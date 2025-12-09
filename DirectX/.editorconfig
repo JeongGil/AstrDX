@@ -1,0 +1,45 @@
+# 최상위 .editorconfig 파일 지정
+root = true
+
+# 모든 파일 공통 설정
+[*]
+charset = utf-8
+indent_style = tab
+indent_size = 4
+end_of_line = crlf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# C++ 파일 설정
+[*.{h,hpp,hh,c,cpp,cc}]
+indent_style = tab
+indent_size = 4
+
+# Visual Studio C++ 코드 스타일 (clang-format 부분)
+# VS: Tools → Options → Text Editor → C/C++ → Code Style → Formatting 에 대응
+# Format on save: true (VS 옵션 필요)
+
+# 함수 중괄호 스타일
+cpp_brace_style = allman
+
+# 네임스페이스 중괄호 스타일
+cpp_namespace_braces = allman
+
+# 클래스/구조체 중괄호 스타일
+cpp_class_braces = allman
+
+# Switch/Case 들여쓰기
+cpp_indent_case_contents = true
+cpp_indent_case_labels = true
+
+# 연산자 주변 공백 유지
+cpp_space_around_operators = true
+
+# using, include 정렬
+cpp_sort_includes = true
+
+# include 블록 간 빈줄 유지
+cpp_preserve_include_block = true
+
+# 탭 금지
+cpp_indent_with_tabs = false
