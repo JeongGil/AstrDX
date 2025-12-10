@@ -73,27 +73,27 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>../Core/Inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../Core/Bin/;$(LibraryPath)</LibraryPath>
-    <OutDir>../Binary/</OutDir>
+    <OutDir>../Bin/</OutDir>
     <IntDir>../Obj/Game_2D/</IntDir>
     <TargetName>$(ProjectName)_Debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>../Core/Inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../Core/Bin/;$(LibraryPath)</LibraryPath>
-    <OutDir>../Binary/</OutDir>
+    <OutDir>../Bin/</OutDir>
     <IntDir>../Obj/Game_2D/</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>../Core/Inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../Core/Bin/;$(LibraryPath)</LibraryPath>
-    <OutDir>../Binary/</OutDir>
+    <OutDir>../Bin/</OutDir>
     <IntDir>../Obj/Game_2D/</IntDir>
     <TargetName>$(ProjectName)_Debug</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>../Core/Inc/;$(IncludePath)</IncludePath>
     <LibraryPath>../Core/Bin/;$(LibraryPath)</LibraryPath>
-    <OutDir>../Binary/</OutDir>
+    <OutDir>../Bin/</OutDir>
     <IntDir>../Obj/Game_2D/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

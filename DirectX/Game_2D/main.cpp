@@ -20,6 +20,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		1280, 720, true))
 	{
 		CEngine::DestroyInst();
+
+		return 0;
 	}
 
 	int ret = CEngine::GetInst()->Run();

@@ -2,6 +2,7 @@
 
 #include "CDevice.h"
 #include "CTimer.h"
+#include "Asset/CAssetManager.h"
 #include "World/CWorldManager.h"
 
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
@@ -18,6 +19,11 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 		return false;
 	}
 
+	if (!CAssetManager::GetInst()->Init())
+	{
+		return false;
+	}
+
 	if (!CWorldManager::GetInst()->Init())
 	{
 		return false;
@@ -28,7 +34,7 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 
 int CEngine::Run()
 {
-	MSG msg;
+	MSG msg{};
 
 	while (bLoop)
 	{
@@ -150,6 +156,7 @@ CEngine::CEngine()
 CEngine::~CEngine()
 {
 	CWorldManager::DestroyInst();
+	CAssetManager::DestroyInst();
 
 	CDevice::DestroyInst();
 }

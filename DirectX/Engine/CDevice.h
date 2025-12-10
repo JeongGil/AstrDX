@@ -12,6 +12,16 @@ public:
 	void BeginRender();
 	void EndRender();
 
+	ID3D11Device* GetDevice() const
+	{
+		return device;
+	}
+
+	ID3D11DeviceContext* GetContext() const
+	{
+		return context;
+	}
+
 private:
 	// It is mainly used when creating resources.
 	ID3D11Device* device = nullptr;

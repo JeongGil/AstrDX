@@ -164,10 +164,19 @@
     <None Include="Copy.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\CAssetManager.h" />
+    <ClInclude Include="Asset\Mesh\CMesh.h" />
+    <ClInclude Include="Asset\Mesh\CMeshManager.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
+    <ClInclude Include="CObject.h" />
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="EngineInfo.h" />
+    <ClInclude Include="EngineMath.h" />
+    <ClInclude Include="FMatrix.h" />
+    <ClInclude Include="FVector2.h" />
+    <ClInclude Include="FVector3.h" />
+    <ClInclude Include="FVector4.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="World\CWorld.h" />
     <ClInclude Include="World\CWorldManager.h" />
@@ -179,9 +188,15 @@
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\CAssetManager.cpp" />
+    <ClCompile Include="Asset\Mesh\CMesh.cpp" />
+    <ClCompile Include="Asset\Mesh\CMeshManager.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
+    <ClCompile Include="CObject.cpp" />
     <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="FVector3.cpp" />
+    <ClCompile Include="FVector4.cpp" />
     <ClCompile Include="World\CWorld.cpp" />
     <ClCompile Include="World\CWorldManager.cpp" />
   </ItemGroup>

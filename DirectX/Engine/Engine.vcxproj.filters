@@ -13,11 +13,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="01_Core">
+    <Filter Include="Core">
       <UniqueIdentifier>{6480c380-25a8-4497-8774-7996ccc04e9d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_World">
+    <Filter Include="Core\Object">
+      <UniqueIdentifier>{43363bad-d05d-4c18-a04e-fc18919324f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World">
       <UniqueIdentifier>{c83c9741-84e1-4148-a483-ab3decd893c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset">
+      <UniqueIdentifier>{9301b53a-d4e3-4b5f-ac13-520988bef5ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Mesh">
+      <UniqueIdentifier>{52a7d00c-dcc1-45de-8490-45640409bef4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{2fc911d5-15f2-4077-a929-dc32310fe604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Timer">
+      <UniqueIdentifier>{fd80a7e3-1b70-4d27-b6bd-f17f6322f2f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Device">
+      <UniqueIdentifier>{ce660eb7-03f4-4a87-8d5e-2b4c2a22c4a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -33,19 +51,46 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="CEngine.h">
-      <Filter>01_Core</Filter>
-    </ClInclude>
-    <ClInclude Include="CTimer.h">
-      <Filter>01_Core</Filter>
-    </ClInclude>
-    <ClInclude Include="CDevice.h">
-      <Filter>01_Core</Filter>
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="World\CWorld.h">
-      <Filter>02_World</Filter>
+      <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="World\CWorldManager.h">
-      <Filter>02_World</Filter>
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\CAssetManager.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="CObject.h">
+      <Filter>Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Mesh\CMeshManager.h">
+      <Filter>Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Mesh\CMesh.h">
+      <Filter>Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineMath.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FVector3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="FVector2.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="FVector4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="FMatrix.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>Core\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="CDevice.h">
+      <Filter>Core\Device</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,19 +105,37 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CEngine.cpp">
-      <Filter>01_Core</Filter>
-    </ClCompile>
-    <ClCompile Include="CTimer.cpp">
-      <Filter>01_Core</Filter>
-    </ClCompile>
-    <ClCompile Include="CDevice.cpp">
-      <Filter>01_Core</Filter>
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="World\CWorld.cpp">
-      <Filter>02_World</Filter>
+      <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="World\CWorldManager.cpp">
-      <Filter>02_World</Filter>
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\CAssetManager.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Mesh\CMeshManager.cpp">
+      <Filter>Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CObject.cpp">
+      <Filter>Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Mesh\CMesh.cpp">
+      <Filter>Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="FVector3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="FVector4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimer.cpp">
+      <Filter>Core\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="CDevice.cpp">
+      <Filter>Core\Device</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
