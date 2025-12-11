@@ -3,6 +3,9 @@
 #include "CDevice.h"
 #include "CTimer.h"
 #include "Asset/CAssetManager.h"
+#include "Asset/Mesh/CMesh.h"
+#include "Asset/Mesh/CMeshManager.h"
+#include "Asset/Shader/CShaderManager.h"
 #include "World/CWorldManager.h"
 
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
@@ -68,6 +71,28 @@ void CEngine::Update(const float deltaTime)
 void CEngine::Render()
 {
 	CDevice::GetInst()->BeginRender();
+
+	// Print sample.
+	{
+		auto WeakMeshMgr = CAssetManager::GetInst()->GetMeshManager();
+		auto WeakShaderMgr = CAssetManager::GetInst()->GetShaderManager();
+
+		auto MeshManager = WeakMeshMgr.lock();
+		auto ShaderManager = WeakShaderMgr.lock();
+
+		if (MeshManager && ShaderManager)
+		{
+			auto WeakShader = ShaderManager->FindShader("Color2D");
+			auto WeakMesh = MeshManager->FindMesh("CenterRectColor");
+
+			auto Shader = WeakShader.lock();
+			auto Mesh = WeakMesh.lock();
+
+			Shader->SetShader();
+
+			Mesh->Render();
+		}
+	}
 
 	CWorldManager::GetInst()->Render();
 

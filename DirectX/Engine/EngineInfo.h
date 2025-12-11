@@ -22,7 +22,9 @@
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#define SAFE_DELETE(p)       { if(p) { delete (p); (p)=nullptr; } }
+#define SAFE_DELETE(p) { if(p) { delete (p); (p)=nullptr; } }
+#define SAFE_DELETE_ARRAY(P) { if (p) {delete[] (p); (p) = nullptr; } }
+#define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = nullptr; } }
 
 struct FResolution
 {

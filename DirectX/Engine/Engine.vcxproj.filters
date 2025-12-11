@@ -37,10 +37,22 @@
     <Filter Include="Core\Device">
       <UniqueIdentifier>{ce660eb7-03f4-4a87-8d5e-2b4c2a22c4a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Shader">
+      <UniqueIdentifier>{4a18de9f-41bf-44f3-8040-baa7992f6ceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\HLSL">
+      <UniqueIdentifier>{c8a47421-f87f-457b-a4a6-4e434c6d2745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\Shader">
+      <UniqueIdentifier>{5bfebd96-5fd9-4e2f-83aa-ead3b6c577ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
       <Filter>소스 파일</Filter>
+    </None>
+    <None Include="..\Bin\Asset\Shader\Share.hlsli">
+      <Filter>Asset\Shader\HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -92,6 +104,24 @@
     <ClInclude Include="CDevice.h">
       <Filter>Core\Device</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Shader\CShader.h">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderManager.h">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CGraphicShader.h">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CComputeShader.h">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\CPathManager.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderColor2D.h">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -137,5 +167,28 @@
     <ClCompile Include="CDevice.cpp">
       <Filter>Core\Device</Filter>
     </ClCompile>
+    <ClCompile Include="Asset\Shader\CShader.cpp">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderManager.cpp">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CGraphicShader.cpp">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CComputeShader.cpp">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\CPathManager.cpp">
+      <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderColor2D.cpp">
+      <Filter>Asset\Shader\Shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Asset\Shader\GlobalShader2D.hlsl">
+      <Filter>Asset\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -3,8 +3,8 @@
 #include "../../CDevice.h"
 
 bool CMesh::CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_USAGE VertexUsage,
-                       D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount, DXGI_FORMAT Format,
-                       D3D11_USAGE IndexUsage)
+	D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount, DXGI_FORMAT Format,
+	D3D11_USAGE IndexUsage)
 {
 	VertexBuffer.Size = VertexSize;
 	VertexBuffer.Count = VertexCount;
@@ -31,6 +31,34 @@ bool CMesh::CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_US
 	}
 
 	return true;
+}
+
+void CMesh::Render() const
+{
+	UINT Stride = VertexBuffer.Size;
+	UINT Offset = 0;
+
+	CDevice::GetInst()->GetContext()->IASetPrimitiveTopology(Topology);
+	CDevice::GetInst()->GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer.Buffer, &Stride, &Offset);
+
+	// No mesh slot (including index buffer).
+	if (Slots.empty())
+	{
+		CDevice::GetInst()->GetContext()->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		CDevice::GetInst()->GetContext()->Draw(VertexBuffer.Count, 0);
+	}
+	else
+	{
+		for (auto Slot : Slots)
+		{
+			CDevice::GetInst()->GetContext()->IASetIndexBuffer(
+				Slot->IndexBuffer.Buffer,
+				Slot->IndexBuffer.Format, 0);
+
+			CDevice::GetInst()->GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer.Buffer, &Stride, &Offset);
+			CDevice::GetInst()->GetContext()->DrawIndexed(Slot->IndexBuffer.Count, 0, 0);
+		}
+	}
 }
 
 bool CMesh::CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count,

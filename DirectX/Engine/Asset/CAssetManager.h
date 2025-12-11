@@ -3,19 +3,26 @@
 #include "../EngineInfo.h"
 
 class CMeshManager;
+class CShaderManager;
 
 class CAssetManager
 {
 public:
 	bool Init();
 
-	CMeshManager* GetMeshManager() const
+	[[nodiscard]] std::weak_ptr<CMeshManager> GetMeshManager() const
 	{
-		return meshManager.get();
+		return MeshManager;
+	}
+
+	[[nodiscard]] std::weak_ptr<CShaderManager> GetShaderManager() const
+	{
+		return ShaderManager;
 	}
 
 private:
-	std::shared_ptr<CMeshManager> meshManager;
+	std::shared_ptr<CMeshManager> MeshManager;
+	std::shared_ptr<CShaderManager> ShaderManager;
 
 public:
 	static CAssetManager* GetInst()
