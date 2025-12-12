@@ -51,11 +51,11 @@ bool CMeshManager::Init()
 	return true;
 }
 
-bool CMeshManager::CreateMesh(const std::string Name, void* Vertices, int VertexSize, int VertexCount,
+bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int VertexSize, int VertexCount,
 	D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
 	DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
 {
-	if (Meshes.contains(Name))
+	if (Meshes.contains(Key))
 	{
 		return false;
 	}
@@ -67,14 +67,14 @@ bool CMeshManager::CreateMesh(const std::string Name, void* Vertices, int Vertex
 		return false;
 	}
 
-	Meshes.insert(std::make_pair(Name, NewMesh));
+	Meshes.emplace(Key, NewMesh);
 
 	return true;
 }
 
-std::weak_ptr<CMesh> CMeshManager::FindMesh(const std::string& Name) const
+std::weak_ptr<CMesh> CMeshManager::FindMesh(const std::string& Key) const
 {
-	auto it = Meshes.find(Name);
+	auto it = Meshes.find(Key);
 	return it != Meshes.end() ? it->second : nullptr;
 }
 

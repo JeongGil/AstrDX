@@ -61,8 +61,8 @@ bool CPathManager::CreatePath(const std::string& Name, const TCHAR* Path, const 
 	return true;
 }
 
-const TCHAR* CPathManager::FindPath(const std::string& Name)
+const TCHAR* CPathManager::FindPath(const std::string& Key)
 {
-	const auto it = Paths.find(Name);
+	const auto it = Paths.find(Key);
 	return it == Paths.end() ? nullptr : it->second;
 }

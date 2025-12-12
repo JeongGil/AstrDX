@@ -46,6 +46,15 @@
     <Filter Include="Asset\Shader\Shader">
       <UniqueIdentifier>{5bfebd96-5fd9-4e2f-83aa-ead3b6c577ea}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Shader\Shader\Color2D">
+      <UniqueIdentifier>{1e3d8110-4197-4683-b767-a61a8be4132c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\ConstantBuffer">
+      <UniqueIdentifier>{f6930ead-b461-4e71-84c0-2f51bd7b5dea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\ConstantBuffer\Transform">
+      <UniqueIdentifier>{a08a9d44-ce1c-408b-b8b5-eb48f05200c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -120,7 +129,19 @@
       <Filter>Asset</Filter>
     </ClInclude>
     <ClInclude Include="Asset\Shader\CShaderColor2D.h">
-      <Filter>Asset\Shader\Shader</Filter>
+      <Filter>Asset\Shader\Shader\Color2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CBufferContainer.h">
+      <Filter>Asset\Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CCBufferTransform.h">
+      <Filter>Asset\Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CConstantBuffer.h">
+      <Filter>Asset\Shader\ConstantBuffer\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CConstantBufferData.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -183,12 +204,26 @@
       <Filter>Asset</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderColor2D.cpp">
-      <Filter>Asset\Shader\Shader</Filter>
+      <Filter>Asset\Shader\Shader\Color2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CCBufferTransform.cpp">
+      <Filter>Asset\Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CConstantBuffer.cpp">
+      <Filter>Asset\Shader\ConstantBuffer\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CConstantBufferData.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Asset\Shader\GlobalShader2D.hlsl">
       <Filter>Asset\Shader\HLSL</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Asset\Shader\SpaceTransformation.txt">
+      <Filter>소스 파일</Filter>
+    </Text>
   </ItemGroup>
 </Project>

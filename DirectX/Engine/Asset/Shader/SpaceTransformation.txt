@@ -1,0 +1,38 @@
+Local Space:
+The coordinate system relative to the model itself. These are the coordinates used when creating the mesh.
+
+World Space:
+The space in which the game runs. Objects in local space are transformed into world space using matrices.
+Position, scale, and rotation can all be represented using matrices. Rotation can be expressed by combining rotations around the X, Y, and Z axes.
+World Matrix = Scale Matrix * Self-Rotation Matrix * Translation Matrix * Orbit Rotation Matrix * Parent Matrix
+
+View Space:
+The coordinate system relative to the camera.
+To place objects into view space, every object in world space is translated by the inverse of the camera’s position so that the camera becomes the origin (0, 0, 0).
+Then they are rotated around the origin by the inverse of the camera’s rotation so that the camera looks toward the +Z direction.
+A matrix is used to transform objects from world space into view space.
+
+Projection Space:
+The process of converting 3D into 2D. A matrix transforms objects in view space into projection space.
+Vertex data in view space is transformed so that x and y become values between -1 and 1, and z becomes a value between 0 and 1.
+This step applies perspective to prepare the scene for rendering. Two types of projection exist:
+
+Perspective Projection: Applies perspective (objects farther away appear smaller).
+
+Orthographic Projection: Maintains original size without perspective.
+Anything outside x, y ∈ [-1, 1] or z ∈ [0, 1] is clipped.
+
+===== Processes Handled Automatically by DirectX =====
+
+Homogeneous Space (Clip / NDC Space):
+The normalized coordinates actually used by the GPU.
+After the projection transform, x and y fall between -1 and 1, and z falls between 0 and 1.
+The w component holds the z-value from view space.
+Coordinates (x, y, z, w) are divided by w:
+x / w, y / w, z / w
+
+Viewport Transform:
+Converts NDC space into the 2D screen space defined when initializing DirectX.
+For example, if the resolution is 1280×720, NDC values are transformed into the 0–1280, 0–720 screen coordinate space. This is the actual display coordinate system.
+
+Pixel Shader Execution

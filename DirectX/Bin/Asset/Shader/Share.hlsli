@@ -7,3 +7,13 @@
  * Constant register: Used to pass general data from C++ code to the shader.
  * Temporary register: A register used during computations.
  */
+
+// A feature that transfers frequently changing values from the CPU to the GPU.
+cbuffer CBTransform : register(b0)
+{
+	matrix cbWorld;
+	matrix sbView;
+	matrix cbProj;
+	matrix cbWV;
+	matrix cbWVP;
+}

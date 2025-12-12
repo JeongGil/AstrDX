@@ -22,7 +22,7 @@ VS_OUTPUT_COLOR2D Color2DVS(VS_INPUT_COLOR2D input)
 {
 	VS_OUTPUT_COLOR2D output; //= (VS_OUTPUT_COLOR2D)0;
 
-	output.Pos = float4(input.Pos, 1.0f);
+	output.Pos = mul(float4(input.Pos, 1.f), cbWVP);
 	output.Color = input.Color;
 
 	return output;

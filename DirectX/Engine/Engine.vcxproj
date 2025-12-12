@@ -169,7 +169,11 @@
     <ClInclude Include="Asset\CPathManager.h" />
     <ClInclude Include="Asset\Mesh\CMesh.h" />
     <ClInclude Include="Asset\Mesh\CMeshManager.h" />
+    <ClInclude Include="Asset\Shader\CBufferContainer.h" />
+    <ClInclude Include="Asset\Shader\CCBufferTransform.h" />
     <ClInclude Include="Asset\Shader\CComputeShader.h" />
+    <ClInclude Include="Asset\Shader\CConstantBuffer.h" />
+    <ClInclude Include="Asset\Shader\CConstantBufferData.h" />
     <ClInclude Include="Asset\Shader\CGraphicShader.h" />
     <ClInclude Include="Asset\Shader\CShader.h" />
     <ClInclude Include="Asset\Shader\CShaderColor2D.h" />
@@ -199,7 +203,10 @@
     <ClCompile Include="Asset\CPathManager.cpp" />
     <ClCompile Include="Asset\Mesh\CMesh.cpp" />
     <ClCompile Include="Asset\Mesh\CMeshManager.cpp" />
+    <ClCompile Include="Asset\Shader\CCBufferTransform.cpp" />
     <ClCompile Include="Asset\Shader\CComputeShader.cpp" />
+    <ClCompile Include="Asset\Shader\CConstantBuffer.cpp" />
+    <ClCompile Include="Asset\Shader\CConstantBufferData.cpp" />
     <ClCompile Include="Asset\Shader\CGraphicShader.cpp" />
     <ClCompile Include="Asset\Shader\CShader.cpp" />
     <ClCompile Include="Asset\Shader\CShaderColor2D.cpp" />
@@ -228,6 +235,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Asset\Shader\SpaceTransformation.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

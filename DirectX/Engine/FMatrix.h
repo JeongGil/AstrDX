@@ -54,7 +54,11 @@ __declspec(align(16)) union FMatrix
 		return v[Index];
 	}
 
-	FMatrix& operator = (const FMatrix& _m) = default;
+	FMatrix& operator = (const FMatrix& _m)
+	{
+		m = _m.m;
+		return *this;
+	}
 
 	FMatrix& operator = (const DirectX::XMMATRIX& _m)
 	{

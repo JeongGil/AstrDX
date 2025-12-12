@@ -7,6 +7,7 @@
 #include "Asset/Mesh/CMeshManager.h"
 #include "Asset/Shader/CShaderManager.h"
 #include "World/CWorldManager.h"
+#include "Asset/Shader/CCBufferTransform.h"
 
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
                    const int Width, const int	Height, const bool WindowMode)
@@ -83,10 +84,42 @@ void CEngine::Render()
 		if (MeshManager && ShaderManager)
 		{
 			auto WeakShader = ShaderManager->FindShader("Color2D");
-			auto WeakMesh = MeshManager->FindMesh("CenterRectColor");
+			auto WeakMesh = MeshManager->FindMesh("CenterCubeColor");
+			//auto WeakMesh = MeshManager->FindMesh("CenterRectColor");
 
 			auto Shader = WeakShader.lock();
 			auto Mesh = WeakMesh.lock();
+
+			// Make world matrix.
+			FVector Scale(1.f, 1.f, 1.f);
+			FVector Rot(45.f, 45.f, 0.f);
+			FVector Pos = {};
+
+			FMatrix ScaleMat = FMatrix::StaticScaling(Scale);
+			FMatrix RotMat = FMatrix::StaticRotation(Rot);
+			FMatrix TransMat = FMatrix::StaticTranslation(Pos);
+			// Ret = V * SRT
+			FMatrix WorldMat = ScaleMat * RotMat * TransMat;
+
+			FVector CamPos(0.f, 0.f, -2.f);
+			FVector LookAt(0, 0, 0);
+			FVector CamUp(0, 1, 0);
+
+			FMatrix ViewMat = DirectX::XMMatrixLookAtLH(CamPos.Convert(), LookAt.Convert(), CamUp.Convert());
+
+			float Radian = DirectX::XMConvertToRadians(60);
+
+			FMatrix ProjMat = DirectX::XMMatrixPerspectiveFovLH(Radian, 1280.f / 720.f, 0.1f, 1000.f);
+
+			auto CBuffer = std::make_shared<CCBufferTransform>();
+
+			CBuffer->Init();
+
+			CBuffer->SetWorldMatrix(WorldMat);
+			CBuffer->SetViewMatrix(ViewMat);
+			CBuffer->SetProjMatrix(ProjMat);
+
+			CBuffer->UpdateBuffer();
 
 			Shader->SetShader();
 
@@ -148,24 +181,24 @@ LRESULT CEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-	case WM_PAINT:
-	{
-		PAINTSTRUCT ps;
-		HDC hdc = BeginPaint(hWnd, &ps);
+		case WM_PAINT:
+		{
+			PAINTSTRUCT ps;
+			HDC hdc = BeginPaint(hWnd, &ps);
 
-		EndPaint(hWnd, &ps);
-		break;
-	}
-	case WM_DESTROY:
-	{
-		bLoop = false;
-		PostQuitMessage(0);
-		break;
-	}
-	default:
-	{
-		return DefWindowProc(hWnd, message, wParam, lParam);
-	}
+			EndPaint(hWnd, &ps);
+			break;
+		}
+		case WM_DESTROY:
+		{
+			bLoop = false;
+			PostQuitMessage(0);
+			break;
+		}
+		default:
+		{
+			return DefWindowProc(hWnd, message, wParam, lParam);
+		}
 	}
 
 	return 0;
