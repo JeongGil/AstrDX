@@ -60,7 +60,7 @@ bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int Vertex
 		return false;
 	}
 
-	auto NewMesh = std::shared_ptr<CMesh>(new CMesh);
+	std::shared_ptr<CMesh> NewMesh(new CMesh);
 	if (!NewMesh->CreateMesh(Vertices, VertexSize, VertexCount, VertexUsage, Topology,
 		Indices, IndexSize, IndexCount, Format, IndexUsage))
 	{

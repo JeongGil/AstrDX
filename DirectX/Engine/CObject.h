@@ -2,7 +2,7 @@
 
 #include "EngineInfo.h"
 
-class CObject
+class CObject : public std::enable_shared_from_this<CObject>
 {
 public:
 	CObject();

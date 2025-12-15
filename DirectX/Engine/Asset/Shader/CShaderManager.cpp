@@ -39,10 +39,7 @@ bool CShaderManager::CreateCBuffer(const std::string& Key, int Size, int Registe
 		return false;
 	}
 
-	auto NewBuffer = new CConstantBuffer;
-	std::shared_ptr<CConstantBuffer> Shared;
-	Shared.reset(NewBuffer);
-
+	std::shared_ptr<CConstantBuffer> Shared(new CConstantBuffer);
 	if (!Shared->Init(Size, Register, ShaderBuffer))
 	{
 		return false;
