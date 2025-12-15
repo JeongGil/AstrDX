@@ -55,6 +55,18 @@
     <Filter Include="Asset\Shader\ConstantBuffer\Transform">
       <UniqueIdentifier>{a08a9d44-ce1c-408b-b8b5-eb48f05200c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object">
+      <UniqueIdentifier>{36ed9081-fa1b-485a-b90b-fd5c9101e9f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compnent">
+      <UniqueIdentifier>{fda44d5f-4d14-40f9-a920-1a790e325c70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compnent\SceneComponent">
+      <UniqueIdentifier>{ba2fb882-6ea1-43f7-8f3b-9875ffc5948f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compnent\ObjectComponent">
+      <UniqueIdentifier>{56fa3312-7f34-4076-9867-5cdf5e841615}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -143,6 +155,15 @@
     <ClInclude Include="Asset\Shader\CConstantBufferData.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Object\CGameObject.h">
+      <Filter>Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CComponent.h">
+      <Filter>Compnent</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CSceneComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -213,6 +234,15 @@
       <Filter>Asset\Shader\ConstantBuffer\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Shader\CConstantBufferData.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\CGameObject.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CComponent.cpp">
+      <Filter>Compnent</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CSceneComponent.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

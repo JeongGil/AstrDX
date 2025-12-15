@@ -112,10 +112,12 @@ struct FVector3
 
 	DirectX::XMVECTOR Convert()	const;
 
-	//FVector3 TransformNormal(union FMatrix& mat) const;
-	//
-	//FVector3 TransformCoord(union FMatrix& mat)	const;
-	//
+	// w = 0. Only apply scale and rotation, not position.
+	FVector3 TransformNormal(union FMatrix& mat) const;
+	
+	// w=w 1. Apply scale, rotation and Position.
+	FVector3 TransformCoord(union FMatrix& mat)	const;
+	
 	//FVector3 GetRotation(const FVector3& Rot) const;
 	//
 	//float GetAngle(const FVector3& v)	const;

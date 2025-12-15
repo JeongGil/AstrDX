@@ -74,6 +74,7 @@ void CEngine::Render()
 	CDevice::GetInst()->BeginRender();
 
 	// Print sample.
+	/*
 	{
 		auto WeakMeshMgr = CAssetManager::GetInst()->GetMeshManager();
 		auto WeakShaderMgr = CAssetManager::GetInst()->GetShaderManager();
@@ -126,6 +127,7 @@ void CEngine::Render()
 			Mesh->Render();
 		}
 	}
+	*/
 
 	CWorldManager::GetInst()->Render();
 

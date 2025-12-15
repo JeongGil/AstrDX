@@ -5,34 +5,40 @@
 class CWorld;
 class CWorldManager
 {
+public:
+	std::weak_ptr<CWorld> GetWorld() const
+	{
+		return World;
+	}
+
 private:
-	std::shared_ptr<CWorld> world;
+	std::shared_ptr<CWorld> World;
 
 public:
 	bool Init();
-	void Update(float deltaTime);
+	void Update(float DeltaTime);
 	void Render();
 
 public:
 	static CWorldManager* GetInst()
 	{
-		if (inst == nullptr)
+		if (Instance == nullptr)
 		{
-			inst = new CWorldManager;
+			Instance = new CWorldManager;
 		}
 
-		return inst;
+		return Instance;
 	}
 
 	static void DestroyInst()
 	{
-		SAFE_DELETE(inst)
+		SAFE_DELETE(Instance)
 	}
 
 private:
 	CWorldManager();
 	~CWorldManager();
 
-	inline static CWorldManager* inst = nullptr;
+	inline static CWorldManager* Instance = nullptr;
 };
 

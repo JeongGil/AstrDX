@@ -4,8 +4,8 @@
 
 bool CWorldManager::Init()
 {
-	world = std::make_shared<CWorld>();
-	if (!world || !world->Init())
+	World = std::make_shared<CWorld>();
+	if (!World || !World->Init())
 	{
 		return false;
 	}
@@ -13,14 +13,14 @@ bool CWorldManager::Init()
 	return true;
 }
 
-void CWorldManager::Update(const float deltaTime)
+void CWorldManager::Update(const float DeltaTime)
 {
-	world->Update(deltaTime);
+	World->Update(DeltaTime);
 }
 
 void CWorldManager::Render()
 {
-	world->Render();
+	World->Render();
 }
 
 CWorldManager::CWorldManager()

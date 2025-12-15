@@ -476,24 +476,24 @@ DirectX::XMVECTOR FVector3::Convert()	const
 	return DirectX::XMLoadFloat3((DirectX::XMFLOAT3*)this);
 }
 
-//FVector3 FVector3::TransformNormal(FMatrix& mat)	const
-//{
-//	// XMVector3TransformNormal : It sets w to 0, multiplies it by a 4x4 matrix, and returns the result.
-//	DirectX::XMVECTOR result = DirectX::XMVector3TransformNormal(Convert(),
-//		mat.m);
-//
-//	return result;
-//}
-//
-//FVector3 FVector3::TransformCoord(FMatrix& mat)	const
-//{
-//	// XMVector3TransformCoord : It sets w to 1, multiplies it by a 4x4 matrix, and returns the result.
-//	DirectX::XMVECTOR result = DirectX::XMVector3TransformCoord(Convert(),
-//		mat.m);
-//
-//	return result;
-//}
-//
+FVector3 FVector3::TransformNormal(FMatrix& mat)	const
+{
+	// XMVector3TransformNormal : It sets w to 0, multiplies it by a 4x4 matrix, and returns the result.
+	DirectX::XMVECTOR result = DirectX::XMVector3TransformNormal(Convert(),
+		mat.m);
+
+	return result;
+}
+
+FVector3 FVector3::TransformCoord(FMatrix& mat)	const
+{
+	// XMVector3TransformCoord : It sets w to 1, multiplies it by a 4x4 matrix, and returns the result.
+	DirectX::XMVECTOR result = DirectX::XMVector3TransformCoord(Convert(),
+		mat.m);
+
+	return result;
+}
+
 //FVector3 FVector3::GetRotation(const FVector3& Rot)	const
 //{
 //	FMatrix	matRot;
