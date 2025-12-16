@@ -28,7 +28,7 @@
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="World\CMainWorld.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>World</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -36,7 +36,7 @@
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="World\CMainWorld.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>World</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
