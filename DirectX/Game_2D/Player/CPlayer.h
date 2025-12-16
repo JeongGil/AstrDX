@@ -4,7 +4,7 @@
 class CMeshComponent;
 
 class CPlayer :
-    public CGameObject
+	public CGameObject
 {
 	friend class CWorld;
 
@@ -14,20 +14,13 @@ public:
 
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
+	std::weak_ptr<CSceneComponent> Rotation;
+	std::weak_ptr<CMeshComponent> SubMeshComponent;
 
 public:
 	CPlayer() = default;
-
-	CPlayer(const CPlayer& ref)
-		: CGameObject(ref)
-	{
-	}
-
-	CPlayer(CPlayer&& ref) noexcept
-		: CGameObject(std::move(ref))
-	{
-	}
-
+	CPlayer(const CPlayer& ref) = default;
+	CPlayer(CPlayer&& ref) noexcept = default;
 	~CPlayer() override = default;
 };
 

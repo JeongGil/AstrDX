@@ -32,7 +32,7 @@ public:
 			return std::weak_ptr<T>();
 		}
 
-		const auto& Origin = WeakOrigin.lock();
+		auto Origin = WeakOrigin.lock();
 		if (!Origin)
 		{
 			return std::weak_ptr<T>();

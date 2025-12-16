@@ -6,7 +6,7 @@
 void CMeshComponent::SetMesh(const std::string& Key)
 {
 	auto WeakManager = CAssetManager::GetInst()->GetMeshManager();
-	if (const auto MeshManager = WeakManager.lock())
+	if (auto MeshManager = WeakManager.lock())
 	{
 		Mesh = MeshManager->FindMesh(Key);
 	}
@@ -15,7 +15,7 @@ void CMeshComponent::SetMesh(const std::string& Key)
 void CMeshComponent::SetShader(const std::string& Key)
 {
 	auto WeakManager = CAssetManager::GetInst()->GetShaderManager();
-	if (const auto ShaderManager = WeakManager.lock())
+	if (auto ShaderManager = WeakManager.lock())
 	{
 		Shader = ShaderManager->FindShader(Key);
 	}
@@ -39,7 +39,7 @@ void CMeshComponent::Render()
 	auto Shader = this->Shader.lock();
 	auto Mesh = this->Mesh.lock();
 
-	FVector CamPos(0, 0, -2);
+	FVector CamPos(0, 0, -5);
 	FVector LookAt(0, 0, 0);
 	FVector CamUp(0, 1, 0);
 

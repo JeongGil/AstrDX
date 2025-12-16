@@ -18,43 +18,16 @@ public:
 	void UpdateTransform();
 
 public:
-	const FVector& GetAxis(EAxis::Type Axis) const
-	{
-		return WorldAxis[Axis];
-	}
-
-	const FVector& GetRelativeScale() const
-	{
-		return RelativeScale;
-	}
-
-	const FVector& GetRelativeRotation() const
-	{
-		return RelativeRotation;
-	}
-
-	const FVector& GetRelativePosition() const
-	{
-		return RelativePosition;
-	}
-
-	const FVector& GetWorldScale() const
-	{
-		return WorldScale;
-	}
-
-	const FVector& GetWorldRotation() const
-	{
-		return WorldRotation;
-	}
-
-	const FVector& GetWorldPosition() const
-	{
-		return WorldPosition;
-	}
+	const FVector& GetAxis(EAxis::Type Axis) const;
+	const FVector& GetRelativeScale() const;
+	const FVector& GetRelativeRotation() const;
+	const FVector& GetRelativePosition() const;
+	const FVector& GetWorldScale() const;
+	const FVector& GetWorldRotation() const;
+	const FVector& GetWorldPosition() const;
 
 	void SetInheritScale(bool bInherit);
-	void SetInheritRot(bool bInherit);
+	void SetInheritRotation(bool bInherit);
 
 	void SetRelativeScale(const FVector3& Scale);
 	void SetRelativeScale(const FVector2& Scale);

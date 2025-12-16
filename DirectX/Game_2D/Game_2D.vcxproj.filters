@@ -19,6 +19,9 @@
     <Filter Include="World">
       <UniqueIdentifier>{cab25af1-35e6-4d98-99f4-f7bf583b2177}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Monster">
+      <UniqueIdentifier>{510415f3-5d1d-45d5-ae04-d88826681834}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -30,6 +33,12 @@
     <ClCompile Include="World\CMainWorld.cpp">
       <Filter>World</Filter>
     </ClCompile>
+    <ClCompile Include="Player\CBullet.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster\CMonster.cpp">
+      <Filter>Monster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -37,6 +46,12 @@
     </ClInclude>
     <ClInclude Include="World\CMainWorld.h">
       <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\CBullet.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster\CMonster.h">
+      <Filter>Monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

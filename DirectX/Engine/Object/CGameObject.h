@@ -33,6 +33,90 @@ public:
 		return bAlive;
 	}
 
+public:
+	const FVector& GetAxis(EAxis::Type Axis) const;
+	const FVector& GetRelativeScale() const;
+	const FVector& GetRelativeRotation() const;
+	const FVector& GetRelativePosition() const;
+	const FVector& GetWorldScale() const;
+	const FVector& GetWorldRotation() const;
+	const FVector& GetWorldPosition() const;
+
+	void SetInheritScale(bool bInherit) const;
+	void SetInheritRotation(bool bInherit) const;
+
+	void SetRelativeScale(const FVector3& Scale) const;
+	void SetRelativeScale(const FVector2& Scale) const;
+	void SetRelativeScale(float X, float Y, float Z) const;
+	void SetRelativeScale(float X, float Y) const;
+
+	void AddRelativeScale(const FVector3& Scale) const;
+	void AddRelativeScale(const FVector2& Scale) const;
+	void AddRelativeScale(float X, float Y, float Z) const;
+	void AddRelativeScale(float X, float Y) const;
+
+	void SetRelativeRotation(const FVector3& Rotation) const;
+	void SetRelativeRotation(const FVector2& Rotation) const;
+	void SetRelativeRotation(float X, float Y, float Z) const;
+	void SetRelativeRotation(float X, float Y) const;
+	void SetRelativeRotationX(float X) const;
+	void SetRelativeRotationY(float Y) const;
+	void SetRelativeRotationZ(float Z) const;
+
+	void AddRelativeRotation(const FVector3& Rotation) const;
+	void AddRelativeRotation(const FVector2& Rotation) const;
+	void AddRelativeRotation(float X, float Y, float Z) const;
+	void AddRelativeRotation(float X, float Y) const;
+	void AddRelativeRotationX(float X) const;
+	void AddRelativeRotationY(float Y) const;
+	void AddRelativeRotationZ(float Z) const;
+
+	void SetRelativePosition(const FVector3& Position) const;
+	void SetRelativePosition(const FVector2& Position) const;
+	void SetRelativePosition(float X, float Y, float Z) const;
+	void SetRelativePosition(float X, float Y) const;
+
+	void AddRelativePosition(const FVector3& Position) const;
+	void AddRelativePosition(const FVector2& Position) const;
+	void AddRelativePosition(float X, float Y, float Z) const;
+	void AddRelativePosition(float X, float Y) const;
+
+	void SetWorldScale(const FVector3& Scale) const;
+	void SetWorldScale(const FVector2& Scale) const;
+	void SetWorldScale(float X, float Y, float Z) const;
+	void SetWorldScale(float X, float Y) const;
+
+	void AddWorldScale(const FVector3& Scale) const;
+	void AddWorldScale(const FVector2& Scale) const;
+	void AddWorldScale(float X, float Y, float Z) const;
+	void AddWorldScale(float X, float Y) const;
+
+	void SetWorldRotation(const FVector3& Rotation) const;
+	void SetWorldRotation(const FVector2& Rotation) const;
+	void SetWorldRotation(float X, float Y, float Z) const;
+	void SetWorldRotation(float X, float Y) const;
+	void SetWorldRotationX(float X) const;
+	void SetWorldRotationY(float Y) const;
+	void SetWorldRotationZ(float Z) const;
+
+	void AddWorldRotation(const FVector3& Rotation) const;
+	void AddWorldRotation(const FVector2& Rotation) const;
+	void AddWorldRotation(float X, float Y, float Z) const;
+	void AddWorldRotation(float X, float Y) const;
+	void AddWorldRotationX(float X) const;
+	void AddWorldRotationY(float Y) const;
+	void AddWorldRotationZ(float Z) const;
+
+	void SetWorldPosition(const FVector3& Position) const;
+	void SetWorldPosition(const FVector2& Position) const;
+	void SetWorldPosition(float X, float Y, float Z) const;
+	void SetWorldPosition(float X, float Y) const;
+
+	void AddWorldPosition(const FVector3& Position) const;
+	void AddWorldPosition(const FVector2& Position) const;
+	void AddWorldPosition(float X, float Y, float Z) const;
+	void AddWorldPosition(float X, float Y) const;
+
 protected:
 	std::weak_ptr<CWorld> World;
 	std::vector<std::shared_ptr<CSceneComponent>> SceneComponents;
@@ -73,7 +157,7 @@ public:
 		{
 			if (ParentName == "Root")
 			{
-				if (const auto Root = this->Root.lock())
+				if (auto Root = this->Root.lock())
 				{
 					Root->AddChild(Component);
 				}
@@ -129,7 +213,7 @@ protected:
 		size_t Size = other.SceneComponents.size();
 		for (size_t i = 0; i < Size; i++)
 		{
-			const auto& OtherCmp = other.SceneComponents[i];
+			const auto OtherCmp = other.SceneComponents[i];
 			if (OtherCmp->Parent.expired())
 			{
 				continue;

@@ -21,12 +21,47 @@ void CSceneComponent::UpdateTransform()
 	WorldMatrix = ScaleMatrix * RotationMatrix * TranslateMatrix;
 }
 
+const FVector& CSceneComponent::GetAxis(EAxis::Type Axis) const
+{
+	return WorldAxis[Axis];
+}
+
+const FVector& CSceneComponent::GetRelativeScale() const
+{
+	return RelativeScale;
+}
+
+const FVector& CSceneComponent::GetRelativeRotation() const
+{
+	return RelativeRotation;
+}
+
+const FVector& CSceneComponent::GetRelativePosition() const
+{
+	return RelativePosition;
+}
+
+const FVector& CSceneComponent::GetWorldScale() const
+{
+	return WorldScale;
+}
+
+const FVector& CSceneComponent::GetWorldRotation() const
+{
+	return WorldRotation;
+}
+
+const FVector& CSceneComponent::GetWorldPosition() const
+{
+	return WorldPosition;
+}
+
 void CSceneComponent::SetInheritScale(bool bInherit)
 {
 	bInheritScale = bInherit;
 }
 
-void CSceneComponent::SetInheritRot(bool bInherit)
+void CSceneComponent::SetInheritRotation(bool bInherit)
 {
 	bInheritRotation = bInherit;
 }
@@ -192,15 +227,15 @@ void CSceneComponent::InheritRelativeScale()
 	WorldScale = RelativeScale;
 	if (bInheritScale)
 	{
-		if (const auto Parent = this->Parent.lock())
+		if (auto Parent = this->Parent.lock())
 		{
 			WorldScale *= Parent->WorldScale;
 		}
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritRelativeScale();
 		}
@@ -212,7 +247,7 @@ void CSceneComponent::InheritRelativeRotation()
 	WorldRotation = RelativeRotation;
 	if (bInheritRotation)
 	{
-		if (const auto Parent = this->Parent.lock())
+		if (auto Parent = this->Parent.lock())
 		{
 			WorldRotation += Parent->WorldRotation;
 		}
@@ -228,17 +263,17 @@ void CSceneComponent::InheritRelativeRotation()
 		WorldAxis[i].Normalize();
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritRelativeRotation();
 		}
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritRelativePosition();
 		}
@@ -267,9 +302,9 @@ void CSceneComponent::InheritRelativePosition()
 		WorldPosition = RelativePosition;
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritRelativePosition();
 		}
@@ -437,15 +472,15 @@ void CSceneComponent::InheritWorldScale()
 	RelativeScale = WorldScale;
 	if (bInheritScale)
 	{
-		if (const auto Parent = this->Parent.lock())
+		if (auto Parent = this->Parent.lock())
 		{
 			RelativeScale /= Parent->GetWorldScale();
 		}
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritWorldScale();
 		}
@@ -457,7 +492,7 @@ void CSceneComponent::InheritWorldRotation()
 	RelativeRotation = WorldRotation;
 	if (bInheritRotation)
 	{
-		if (const auto Parent = this->Parent.lock())
+		if (auto Parent = this->Parent.lock())
 		{
 			WorldRotation -= Parent->WorldRotation;
 		}
@@ -473,17 +508,17 @@ void CSceneComponent::InheritWorldRotation()
 		WorldAxis[i].Normalize();
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritWorldRotation();
 		}
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritWorldPosition();
 		}
@@ -512,9 +547,9 @@ void CSceneComponent::InheritWorldPosition()
 		RelativePosition = WorldPosition;
 	}
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->InheritWorldPosition();
 		}
@@ -528,9 +563,9 @@ bool CSceneComponent::Init()
 
 void CSceneComponent::Update(const float DeltaTime)
 {
-	for (auto WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->Update(DeltaTime);
 		}
@@ -541,9 +576,9 @@ void CSceneComponent::PostUpdate(const float DeltaTime)
 {
 	UpdateTransform();
 
-	for (auto& WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto& Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->PostUpdate(DeltaTime);
 		}
@@ -552,9 +587,9 @@ void CSceneComponent::PostUpdate(const float DeltaTime)
 
 void CSceneComponent::Render()
 {
-	for (auto WeakChild : Children)
+	for (const auto& WeakChild : Children)
 	{
-		if (const auto Child = WeakChild.lock())
+		if (auto Child = WeakChild.lock())
 		{
 			Child->Render();
 		}
