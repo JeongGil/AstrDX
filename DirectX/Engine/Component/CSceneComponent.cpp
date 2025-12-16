@@ -550,12 +550,12 @@ void CSceneComponent::Render()
 	}
 }
 
-CComponent* CSceneComponent::Clone() const
+CSceneComponent* CSceneComponent::Clone() const
 {
 	return new CSceneComponent(*this);
 }
 
 void CSceneComponent::Destroy()
 {
-	bAlive = false;
+	CComponent::Destroy();
 }

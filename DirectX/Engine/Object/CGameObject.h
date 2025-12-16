@@ -47,7 +47,7 @@ public:
 
 public:
 	template <typename T>
-	std::weak_ptr<CSceneComponent> CreateComponent(const std::string& Name, const std::string& ParentName = "Root")
+	std::weak_ptr<T> CreateComponent(const std::string& Name, const std::string& ParentName = "Root")
 	{
 		std::shared_ptr<CSceneComponent> Component(new T);
 
@@ -57,7 +57,7 @@ public:
 
 		if (!Component->Init())
 		{
-			return std::weak_ptr<CSceneComponent>();
+			return std::weak_ptr<T>();
 		}
 
 		if (SceneComponents.empty())
@@ -98,22 +98,22 @@ public:
 
 		SceneComponents.push_back(Component);
 
-		return Component;
+		return std::dynamic_pointer_cast<T>(Component);
 	}
 
 protected:
 	CGameObject();
-	CGameObject(const CObject& ref)
+	CGameObject(const CGameObject& ref)
 		: CObject(ref)
 	{
 	}
 
-	CGameObject(CObject&& ref)
+	CGameObject(CGameObject&& ref) noexcept
 		: CObject(std::move(ref))
 	{
 	}
 
 public:
-	virtual ~CGameObject();
+	~CGameObject() override;
 };
 

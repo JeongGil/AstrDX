@@ -67,6 +67,9 @@
     <Filter Include="Compnent\ObjectComponent">
       <UniqueIdentifier>{56fa3312-7f34-4076-9867-5cdf5e841615}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compnent\SceneComponent\Mesh">
+      <UniqueIdentifier>{c88daf8f-ea83-419e-98a1-9d0f8385bd80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -152,9 +155,6 @@
     <ClInclude Include="Asset\Shader\CConstantBuffer.h">
       <Filter>Asset\Shader\ConstantBuffer\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Shader\CConstantBufferData.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Object\CGameObject.h">
       <Filter>Object</Filter>
     </ClInclude>
@@ -163,6 +163,12 @@
     </ClInclude>
     <ClInclude Include="Component\CSceneComponent.h">
       <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CMeshComponent.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CConstantBufferData.h">
+      <Filter>Asset\Shader\ConstantBuffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -233,9 +239,6 @@
     <ClCompile Include="Asset\Shader\CConstantBuffer.cpp">
       <Filter>Asset\Shader\ConstantBuffer\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Shader\CConstantBufferData.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Object\CGameObject.cpp">
       <Filter>Object</Filter>
     </ClCompile>
@@ -243,7 +246,13 @@
       <Filter>Compnent</Filter>
     </ClCompile>
     <ClCompile Include="Component\CSceneComponent.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Compnent\SceneComponent\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CMeshComponent.cpp">
+      <Filter>Compnent\SceneComponent\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CConstantBufferData.cpp">
+      <Filter>Asset\Shader\ConstantBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,8 @@
 #include <CEngine.h>
 
+#include "World/CMainWorld.h"
+#include "World/CWorldManager.h"
+
 #ifdef _DEBUG
 // link debug lib
 #pragma comment(lib, "Engine_Debug.lib")
@@ -23,6 +26,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		return 0;
 	}
+
+	CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);
 
 	int ret = CEngine::GetInst()->Run();
 

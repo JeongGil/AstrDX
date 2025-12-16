@@ -167,7 +167,7 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void Render() override;
-	CComponent* Clone() const override;
+	CSceneComponent* Clone() const override;
 	void Destroy() override;
 
 protected:

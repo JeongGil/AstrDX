@@ -7,16 +7,16 @@ class CWorld : public std::enable_shared_from_this<CWorld>
 {	
 public:
 	template <typename T>
-	std::weak_ptr<CGameObject> CreateGameObject(const std::string& Name)
+	std::weak_ptr<T> CreateGameObject(const std::string& Name)
 	{
-		std::shared_ptr<CGameObject> NewObject(new T);
+		std::shared_ptr<T> NewObject(new T);
 
 		NewObject->SetWorld(weak_from_this());
 		NewObject->SetName(Name);
 
 		if (!NewObject->Init())
 		{
-			return std::weak_ptr<CGameObject>();
+			return std::weak_ptr<T>();
 		}
 
 		Objects.push_back(NewObject);
@@ -28,12 +28,12 @@ protected:
 	std::list<std::shared_ptr<CGameObject>> Objects;
 
 public:
-	bool Init();
-	void Update(float DeltaTime);
-	void Render();
+	virtual bool Init();
+	virtual void Update(float DeltaTime);
+	virtual void Render();
 
 public:
 	CWorld();
-	~CWorld();
+	virtual ~CWorld();
 };
 

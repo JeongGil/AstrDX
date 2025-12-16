@@ -17,3 +17,7 @@ void CComponent::Destroy()
 {
 	bAlive = false;
 }
+
+CComponent::~CComponent()
+{
+}

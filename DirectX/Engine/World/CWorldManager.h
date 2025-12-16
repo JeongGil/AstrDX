@@ -1,10 +1,25 @@
 #pragma once
 
 #include "../EngineInfo.h"
+#include "CWorld.h"
 
-class CWorld;
 class CWorldManager
 {
+public:
+	template <typename T>
+	std::weak_ptr<T> CreateWorld(bool bNext = true)
+	{
+		std::shared_ptr<CWorld>& TargetWorld = bNext ? NextWorld : World;
+
+		TargetWorld = std::make_shared<T>();
+		if (!TargetWorld || !TargetWorld->Init())
+		{
+			return std::weak_ptr<T>();
+		}
+
+		return std::dynamic_pointer_cast<T>(TargetWorld);
+	}
+
 public:
 	std::weak_ptr<CWorld> GetWorld() const
 	{
@@ -13,6 +28,7 @@ public:
 
 private:
 	std::shared_ptr<CWorld> World;
+	std::shared_ptr<CWorld> NextWorld;
 
 public:
 	bool Init();

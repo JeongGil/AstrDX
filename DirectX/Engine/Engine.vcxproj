@@ -182,6 +182,7 @@
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CObject.h" />
     <ClInclude Include="Component\CComponent.h" />
+    <ClInclude Include="Component\CMeshComponent.h" />
     <ClInclude Include="Component\CSceneComponent.h" />
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="EngineInfo.h" />
@@ -218,6 +219,7 @@
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CObject.cpp" />
     <ClCompile Include="Component\CComponent.cpp" />
+    <ClCompile Include="Component\CMeshComponent.cpp" />
     <ClCompile Include="Component\CSceneComponent.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="FVector3.cpp" />

@@ -75,6 +75,6 @@ protected:
 	}
 
 public:
-	~CComponent() override = 0;
+	~CComponent() override;
 };
 
