@@ -37,6 +37,8 @@ protected:
 public:
 	bool Init() override;
 	void Render() override;
+
+protected:
 	CMeshComponent* Clone() const override;
 
 protected:

@@ -18,6 +18,11 @@ void CWorldManager::Update(const float DeltaTime)
 	World->Update(DeltaTime);
 }
 
+void CWorldManager::PostUpdate(const float DeltaTime)
+{
+	World->PostUpdate(DeltaTime);
+}
+
 void CWorldManager::Render()
 {
 	World->Render();

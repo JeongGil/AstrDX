@@ -67,67 +67,12 @@ void CEngine::Loop()
 void CEngine::Update(const float deltaTime)
 {
 	CWorldManager::GetInst()->Update(deltaTime);
+	CWorldManager::GetInst()->PostUpdate(deltaTime);
 }
 
 void CEngine::Render()
 {
 	CDevice::GetInst()->BeginRender();
-
-	// Print sample.
-	/*
-	{
-		auto WeakMeshMgr = CAssetManager::GetInst()->GetMeshManager();
-		auto WeakShaderMgr = CAssetManager::GetInst()->GetShaderManager();
-
-		auto MeshManager = WeakMeshMgr.lock();
-		auto ShaderManager = WeakShaderMgr.lock();
-
-		if (MeshManager && ShaderManager)
-		{
-			auto WeakShader = ShaderManager->FindShader("Color2D");
-			auto WeakMesh = MeshManager->FindMesh("CenterCubeColor");
-			//auto WeakMesh = MeshManager->FindMesh("CenterRectColor");
-
-			auto Shader = WeakShader.lock();
-			auto Mesh = WeakMesh.lock();
-
-			// Make world matrix.
-			FVector Scale(1.f, 1.f, 1.f);
-			FVector Rot(45.f, 45.f, 0.f);
-			FVector Pos = {};
-
-			FMatrix ScaleMat = FMatrix::StaticScaling(Scale);
-			FMatrix RotMat = FMatrix::StaticRotation(Rot);
-			FMatrix TransMat = FMatrix::StaticTranslation(Pos);
-			// Ret = V * SRT
-			FMatrix WorldMat = ScaleMat * RotMat * TransMat;
-
-			FVector CamPos(0.f, 0.f, -2.f);
-			FVector LookAt(0, 0, 0);
-			FVector CamUp(0, 1, 0);
-
-			FMatrix ViewMat = DirectX::XMMatrixLookAtLH(CamPos.Convert(), LookAt.Convert(), CamUp.Convert());
-
-			float Radian = DirectX::XMConvertToRadians(60);
-
-			FMatrix ProjMat = DirectX::XMMatrixPerspectiveFovLH(Radian, 1280.f / 720.f, 0.1f, 1000.f);
-
-			auto CBuffer = std::make_shared<CCBufferTransform>();
-
-			CBuffer->Init();
-
-			CBuffer->SetWorldMatrix(WorldMat);
-			CBuffer->SetViewMatrix(ViewMat);
-			CBuffer->SetProjMatrix(ProjMat);
-
-			CBuffer->UpdateBuffer();
-
-			Shader->SetShader();
-
-			Mesh->Render();
-		}
-	}
-	*/
 
 	CWorldManager::GetInst()->Render();
 

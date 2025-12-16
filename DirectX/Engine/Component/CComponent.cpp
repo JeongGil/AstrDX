@@ -9,6 +9,10 @@ void CComponent::Update(const float Delta)
 {
 }
 
+void CComponent::PostUpdate(const float Delta)
+{
+}
+
 void CComponent::Render()
 {
 }

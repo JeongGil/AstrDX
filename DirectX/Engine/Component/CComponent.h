@@ -49,29 +49,56 @@ protected:
 public:
 	virtual bool Init();
 	virtual void Update(const float Delta);
+	virtual void PostUpdate(const float Delta);
 	virtual void Render();
-	virtual CComponent* Clone() const = 0;
 	virtual void Destroy();
+
+protected:
+	virtual CComponent* Clone() const = 0;
 
 protected:
 	CComponent() = default;
 
-	CComponent(const CComponent& Other)
-		: CObject(Other),
-		World(Other.World),
-		Owner(Other.Owner),
-		Name(Other.Name)
+	CComponent(const CComponent& other)
+		: CObject(other),
+		  //World(other.World),
+		  //Owner(other.Owner),
+		  Name(other.Name),
+		  bAlive(other.bAlive)
 	{
 	}
 
-	CComponent(CComponent&& Other) noexcept
-		: CObject(std::move(Other)),
-		World(std::move(Other.World)),
-		Owner(std::move(Other.Owner))
-
+	CComponent(CComponent&& other) noexcept
+		: CObject(std::move(other)),
+		  //World(std::move(other.World)),
+		  //Owner(std::move(other.Owner)),
+		  Name(std::move(other.Name)),
+		  bAlive(other.bAlive)
 	{
-		Other.World.reset();
-		Other.Owner.reset();
+	}
+
+	CComponent& operator=(const CComponent& other)
+	{
+		if (this == &other)
+			return *this;
+		CObject::operator =(other);
+		//World = other.World;
+		//Owner = other.Owner;
+		Name = other.Name;
+		bAlive = other.bAlive;
+		return *this;
+	}
+
+	CComponent& operator=(CComponent&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
+		CObject::operator =(std::move(other));
+		//World = std::move(other.World);
+		//Owner = std::move(other.Owner);
+		Name = std::move(other.Name);
+		bAlive = other.bAlive;
+		return *this;
 	}
 
 public:

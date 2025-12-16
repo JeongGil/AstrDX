@@ -1,5 +1,6 @@
 #pragma once
 #include "CComponent.h"
+#include <array>
 
 enum class EComponentRender : unsigned char
 {
@@ -151,11 +152,11 @@ protected:
 	FVector WorldRotation;
 	FVector WorldPosition;
 
-	FVector3 WorldAxis[EAxis::End] =
+	std::array<FVector, EAxis::End> WorldAxis =
 	{
-		FVector3::Axis[EAxis::X],
-		FVector3::Axis[EAxis::Y],
-		FVector3::Axis[EAxis::Z],
+		FVector::Axis[EAxis::X],
+		FVector::Axis[EAxis::Y],
+		FVector::Axis[EAxis::Z],
 	};
 
 	FMatrix ScaleMatrix;
@@ -166,21 +167,104 @@ protected:
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
+	void PostUpdate(const float DeltaTime) override;
 	void Render() override;
-	CSceneComponent* Clone() const override;
 	void Destroy() override;
+
+protected:
+	CSceneComponent* Clone() const override;
 
 protected:
 	CSceneComponent() = default;
 
-	CSceneComponent(const CSceneComponent& ref)
-		: CComponent(ref)
+	CSceneComponent(const CSceneComponent& other)
+		: CComponent(other),
+		  //Parent(other.Parent),
+		  RenderType(other.RenderType),
+		  //Children(other.Children),
+		  bInheritScale(other.bInheritScale),
+		  bInheritRotation(other.bInheritRotation),
+		  RelativeScale(other.RelativeScale),
+		  RelativeRotation(other.RelativeRotation),
+		  RelativePosition(other.RelativePosition),
+		  WorldScale(other.WorldScale),
+		  WorldRotation(other.WorldRotation),
+		  WorldPosition(other.WorldPosition),
+		  WorldAxis(other.WorldAxis),
+		  ScaleMatrix(other.ScaleMatrix),
+		  RotationMatrix(other.RotationMatrix),
+		  TranslateMatrix(other.TranslateMatrix),
+		  WorldMatrix(other.WorldMatrix)
 	{
 	}
 
-	CSceneComponent(CSceneComponent&& ref) noexcept
-		: CComponent(std::move(ref))
+	CSceneComponent(CSceneComponent&& other) noexcept
+		: CComponent(std::move(other)),
+		  //Parent(std::move(other.Parent)),
+		  RenderType(other.RenderType),
+		  //Children(std::move(other.Children)),
+		  bInheritScale(other.bInheritScale),
+		  bInheritRotation(other.bInheritRotation),
+		  RelativeScale(std::move(other.RelativeScale)),
+		  RelativeRotation(std::move(other.RelativeRotation)),
+		  RelativePosition(std::move(other.RelativePosition)),
+		  WorldScale(std::move(other.WorldScale)),
+		  WorldRotation(std::move(other.WorldRotation)),
+		  WorldPosition(std::move(other.WorldPosition)),
+		  WorldAxis(std::move(other.WorldAxis)),
+		  ScaleMatrix(std::move(other.ScaleMatrix)),
+		  RotationMatrix(std::move(other.RotationMatrix)),
+		  TranslateMatrix(std::move(other.TranslateMatrix)),
+		  WorldMatrix(std::move(other.WorldMatrix))
 	{
+	}
+
+	CSceneComponent& operator=(const CSceneComponent& other)
+	{
+		if (this == &other)
+			return *this;
+		CComponent::operator =(other);
+		//Parent = other.Parent;
+		RenderType = other.RenderType;
+		//Children = other.Children;
+		bInheritScale = other.bInheritScale;
+		bInheritRotation = other.bInheritRotation;
+		RelativeScale = other.RelativeScale;
+		RelativeRotation = other.RelativeRotation;
+		RelativePosition = other.RelativePosition;
+		WorldScale = other.WorldScale;
+		WorldRotation = other.WorldRotation;
+		WorldPosition = other.WorldPosition;
+		WorldAxis = other.WorldAxis;
+		ScaleMatrix = other.ScaleMatrix;
+		RotationMatrix = other.RotationMatrix;
+		TranslateMatrix = other.TranslateMatrix;
+		WorldMatrix = other.WorldMatrix;
+		return *this;
+	}
+
+	CSceneComponent& operator=(CSceneComponent&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
+		CComponent::operator =(std::move(other));
+		//Parent = std::move(other.Parent);
+		RenderType = other.RenderType;
+		//Children = std::move(other.Children);
+		bInheritScale = other.bInheritScale;
+		bInheritRotation = other.bInheritRotation;
+		RelativeScale = std::move(other.RelativeScale);
+		RelativeRotation = std::move(other.RelativeRotation);
+		RelativePosition = std::move(other.RelativePosition);
+		WorldScale = std::move(other.WorldScale);
+		WorldRotation = std::move(other.WorldRotation);
+		WorldPosition = std::move(other.WorldPosition);
+		WorldAxis = std::move(other.WorldAxis);
+		ScaleMatrix = std::move(other.ScaleMatrix);
+		RotationMatrix = std::move(other.RotationMatrix);
+		TranslateMatrix = std::move(other.TranslateMatrix);
+		WorldMatrix = std::move(other.WorldMatrix);
+		return *this;
 	}
 
 public:

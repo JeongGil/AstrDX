@@ -24,12 +24,36 @@ public:
 		return NewObject;
 	}
 
+	template <typename T>
+	std::weak_ptr<T> CreateCloneGameObject(const std::string& Name, const std::weak_ptr<T>& WeakOrigin)
+	{
+		if (WeakOrigin.expired())
+		{
+			return std::weak_ptr<T>();
+		}
+
+		const auto& Origin = WeakOrigin.lock();
+		if (!Origin)
+		{
+			return;
+		}
+
+		std::shared_ptr<T> NewObject(Origin->Clone());
+
+		NewObject->SetName(Name);
+
+		Objects.push_back(NewObject);
+
+		return NewObject;
+	}
+
 protected:
 	std::list<std::shared_ptr<CGameObject>> Objects;
 
 public:
 	virtual bool Init();
-	virtual void Update(float DeltaTime);
+	virtual void Update(const float DeltaTime);
+	virtual void PostUpdate(const float DeltaTime);
 	virtual void Render();
 
 public:

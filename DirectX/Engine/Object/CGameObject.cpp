@@ -1,15 +1,33 @@
 #include "CGameObject.h"
 
+void CGameObject::SetWorld(const std::weak_ptr<CWorld>& World)
+{
+	this->World = World;
+
+	for (const auto& Cmp : SceneComponents)
+	{
+		Cmp->SetWorld(World);
+	}
+}
+
 bool CGameObject::Init()
 {
 	return true;
 }
 
-void CGameObject::Update(float DeltaTime)
+void CGameObject::Update(const float DeltaTime)
 {
 	if (const auto Root = this->Root.lock())
 	{
 		Root->Update(DeltaTime);
+	}
+}
+
+void CGameObject::PostUpdate(const float DeltaTime)
+{
+	if (const auto Root = this->Root.lock())
+	{
+		Root->PostUpdate(DeltaTime);
 	}
 }
 
@@ -29,12 +47,4 @@ CGameObject* CGameObject::Clone()
 void CGameObject::Destroy()
 {
 	bAlive = false;
-}
-
-CGameObject::CGameObject()
-{
-}
-
-CGameObject::~CGameObject()
-{
 }

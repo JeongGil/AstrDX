@@ -32,7 +32,8 @@ private:
 
 public:
 	bool Init();
-	void Update(float DeltaTime);
+	void Update(const float DeltaTime);
+	void PostUpdate(const float DeltaTime);
 	void Render();
 
 public:

@@ -6,24 +6,26 @@ class CSceneComponent;
 class CWorld;
 
 class CGameObject :
-    public CObject
+	public CObject
 {
 	friend class CWorld;
 
 public:
-	void SetName(const std::string& Name)
-	{
-		this->Name = Name;
-	}
-
 	std::weak_ptr<CWorld> GetWorld() const
 	{
 		return World;
 	}
 
-	void SetWorld(const std::weak_ptr<CWorld>& World)
+	void SetWorld(const std::weak_ptr<CWorld>& World);
+
+	std::weak_ptr<CSceneComponent> GetRootComponent() const
 	{
-		this->World = World;
+		return Root;
+	}
+
+	void SetName(const std::string& Name)
+	{
+		this->Name = Name;
 	}
 
 	bool GetAlive() const
@@ -35,15 +37,18 @@ protected:
 	std::weak_ptr<CWorld> World;
 	std::vector<std::shared_ptr<CSceneComponent>> SceneComponents;
 	std::weak_ptr<CSceneComponent> Root;
-	std::string Name;	
+	std::string Name;
 	bool bAlive = true;
 
 public:
 	virtual bool Init();
-	virtual void Update(float DeltaTime);
+	virtual void Update(const float DeltaTime);
+	virtual void PostUpdate(const float DeltaTime);
 	virtual void Render();
-	virtual CGameObject* Clone();
 	virtual void Destroy();
+
+protected:
+	virtual CGameObject* Clone();
 
 public:
 	template <typename T>
@@ -102,18 +107,100 @@ public:
 	}
 
 protected:
-	CGameObject();
-	CGameObject(const CGameObject& ref)
-		: CObject(ref)
+	CGameObject() = default;
+
+	void CloneAndSetHierarchyComponents(const CGameObject& other)
 	{
+		// Copy and set root.
+		for (const auto& OtherCmp : other.SceneComponents)
+		{
+			std::shared_ptr<CSceneComponent> Cloned(OtherCmp->Clone());
+			SceneComponents.push_back(Cloned);
+
+			auto OtherRoot = other.Root.lock();
+
+			if (OtherCmp == OtherRoot)
+			{
+				Root = Cloned;
+			}
+		}
+
+		// Set hierarchy.
+		size_t Size = other.SceneComponents.size();
+		for (size_t i = 0; i < Size; i++)
+		{
+			const auto& OtherCmp = other.SceneComponents[i];
+			if (OtherCmp->Parent.expired())
+			{
+				continue;
+			}
+
+			auto OtherParent = OtherCmp->Parent.lock();
+			for (size_t j = 0; j < Size; j++)
+			{
+				// Find parent idx from other components.
+				if (OtherParent == other.SceneComponents[j])
+				{
+					// Set parent-child using idx.
+					SceneComponents[j]->AddChild(SceneComponents[i]);
+
+					break;
+				}
+			}
+		}
 	}
 
-	CGameObject(CGameObject&& ref) noexcept
-		: CObject(std::move(ref))
+	CGameObject(const CGameObject& other)
+		: CObject(other),
+		World(other.World),
+		//SceneComponents(other.SceneComponents),
+		//Root(other.Root),
+		Name(other.Name),
+		bAlive(other.bAlive)
 	{
+		CloneAndSetHierarchyComponents(other);
+	}
+
+	CGameObject(CGameObject&& other) noexcept
+		: CObject(std::move(other)),
+		World(std::move(other.World)),
+		SceneComponents(std::move(other.SceneComponents)),
+		Root(std::move(other.Root)),
+		Name(std::move(other.Name)),
+		bAlive(other.bAlive)
+	{
+		other.SceneComponents.clear();
+		other.Root.reset();
+	}
+
+	CGameObject& operator=(const CGameObject& other)
+	{
+		if (this == &other)
+			return *this;
+		CObject::operator =(other);
+		World = other.World;
+		//SceneComponents = other.SceneComponents;
+		//Root = other.Root;
+		CloneAndSetHierarchyComponents(other);
+		Name = other.Name;
+		bAlive = other.bAlive;
+		return *this;
+	}
+
+	CGameObject& operator=(CGameObject&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
+		CObject::operator =(std::move(other));
+		World = std::move(other.World);
+		SceneComponents = std::move(other.SceneComponents);
+		Root = std::move(other.Root);
+		Name = std::move(other.Name);
+		bAlive = other.bAlive;
+		return *this;
 	}
 
 public:
-	~CGameObject() override;
+	~CGameObject() override = default;
 };
 
