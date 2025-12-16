@@ -39,7 +39,7 @@ public:
 		}
 
 		std::shared_ptr<T> NewObject;
-		NewObject.reset(new T);
+		NewObject.reset(Origin->Clone());
 
 		NewObject->SetName(Name);
 
