@@ -4,7 +4,7 @@
 #include "../Object/CGameObject.h"
 
 class CWorld : public std::enable_shared_from_this<CWorld>
-{	
+{
 public:
 	template <typename T>
 	std::weak_ptr<T> CreateGameObject(const std::string& Name)
@@ -35,10 +35,11 @@ public:
 		const auto& Origin = WeakOrigin.lock();
 		if (!Origin)
 		{
-			return;
+			return std::weak_ptr<T>();
 		}
 
-		std::shared_ptr<T> NewObject(Origin->Clone());
+		std::shared_ptr<T> NewObject;
+		NewObject.reset(new T);
 
 		NewObject->SetName(Name);
 
