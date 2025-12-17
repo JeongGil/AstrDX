@@ -4,6 +4,7 @@ void CSceneComponent::AddChild(const std::weak_ptr<CSceneComponent>& Child)
 {
 	if (auto Shared = Child.lock())
 	{
+		Shared->Parent = std::dynamic_pointer_cast<CSceneComponent>(shared_from_this());
 		Children.push_back(Child);
 
 		Shared->SetRelativeScale(RelativeScale);
