@@ -24,7 +24,10 @@ void CMeshComponent::SetShader(const std::string& Key)
 bool CMeshComponent::Init()
 {
 	CBufferTransform.reset(new CCBufferTransform);
-	CBufferTransform->Init();
+	if (!CBufferTransform->Init())
+	{
+		return false;
+	}
 
 	return true;
 }

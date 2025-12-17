@@ -78,6 +78,7 @@
     <None Include="..\Bin\Asset\Shader\Share.hlsli">
       <Filter>Asset\Shader\HLSL</Filter>
     </None>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">

@@ -35,7 +35,29 @@ protected:
 	std::shared_ptr<CCBufferTransform> CBufferTransform;
 
 public:
+	/**
+	 * @brief Initializes the mesh component and its associated resources.
+	 *
+	 * This method sets up the necessary resources for the mesh component, including
+	 * the creation and initialization of the constant buffer for transformation matrices.
+	 *
+	 * @return `true` if the initialization is successful, otherwise `false`.
+	 */
 	bool Init() override;
+
+	/**
+	 * @brief Renders the mesh component using its associated shader and transformation matrices.
+	 *
+	 * This method performs the rendering of the mesh component by:
+	 * - Validating the availability of the associated shader and mesh.
+	 * - Setting up the view and projection matrices for the camera.
+	 * - Updating the constant buffer with the world, view, and projection matrices.
+	 * - Activating the shader and rendering the mesh.
+	 * - Invoking the render method of the base class to ensure hierarchical rendering.
+	 *
+	 * The method ensures that the component is rendered correctly in the 3D scene
+	 * with the appropriate transformations and shader effects.
+	 */
 	void Render() override;
 
 protected:

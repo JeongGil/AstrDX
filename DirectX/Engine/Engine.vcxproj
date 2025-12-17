@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\Bin\Asset\Shader\Share.hlsli" />
+    <None Include="ClassDiagram.cd" />
     <None Include="Copy.bat" />
   </ItemGroup>
   <ItemGroup>

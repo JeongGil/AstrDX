@@ -135,6 +135,24 @@ protected:
 	virtual CGameObject* Clone();
 
 public:
+	/**
+	 * @brief Creates a new component of the specified type and attaches it to the game object.
+	 *
+	 * This template method allows the creation of a component of type `T` and associates it with
+	 * the current game object. The component is initialized with the provided name and optionally
+	 * attached to a parent component specified by its name.
+	 *
+	 * @tparam T The type of the component to be created. Must be derived from `CSceneComponent`.
+	 * @param Name The name of the new component.
+	 * @param ParentName The name of the parent component to which the new component will be attached.
+	 *                   Defaults to "Root" if no parent is specified.
+	 * @return A weak pointer to the newly created component of type `T`. Returns an empty weak pointer
+	 *         if the component initialization fails.
+	 *
+	 * @note The created component is automatically added to the game object's list of components.
+	 *       If the parent component is not found, the new component is attached to the root component.
+	 *       Ensure that the type `T` has a default constructor and implements the `Init` method.
+	 */
 	template <typename T>
 	std::weak_ptr<T> CreateComponent(const std::string& Name, const std::string& ParentName = "Root")
 	{
@@ -193,6 +211,18 @@ public:
 protected:
 	CGameObject() = default;
 
+	/**
+	 * @brief Clones the hierarchy of scene components from another game object and sets them for the current object.
+	 *
+	 * This method duplicates the scene components of the specified game object, maintaining their hierarchy
+	 * relationships, and assigns them to the current game object. The root component and parent-child relationships
+	 * are preserved during the cloning process.
+	 *
+	 * @param other The game object whose scene components and hierarchy are to be cloned.
+	 *
+	 * @note This method ensures that the cloned components are properly initialized and linked to the current game object.
+	 *       It is typically used in copy constructors or assignment operators to replicate the state of another game object.
+	 */
 	void CloneAndSetHierarchyComponents(const CGameObject& other)
 	{
 		// Copy and set root.
@@ -255,6 +285,7 @@ protected:
 	{
 		other.SceneComponents.clear();
 		other.Root.reset();
+		other.bAlive = false;
 	}
 
 	CGameObject& operator=(const CGameObject& other)
@@ -281,6 +312,7 @@ protected:
 		Root = std::move(other.Root);
 		Name = std::move(other.Name);
 		bAlive = other.bAlive;
+		other.bAlive = false;
 		return *this;
 	}
 

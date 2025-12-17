@@ -14,7 +14,30 @@ class CSceneComponent :
 	friend class CGameObject;
 
 public:
+	/**
+	 * @brief Adds a child scene component to the current component.
+	 *
+	 * This method establishes a parent-child relationship between the current
+	 * scene component and the specified child component. The child's relative
+	 * transformations (scale, rotation, and position) are updated to match
+	 * those of the parent component.
+	 *
+	 * @param Child A weak pointer to the child scene component to be added.
+	 *              If the child component is valid, it will be added to the
+	 *              list of children for this component.
+	 */
 	void AddChild(const std::weak_ptr<CSceneComponent>& Child);
+
+	/**
+	 * @brief Updates the transformation matrices of the scene component.
+	 *
+	 * This method recalculates the component's world transformation matrices, including
+	 * scaling, rotation, and translation, based on the current world scale, rotation,
+	 * and position. The resulting transformation is stored in the world matrix.
+	 *
+	 * This function is typically called during the update cycle to ensure that the
+	 * component's transformations are up-to-date before rendering or further processing.
+	 */
 	void UpdateTransform();
 
 public:
@@ -135,12 +158,44 @@ protected:
 	FMatrix ScaleMatrix;
 	FMatrix RotationMatrix;
 	FMatrix TranslateMatrix;
+
+	/**
+	 * @brief Represents the world transformation matrix of the scene component.
+	 *
+	 * This matrix encapsulates the combined transformations of scaling, rotation,
+	 * and translation in world space. It is computed based on the component's
+	 * relative transformations and any inherited transformations from parent components.
+	 *
+	 * The world matrix is used for rendering and spatial calculations, ensuring
+	 * the component is correctly positioned and oriented in the 3D world.
+	 */
 	FMatrix WorldMatrix;
 
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
+
+	/**
+	 * @brief Performs post-update operations for the scene component and its children.
+	 *
+	 * This method is called after the main update to apply transformations and propagate
+	 * updates to all child components in the hierarchy. It ensures that the component's
+	 * transform is updated and recursively calls the same method on all child components.
+	 *
+	 * @param DeltaTime The time elapsed since the last update, used for time-dependent operations.
+	 */
 	void PostUpdate(const float DeltaTime) override;
+
+	/**
+	 * @brief Renders the scene component and its child components.
+	 *
+	 * This method is responsible for rendering the current scene component and
+	 * recursively rendering all its child components. It ensures that the entire
+	 * hierarchy of components is rendered in the correct order.
+	 *
+	 * This function is typically called during the rendering phase of the game loop
+	 * to draw the component and its children to the screen.
+	 */
 	void Render() override;
 	void Destroy() override;
 

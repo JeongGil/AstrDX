@@ -37,9 +37,9 @@ void CPathManager::Clear()
 	Paths.clear();
 }
 
-bool CPathManager::CreatePath(const std::string& Name, const TCHAR* Path, const std::string& BasePathName)
+bool CPathManager::CreatePath(const std::string& Key, const TCHAR* Path, const std::string& BasePathName)
 {
-	if (Paths.contains(Name))
+	if (Paths.contains(Key))
 	{
 		return false;
 	}
@@ -56,7 +56,7 @@ bool CPathManager::CreatePath(const std::string& Name, const TCHAR* Path, const 
 	lstrcpy(FullPath, BasePath);
 	lstrcat(FullPath, Path);
 
-	Paths.emplace(Name, FullPath);
+	Paths.emplace(Key, FullPath);
 
 	return true;
 }
