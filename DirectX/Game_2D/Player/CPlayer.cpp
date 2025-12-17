@@ -4,6 +4,7 @@
 
 #include "CBullet.h"
 #include "Component/CMeshComponent.h"
+#include "Component/CCameraComponent.h"
 
 bool CPlayer::Init()
 {
@@ -35,6 +36,12 @@ bool CPlayer::Init()
 		Mesh->SetInheritScale(false);
 		Mesh->SetRelativePosition(1.f, 0.f, 0.f);
 		Mesh->SetRelativeScale(0.2f, 0.2f, 0.2f);
+	}
+
+	CameraComponent = CreateComponent<CCameraComponent>("PlayerCamera");
+	if (auto Cam = CameraComponent.lock())
+	{
+		Cam->SetRelativePosition(0, 0, -5);
 	}
 
 	return true;

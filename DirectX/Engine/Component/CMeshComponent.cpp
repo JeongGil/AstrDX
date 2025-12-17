@@ -2,6 +2,8 @@
 
 #include "../Asset/Mesh/CMesh.h"
 #include "../Asset/Shader/CCBufferTransform.h"
+#include "../World/CWorld.h"
+#include "../World/CCameraManager.h"
 
 void CMeshComponent::SetMesh(const std::string& Key)
 {
@@ -42,14 +44,17 @@ void CMeshComponent::Render()
 	auto Shader = this->Shader.lock();
 	auto Mesh = this->Mesh.lock();
 
-	FVector CamPos(0, 0, -5);
-	FVector LookAt(0, 0, 0);
-	FVector CamUp(0, 1, 0);
+	FMatrix ViewMat;
+	FMatrix ProjMat;
 
-	FMatrix ViewMat = DirectX::XMMatrixLookAtLH(CamPos.Convert(), LookAt.Convert(), CamUp.Convert());
-
-	float Radian = DirectX::XMConvertToRadians(60);
-	FMatrix ProjMat = DirectX::XMMatrixPerspectiveFovLH(Radian, 1280.f/720, 0.1f, 1000);
+	if (auto World=this->World.lock())
+	{
+		if (auto CamMgr = World->GetCameraManager().lock())
+		{
+			ViewMat = CamMgr->GetViewMatrix();
+			ProjMat = CamMgr->GetProjectionMatrix();
+		}
+	}
 
 	CBufferTransform->SetWorldMatrix(WorldMatrix);
 	CBufferTransform->SetViewMatrix(ViewMat);

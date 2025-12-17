@@ -3,8 +3,8 @@
 bool CDevice::Init(const HWND window, const int width, const int height, const bool windowMode)
 {
 	this->window = window;
-	resolution.Width = width;
-	resolution.Height = height;
+	Resolution.Width = width;
+	Resolution.Height = height;
 	
 	UINT flag{ 0u };
 #ifdef _DEBUG
@@ -14,7 +14,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	D3D_FEATURE_LEVEL featureLevelResult;
 
 	if (FAILED(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, flag, &featureLevel, 1,
-		D3D11_SDK_VERSION, &device, &featureLevelResult, &context)))
+		D3D11_SDK_VERSION, &Device, &featureLevelResult, &Context)))
 	{
 		return false;
 	}
@@ -22,7 +22,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	//UINT sampleCount{ 4u };
 	//UINT quality{ 0u };
 	//UINT maxQuality{ 0u };
-	//if (SUCCEEDED(device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &quality)))
+	//if (SUCCEEDED(Device->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, sampleCount, &quality)))
 	//{
 	//	if (quality < 1u)
 	//	{
@@ -78,7 +78,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	};
 
 	IDXGIDevice* DXGIDevice = nullptr;
-	if (FAILED(device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice)))
+	if (FAILED(Device->QueryInterface(__uuidof(IDXGIDevice), (void**)&DXGIDevice)))
 	{
 		return false;
 	}
@@ -100,7 +100,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 		return false;
 	}
 
-	if (FAILED(factory->CreateSwapChain(device, &swapDesc, &swapChain)))
+	if (FAILED(factory->CreateSwapChain(Device, &swapDesc, &SwapChain)))
 	{
 		factory->Release();
 		adapter->Release();
@@ -114,12 +114,12 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	DXGIDevice->Release();
 
 	ID3D11Texture2D* backBuffer = nullptr;
-	if (FAILED(swapChain->GetBuffer(0u, __uuidof(ID3D11Texture2D), (void**)&backBuffer)))
+	if (FAILED(SwapChain->GetBuffer(0u, __uuidof(ID3D11Texture2D), (void**)&backBuffer)))
 	{
 		return false;
 	}
 
-	if (FAILED(device->CreateRenderTargetView(backBuffer, nullptr, &targetView)))
+	if (FAILED(Device->CreateRenderTargetView(backBuffer, nullptr, &TargetView)))
 	{
 		backBuffer->Release();
 
@@ -147,12 +147,12 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	};
 
 	ID3D11Texture2D* depthBuffer = nullptr;
-	if (FAILED(device->CreateTexture2D(&depthDesc, nullptr, &depthBuffer)))
+	if (FAILED(Device->CreateTexture2D(&depthDesc, nullptr, &depthBuffer)))
 	{
 		return false;
 	}
 
-	if (FAILED( device->CreateDepthStencilView(depthBuffer, nullptr, &depthView)))
+	if (FAILED( Device->CreateDepthStencilView(depthBuffer, nullptr, &DepthView)))
 	{
 		depthBuffer->Release();
 
@@ -171,7 +171,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 		.MaxDepth = 1.f,
 	};
 
-	context->RSSetViewports(1, &vp);
+	Context->RSSetViewports(1, &vp);
 
 	return true;
 }
@@ -179,17 +179,17 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 void CDevice::ClearBackBuffer()
 {
 	constexpr float color[4] = {};
-	context->ClearRenderTargetView(targetView, color);
+	Context->ClearRenderTargetView(TargetView, color);
 }
 
 void CDevice::ClearDepthStencil(const float depth, const UINT8 stencil)
 {
-	context->ClearDepthStencilView(depthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
+	Context->ClearDepthStencilView(DepthView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
 }
 
 void CDevice::SetTarget()
 {
-	context->OMSetRenderTargets(1, &targetView, depthView);
+	Context->OMSetRenderTargets(1, &TargetView, DepthView);
 }
 
 void CDevice::BeginRender()
@@ -201,7 +201,7 @@ void CDevice::BeginRender()
 
 void CDevice::EndRender()
 {
-	swapChain->Present(0u, 0u);
+	SwapChain->Present(0u, 0u);
 }
 
 CDevice::CDevice()
@@ -210,29 +210,29 @@ CDevice::CDevice()
 
 CDevice::~CDevice()
 {
-	if (targetView)
+	if (TargetView)
 	{
-		targetView->Release();
+		TargetView->Release();
 	}
 
-	if (depthView)
+	if (DepthView)
 	{
-		depthView->Release();
+		DepthView->Release();
 	}
 
-	if (swapChain)
+	if (SwapChain)
 	{
-		swapChain->Release();
+		SwapChain->Release();
 	}
 
-	if (context)
+	if (Context)
 	{
-		context->ClearState();
-		context->Release();
+		Context->ClearState();
+		Context->Release();
 	}
 
-	if (device)
+	if (Device)
 	{
-		device->Release();
+		Device->Release();
 	}
 }

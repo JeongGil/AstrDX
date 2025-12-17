@@ -2,6 +2,12 @@
 
 bool CWorld::Init()
 {
+	CameraManager.reset(new CCameraManager);
+	if (!CameraManager->Init())
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -20,6 +26,8 @@ void CWorld::Update(const float DeltaTime)
 		(*Curr)->Update(DeltaTime);
 		++Curr;
 	}
+
+	CameraManager->Update(DeltaTime);
 }
 
 void CWorld::PostUpdate(const float DeltaTime)

@@ -70,6 +70,12 @@
     <Filter Include="Compnent\SceneComponent\Mesh">
       <UniqueIdentifier>{c88daf8f-ea83-419e-98a1-9d0f8385bd80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compnent\SceneComponent\Camera">
+      <UniqueIdentifier>{bd17ee18-44a4-4b8f-8fcd-e81a2a511f09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World\Camera">
+      <UniqueIdentifier>{5ee2aecf-e7c8-409d-8782-67afb4f8552e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -162,14 +168,20 @@
     <ClInclude Include="Component\CComponent.h">
       <Filter>Compnent</Filter>
     </ClInclude>
-    <ClInclude Include="Component\CSceneComponent.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\CMeshComponent.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\Shader\CConstantBufferData.h">
       <Filter>Asset\Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CCameraManager.h">
+      <Filter>World\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CCameraComponent.h">
+      <Filter>Compnent\SceneComponent\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CSceneComponent.h">
+      <Filter>Compnent\SceneComponent\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CMeshComponent.h">
+      <Filter>Compnent\SceneComponent\Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -254,6 +266,15 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CConstantBufferData.cpp">
       <Filter>Asset\Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CCameraManager.cpp">
+      <Filter>World\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CCameraComponent.cpp">
+      <Filter>Compnent\SceneComponent\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="FMatrix.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

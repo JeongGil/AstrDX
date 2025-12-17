@@ -2,6 +2,7 @@
 #include "Object/CGameObject.h"
 
 class CMeshComponent;
+class CCameraComponent;
 
 class CPlayer :
 	public CGameObject
@@ -16,6 +17,7 @@ private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CSceneComponent> Rotation;
 	std::weak_ptr<CMeshComponent> SubMeshComponent;
+	std::weak_ptr<CCameraComponent> CameraComponent;
 
 public:
 	CPlayer() = default;

@@ -86,46 +86,51 @@ public:
 
 	ID3D11Device* GetDevice() const
 	{
-		return device;
+		return Device;
 	}
 
 	ID3D11DeviceContext* GetContext() const
 	{
-		return context;
+		return Context;
+	}
+
+	[[nodiscard]] FResolution GetResolution() const
+	{
+		return Resolution;
 	}
 
 private:
 	// It is mainly used when creating resources.
-	ID3D11Device* device = nullptr;
-	ID3D11DeviceContext* context = nullptr;
-	IDXGISwapChain* swapChain = nullptr;
-	ID3D11RenderTargetView* targetView = nullptr;
-	ID3D11DepthStencilView* depthView = nullptr;
+	ID3D11Device* Device = nullptr;
+	ID3D11DeviceContext* Context = nullptr;
+	IDXGISwapChain* SwapChain = nullptr;
+	ID3D11RenderTargetView* TargetView = nullptr;
+	ID3D11DepthStencilView* DepthView = nullptr;
 
-	FResolution resolution;
+	FResolution Resolution;
 
 	HWND window = nullptr;
 
 public:
 	static CDevice* GetInst()
 	{
-		if (inst == nullptr)
+		if (Inst == nullptr)
 		{
-			inst = new CDevice;
+			Inst = new CDevice;
 		}
 
-		return inst;
+		return Inst;
 	}
 
 	static void DestroyInst()
 	{
-		SAFE_DELETE(inst)
+		SAFE_DELETE(Inst)
 	}
 
 private:
 	CDevice();
 	~CDevice();
 
-	inline static CDevice* inst = nullptr;
+	inline static CDevice* Inst = nullptr;
 };
 

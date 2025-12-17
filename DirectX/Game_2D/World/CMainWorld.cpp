@@ -5,6 +5,8 @@
 
 bool CMainWorld::Init()
 {
+	CWorld::Init();
+
 	auto WeakPlayer = CreateGameObject<CPlayer>("Player");
 
 	auto WeakMonster = CreateGameObject<CMonster>("Monster");

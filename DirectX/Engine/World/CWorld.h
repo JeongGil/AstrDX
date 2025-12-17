@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CCameraManager.h"
 #include "../EngineInfo.h"
 #include "../Object/CGameObject.h"
 
@@ -73,8 +74,14 @@ public:
 		return NewObject;
 	}
 
+	[[nodiscard]] std::weak_ptr<CCameraManager> GetCameraManager() const
+	{
+		return CameraManager;
+	}
+
 protected:
 	std::list<std::shared_ptr<CGameObject>> Objects;
+	std::shared_ptr<CCameraManager> CameraManager;
 
 public:
 	virtual bool Init();

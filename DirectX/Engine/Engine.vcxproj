@@ -182,6 +182,7 @@
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CObject.h" />
+    <ClInclude Include="Component\CCameraComponent.h" />
     <ClInclude Include="Component\CComponent.h" />
     <ClInclude Include="Component\CMeshComponent.h" />
     <ClInclude Include="Component\CSceneComponent.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="FVector4.h" />
     <ClInclude Include="Object\CGameObject.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="World\CCameraManager.h" />
     <ClInclude Include="World\CWorld.h" />
     <ClInclude Include="World\CWorldManager.h" />
   </ItemGroup>
@@ -219,13 +221,16 @@
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="Component\CCameraComponent.cpp" />
     <ClCompile Include="Component\CComponent.cpp" />
     <ClCompile Include="Component\CMeshComponent.cpp" />
     <ClCompile Include="Component\CSceneComponent.cpp" />
     <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector3.cpp" />
     <ClCompile Include="FVector4.cpp" />
     <ClCompile Include="Object\CGameObject.cpp" />
+    <ClCompile Include="World\CCameraManager.cpp" />
     <ClCompile Include="World\CWorld.cpp" />
     <ClCompile Include="World\CWorldManager.cpp" />
   </ItemGroup>

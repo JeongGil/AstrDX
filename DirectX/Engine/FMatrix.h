@@ -56,6 +56,8 @@ __declspec(align(16)) union FMatrix
 
 	FMatrix& operator = (const FMatrix& _m)
 	{
+		if (this == &_m)
+			return *this;
 		m = _m.m;
 		return *this;
 	}
@@ -82,7 +84,7 @@ __declspec(align(16)) union FMatrix
 		return { m * _m };
 	}
 
-	void Identity()
+	void SetIdentity()
 	{
 		m = DirectX::XMMatrixIdentity();
 	}
@@ -301,5 +303,17 @@ __declspec(align(16)) union FMatrix
 	static FMatrix StaticTranslation(float x, float y)
 	{
 		return DirectX::XMMatrixTranslation(x, y, 0.f);
+	}
+
+	static FMatrix Identity;
+
+	void* operator new(size_t size)
+	{
+		return _aligned_malloc(size, 16);
+	}
+
+	void operator delete(void* p)
+	{
+		_aligned_free(p);
 	}
 };

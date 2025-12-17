@@ -9,7 +9,7 @@ public:
 	 * @brief Initializes the engine and its essential components.
 	 *
 	 * This method sets up the engine by registering the window class, creating the application window,
-	 * and initializing core subsystems such as the device, asset manager, and world manager.
+	 * and initializing core subsystems such as the Device, asset manager, and world manager.
 	 *
 	 * @param hInstance The handle to the current instance of the application.
 	 * @param WindowName The name of the application window.

@@ -20,19 +20,24 @@ public:
 		return World;
 	}
 
-	std::weak_ptr<CGameObject> GetOwner() const
-	{
-		return Owner;
-	}
-
 	void SetWorld(std::weak_ptr<CWorld> World)
 	{
 		this->World = World;
 	}
 
+	std::weak_ptr<CGameObject> GetOwner() const
+	{
+		return Owner;
+	}
+
 	void SetOwner(std::weak_ptr<CGameObject> Owner)
 	{
 		this->Owner = Owner;
+	}
+
+	const std::string& GetName() const
+	{
+		return Name;
 	}
 
 	void SetName(const std::string& Name)
