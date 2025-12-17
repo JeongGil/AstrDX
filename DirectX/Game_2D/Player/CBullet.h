@@ -9,7 +9,7 @@ class CBullet :
 	friend class CWorld;
 
 private:
-	float Distance = 2.f;
+	float Distance = 600;
 
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;

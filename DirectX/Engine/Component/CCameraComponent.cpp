@@ -29,13 +29,13 @@ void CCameraComponent::SetProjection(EProjectionType Type, float ViewAngleDegree
 	}
 }
 
+CCameraComponent* CCameraComponent::Clone() const
+{
+	return new CCameraComponent(*this);
+}
+
 bool CCameraComponent::Init()
 {
-	if (!CSceneComponent::Init())
-	{
-		return false;
-	}
-
 	FResolution Resolution = CDevice::GetInst()->GetResolution();
 	SetProjection(EProjectionType::Perspective, 90, Resolution.Width, Resolution.Height, 1000);
 

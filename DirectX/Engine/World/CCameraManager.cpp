@@ -23,6 +23,11 @@ void CCameraManager::SetMainCamera(const std::string& Key)
 	}
 }
 
+void CCameraManager::SetMainCamera(const std::weak_ptr<CCameraComponent>& Camera)
+{
+	MainCamera = Camera;
+}
+
 const FVector& CCameraManager::GetMainCameraWorldPosition() const
 {
 	if (auto Cam = MainCamera.lock())

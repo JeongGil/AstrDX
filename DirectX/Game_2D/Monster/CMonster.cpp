@@ -15,7 +15,8 @@ bool CMonster::Init()
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("Color2D");
-		Mesh->SetMesh("CenterCubeColor");
+		Mesh->SetMesh("CenterRectColor");
+		Mesh->SetRelativeScale(100, 100);
 	}
 
 	return true;
@@ -38,8 +39,7 @@ void CMonster::Update(const float DeltaTime)
 
 			if (auto Bullet = WeakBullet.lock())
 			{
-				Bullet->SetWorldScale(0.3f, 0.3f, 0.3f);
-				Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 0.4f);
+				Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75);
 				Bullet->SetWorldRotation(GetWorldRotation());
 			}
 		}

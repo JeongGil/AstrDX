@@ -12,7 +12,7 @@ bool CMainWorld::Init()
 	auto WeakMonster = CreateGameObject<CMonster>("Monster");
 	if (auto Monster = WeakMonster.lock())
 	{
-		Monster->SetWorldPosition(-1.f, 1.f, 0.f);
+		Monster->SetWorldPosition(-400, 300);
 		Monster->SetWorldRotationZ(180.f);
 		Monster->SetWorldScale(0.5f, 0.5f, 0.5f);
 	}
@@ -20,7 +20,7 @@ bool CMainWorld::Init()
 	WeakMonster = CreateGameObject<CMonster>("Monster");
 	if (auto Monster = WeakMonster.lock())
 	{
-		Monster->SetWorldPosition(1.f, 1.f, 0.f);
+		Monster->SetWorldPosition(400, 300);
 		Monster->SetWorldRotationZ(180.f);
 		Monster->SetWorldScale(0.5f, 0.5f, 0.5f);
 	}

@@ -80,6 +80,8 @@ protected:
 		  Mesh(std::move(other.Mesh)),
 		  CBufferTransform(std::move(other.CBufferTransform))
 	{
+		other.Shader.reset();
+		other.Mesh.reset();
 		other.CBufferTransform.reset();
 	}
 

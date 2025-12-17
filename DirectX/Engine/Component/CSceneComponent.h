@@ -52,17 +52,17 @@ public:
 	void SetInheritScale(bool bInherit);
 	void SetInheritRotation(bool bInherit);
 
-	void SetRelativeScale(const FVector3& Scale);
+	void SetRelativeScale(const FVector& Scale);
 	void SetRelativeScale(const FVector2& Scale);
 	void SetRelativeScale(float X, float Y, float Z);
 	void SetRelativeScale(float X, float Y);
 
-	void AddRelativeScale(const FVector3& Scale);
+	void AddRelativeScale(const FVector& Scale);
 	void AddRelativeScale(const FVector2& Scale);
 	void AddRelativeScale(float X, float Y, float Z);
 	void AddRelativeScale(float X, float Y);
 
-	void SetRelativeRotation(const FVector3& Rotation);
+	void SetRelativeRotation(const FVector& Rotation);
 	void SetRelativeRotation(const FVector2& Rotation);
 	void SetRelativeRotation(float X, float Y, float Z);
 	void SetRelativeRotation(float X, float Y);
@@ -70,7 +70,7 @@ public:
 	void SetRelativeRotationY(float Y);
 	void SetRelativeRotationZ(float Z);
 
-	void AddRelativeRotation(const FVector3& Rotation);
+	void AddRelativeRotation(const FVector& Rotation);
 	void AddRelativeRotation(const FVector2& Rotation);
 	void AddRelativeRotation(float X, float Y, float Z);
 	void AddRelativeRotation(float X, float Y);
@@ -78,12 +78,12 @@ public:
 	void AddRelativeRotationY(float Y);
 	void AddRelativeRotationZ(float Z);
 
-	void SetRelativePosition(const FVector3& Position);
+	void SetRelativePosition(const FVector& Position);
 	void SetRelativePosition(const FVector2& Position);
 	void SetRelativePosition(float X, float Y, float Z);
 	void SetRelativePosition(float X, float Y);
 
-	void AddRelativePosition(const FVector3& Position);
+	void AddRelativePosition(const FVector& Position);
 	void AddRelativePosition(const FVector2& Position);
 	void AddRelativePosition(float X, float Y, float Z);
 	void AddRelativePosition(float X, float Y);
@@ -92,17 +92,17 @@ public:
 	void InheritRelativeRotation();
 	void InheritRelativePosition();
 
-	void SetWorldScale(const FVector3& Scale);
+	void SetWorldScale(const FVector& Scale);
 	void SetWorldScale(const FVector2& Scale);
 	void SetWorldScale(float X, float Y, float Z);
 	void SetWorldScale(float X, float Y);
 
-	void AddWorldScale(const FVector3& Scale);
+	void AddWorldScale(const FVector& Scale);
 	void AddWorldScale(const FVector2& Scale);
 	void AddWorldScale(float X, float Y, float Z);
 	void AddWorldScale(float X, float Y);
 
-	void SetWorldRotation(const FVector3& Rotation);
+	void SetWorldRotation(const FVector& Rotation);
 	void SetWorldRotation(const FVector2& Rotation);
 	void SetWorldRotation(float X, float Y, float Z);
 	void SetWorldRotation(float X, float Y);
@@ -110,7 +110,7 @@ public:
 	void SetWorldRotationY(float Y);
 	void SetWorldRotationZ(float Z);
 
-	void AddWorldRotation(const FVector3& Rotation);
+	void AddWorldRotation(const FVector& Rotation);
 	void AddWorldRotation(const FVector2& Rotation);
 	void AddWorldRotation(float X, float Y, float Z);
 	void AddWorldRotation(float X, float Y);
@@ -118,15 +118,17 @@ public:
 	void AddWorldRotationY(float Y);
 	void AddWorldRotationZ(float Z);
 
-	void SetWorldPosition(const FVector3& Position);
+	void SetWorldPosition(const FVector& Position);
 	void SetWorldPosition(const FVector2& Position);
 	void SetWorldPosition(float X, float Y, float Z);
 	void SetWorldPosition(float X, float Y);
 
-	void AddWorldPosition(const FVector3& Position);
+	void AddWorldPosition(const FVector& Position);
 	void AddWorldPosition(const FVector2& Position);
 	void AddWorldPosition(float X, float Y, float Z);
 	void AddWorldPosition(float X, float Y);
+
+	void UpdateChildWorldPosition(const FVector& DeltaPosition);
 
 	void InheritWorldScale();
 	void InheritWorldRotation();

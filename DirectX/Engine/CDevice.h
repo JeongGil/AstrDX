@@ -94,7 +94,7 @@ public:
 		return Context;
 	}
 
-	[[nodiscard]] FResolution GetResolution() const
+	[[nodiscard]] const FResolution& GetResolution() const
 	{
 		return Resolution;
 	}

@@ -156,12 +156,14 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster\CMonster.cpp" />
     <ClCompile Include="Player\CBullet.cpp" />
+    <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Monster\CMonster.h" />
     <ClInclude Include="Player\CBullet.h" />
+    <ClInclude Include="Player\CMissile.h" />
     <ClInclude Include="Player\CPlayer.h" />
     <ClInclude Include="World\CMainWorld.h" />
   </ItemGroup>

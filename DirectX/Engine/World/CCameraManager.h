@@ -11,6 +11,7 @@ class CCameraManager
 public:
 	void AddCamera(const std::string& Key, const std::weak_ptr<CCameraComponent>& Camera);
 	void SetMainCamera(const std::string& Key);
+	void SetMainCamera(const std::weak_ptr<CCameraComponent>& Camera);
 
 	[[nodiscard]] std::weak_ptr<CCameraComponent> GetMainCamera() const
 	{
@@ -23,7 +24,7 @@ public:
 	const FMatrix& GetProjectionMatrix()const;
 
 private:
-	std::unordered_map<std::string, std::weak_ptr<CCameraComponent>> Cameras;
+	std::unordered_multimap<std::string, std::weak_ptr<CCameraComponent>> Cameras;
 	std::weak_ptr<CCameraComponent> MainCamera;
 
 public:

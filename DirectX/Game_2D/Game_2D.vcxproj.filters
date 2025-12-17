@@ -39,6 +39,9 @@
     <ClCompile Include="Monster\CMonster.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
+    <ClCompile Include="Player\CMissile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -52,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="Monster\CMonster.h">
       <Filter>Monster</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\CMissile.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

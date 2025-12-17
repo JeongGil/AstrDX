@@ -67,7 +67,7 @@ void CSceneComponent::SetInheritRotation(bool bInherit)
 	bInheritRotation = bInherit;
 }
 
-void CSceneComponent::SetRelativeScale(const FVector3& Scale)
+void CSceneComponent::SetRelativeScale(const FVector& Scale)
 {
 	RelativeScale = Scale;
 
@@ -89,7 +89,7 @@ void CSceneComponent::SetRelativeScale(float X, float Y)
 	SetRelativeScale(FVector(X, Y, RelativeScale.z));
 }
 
-void CSceneComponent::AddRelativeScale(const FVector3& Scale)
+void CSceneComponent::AddRelativeScale(const FVector& Scale)
 {
 	SetRelativeScale(RelativeScale + Scale);
 }
@@ -109,7 +109,7 @@ void CSceneComponent::AddRelativeScale(float X, float Y)
 	AddRelativeScale(FVector(X, Y, 0.f));
 }
 
-void CSceneComponent::SetRelativeRotation(const FVector3& Rotation)
+void CSceneComponent::SetRelativeRotation(const FVector& Rotation)
 {
 	RelativeRotation = Rotation;
 
@@ -146,7 +146,7 @@ void CSceneComponent::SetRelativeRotationZ(float Z)
 	SetRelativeRotation(FVector(RelativeRotation.x, RelativeRotation.y, Z));
 }
 
-void CSceneComponent::AddRelativeRotation(const FVector3& Rotation)
+void CSceneComponent::AddRelativeRotation(const FVector& Rotation)
 {
 	SetRelativeRotation(RelativeRotation + Rotation);
 }
@@ -181,7 +181,7 @@ void CSceneComponent::AddRelativeRotationZ(float Z)
 	AddRelativeRotation(FVector(0.f, 0.f, Z));
 }
 
-void CSceneComponent::SetRelativePosition(const FVector3& Position)
+void CSceneComponent::SetRelativePosition(const FVector& Position)
 {
 	RelativePosition = Position;
 
@@ -203,7 +203,7 @@ void CSceneComponent::SetRelativePosition(float X, float Y)
 	SetRelativePosition(FVector(X, Y, RelativePosition.z));
 }
 
-void CSceneComponent::AddRelativePosition(const FVector3& Position)
+void CSceneComponent::AddRelativePosition(const FVector& Position)
 {
 	SetRelativePosition(RelativePosition + Position);
 }
@@ -312,7 +312,7 @@ void CSceneComponent::InheritRelativePosition()
 	}
 }
 
-void CSceneComponent::SetWorldScale(const FVector3& Scale)
+void CSceneComponent::SetWorldScale(const FVector& Scale)
 {
 	WorldScale = Scale;
 
@@ -334,7 +334,7 @@ void CSceneComponent::SetWorldScale(float X, float Y)
 	SetWorldScale(FVector(X, Y, WorldScale.z));
 }
 
-void CSceneComponent::AddWorldScale(const FVector3& Scale)
+void CSceneComponent::AddWorldScale(const FVector& Scale)
 {
 	SetWorldScale(WorldScale + Scale);
 }
@@ -354,7 +354,7 @@ void CSceneComponent::AddWorldScale(float X, float Y)
 	AddWorldScale(FVector(X, Y, 0.f));
 }
 
-void CSceneComponent::SetWorldRotation(const FVector3& Rotation)
+void CSceneComponent::SetWorldRotation(const FVector& Rotation)
 {
 	WorldRotation = Rotation;
 
@@ -391,7 +391,7 @@ void CSceneComponent::SetWorldRotationZ(float Z)
 	SetWorldRotation(FVector(WorldRotation.x, WorldRotation.y, Z));
 }
 
-void CSceneComponent::AddWorldRotation(const FVector3& Rotation)
+void CSceneComponent::AddWorldRotation(const FVector& Rotation)
 {
 	SetWorldRotation(WorldRotation + Rotation);
 }
@@ -426,9 +426,9 @@ void CSceneComponent::AddWorldRotationZ(float Z)
 	AddWorldRotation(FVector(0.f, 0.f, Z));
 }
 
-void CSceneComponent::SetWorldPosition(const FVector3& Position)
+void CSceneComponent::SetWorldPosition(const FVector& Position)
 {
-	WorldPosition = Position;
+	UpdateChildWorldPosition(Position - WorldPosition);
 
 	InheritWorldPosition();
 }
@@ -448,7 +448,7 @@ void CSceneComponent::SetWorldPosition(float X, float Y)
 	SetWorldPosition(FVector(X, Y, WorldPosition.z));
 }
 
-void CSceneComponent::AddWorldPosition(const FVector3& Position)
+void CSceneComponent::AddWorldPosition(const FVector& Position)
 {
 	SetWorldPosition(WorldPosition + Position);
 }
@@ -466,6 +466,19 @@ void CSceneComponent::AddWorldPosition(float X, float Y, float Z)
 void CSceneComponent::AddWorldPosition(float X, float Y)
 {
 	AddWorldPosition(FVector(X, Y, 0.f));
+}
+
+void CSceneComponent::UpdateChildWorldPosition(const FVector& DeltaPosition)
+{
+	WorldPosition += DeltaPosition;
+
+	for (const auto& WeakChild : Children)
+	{
+		if (auto Child = WeakChild.lock())
+		{
+			Child->UpdateChildWorldPosition(DeltaPosition);
+		}
+	}
 }
 
 void CSceneComponent::InheritWorldScale()

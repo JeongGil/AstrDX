@@ -13,7 +13,8 @@ bool CBullet::Init()
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("Color2D");
-		Mesh->SetMesh("CenterCubeColor");
+		Mesh->SetMesh("CenterRectColor");
+		Mesh->SetRelativeScale(50, 50);
 	}
 
 	return true;
@@ -23,7 +24,7 @@ void CBullet::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 
-	constexpr float Speed = 2.f;
+	constexpr float Speed = 300;
 	float DelDist = Speed * DeltaTime;
 	FVector DelPos = GetAxis(EAxis::Y) * DelDist;
 	Distance -= DelDist;
