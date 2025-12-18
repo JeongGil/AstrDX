@@ -64,7 +64,7 @@ void CMonster::Update(const float DeltaTime)
 
 			if (auto Bullet = WeakBullet.lock())
 			{
-				FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75;
+				FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
 				Bullet->SetWorldPosition(Position);
 				Bullet->SetWorldRotation(GetWorldRotation());
 				Bullet->SetCollisionTargetName("Player");
