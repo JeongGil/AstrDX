@@ -7,6 +7,7 @@
 #include "CMissile.h"
 #include "Component/CMeshComponent.h"
 #include "Component/CCameraComponent.h"
+#include "../Monster/CMonster.h"
 
 bool CPlayer::Init()
 {
@@ -46,7 +47,7 @@ bool CPlayer::Init()
 	{
 		const auto& Resolution = CDevice::GetInst()->GetResolution();
 		Cam->SetProjection(CCameraComponent::EProjectionType::Orthogonal,
-			90, Resolution.Width, Resolution.Height, 1000);
+			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
 		Cam->SetInheritRotation(false);
 	}
@@ -119,6 +120,30 @@ void CPlayer::Update(float DeltaTime)
 					Missile->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 100);
 					Missile->SetWorldRotation(GetWorldRotation());
 					Missile->SetCamera();
+				}
+			}
+		}
+
+		if (GetAsyncKeyState('3') & 0x8000)
+		{
+			for (int i = 0; i < 12; i++)
+			{
+				if (auto World = this->World.lock())
+				{
+					auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
+					if (auto Bullet = WeakBullet.lock())
+					{
+						FMatrix DirMat;
+						DirMat.RotationZ(static_cast<float>(i) * 30.f);
+
+						FVector BulletDir = GetAxis(EAxis::Y).TransformNormal(DirMat).GetNormalized();
+						constexpr float Offset = 90.f;
+						FVector BulletPos = GetWorldPosition() + BulletDir * Offset;
+
+						Bullet->SetWorldPosition(BulletPos);
+
+						Bullet->SetCloseTarget<CMonster>();
+					}
 				}
 			}
 		}

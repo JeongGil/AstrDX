@@ -31,6 +31,18 @@ void CMonster::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 
+	// Look at target;
+	auto Target = FireTarget.lock();
+	float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition());
+
+	SetWorldRotationZ(Degree);
+
+#ifdef _DEBUG
+	char Log[256] = {};
+	sprintf_s(Log, "Target Angle: %.4f°\n", Degree);
+	OutputDebugStringA(Log);
+#endif
+
 	FireCoolTime -= DeltaTime;
 	if (FireCoolTime <= 0.f)
 	{
@@ -48,7 +60,7 @@ void CMonster::Update(const float DeltaTime)
 				Bullet->SetWorldPosition(Position);
 				Bullet->SetWorldRotation(GetWorldRotation());
 
-				if (auto Target = FireTarget.lock())
+				if (Target)
 				{
 					FVector Dir = Target->GetWorldPosition() - Position;
 					Dir.Normalize();

@@ -423,6 +423,11 @@ float FVector3::Length()	const
 	return sqrtf(x * x + y * y + z * z);
 }
 
+float FVector3::SqrLength() const
+{
+	return x * x + y * y + z * z;
+}
+
 void FVector3::Normalize()
 {
 	float	Size = Length();
@@ -471,6 +476,11 @@ float FVector3::Distance(const FVector3& v)	const
 	return v1.Length();
 }
 
+float FVector3::SqrDistance(const FVector3& v) const
+{
+	return (*this - v).SqrLength();
+}
+
 DirectX::XMVECTOR FVector3::Convert()	const
 {
 	return DirectX::XMLoadFloat3((DirectX::XMFLOAT3*)this);
@@ -492,6 +502,46 @@ FVector3 FVector3::TransformCoord(FMatrix& mat)	const
 		mat.m);
 
 	return result;
+}
+
+float FVector3::GetAngleDegree2D(const FVector3& v) const
+{
+	FVector3 Dir1 = this->GetNormalized();
+	FVector3 Dir2 = v.GetNormalized();
+
+	float Dot = Dir1.Dot(Dir2);
+
+	float CrossZ = Dir1.x * Dir2.y - Dir1.y * Dir2.x;
+
+	float Radian = atan2f(CrossZ, Dot);
+	float Degree = DirectX::XMConvertToDegrees(Radian);
+
+	if (Degree < 0.f)
+	{
+		Degree += 360.f;
+	}
+
+	return Degree;
+}
+
+float FVector3::GetViewTargetAngleDegree2D(const FVector3& v, EAxis::Type AxisType) const
+{
+	return Axis[AxisType].GetAngleDegree2D(v - *this);
+}
+
+float FVector3::GetAngleDegree2D(const FVector3& v1, const FVector3& v2)
+{
+	FVector3 Dir1 = v1.GetNormalized();
+	FVector3 Dir2 = v2.GetNormalized();
+
+	float Dot = Dir1.Dot(Dir2);
+
+	float CrossZ = Dir1.x * Dir2.y - Dir1.y * Dir2.x;
+
+	float Radian = atan2f(CrossZ, Dot);
+	float Degree = DirectX::XMConvertToDegrees(Radian);
+
+	return Degree;
 }
 
 //FVector3 FVector3::GetRotation(const FVector3& Rot)	const

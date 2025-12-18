@@ -101,14 +101,20 @@ struct FVector3
 #pragma region Function
 
 	float Length()	const;
+	float SqrLength() const;
 
 	void Normalize();
 	static FVector3 Normalize(const FVector3& v);
+	FVector3 GetNormalized() const
+	{
+		return Normalize(*this);
+	}
 
 	float Dot(const FVector3& v) const;
 	FVector3 Cross(const FVector3& v) const;
 
 	float Distance(const FVector3& v) const;
+	float SqrDistance(const FVector3& v) const;
 
 	DirectX::XMVECTOR Convert()	const;
 
@@ -118,6 +124,10 @@ struct FVector3
 	// w=w 1. Apply scale, rotation and Position.
 	FVector3 TransformCoord(union FMatrix& mat)	const;
 	
+	float GetAngleDegree2D(const FVector3& v) const;
+	float GetViewTargetAngleDegree2D(const FVector3& v, EAxis::Type AxisType = EAxis::Y) const;
+	static float GetAngleDegree2D(const FVector3& v1, const FVector3& v2);
+
 	//FVector3 GetRotation(const FVector3& Rot) const;
 	//
 	//float GetAngle(const FVector3& v)	const;

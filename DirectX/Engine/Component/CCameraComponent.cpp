@@ -23,7 +23,7 @@ void CCameraComponent::SetProjection(EProjectionType Type, float ViewAngleDegree
 		case EProjectionType::Orthogonal:
 		{
 			ProjectionMatrix = DirectX::XMMatrixOrthographicOffCenterLH(
-				Width / -2, Width / 2, Height / -2, Height / 2, 0, ViewDistance);
+				Width / -2.f, Width / 2.f, Height / -2.f, Height / 2.f, 0.f, ViewDistance);
 			break;
 		}
 	}
@@ -37,7 +37,7 @@ CCameraComponent* CCameraComponent::Clone() const
 bool CCameraComponent::Init()
 {
 	FResolution Resolution = CDevice::GetInst()->GetResolution();
-	SetProjection(EProjectionType::Perspective, 90, Resolution.Width, Resolution.Height, 1000);
+	SetProjection(EProjectionType::Perspective, 90, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
 	if (auto World = this->World.lock())
 	{
