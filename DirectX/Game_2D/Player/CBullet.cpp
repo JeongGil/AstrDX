@@ -26,7 +26,10 @@ void CBullet::Update(const float DeltaTime)
 
 	constexpr float Speed = 300;
 	float DelDist = Speed * DeltaTime;
-	FVector DelPos = GetAxis(EAxis::Y) * DelDist;
+
+	FVector MoveDirection = bUseMoveDirection ? this->MoveDirection : GetAxis(EAxis::Y);
+	FVector DelPos = MoveDirection * DelDist;
+
 	Distance -= DelDist;
 
 	AddWorldPosition(DelPos);
