@@ -95,14 +95,15 @@ void CPlayer::Update(float DeltaTime)
 		{
 			if (auto World = this->World.lock())
 			{
-				const std::string BulletName = "Bullet_";
-
-				static int Counter = 0;
-				const auto WeakBullet = World->CreateGameObject<CBullet>(BulletName + std::to_string(Counter++));
+				//const std::string BulletName = "Bullet_";
+				//static int Counter = 0;
+				const auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
 				if (auto Bullet = WeakBullet.lock())
 				{
 					Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75);
 					Bullet->SetWorldRotation(GetWorldRotation());
+					Bullet->SetCollisionTargetName("Monster");
+					Bullet->CalcCollisionRadius();
 				}
 			}
 		}
@@ -111,10 +112,9 @@ void CPlayer::Update(float DeltaTime)
 		{
 			if (auto World = this->World.lock())
 			{
-				const std::string BulletName = "Missile_";
-
-				static int Counter = 0;
-				auto WeakMissile = World->CreateGameObject<CMissile>(BulletName + std::to_string(Counter++));
+				//const std::string BulletName = "Missile_";
+				//static int Counter = 0;
+				auto WeakMissile = World->CreateGameObject<CMissile>("Missile");
 				if (auto Missile = WeakMissile.lock())
 				{
 					Missile->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 100);
@@ -141,8 +141,10 @@ void CPlayer::Update(float DeltaTime)
 						FVector BulletPos = GetWorldPosition() + BulletDir * Offset;
 
 						Bullet->SetWorldPosition(BulletPos);
+						Bullet->CalcCollisionRadius();
 
 						Bullet->SetCloseTarget<CMonster>();
+						Bullet->SetCollisionTargetName("Monster");
 					}
 				}
 			}

@@ -38,4 +38,26 @@ void CBullet::Update(const float DeltaTime)
 	{
 		Destroy();
 	}
+
+	if (auto World = this->World.lock())
+	{
+		std::list<std::weak_ptr<CGameObject>> ColCandidates;
+		World->FindObjects(CollisionTargetName, ColCandidates);
+		for (const auto& WeakOther : ColCandidates)
+		{
+			if (auto Other = WeakOther.lock())
+			{
+				FVector OtherHalfExtent = Other->GetWorldScale() * 0.5f;
+				float OtherRadius = sqrtf(OtherHalfExtent.x * OtherHalfExtent.x + OtherHalfExtent.y * OtherHalfExtent.y);
+				float RadiusSum = OtherRadius + CollisionRadius;
+
+				// Collision occurred.
+				if (Other->GetWorldPosition().SqrDistance(GetWorldPosition()) <= RadiusSum * RadiusSum)
+				{
+					// Process damage event.
+					Destroy();
+				}
+			}
+		}
+	}
 }

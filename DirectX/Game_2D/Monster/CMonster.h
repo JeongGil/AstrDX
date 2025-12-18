@@ -9,8 +9,10 @@ class CMonster :
 	friend class CWorld;
 
 private:
-	float FireCoolTime = 1.f;
+	float ElapsedFromShot = 0.f;
 	std::weak_ptr<CGameObject> FireTarget;
+
+	float DetectRange = 400.f;
 
 	std::weak_ptr<CMeshComponent> MeshComponent;
 

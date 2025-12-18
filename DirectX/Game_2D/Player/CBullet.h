@@ -53,6 +53,18 @@ public:
 		return SqrDist != FLT_MAX;
 	}
 
+	void CalcCollisionRadius()
+	{
+		// Original mesh is 1*1*1.
+		FVector3 HalfExtent = GetWorldScale() / 2.f;
+		CollisionRadius = sqrtf(HalfExtent.x * HalfExtent.x + HalfExtent.y * HalfExtent.y);
+	}
+
+	void SetCollisionTargetName(const std::string& CollisionTargetName)
+	{
+		this->CollisionTargetName = CollisionTargetName;
+	}
+
 private:
 	float Distance = 600;
 
@@ -60,6 +72,9 @@ private:
 	bool bUseMoveDirection = false;
 
 	std::weak_ptr<CGameObject> Target;
+
+	std::string CollisionTargetName;
+	float CollisionRadius;
 
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
