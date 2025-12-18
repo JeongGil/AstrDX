@@ -8,6 +8,12 @@ class CBullet :
 {
 	friend class CWorld;
 
+public:
+	void SetMoveDirection(const FVector& MoveDirection)
+	{
+		bUseMoveDirection = true;
+		this->MoveDirection = MoveDirection;
+	}
 private:
 	float Distance = 600;
 

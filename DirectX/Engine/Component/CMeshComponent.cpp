@@ -43,7 +43,7 @@ void CMeshComponent::Render()
 
 	auto Shader = this->Shader.lock();
 	auto Mesh = this->Mesh.lock();
-
+	
 	FMatrix ViewMat;
 	FMatrix ProjMat;
 
