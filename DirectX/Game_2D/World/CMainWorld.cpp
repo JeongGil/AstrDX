@@ -14,7 +14,6 @@ bool CMainWorld::Init()
 	{
 		Monster->SetWorldPosition(-400, 300);
 		Monster->SetWorldRotationZ(180.f);
-		Monster->SetWorldScale(0.5f, 0.5f, 0.5f);
 	}
 
 	WeakMonster = CreateGameObject<CMonster>("Monster");
@@ -22,7 +21,6 @@ bool CMainWorld::Init()
 	{
 		Monster->SetWorldPosition(400, 300);
 		Monster->SetWorldRotationZ(180.f);
-		Monster->SetWorldScale(0.5f, 0.5f, 0.5f);
 	}
 
 	return true;

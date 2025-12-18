@@ -75,7 +75,7 @@ bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int Vertex
 std::weak_ptr<CMesh> CMeshManager::FindMesh(const std::string& Key) const
 {
 	auto it = Meshes.find(Key);
-	return it != Meshes.end() ? it->second : nullptr;
+	return it != Meshes.end() ? it->second : std::weak_ptr<CMesh>();
 }
 
 CMeshManager::CMeshManager()

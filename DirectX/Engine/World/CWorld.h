@@ -1,5 +1,7 @@
 #pragma once
 
+#include <ranges>
+
 #include "CCameraManager.h"
 #include "../EngineInfo.h"
 #include "../Object/CGameObject.h"
@@ -16,23 +18,23 @@ public:
 	 * to the world's object list and a weak pointer to the object is returned.
 	 *
 	 * @tparam T The type of the game object to create. Must be a class derived from `CGameObject`.
-	 * @param Name The name to assign to the created game object.
+	 * @param Key The name to assign to the created game object.
 	 * @return std::weak_ptr<T> A weak pointer to the created game object, or an empty weak pointer if initialization fails.
 	 */
 	template <typename T>
-	std::weak_ptr<T> CreateGameObject(const std::string& Name)
+	std::weak_ptr<T> CreateGameObject(const std::string& Key)
 	{
 		std::shared_ptr<T> NewObject(new T);
 
 		NewObject->SetWorld(weak_from_this());
-		NewObject->SetName(Name);
+		NewObject->SetName(Key);
 
 		if (!NewObject->Init())
 		{
 			return std::weak_ptr<T>();
 		}
 
-		Objects.push_back(NewObject);
+		Objects.emplace(Key, NewObject);
 
 		return NewObject;
 	}
@@ -46,12 +48,12 @@ public:
 	 * returns an empty weak pointer.
 	 *
 	 * @tparam T The type of the game object to clone. Must be a class derived from `CGameObject`.
-	 * @param Name The name to assign to the cloned game object.
+	 * @param key The name to assign to the cloned game object.
 	 * @param WeakOrigin A weak pointer to the origin game object to be cloned.
 	 * @return std::weak_ptr<T> A weak pointer to the cloned game object, or an empty weak pointer if cloning fails.
 	 */
 	template <typename T>
-	std::weak_ptr<T> CreateCloneGameObject(const std::string& Name, const std::weak_ptr<T>& WeakOrigin)
+	std::weak_ptr<T> CreateCloneGameObject(const std::string& key, const std::weak_ptr<T>& WeakOrigin)
 	{
 		if (WeakOrigin.expired())
 		{
@@ -67,9 +69,9 @@ public:
 		std::shared_ptr<T> NewObject;
 		NewObject.reset(Origin->Clone());
 
-		NewObject->SetName(Name);
+		NewObject->SetName(key);
 
-		Objects.push_back(NewObject);
+		Objects.emplace(key, NewObject);
 
 		return NewObject;
 	}
@@ -79,8 +81,63 @@ public:
 		return CameraManager;
 	}
 
+	template <typename T>
+	std::weak_ptr<T> FindObject(const std::string& Key)
+	{
+		const auto It = Objects.find(Key);
+
+		return It == Objects.end() ? std::weak_ptr<T>() : std::dynamic_pointer_cast<T>(It->second);
+	}
+
+	template <typename T>
+	bool FindObjects(const std::string& Key, std::list<std::weak_ptr<T>>& OutObjects)
+	{
+		auto Range = Objects.equal_range(Key);
+
+		if (Range.first == Range.second)
+		{
+			return false;
+		}
+
+		for (auto Pair : std::ranges::subrange(Range.first, Range.second))
+		{
+			OutObjects.push_back(std::dynamic_pointer_cast<T>(Pair.second));
+		}
+
+		return true;
+	}
+
+	template <typename T>
+	std::vector<std::weak_ptr<T>> FindObjectsOfType()
+	{
+		std::vector<std::weak_ptr<T>> Results;
+		for (const auto& Object : Objects | std::views::values)
+		{
+			if (auto Casted = std::dynamic_pointer_cast<T>(Object))
+			{
+				Results.push_back(Casted);
+			}
+		}
+
+		return Results;
+	}
+
+	template <typename T>
+	std::weak_ptr<T> FindObjectOfType()
+	{
+		for (const auto& Object : Objects | std::views::values)
+		{
+			if (auto Casted = std::dynamic_pointer_cast<T>(Object))
+			{
+				return Casted;
+			}
+		}
+
+		return std::weak_ptr<T>();
+	}
+
 protected:
-	std::list<std::shared_ptr<CGameObject>> Objects;
+	std::unordered_multimap<std::string, std::shared_ptr<CGameObject>> Objects;
 	std::shared_ptr<CCameraManager> CameraManager;
 
 public:

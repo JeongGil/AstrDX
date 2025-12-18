@@ -23,6 +23,11 @@ public:
 		return Root;
 	}
 
+	[[nodiscard]] std::string GetName() const
+	{
+		return Name;
+	}
+
 	void SetName(const std::string& Name)
 	{
 		this->Name = Name;
@@ -159,7 +164,7 @@ public:
 		std::shared_ptr<CSceneComponent> Component(new T);
 
 		Component->SetWorld(World);
-		Component->SetOwner(std::static_pointer_cast<CGameObject>(shared_from_this()));
+		Component->SetOwner(std::dynamic_pointer_cast<CGameObject>(shared_from_this()));
 		Component->SetName(Name);
 
 		if (!Component->Init())
@@ -179,26 +184,30 @@ public:
 				{
 					Root->AddChild(Component);
 				}
-				else
+			}
+			else
+			{
+				std::shared_ptr<CSceneComponent> Parent;
+				for (auto SceneComponent : SceneComponents)
 				{
-					std::shared_ptr<CSceneComponent> Parent;
-					for (auto SceneComponent : SceneComponents)
+					if (SceneComponent->Name == ParentName)
 					{
-						Parent = std::static_pointer_cast<CSceneComponent>(SceneComponent->shared_from_this());
+						Parent = SceneComponent;
+
 						break;
 					}
+				}
 
-					if (!Parent)
+				if (!Parent)
+				{
+					if (auto Root = this->Root.lock())
 					{
-						if (auto Root = this->Root.lock())
-						{
-							Root->AddChild(Component);
-						}
+						Root->AddChild(Component);
 					}
-					else
-					{
-						Parent->AddChild(Component);
-					}
+				}
+				else
+				{
+					Parent->AddChild(Component);
 				}
 			}
 		}

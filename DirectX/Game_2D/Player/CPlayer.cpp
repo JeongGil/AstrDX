@@ -47,6 +47,8 @@ bool CPlayer::Init()
 		const auto& Resolution = CDevice::GetInst()->GetResolution();
 		Cam->SetProjection(CCameraComponent::EProjectionType::Orthogonal,
 			90, Resolution.Width, Resolution.Height, 1000);
+
+		Cam->SetInheritRotation(false);
 	}
 
 	return true;
@@ -111,7 +113,7 @@ void CPlayer::Update(float DeltaTime)
 				const std::string BulletName = "Missile_";
 
 				static int Counter = 0;
-				auto WeakMissile = World->CreateGameObject<CMissile>(BulletName + std::to_string(Counter));
+				auto WeakMissile = World->CreateGameObject<CMissile>(BulletName + std::to_string(Counter++));
 				if (auto Missile = WeakMissile.lock())
 				{
 					Missile->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 100);

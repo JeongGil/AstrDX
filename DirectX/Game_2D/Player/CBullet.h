@@ -11,6 +11,9 @@ class CBullet :
 private:
 	float Distance = 600;
 
+	FVector MoveDirection;
+	bool bUseMoveDirection = false;
+
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
 

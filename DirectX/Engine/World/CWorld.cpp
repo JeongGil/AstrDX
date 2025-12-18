@@ -8,6 +8,8 @@ bool CWorld::Init()
 		return false;
 	}
 
+	Objects.reserve(10000);
+
 	return true;
 }
 
@@ -17,13 +19,13 @@ void CWorld::Update(const float DeltaTime)
 	const auto End = Objects.end();
 	while (Curr != End)
 	{
-		if (!(*Curr)->GetAlive())
+		if (!Curr->second->GetAlive())
 		{
 			Curr = Objects.erase(Curr);
 			continue;
 		}
 
-		(*Curr)->Update(DeltaTime);
+		Curr->second->Update(DeltaTime);
 		++Curr;
 	}
 
@@ -36,13 +38,13 @@ void CWorld::PostUpdate(const float DeltaTime)
 	const auto End = Objects.end();
 	while (Curr != End)
 	{
-		if (!(*Curr)->GetAlive())
+		if (!Curr->second->GetAlive())
 		{
 			Curr = Objects.erase(Curr);
 			continue;
 		}
 
-		(*Curr)->PostUpdate(DeltaTime);
+		Curr->second->PostUpdate(DeltaTime);
 		++Curr;
 	}
 }
@@ -53,13 +55,13 @@ void CWorld::Render()
 	const auto End = Objects.end();
 	while (Curr != End)
 	{
-		if (!(*Curr)->GetAlive())
+		if (!Curr->second->GetAlive())
 		{
 			Curr = Objects.erase(Curr);
 			continue;
 		}
 
-		(*Curr)->Render();
+		Curr->second->Render();
 		++Curr;
 	}
 }

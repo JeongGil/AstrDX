@@ -9,8 +9,10 @@ class CMonster :
 	friend class CWorld;
 
 private:
-	std::weak_ptr<CMeshComponent> MeshComponent;
 	float FireCoolTime = 1.f;
+	std::weak_ptr<CGameObject> FireTarget;
+
+	std::weak_ptr<CMeshComponent> MeshComponent;
 
 public:
 	bool Init() override;

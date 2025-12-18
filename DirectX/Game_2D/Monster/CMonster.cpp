@@ -19,6 +19,11 @@ bool CMonster::Init()
 		Mesh->SetRelativeScale(100, 100);
 	}
 
+	if (auto World = this->World.lock())
+	{
+		FireTarget = World->FindObject<CGameObject>("Player");
+	}
+
 	return true;
 }
 
@@ -39,8 +44,17 @@ void CMonster::Update(const float DeltaTime)
 
 			if (auto Bullet = WeakBullet.lock())
 			{
-				Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75);
+				FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75;
+				Bullet->SetWorldPosition(Position);
 				Bullet->SetWorldRotation(GetWorldRotation());
+
+				if (auto Target = FireTarget.lock())
+				{
+					FVector Dir = Target->GetWorldPosition() - Position;
+					Dir.Normalize();
+
+					Bullet->SetMoveDirection(Dir);
+				}
 			}
 		}
 	}
