@@ -1,5 +1,6 @@
 #pragma once
 #include "../CObject.h"
+#include "../Component/CObjectComponent.h"
 #include "../Component/CSceneComponent.h"
 
 class CSceneComponent;
@@ -125,6 +126,7 @@ public:
 protected:
 	std::weak_ptr<CWorld> World;
 	std::vector<std::shared_ptr<CSceneComponent>> SceneComponents;
+	std::vector<std::shared_ptr<CObjectComponent>> ObjectComponents;
 	std::weak_ptr<CSceneComponent> Root;
 	std::string Name;
 	bool bAlive = true;
@@ -161,7 +163,7 @@ public:
 	template <typename T>
 	std::weak_ptr<T> CreateComponent(const std::string& Name, const std::string& ParentName = "Root")
 	{
-		std::shared_ptr<CSceneComponent> Component(new T);
+		std::shared_ptr<CComponent> Component(new T);
 
 		Component->SetWorld(World);
 		Component->SetOwner(std::dynamic_pointer_cast<CGameObject>(shared_from_this()));
@@ -172,49 +174,81 @@ public:
 			return std::weak_ptr<T>();
 		}
 
-		if (SceneComponents.empty())
+		if (Component->Type == CComponent::EType::Scene)
 		{
-			Root = Component;
-		}
-		else
-		{
-			if (ParentName == "Root")
+			if (std::shared_ptr<CSceneComponent> NewCmp = std::dynamic_pointer_cast<CSceneComponent>(Component))
 			{
-				if (auto Root = this->Root.lock())
+				if (SceneComponents.empty())
 				{
-					Root->AddChild(Component);
-				}
-			}
-			else
-			{
-				std::shared_ptr<CSceneComponent> Parent;
-				for (auto SceneComponent : SceneComponents)
-				{
-					if (SceneComponent->Name == ParentName)
-					{
-						Parent = SceneComponent;
-
-						break;
-					}
-				}
-
-				if (!Parent)
-				{
-					if (auto Root = this->Root.lock())
-					{
-						Root->AddChild(Component);
-					}
+					Root = NewCmp;
 				}
 				else
 				{
-					Parent->AddChild(Component);
+					if (ParentName == "Root")
+					{
+						if (auto Root = this->Root.lock())
+						{
+							Root->AddChild(NewCmp);
+						}
+					}
+					else
+					{
+						std::shared_ptr<CSceneComponent> Parent;
+						for (auto SceneComponent : SceneComponents)
+						{
+							if (SceneComponent->Name == ParentName)
+							{
+								Parent = SceneComponent;
+
+								break;
+							}
+						}
+
+						if (!Parent)
+						{
+							if (auto Root = this->Root.lock())
+							{
+								Root->AddChild(NewCmp);
+							}
+						}
+						else
+						{
+							Parent->AddChild(NewCmp);
+						}
+					}
 				}
+
+				SceneComponents.push_back(NewCmp);
+			}
+		}
+		else if (Component->Type == CComponent::EType::Object)
+		{
+			ObjectComponents.push_back(std::dynamic_pointer_cast<CObjectComponent>(Component));
+		}
+
+		return std::dynamic_pointer_cast<T>(Component);
+	}
+
+	template <typename T>
+	std::weak_ptr<T> FindComponent(const std::string& Name)
+	{
+		for (const auto& Cmp : SceneComponents)
+		{
+			if (Cmp->GetName() == Name)
+			{
+				return std::dynamic_pointer_cast<T>(Cmp);
 			}
 		}
 
-		SceneComponents.push_back(Component);
+		for (const auto& Cmp : ObjectComponents)
+		{
+			if (Cmp->GetName() == Name)
+			{
+				return std::dynamic_pointer_cast<T>(Cmp);
+			}
+		}
 
-		return std::dynamic_pointer_cast<T>(Component);
+		return std::weak_ptr<T>();
 	}
 
 protected:

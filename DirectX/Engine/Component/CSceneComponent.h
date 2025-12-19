@@ -205,7 +205,10 @@ protected:
 	CSceneComponent* Clone() const override;
 
 protected:
-	CSceneComponent() = default;
+	CSceneComponent()
+	{
+		Type = EType::Scene;
+	}
 
 	CSceneComponent(const CSceneComponent& other)
 		: CComponent(other),

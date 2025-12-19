@@ -587,6 +587,11 @@ void CGameObject::Update(const float DeltaTime)
 	{
 		Root->Update(DeltaTime);
 	}
+
+	for (const auto& ObjCmp : ObjectComponents)
+	{
+		ObjCmp->Update(DeltaTime);
+	}
 }
 
 void CGameObject::PostUpdate(const float DeltaTime)
@@ -594,6 +599,11 @@ void CGameObject::PostUpdate(const float DeltaTime)
 	if (auto Root = this->Root.lock())
 	{
 		Root->PostUpdate(DeltaTime);
+	}
+
+	for (const auto& ObjCmp : ObjectComponents)
+	{
+		ObjCmp->Update(DeltaTime);
 	}
 }
 

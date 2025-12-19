@@ -45,9 +45,9 @@ void CMonster::Update(const float DeltaTime)
 		SetWorldRotationZ(Degree);
 
 #ifdef _DEBUG
-		char Log[256] = {};
-		sprintf_s(Log, "Target Angle: %.4f°\n", Degree);
-		OutputDebugStringA(Log);
+		//char Log[256] = {};
+		//sprintf_s(Log, "Target Angle: %.4f°\n", Degree);
+		//OutputDebugStringA(Log);
 #endif
 	}
 

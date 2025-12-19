@@ -10,6 +10,14 @@ class CComponent :
 	friend class CGameObject;
 
 public:
+	enum class EType : unsigned char
+	{
+		None,
+		Scene,
+		Object,
+	};
+
+public:
 	bool GetAlive() const
 	{
 		return bAlive;
@@ -45,11 +53,17 @@ public:
 		this->Name = Name;
 	}
 
+	[[nodiscard]] EType GetType() const
+	{
+		return Type;
+	}
+
 protected:
 	std::weak_ptr<CWorld> World;
 	std::weak_ptr<CGameObject> Owner;
 	std::string Name;
 	bool bAlive = true;
+	EType Type = EType::None;
 
 public:
 	virtual bool Init();
@@ -66,19 +80,21 @@ protected:
 
 	CComponent(const CComponent& other)
 		: CObject(other),
-		  //World(other.World),
-		  //Owner(other.Owner),
-		  Name(other.Name),
-		  bAlive(other.bAlive)
+		//World(other.World),
+		//Owner(other.Owner),
+		Name(other.Name),
+		bAlive(other.bAlive),
+		Type(other.Type)
 	{
 	}
 
 	CComponent(CComponent&& other) noexcept
 		: CObject(std::move(other)),
-		  //World(std::move(other.World)),
-		  //Owner(std::move(other.Owner)),
-		  Name(std::move(other.Name)),
-		  bAlive(other.bAlive)
+		//World(std::move(other.World)),
+		//Owner(std::move(other.Owner)),
+		Name(std::move(other.Name)),
+		bAlive(other.bAlive),
+		Type(other.Type)
 	{
 	}
 
@@ -91,6 +107,7 @@ protected:
 		//Owner = other.Owner;
 		Name = other.Name;
 		bAlive = other.bAlive;
+		Type = other.Type;
 		return *this;
 	}
 
@@ -103,6 +120,7 @@ protected:
 		//Owner = std::move(other.Owner);
 		Name = std::move(other.Name);
 		bAlive = other.bAlive;
+		Type = other.Type;
 		return *this;
 	}
 

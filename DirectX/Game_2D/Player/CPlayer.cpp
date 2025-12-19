@@ -8,6 +8,7 @@
 #include "Component/CMeshComponent.h"
 #include "Component/CCameraComponent.h"
 #include "../Monster/CMonster.h"
+#include "../Component/CStateComponent.h"
 
 bool CPlayer::Init()
 {
@@ -51,6 +52,8 @@ bool CPlayer::Init()
 
 		Cam->SetInheritRotation(false);
 	}
+
+	StateComponent = CreateComponent<CStateComponent>("State");
 
 	return true;
 }

@@ -22,6 +22,15 @@
     <Filter Include="Monster">
       <UniqueIdentifier>{510415f3-5d1d-45d5-ae04-d88826681834}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Component">
+      <UniqueIdentifier>{2d24812d-0fe2-49a4-9606-c56abfb41edc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interface">
+      <UniqueIdentifier>{735ff989-9ba2-4890-b154-c82e373a4da8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Component\State">
+      <UniqueIdentifier>{7556fa80-b64f-48d2-8a3b-6892d031bfa5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -39,7 +48,13 @@
     <ClCompile Include="Monster\CMonster.cpp">
       <Filter>Monster</Filter>
     </ClCompile>
+    <ClCompile Include="Component\CStateComponent.cpp">
+      <Filter>Component\State</Filter>
+    </ClCompile>
     <ClCompile Include="Player\CMissile.cpp">
+      <Filter>Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface\CStateInterface.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -56,7 +71,13 @@
     <ClInclude Include="Monster\CMonster.h">
       <Filter>Monster</Filter>
     </ClInclude>
+    <ClInclude Include="Component\CStateComponent.h">
+      <Filter>Component\State</Filter>
+    </ClInclude>
     <ClInclude Include="Player\CMissile.h">
+      <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\CStateInterface.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

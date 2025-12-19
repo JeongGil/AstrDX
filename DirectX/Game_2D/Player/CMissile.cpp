@@ -37,7 +37,7 @@ bool CMissile::Init()
 	{
 		const auto& Resolution = CDevice::GetInst()->GetResolution();
 		Cam->SetProjection(CCameraComponent::EProjectionType::Orthogonal,
-			90, Resolution.Width, Resolution.Height, 1000);
+			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000.f);
 
 		Cam->SetInheritRotation(false);
 	}

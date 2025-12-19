@@ -1,6 +1,7 @@
 #include "CBullet.h"
 
 #include "Component/CMeshComponent.h"
+#include "../Component/CStateComponent.h"
 
 bool CBullet::Init()
 {
@@ -55,6 +56,12 @@ void CBullet::Update(const float DeltaTime)
 				if (Other->GetWorldPosition().SqrDistance(GetWorldPosition()) <= RadiusSum * RadiusSum)
 				{
 					// Process damage event.
+					auto WeakState = Other->FindComponent<CStateComponent>("State");
+					if (auto State = WeakState.lock())
+					{
+						State->AddHP(-1);
+					}
+
 					Destroy();
 				}
 			}
