@@ -61,3 +61,8 @@ void CMissile::Update(const float DeltaTime)
 		Destroy();
 	}
 }
+
+CMissile* CMissile::Clone()
+{
+	return new CMissile(*this);
+}

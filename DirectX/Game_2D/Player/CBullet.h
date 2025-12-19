@@ -9,6 +9,7 @@ class CBullet :
 	public CGameObject
 {
 	friend class CWorld;
+	friend CObject;
 
 public:
 	void SetMoveDirection(const FVector& MoveDirection)
@@ -74,7 +75,7 @@ private:
 	std::weak_ptr<CGameObject> Target;
 
 	std::string CollisionTargetName;
-	float CollisionRadius;
+	float CollisionRadius = 0.f;
 
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
@@ -82,6 +83,9 @@ private:
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
+
+protected:
+	CBullet* Clone() override;
 
 protected:
 	CBullet() = default;

@@ -68,3 +68,8 @@ void CBullet::Update(const float DeltaTime)
 		}
 	}
 }
+
+CBullet* CBullet::Clone()
+{
+	return new CBullet(*this);
+}

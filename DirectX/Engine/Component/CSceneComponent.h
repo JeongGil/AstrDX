@@ -12,6 +12,7 @@ class CSceneComponent :
 	public CComponent
 {
 	friend class CGameObject;
+	friend CObject;
 
 public:
 	/**

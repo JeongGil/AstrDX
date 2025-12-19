@@ -31,53 +31,59 @@ void CMonster::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 
-	auto Target = FireTarget.lock();
-
-	FVector Displacement = Target->GetWorldPosition() - GetWorldPosition();
-
-	bool bIsInRange = Displacement.SqrLength() <= DetectRange * DetectRange;
-
-	// Look at target;
-	if (bIsInRange)
+	if (auto Target = FireTarget.lock())
 	{
-		float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition());
+		FVector Displacement = Target->GetWorldPosition() - GetWorldPosition();
 
-		SetWorldRotationZ(Degree);
+		bool bIsInRange = Displacement.SqrLength() <= DetectRange * DetectRange;
+
+		// Look at target;
+		if (bIsInRange)
+		{
+			float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition());
+
+			SetWorldRotationZ(Degree);
 
 #ifdef _DEBUG
-		//char Log[256] = {};
-		//sprintf_s(Log, "Target Angle: %.4f°\n", Degree);
-		//OutputDebugStringA(Log);
+			//char Log[256] = {};
+			//sprintf_s(Log, "Target Angle: %.4f°\n", Degree);
+			//OutputDebugStringA(Log);
 #endif
-	}
+		}
 
-	ElapsedFromShot += DeltaTime;
-	if (bIsInRange && ElapsedFromShot >= 1.f)
-	{
-		ElapsedFromShot = 0.f;
-
-		if (auto World = this->World.lock())
+		ElapsedFromShot += DeltaTime;
+		if (bIsInRange && ElapsedFromShot >= 1.f)
 		{
-			//static int Counter = 0;
-			//const std::string BulletName = "MonsterBullet_";
-			auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
+			ElapsedFromShot = 0.f;
 
-			if (auto Bullet = WeakBullet.lock())
+			if (auto World = this->World.lock())
 			{
-				FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
-				Bullet->SetWorldPosition(Position);
-				Bullet->SetWorldRotation(GetWorldRotation());
-				Bullet->SetCollisionTargetName("Player");
-				Bullet->CalcCollisionRadius();
+				//static int Counter = 0;
+				//const std::string BulletName = "MonsterBullet_";
+				auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
 
-				if (Target)
+				if (auto Bullet = WeakBullet.lock())
 				{
-					FVector Dir = Target->GetWorldPosition() - Position;
-					Dir.Normalize();
+					FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
+					Bullet->SetWorldPosition(Position);
+					Bullet->SetWorldRotation(GetWorldRotation());
+					Bullet->SetCollisionTargetName("Player");
+					Bullet->CalcCollisionRadius();
 
-					Bullet->SetMoveDirection(Dir);
+					if (Target)
+					{
+						FVector Dir = Target->GetWorldPosition() - Position;
+						Dir.Normalize();
+
+						Bullet->SetMoveDirection(Dir);
+					}
 				}
 			}
 		}
 	}
+}
+
+CMonster* CMonster::Clone()
+{
+	return new CMonster(*this);
 }

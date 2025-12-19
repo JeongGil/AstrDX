@@ -55,7 +55,10 @@
       <Filter>Player</Filter>
     </ClCompile>
     <ClCompile Include="Interface\CStateInterface.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Monster\CMonsterSpawnPoint.cpp">
+      <Filter>Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -78,7 +81,10 @@
       <Filter>Player</Filter>
     </ClInclude>
     <ClInclude Include="Interface\CStateInterface.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Monster\CMonsterSpawnPoint.h">
+      <Filter>Monster</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

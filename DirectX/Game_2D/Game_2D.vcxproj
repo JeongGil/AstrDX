@@ -157,6 +157,7 @@
     <ClCompile Include="Interface\CStateInterface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster\CMonster.cpp" />
+    <ClCompile Include="Monster\CMonsterSpawnPoint.cpp" />
     <ClCompile Include="Player\CBullet.cpp" />
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Component\CStateComponent.h" />
     <ClInclude Include="Interface\CStateInterface.h" />
     <ClInclude Include="Monster\CMonster.h" />
+    <ClInclude Include="Monster\CMonsterSpawnPoint.h" />
     <ClInclude Include="Player\CBullet.h" />
     <ClInclude Include="Player\CMissile.h" />
     <ClInclude Include="Player\CPlayer.h" />

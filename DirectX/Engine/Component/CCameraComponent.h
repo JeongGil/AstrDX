@@ -6,6 +6,7 @@ class CCameraComponent :
 	public CSceneComponent
 {
 	friend class CGameObject;
+	friend CObject;
 
 public:
 	enum class EProjectionType : unsigned char
@@ -15,12 +16,12 @@ public:
 	};
 
 public:
-	[[nodiscard]] FMatrix GetViewMatrix() const
+	[[nodiscard]] const FMatrix& GetViewMatrix() const
 	{
 		return ViewMatrix;
 	}
 
-	[[nodiscard]] FMatrix GetProjectionMatrix() const
+	[[nodiscard]] const FMatrix& GetProjectionMatrix() const
 	{
 		return ProjectionMatrix;
 	}

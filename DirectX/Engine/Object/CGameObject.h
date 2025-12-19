@@ -10,6 +10,7 @@ class CGameObject :
 	public CObject
 {
 	friend class CWorld;
+	friend CObject;
 
 public:
 	std::weak_ptr<CWorld> GetWorld() const

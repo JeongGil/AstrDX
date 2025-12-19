@@ -1,7 +1,13 @@
 #include <CEngine.h>
 
+#include "Monster/CMonster.h"
+#include "Monster/CMonsterSpawnPoint.h"
+#include "Player/CBullet.h"
+#include "Player/CMissile.h"
+#include "Player/CPlayer.h"
 #include "World/CMainWorld.h"
 #include "World/CWorldManager.h"
+#include "Component/CStateComponent.h"
 
 #ifdef _DEBUG
 // link debug lib
@@ -26,6 +32,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 		return 0;
 	}
+
+	CEngine::CreateCDO<CPlayer>();
+	CEngine::CreateCDO<CBullet>();
+	CEngine::CreateCDO<CMissile>();
+	CEngine::CreateCDO<CMonster>();
+	CEngine::CreateCDO<CMonsterSpawnPoint>();
+	CEngine::CreateCDO<CStateComponent>();
 
 	CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);
 

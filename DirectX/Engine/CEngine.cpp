@@ -8,6 +8,18 @@
 #include "Asset/Shader/CShaderManager.h"
 #include "World/CWorldManager.h"
 #include "Asset/Shader/CCBufferTransform.h"
+#include "CObject.h"
+#include "Object/CGameObject.h"
+#include "Component/CMeshComponent.h"
+#include "Component/CCameraComponent.h"
+
+void CEngine::InitCDO()
+{
+	CObject::CreateCDO<CGameObject>();
+	CObject::CreateCDO<CSceneComponent>();
+	CObject::CreateCDO<CMeshComponent>();
+	CObject::CreateCDO<CCameraComponent>();
+}
 
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
                    const int Width, const int	Height, const bool WindowMode)
@@ -161,6 +173,9 @@ CEngine::CEngine()
 CEngine::~CEngine()
 {
 	CWorldManager::DestroyInst();
+
+	CObject::ClearCDO();
+
 	CAssetManager::DestroyInst();
 
 	CDevice::DestroyInst();

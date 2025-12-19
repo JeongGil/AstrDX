@@ -8,6 +8,7 @@ class CMissile :
     public CGameObject
 {
 	friend class CWorld;
+	friend CObject;
 
 public:
 	void SetCamera();
@@ -15,6 +16,9 @@ public:
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
+
+protected:
+	CMissile* Clone() override;
 
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;

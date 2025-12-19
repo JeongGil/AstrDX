@@ -69,7 +69,13 @@ public:
 		std::shared_ptr<T> NewObject;
 		NewObject.reset(Origin->Clone());
 
+		NewObject->SetWorld(weak_from_this());
 		NewObject->SetName(key);
+
+		if (!NewObject->Init())
+		{
+			return std::weak_ptr<T>();
+		}
 
 		Objects.emplace(key, NewObject);
 

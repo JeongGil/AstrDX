@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <functional>
+#include <typeindex>
 
 // check memory leak
 #include <crtdbg.h>

@@ -7,6 +7,7 @@ class CMonster :
     public CGameObject
 {
 	friend class CWorld;
+	friend CObject;
 
 private:
 	float ElapsedFromShot = 0.f;
@@ -19,6 +20,9 @@ private:
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
+
+protected:
+	CMonster* Clone() override;
 
 protected:
 	CMonster() = default;

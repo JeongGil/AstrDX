@@ -5,6 +5,8 @@ class CStateComponent :
     public CObjectComponent
 {
 	friend class CGameObject;
+	friend CObject;
+
 public:
 	bool AddHP(int Added);
 

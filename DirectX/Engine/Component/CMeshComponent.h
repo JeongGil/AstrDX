@@ -13,6 +13,7 @@ class CMeshComponent :
     public CSceneComponent
 {
 	friend class CGameObject;
+	friend CObject;
 
 public:
 	void SetMesh(const std::weak_ptr<CMesh>& Mesh)

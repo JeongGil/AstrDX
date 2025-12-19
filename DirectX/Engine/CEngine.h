@@ -1,9 +1,20 @@
 #pragma once
 
 #include "EngineInfo.h"
+#include "CObject.h"
 
 class CEngine
 {
+public:
+	template <typename T>
+	static void CreateCDO()
+	{
+		CObject::CreateCDO<T>();
+	}
+
+private:
+	void InitCDO();
+
 public:
 	/**
 	 * @brief Initializes the engine and its essential components.

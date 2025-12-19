@@ -9,6 +9,7 @@ class CPlayer :
 	public CGameObject
 {
 	friend class CWorld;
+	friend CObject;
 
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
