@@ -168,9 +168,12 @@
   <ItemGroup>
     <ClInclude Include="Asset\CAssetManager.h" />
     <ClInclude Include="Asset\CPathManager.h" />
+    <ClInclude Include="Asset\Material\CMaterial.h" />
+    <ClInclude Include="Asset\Material\CMaterialManager.h" />
     <ClInclude Include="Asset\Mesh\CMesh.h" />
     <ClInclude Include="Asset\Mesh\CMeshManager.h" />
     <ClInclude Include="Asset\Shader\CBufferContainer.h" />
+    <ClInclude Include="Asset\Shader\CCBufferMaterial.h" />
     <ClInclude Include="Asset\Shader\CCBufferTransform.h" />
     <ClInclude Include="Asset\Shader\CComputeShader.h" />
     <ClInclude Include="Asset\Shader\CConstantBuffer.h" />
@@ -179,6 +182,7 @@
     <ClInclude Include="Asset\Shader\CShader.h" />
     <ClInclude Include="Asset\Shader\CShaderColor2D.h" />
     <ClInclude Include="Asset\Shader\CShaderManager.h" />
+    <ClInclude Include="Asset\Shader\CShaderMaterialColor2D.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CObject.h" />
@@ -209,8 +213,11 @@
   <ItemGroup>
     <ClCompile Include="Asset\CAssetManager.cpp" />
     <ClCompile Include="Asset\CPathManager.cpp" />
+    <ClCompile Include="Asset\Material\CMaterial.cpp" />
+    <ClCompile Include="Asset\Material\CMaterialManager.cpp" />
     <ClCompile Include="Asset\Mesh\CMesh.cpp" />
     <ClCompile Include="Asset\Mesh\CMeshManager.cpp" />
+    <ClCompile Include="Asset\Shader\CCBufferMaterial.cpp" />
     <ClCompile Include="Asset\Shader\CCBufferTransform.cpp" />
     <ClCompile Include="Asset\Shader\CComputeShader.cpp" />
     <ClCompile Include="Asset\Shader\CConstantBuffer.cpp" />
@@ -219,6 +226,7 @@
     <ClCompile Include="Asset\Shader\CShader.cpp" />
     <ClCompile Include="Asset\Shader\CShaderColor2D.cpp" />
     <ClCompile Include="Asset\Shader\CShaderManager.cpp" />
+    <ClCompile Include="Asset\Shader\CShaderMaterialColor2D.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CObject.cpp" />

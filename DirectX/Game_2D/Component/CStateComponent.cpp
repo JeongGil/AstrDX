@@ -1,5 +1,7 @@
 #include "CStateComponent.h"
 
+#include <Object/CGameObject.h>
+
 bool CStateComponent::AddHP(int Added)
 {
 	HP += Added;
@@ -17,6 +19,11 @@ bool CStateComponent::AddHP(int Added)
 	else if (HP < 0)
 	{
 		HP = 0;
+		if (auto Owner = this->Owner.lock())
+		{
+			Owner->Destroy();
+		}
+
 		return false;
 	}
 

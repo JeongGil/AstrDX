@@ -20,7 +20,7 @@ struct VS_OUTPUT_COLOR2D
 // Set entry point name in file option.
 VS_OUTPUT_COLOR2D Color2DVS(VS_INPUT_COLOR2D input)
 {
-	VS_OUTPUT_COLOR2D output; //= (VS_OUTPUT_COLOR2D)0;
+	VS_OUTPUT_COLOR2D output = (VS_OUTPUT_COLOR2D)0;
 
 	output.Pos = mul(float4(input.Pos, 1.f), cbWVP);
 	output.Color = input.Color;
@@ -36,7 +36,16 @@ struct PS_OUTPUT_COLOR
 
 PS_OUTPUT_COLOR Color2DPS(VS_OUTPUT_COLOR2D input)
 {
-	PS_OUTPUT_COLOR output;
+	PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR)0;
 	output.Color = input.Color;
+	return output;
+}
+
+PS_OUTPUT_COLOR MaterialColor2DPS(VS_OUTPUT_COLOR2D input)
+{
+	PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR)0;
+	output.Color = cbBaseColor;
+	output.Color.a = cbOpacity;
+
 	return output;
 }

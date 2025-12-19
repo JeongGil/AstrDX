@@ -17,3 +17,10 @@ cbuffer CBTransform : register(b0)
 	matrix cbWV;
 	matrix cbWVP;
 }
+
+cbuffer CBMaterial : register(b1)
+{
+	float4 cbBaseColor;
+	float cbOpacity;
+	float3 cbMaterialEmpty;
+}

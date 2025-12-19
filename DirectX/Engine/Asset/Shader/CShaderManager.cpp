@@ -2,6 +2,7 @@
 
 #include "CConstantBuffer.h"
 #include "CShaderColor2D.h"
+#include "CShaderMaterialColor2D.h"
 
 bool CShaderManager::Init()
 {
@@ -11,8 +12,18 @@ bool CShaderManager::Init()
 		return false;
 	}
 
+	if (!CreateCBuffer("Material", sizeof(FCBufferMaterialData), 1, EShaderBufferType::Pixel))
+	{
+		return false;
+	}
+
 	// Shader
 	if (!CreateShader<CShaderColor2D>("Color2D"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderMaterialColor2D>("MaterialColor2D"))
 	{
 		return false;
 	}

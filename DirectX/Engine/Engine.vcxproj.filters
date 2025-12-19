@@ -76,6 +76,15 @@
     <Filter Include="World\Camera">
       <UniqueIdentifier>{5ee2aecf-e7c8-409d-8782-67afb4f8552e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Shader\Shader\MaterialColor2D">
+      <UniqueIdentifier>{57ff1359-7aa3-402c-913e-ef07a8607380}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\ConstantBuffer\Material">
+      <UniqueIdentifier>{777153e1-d6d4-454b-8830-80f653417de5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Material">
+      <UniqueIdentifier>{eec91386-d948-4621-8b82-099bfb8f3302}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -183,7 +192,19 @@
     <ClInclude Include="Component\CMeshComponent.h">
       <Filter>Compnent\SceneComponent\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderMaterialColor2D.h">
+      <Filter>Asset\Shader\Shader\MaterialColor2D</Filter>
+    </ClInclude>
     <ClInclude Include="Component\CObjectComponent.h">
+      <Filter>Compnent\ObjectComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CCBufferMaterial.h">
+      <Filter>Asset\Shader\ConstantBuffer\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Material\CMaterial.h">
+      <Filter>Asset\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Material\CMaterialManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -279,7 +300,19 @@
     <ClCompile Include="FMatrix.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderMaterialColor2D.cpp">
+      <Filter>Asset\Shader\Shader\MaterialColor2D</Filter>
+    </ClCompile>
     <ClCompile Include="Component\CObjectComponent.cpp">
+      <Filter>Compnent\ObjectComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CCBufferMaterial.cpp">
+      <Filter>Asset\Shader\ConstantBuffer\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Material\CMaterial.cpp">
+      <Filter>Asset\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Material\CMaterialManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

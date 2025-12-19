@@ -11,14 +11,14 @@ bool CAssetManager::Init()
 		return false;
 	}
 
-	MeshManager.reset(new CMeshManager);
-	if (!MeshManager->Init())
+	ShaderManager.reset(new CShaderManager);
+	if (!ShaderManager->Init())
 	{
 		return false;
 	}
 
-	ShaderManager.reset(new CShaderManager);
-	if (!ShaderManager->Init())
+	MeshManager.reset(new CMeshManager);
+	if (!MeshManager->Init())
 	{
 		return false;
 	}

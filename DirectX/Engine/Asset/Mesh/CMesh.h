@@ -1,6 +1,8 @@
 #pragma once
 #include "../../CObject.h"
 
+class CMaterial;
+
 struct FVertexBuffer
 {
 	ID3D11Buffer* Buffer = nullptr;
@@ -43,7 +45,7 @@ struct FIndexBuffer
 struct FMeshSlot
 {
 	FIndexBuffer IndexBuffer;
-	// Additional mesh slot data can be added here (e.g., material info)
+	std::shared_ptr<CMaterial> Material;
 };
 
 class CMesh :
@@ -56,6 +58,12 @@ public:
 		void* Indices = nullptr, int IndexSize = 0, int IndexCount = 0, DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN, D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
 	void Render() const;
+
+	void SetMaterial(int SlotIndex);
+	void SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a);
+	void SetMaterialBaseColor(int SlotIndex, unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+	void SetMaterialBaseColor(int SlotIndex, const FVector4& Color);
+	void SetMaterialOpacity(int SlotIndex, float Opacity);
 
 protected:
 	static bool CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count, D3D11_USAGE Usage);

@@ -29,3 +29,10 @@ struct FCBufferTransformData
 	FMatrix WV;
 	FMatrix WVP;
 };
+
+struct FCBufferMaterialData
+{
+	FVector4 BaseColor;
+	float Opacity;
+	FVector Empty;
+};

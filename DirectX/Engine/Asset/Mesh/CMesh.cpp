@@ -1,10 +1,11 @@
 #include "CMesh.h"
 
 #include "../../CDevice.h"
+#include "../Material/CMaterial.h"
 
 bool CMesh::CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_USAGE VertexUsage,
-	D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount, DXGI_FORMAT Format,
-	D3D11_USAGE IndexUsage)
+                       D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount, DXGI_FORMAT Format,
+                       D3D11_USAGE IndexUsage)
 {
 	VertexBuffer.Size = VertexSize;
 	VertexBuffer.Count = VertexCount;
@@ -23,6 +24,8 @@ bool CMesh::CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_US
 		Slot->IndexBuffer.Format = Format;
 
 		Slots.push_back(Slot);
+
+		SetMaterial(0);
 
 		if (!CreateBuffer(&Slot->IndexBuffer.Buffer, D3D11_BIND_INDEX_BUFFER, Indices, IndexSize, IndexCount, IndexUsage))
 		{
@@ -51,6 +54,11 @@ void CMesh::Render() const
 	{
 		for (auto Slot : Slots)
 		{
+			if (Slot->Material)
+			{
+				Slot->Material->UpdateConstantBuffer();
+			}
+
 			CDevice::GetInst()->GetContext()->IASetIndexBuffer(
 				Slot->IndexBuffer.Buffer,
 				Slot->IndexBuffer.Format, 0);
@@ -61,8 +69,61 @@ void CMesh::Render() const
 	}
 }
 
+void CMesh::SetMaterial(int SlotIndex)
+{
+	if (!Slots[SlotIndex]->Material)
+	{
+		Slots[SlotIndex]->Material.reset(new CMaterial);
+		Slots[SlotIndex]->Material->Init();
+	}
+}
+
+void CMesh::SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a)
+{
+	if (!Slots[SlotIndex]->Material)
+	{
+		Slots[SlotIndex]->Material.reset(new CMaterial);
+		Slots[SlotIndex]->Material->Init();
+	}
+
+	Slots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
+}
+
+void CMesh::SetMaterialBaseColor(int SlotIndex, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+{
+	if (!Slots[SlotIndex]->Material)
+	{
+		Slots[SlotIndex]->Material.reset(new CMaterial);
+		Slots[SlotIndex]->Material->Init();
+	}
+
+	Slots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
+}
+
+void CMesh::SetMaterialBaseColor(int SlotIndex, const FVector4& Color)
+{
+	if (!Slots[SlotIndex]->Material)
+	{
+		Slots[SlotIndex]->Material.reset(new CMaterial);
+		Slots[SlotIndex]->Material->Init();
+	}
+
+	Slots[SlotIndex]->Material->SetBaseColor(Color);
+}
+
+void CMesh::SetMaterialOpacity(int SlotIndex, float Opacity)
+{
+	if (!Slots[SlotIndex]->Material)
+	{
+		Slots[SlotIndex]->Material.reset(new CMaterial);
+		Slots[SlotIndex]->Material->Init();
+	}
+
+	Slots[SlotIndex]->Material->SetOpacity(Opacity);
+}
+
 bool CMesh::CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count,
-	D3D11_USAGE Usage)
+                         D3D11_USAGE Usage)
 {
 	UINT CPUAccessFlags = 0u;
 	if (Usage == D3D11_USAGE_DYNAMIC)
