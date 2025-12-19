@@ -8,6 +8,7 @@
 class CShader;
 class CMesh;
 class CCBufferTransform;
+class CMaterial;
 
 class CMeshComponent :
     public CSceneComponent
@@ -16,11 +17,7 @@ class CMeshComponent :
 	friend CObject;
 
 public:
-	void SetMesh(const std::weak_ptr<CMesh>& Mesh)
-	{
-		this->Mesh = Mesh;
-	}
-
+	void SetMesh(const std::weak_ptr<CMesh>& Mesh);
 	void SetMesh(const std::string& Key);
 
 	void SetShader(const std::weak_ptr<CShader>& Shader)
@@ -30,9 +27,15 @@ public:
 
 	void SetShader(const std::string& Key);
 
+	void SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a);
+	void SetMaterialBaseColor(int SlotIndex, int r, int g, int b, int a);
+	void SetMaterialBaseColor(int SlotIndex, const FVector4& Color);
+	void SetMaterialOpacity(int SlotIndex, float Opacity);
+
 protected:
 	std::weak_ptr<CShader> Shader;
 	std::weak_ptr<CMesh> Mesh;
+	std::vector<std::shared_ptr<CMaterial>> Materials;
 	std::shared_ptr<CCBufferTransform> CBufferTransform;
 
 public:

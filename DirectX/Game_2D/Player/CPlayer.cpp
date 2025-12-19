@@ -5,6 +5,7 @@
 #include "CBullet.h"
 #include "CDevice.h"
 #include "CMissile.h"
+#include <CEngine.h>
 #include "Component/CMeshComponent.h"
 #include "Component/CCameraComponent.h"
 #include "../Monster/CMonster.h"
@@ -23,6 +24,8 @@ bool CPlayer::Init()
 		Mesh->SetShader("MaterialColor2D");
 		Mesh->SetMesh("CenterRectColor");
 		Mesh->SetWorldScale(100, 100);
+
+		Mesh->SetMaterialBaseColor(0, FColor::Green);
 	}
 
 	Rotation = CreateComponent<CSceneComponent>("Rotation");
@@ -35,12 +38,14 @@ bool CPlayer::Init()
 	SubMeshComponent = CreateComponent<CMeshComponent>("SubMesh", "Rotation");
 	if (auto Mesh = SubMeshComponent.lock())
 	{
-		Mesh->SetShader("Color2D");
+		Mesh->SetShader("MaterialColor2D");
 		Mesh->SetMesh("CenterRectColor");
 
 		Mesh->SetInheritScale(false);
 		Mesh->SetRelativePosition(100, 0, 0);
 		Mesh->SetRelativeScale(50, 50);
+
+		Mesh->SetMaterialBaseColor(0, FColor::Red);
 	}
 
 	CameraComponent = CreateComponent<CCameraComponent>("PlayerCamera");
@@ -67,10 +72,19 @@ void CPlayer::Update(float DeltaTime)
 		RotCmp->AddRelativeRotationZ(100.f * DeltaTime);
 	}
 
-	//if (auto SubMesh = SubMeshComponent.lock())
-	//{
-	//	SubMesh->AddRelativePosition(FVector(0.2f, 0, 0) * DeltaTime);
-	//}
+	if (auto SubMesh = SubMeshComponent.lock())
+	{
+		static float Elapsed = 0.f;
+		Elapsed += DeltaTime;
+		if (Elapsed >= 1.f)
+		{
+			Elapsed -= 1.f;
+			auto& MT = CEngine::GetInst()->GetMT();
+			std::uniform_real_distribution<float> Dist(0.f, 1.f);
+			SubMesh->SetMaterialBaseColor(0, Dist(MT), Dist(MT), Dist(MT), 0.f);
+		}
+		//SubMesh->AddRelativePosition(FVector(0.2f, 0, 0) * DeltaTime);
+	}
 
 	if (auto Mesh = MeshComponent.lock())
 	{

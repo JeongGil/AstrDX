@@ -8,7 +8,7 @@ void CMaterial::SetBaseColor(float r, float g, float b, float a)
 	MaterialCBuffer->SetBaseColor(BaseColor);
 }
 
-void CMaterial::SetBaseColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+void CMaterial::SetBaseColor(int r, int g, int b, int a)
 {
 	BaseColor = FColor(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
 	MaterialCBuffer->SetBaseColor(BaseColor);

@@ -8,6 +8,7 @@
 #include <string>
 #include <functional>
 #include <typeindex>
+#include <random>
 
 // check memory leak
 #include <crtdbg.h>

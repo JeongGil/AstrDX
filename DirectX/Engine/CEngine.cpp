@@ -24,6 +24,9 @@ void CEngine::InitCDO()
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
                    const int Width, const int	Height, const bool WindowMode)
 {
+	std::random_device RD;
+	MT = std::mt19937_64(RD());
+
 	hInst = hInstance;
 
 	InitRegisterClass(WindowName, IconID, SmallIconID);

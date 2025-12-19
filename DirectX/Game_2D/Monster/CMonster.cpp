@@ -14,7 +14,7 @@ bool CMonster::Init()
 	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
-		Mesh->SetShader("Color2D");
+		Mesh->SetShader("MaterialColor2D");
 		Mesh->SetMesh("CenterRectColor");
 		Mesh->SetRelativeScale(100, 100);
 	}

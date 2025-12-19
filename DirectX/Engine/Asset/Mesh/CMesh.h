@@ -58,12 +58,24 @@ public:
 		void* Indices = nullptr, int IndexSize = 0, int IndexCount = 0, DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN, D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
 	void Render() const;
+	void Render(size_t SlotIndex);
 
 	void SetMaterial(int SlotIndex);
 	void SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a);
-	void SetMaterialBaseColor(int SlotIndex, unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+	void SetMaterialBaseColor(int SlotIndex, int r, int g, int b, int a);
 	void SetMaterialBaseColor(int SlotIndex, const FVector4& Color);
 	void SetMaterialOpacity(int SlotIndex, float Opacity);
+
+public:
+	size_t GetSlotCount() const
+	{
+		return Slots.size();
+	}
+
+	std::shared_ptr<FMeshSlot> GetSlot(size_t Index) const
+	{
+		return Slots[Index];
+	}
 
 protected:
 	static bool CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count, D3D11_USAGE Usage);

@@ -12,6 +12,11 @@ public:
 		CObject::CreateCDO<T>();
 	}
 
+	std::mt19937_64& GetMT()
+	{
+		return MT;
+	}
+
 private:
 	void InitCDO();
 
@@ -111,6 +116,8 @@ private:
 	HWND hWnd = nullptr;
 
 	inline static bool bLoop = true;
+
+	std::mt19937_64 MT;
 
 public:
 	static CEngine* GetInst()

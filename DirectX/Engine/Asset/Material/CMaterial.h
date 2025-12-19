@@ -11,7 +11,7 @@ class CMaterial :
 
 public:
 	void SetBaseColor(float r, float g, float b, float a);
-	void SetBaseColor(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
+	void SetBaseColor(int r, int g, int b, int a);
 	void SetBaseColor(const FColor& Color);
 	void SetOpacity(float Opacity);
 

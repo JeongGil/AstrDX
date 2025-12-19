@@ -69,6 +69,33 @@ void CMesh::Render() const
 	}
 }
 
+void CMesh::Render(size_t SlotIndex)
+{
+	UINT Stride = VertexBuffer.Size;
+	UINT Offset = 0;
+
+	CDevice::GetInst()->GetContext()->IASetPrimitiveTopology(Topology);
+	CDevice::GetInst()->GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer.Buffer, &Stride, &Offset);
+
+	// No mesh slot (including index buffer).
+	if (Slots.empty())
+	{
+		CDevice::GetInst()->GetContext()->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		CDevice::GetInst()->GetContext()->Draw(VertexBuffer.Count, 0);
+	}
+	else
+	{
+		const auto& Slot = Slots[SlotIndex];
+
+		CDevice::GetInst()->GetContext()->IASetIndexBuffer(
+			Slot->IndexBuffer.Buffer,
+			Slot->IndexBuffer.Format, 0);
+
+		CDevice::GetInst()->GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer.Buffer, &Stride, &Offset);
+		CDevice::GetInst()->GetContext()->DrawIndexed(Slot->IndexBuffer.Count, 0, 0);
+	}
+}
+
 void CMesh::SetMaterial(int SlotIndex)
 {
 	if (!Slots[SlotIndex]->Material)
@@ -89,7 +116,7 @@ void CMesh::SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float
 	Slots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
 }
 
-void CMesh::SetMaterialBaseColor(int SlotIndex, unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+void CMesh::SetMaterialBaseColor(int SlotIndex, int r, int g, int b, int a)
 {
 	if (!Slots[SlotIndex]->Material)
 	{
