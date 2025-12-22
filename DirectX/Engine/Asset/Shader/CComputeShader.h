@@ -6,7 +6,7 @@ class CComputeShader :
 	friend class CShaderManager;
 
 public:
-	bool Init() override = 0;
+	bool Init(const std::string& PathName) override = 0;
 	void SetShader() final;
 
 protected:

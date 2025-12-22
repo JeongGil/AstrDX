@@ -7,7 +7,7 @@ class CShader
 	friend class CShaderManager;
 
 public:
-	virtual bool Init() = 0;
+	virtual bool Init(const std::string& PathName) = 0;
 	virtual void SetShader() = 0;
 
 protected:

@@ -85,15 +85,18 @@
     <Filter Include="Asset\Material">
       <UniqueIdentifier>{eec91386-d948-4621-8b82-099bfb8f3302}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Texture">
+      <UniqueIdentifier>{02ff4afd-224a-4bf5-a08e-62ca3ea610fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
       <Filter>소스 파일</Filter>
     </None>
-    <None Include="..\Bin\Asset\Shader\Share.hlsli">
+    <None Include="ClassDiagram.cd" />
+    <None Include="..\Core\Bin\EngineAsset\Shader\Share.hlsli">
       <Filter>Asset\Shader\HLSL</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -205,7 +208,10 @@
       <Filter>Asset\Material</Filter>
     </ClInclude>
     <ClInclude Include="Asset\Material\CMaterialManager.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Asset\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Texture\CTexture.h">
+      <Filter>Asset\Texture</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -313,17 +319,20 @@
       <Filter>Asset\Material</Filter>
     </ClCompile>
     <ClCompile Include="Asset\Material\CMaterialManager.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Asset\Material</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\Bin\Asset\Shader\GlobalShader2D.hlsl">
-      <Filter>Asset\Shader\HLSL</Filter>
-    </FxCompile>
+    <ClCompile Include="Asset\Texture\CTexture.cpp">
+      <Filter>Asset\Texture</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Asset\Shader\SpaceTransformation.txt">
       <Filter>소스 파일</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Core\Bin\EngineAsset\Shader\GlobalShader2D.hlsl">
+      <Filter>Asset\Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -1,13 +1,13 @@
 #include "CShaderColor2D.h"
 
-bool CShaderColor2D::Init()
+bool CShaderColor2D::Init(const std::string& PathName)
 {
-	if (!LoadVertexShader("Color2DVS", TEXT("GlobalShader2D.hlsl")))
+	if (!LoadVertexShader("Color2DVS", TEXT("GlobalShader2D.hlsl"), PathName))
 	{
 		return false;
 	}
 
-	if (!LoadPixelShader("Color2DPS", TEXT("GlobalShader2D.hlsl")))
+	if (!LoadPixelShader("Color2DPS", TEXT("GlobalShader2D.hlsl"), PathName))
 	{
 		return false;
 	}

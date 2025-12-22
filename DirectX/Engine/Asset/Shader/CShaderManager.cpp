@@ -18,12 +18,12 @@ bool CShaderManager::Init()
 	}
 
 	// Shader
-	if (!CreateShader<CShaderColor2D>("Color2D"))
+	if (!CreateShader<CShaderColor2D>("Color2D", "EngineShader"))
 	{
 		return false;
 	}
 
-	if (!CreateShader<CShaderMaterialColor2D>("MaterialColor2D"))
+	if (!CreateShader<CShaderMaterialColor2D>("MaterialColor2D", "EngineShader"))
 	{
 		return false;
 	}

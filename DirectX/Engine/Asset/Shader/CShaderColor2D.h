@@ -8,7 +8,7 @@ class CShaderColor2D
 	friend class CShaderManager;
 
 public:
-	bool Init() override;
+	bool Init(const std::string& PathName) override;
 
 protected:
 	CShaderColor2D();

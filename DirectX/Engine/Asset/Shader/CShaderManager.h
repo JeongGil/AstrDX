@@ -35,11 +35,12 @@ public:
 	 *
 	 * @tparam T The type of the shader to be created. Must be derived from `CShader`.
 	 * @param Key The unique identifier for the shader.
+	 * @param PathName = "Shader"
 	 * @return true if the shader is successfully created and initialized,
 	 *         false if a shader with the same key already exists or initialization fails.
 	 */
 	template <typename T>
-	bool CreateShader(const std::string& Key)
+	bool CreateShader(const std::string& Key, const std::string& PathName)
 	{
 		if (Shaders.contains(Key))
 		{
@@ -49,7 +50,7 @@ public:
 		auto ShaderInstance = new T;
 		std::shared_ptr<CShader> NewShader;
 		NewShader.reset(ShaderInstance);
-		if (!NewShader->Init())
+		if (!NewShader->Init(PathName))
 		{
 			return false;
 		}

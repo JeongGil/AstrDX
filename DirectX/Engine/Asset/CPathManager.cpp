@@ -23,6 +23,11 @@ bool CPathManager::Init()
 
 	CreatePath("Asset", TEXT("Asset\\"));
 	CreatePath("Shader", TEXT("Shader\\"), "Asset");
+	CreatePath("Texture", TEXT("Texture\\"), "Asset");
+
+	CreatePath("EngineAsset", TEXT("EngineAsset\\"));
+	CreatePath("EngineShader", TEXT("Shader\\"), "EngineAsset");
+	CreatePath("EngineTexture", TEXT("Shader\\"), "EngineAsset");
 
 	return true;
 }

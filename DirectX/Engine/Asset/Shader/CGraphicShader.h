@@ -6,7 +6,7 @@ class CGraphicShader :
 	friend class CShaderManager;
 
 public:
-	bool Init() override = 0;
+	bool Init(const std::string& PathName) override = 0;
 	void SetShader() final;
 
 	/*
@@ -23,8 +23,8 @@ public:
 
 	bool CreateInputLayout();
 
-	bool LoadVertexShader(const char* EntryName, const TCHAR* FileName);
-	bool LoadPixelShader(const char* EntryName, const TCHAR* FileName);
+	bool LoadVertexShader(const char* EntryName, const TCHAR* FileName, const std::string& PathName = "Shader");
+	bool LoadPixelShader(const char* EntryName, const TCHAR* FileName, const std::string& PathName = "Shader");
 
 protected:
 	// VertexShader, PixelShader, DomainShader, HullShader, GeometryShader

@@ -7,7 +7,7 @@ class CShaderMaterialColor2D :
 	friend class CShaderManager;
 
 public:
-	bool Init() override;
+	bool Init(const std::string& PathName) override;
 
 protected:
 	CShaderMaterialColor2D() = default;

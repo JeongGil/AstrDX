@@ -161,7 +161,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\Bin\Asset\Shader\Share.hlsli" />
+    <None Include="..\Core\Bin\EngineAsset\Shader\Share.hlsli" />
     <None Include="ClassDiagram.cd" />
     <None Include="Copy.bat" />
   </ItemGroup>
@@ -183,6 +183,7 @@
     <ClInclude Include="Asset\Shader\CShaderColor2D.h" />
     <ClInclude Include="Asset\Shader\CShaderManager.h" />
     <ClInclude Include="Asset\Shader\CShaderMaterialColor2D.h" />
+    <ClInclude Include="Asset\Texture\CTexture.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CObject.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="Asset\Shader\CShaderColor2D.cpp" />
     <ClCompile Include="Asset\Shader\CShaderManager.cpp" />
     <ClCompile Include="Asset\Shader\CShaderMaterialColor2D.cpp" />
+    <ClCompile Include="Asset\Texture\CTexture.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CObject.cpp" />
@@ -245,23 +247,15 @@
     <ClCompile Include="World\CWorldManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="..\Bin\Asset\Shader\GlobalShader2D.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Color2DVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Color2DVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Color2DVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Color2DVS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
+    <Text Include="Asset\Shader\SpaceTransformation.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Asset\Shader\SpaceTransformation.txt" />
+    <FxCompile Include="..\Core\Bin\EngineAsset\Shader\GlobalShader2D.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Color2DVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Color2DVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Color2DVS</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Color2DVS</EntryPointName>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

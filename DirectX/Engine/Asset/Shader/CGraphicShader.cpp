@@ -34,9 +34,9 @@ bool CGraphicShader::CreateInputLayout()
 	return true;
 }
 
-bool CGraphicShader::LoadVertexShader(const char* EntryName, const TCHAR* FileName)
+bool CGraphicShader::LoadVertexShader(const char* EntryName, const TCHAR* FileName, const std::string& PathName)
 {
-	const TCHAR* BasePath = CPathManager::FindPath("Shader");
+	const TCHAR* BasePath = CPathManager::FindPath(PathName);
 	TCHAR FullPath[MAX_PATH] = {};
 
 	lstrcpy(FullPath, BasePath);
@@ -86,9 +86,9 @@ bool CGraphicShader::LoadVertexShader(const char* EntryName, const TCHAR* FileNa
 	return true;
 }
 
-bool CGraphicShader::LoadPixelShader(const char* EntryName, const TCHAR* FileName)
+bool CGraphicShader::LoadPixelShader(const char* EntryName, const TCHAR* FileName, const std::string& PathName)
 {
-	const TCHAR* BasePath = CPathManager::FindPath("Shader");
+	const TCHAR* BasePath = CPathManager::FindPath(PathName);
 	TCHAR FullPath[MAX_PATH] = {};
 
 	lstrcpy(FullPath, BasePath);
