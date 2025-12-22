@@ -162,6 +162,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\Core\Bin\EngineAsset\Shader\Share.hlsli" />
+    <None Include="Asset\Texture\DirectXTex.inl" />
     <None Include="ClassDiagram.cd" />
     <None Include="Copy.bat" />
   </ItemGroup>
@@ -183,7 +184,10 @@
     <ClInclude Include="Asset\Shader\CShaderColor2D.h" />
     <ClInclude Include="Asset\Shader\CShaderManager.h" />
     <ClInclude Include="Asset\Shader\CShaderMaterialColor2D.h" />
+    <ClInclude Include="Asset\Shader\CShaderTexture2D.h" />
     <ClInclude Include="Asset\Texture\CTexture.h" />
+    <ClInclude Include="Asset\Texture\CTextureManager.h" />
+    <ClInclude Include="Asset\Texture\DirectXTex.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CObject.h" />
@@ -228,7 +232,9 @@
     <ClCompile Include="Asset\Shader\CShaderColor2D.cpp" />
     <ClCompile Include="Asset\Shader\CShaderManager.cpp" />
     <ClCompile Include="Asset\Shader\CShaderMaterialColor2D.cpp" />
+    <ClCompile Include="Asset\Shader\CShaderTexture2D.cpp" />
     <ClCompile Include="Asset\Texture\CTexture.cpp" />
+    <ClCompile Include="Asset\Texture\CTextureManager.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CObject.cpp" />

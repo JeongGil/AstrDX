@@ -18,6 +18,8 @@ struct FTextureInfo;
 class CTexture :
 	public CObject
 {
+	friend class CTextureManager;
+
 protected:
 	CTexture() = default;
 
@@ -25,25 +27,31 @@ public:
 	~CTexture() override;
 
 	bool LoadTexture(const TCHAR* FileName, const std::string& PathName);
-	bool LoadTexture(const TCHAR* FullPath);
-	bool LoadTexture(const std::vector<const TCHAR*>& FileNames, const std::string& PathName);
-	bool LoadTexture(const std::vector<const TCHAR*>& FullPaths);
+	bool LoadTextureFullPath(const TCHAR* FullPath);
+	bool LoadTextures(const std::vector<const TCHAR*>& FileNames, const std::string& PathName);
+	bool LoadTexturesFullPath(const std::vector<const TCHAR*>& FullPaths);
 
-	void SetShader(UINT Register, EShaderBufferType::Type ShaderBufferType, size_t TextureIndex);
+	void SetShader(UINT Register, int ShaderBufferType, int TextureIndex);
+
+	const std::string& GetName() const
+	{
+		return Name;
+	}
 
 	const FTextureInfo* GetTexture(size_t Index = 0) const
 	{
-		return Textures[Index];
+		return TextureInfos[Index];
 	}
 
 	size_t GetTextureCount() const
 	{
-		return Textures.size();
+		return TextureInfos.size();
 	}
 
 protected:
+	std::string Name;
 	// Designed to allow multiple images to be composed into a single texture.
-	std::vector<FTextureInfo*> Textures;
+	std::vector<FTextureInfo*> TextureInfos;
 
 private:
 	bool CreateResourceView(size_t Index = 0);

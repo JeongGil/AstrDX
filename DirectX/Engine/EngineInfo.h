@@ -78,3 +78,43 @@ struct FVertexColor
 		return *this;
 	}
 };
+
+struct FVertexTex
+{
+	FVector3 Pos;
+	FVector2 UV;
+
+	FVertexTex() = default;
+
+	FVertexTex(float x, float y, float z, float u, float v)
+		: Pos(x, y, z),
+		UV(u, v)
+	{
+	}
+
+	FVertexTex(const FVertexTex& other) = default;
+
+	FVertexTex(FVertexTex&& other) noexcept
+		: Pos(std::move(other.Pos)),
+		  UV(std::move(other.UV))
+	{
+	}
+
+	FVertexTex& operator=(const FVertexTex& other)
+	{
+		if (this == &other)
+			return *this;
+		Pos = other.Pos;
+		UV = other.UV;
+		return *this;
+	}
+
+	FVertexTex& operator=(FVertexTex&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
+		Pos = std::move(other.Pos);
+		UV = std::move(other.UV);
+		return *this;
+	}
+};

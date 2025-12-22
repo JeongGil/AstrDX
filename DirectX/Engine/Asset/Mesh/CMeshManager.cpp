@@ -23,7 +23,23 @@ bool CMeshManager::Init()
 		return false;
 	}
 
-	FVertexColor CenterCubeColor[8] =
+	// TextureMesh rectangle.
+	FVertexTex CenterRectTexture[4] =
+	{
+		FVertexTex(-0.5f, 0.5f, 0.f, 0.f, 0.f),
+		FVertexTex(0.5f, 0.5f, 0.f, 1.f, 0.f),
+		FVertexTex(-0.5f, -0.5f, 0.f, 0.f, 1.f),
+		FVertexTex(0.5f, -0.5f, 0.f, 1.f, 1.f)
+	};
+
+	if (!CreateMesh("CenterRectTex", CenterRectTexture, sizeof(FVertexTex),
+		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
+	{
+		return false;
+	}
+
+		FVertexColor CenterCubeColor[8] =
 	{
 		FVertexColor(-0.5f, 0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f),
 		FVertexColor(0.5f, 0.5f, -0.5f, 0.f, 1.f, 0.f, 1.f),

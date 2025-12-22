@@ -3,6 +3,7 @@
 #include "CConstantBuffer.h"
 #include "CShaderColor2D.h"
 #include "CShaderMaterialColor2D.h"
+#include "CShaderTexture2D.h"
 
 bool CShaderManager::Init()
 {
@@ -24,6 +25,11 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderMaterialColor2D>("MaterialColor2D", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderTexture2D>("DefaultTexture2D", "EngineShader"))
 	{
 		return false;
 	}

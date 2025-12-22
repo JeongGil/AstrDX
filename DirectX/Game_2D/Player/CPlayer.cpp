@@ -21,11 +21,12 @@ bool CPlayer::Init()
 	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
-		Mesh->SetShader("MaterialColor2D");
-		Mesh->SetMesh("CenterRectColor");
+		Mesh->SetShader("DefaultTexture2D");
+		Mesh->SetMesh("CenterRectTex");
 		Mesh->SetWorldScale(100, 100);
 
-		Mesh->SetMaterialBaseColor(0, FColor::Green);
+		Mesh->SetMaterialBaseColor(0, FColor::White);
+		Mesh->AddTexture(0, "Player", TEXT("Icon_Shield.PNG"));
 	}
 
 	Rotation = CreateComponent<CSceneComponent>("Rotation");

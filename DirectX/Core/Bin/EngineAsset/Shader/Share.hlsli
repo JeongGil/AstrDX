@@ -24,3 +24,6 @@ cbuffer CBMaterial : register(b1)
 	float cbOpacity;
 	float3 cbMaterialEmpty;
 }
+
+SamplerState sbPoint : register(s0);
+SamplerState sbLinear : register(s1);

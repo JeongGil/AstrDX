@@ -1,17 +1,17 @@
 #pragma once
 #include "CSceneComponent.h"
-#include "../Asset/CAssetManager.h"
-#include "../Asset/Mesh/CMeshManager.h"
+
+#include "../Asset/Shader/CBufferContainer.h"
 #include "../Asset/Shader/CCBufferTransform.h"
-#include "../Asset/Shader/CShaderManager.h"
 
 class CShader;
 class CMesh;
 class CCBufferTransform;
 class CMaterial;
+class CTexture;
 
 class CMeshComponent :
-    public CSceneComponent
+	public CSceneComponent
 {
 	friend class CGameObject;
 	friend CObject;
@@ -32,10 +32,19 @@ public:
 	void SetMaterialBaseColor(int SlotIndex, const FVector4& Color);
 	void SetMaterialOpacity(int SlotIndex, float Opacity);
 
+	void AddTexture(int SlotIdx, const std::weak_ptr<CTexture>& Texture, int Register, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+
+	void AddTexture(int SlotIdx, const std::string& Key, int Register, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	void AddTexture(int SlotIdx, const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	void AddTextureFullPath(int SlotIdx, const std::string& Key, const TCHAR* FullPath, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+
+	void AddTextures(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	void AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+
 protected:
 	std::weak_ptr<CShader> Shader;
 	std::weak_ptr<CMesh> Mesh;
-	std::vector<std::shared_ptr<CMaterial>> Materials;
+	std::vector<std::shared_ptr<CMaterial>> MaterialSlot;
 	std::shared_ptr<CCBufferTransform> CBufferTransform;
 
 public:
@@ -72,17 +81,17 @@ protected:
 
 	CMeshComponent(const CMeshComponent& other)
 		: CSceneComponent(other),
-		  Shader(other.Shader),
-		  Mesh(other.Mesh),
-		  CBufferTransform(other.CBufferTransform->Clone())
+		Shader(other.Shader),
+		Mesh(other.Mesh),
+		CBufferTransform(other.CBufferTransform->Clone())
 	{
 	}
 
 	CMeshComponent(CMeshComponent&& other) noexcept
 		: CSceneComponent(std::move(other)),
-		  Shader(std::move(other.Shader)),
-		  Mesh(std::move(other.Mesh)),
-		  CBufferTransform(std::move(other.CBufferTransform))
+		Shader(std::move(other.Shader)),
+		Mesh(std::move(other.Mesh)),
+		CBufferTransform(std::move(other.CBufferTransform))
 	{
 		other.Shader.reset();
 		other.Mesh.reset();

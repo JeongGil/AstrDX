@@ -4,6 +4,7 @@
 
 class CMeshManager;
 class CShaderManager;
+class CTextureManager;
 
 class CAssetManager
 {
@@ -29,9 +30,15 @@ public:
 		return ShaderManager;
 	}
 
+	[[nodiscard]] std::weak_ptr<CTextureManager> GetTextureManager() const
+	{
+		return TextureManager;
+	}
+
 private:
 	std::shared_ptr<CMeshManager> MeshManager;
 	std::shared_ptr<CShaderManager> ShaderManager;
+	std::shared_ptr<CTextureManager> TextureManager;
 
 public:
 	static CAssetManager* GetInst()

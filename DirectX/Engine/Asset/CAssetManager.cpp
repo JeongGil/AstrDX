@@ -3,6 +3,7 @@
 #include "CPathManager.h"
 #include "Mesh/CMeshManager.h"
 #include "Shader/CShaderManager.h"
+#include "Texture/CTextureManager.h"
 
 bool CAssetManager::Init()
 {
@@ -13,6 +14,12 @@ bool CAssetManager::Init()
 
 	ShaderManager.reset(new CShaderManager);
 	if (!ShaderManager->Init())
+	{
+		return false;
+	}
+
+	TextureManager.reset(new CTextureManager);
+	if (!TextureManager->Init())
 	{
 		return false;
 	}

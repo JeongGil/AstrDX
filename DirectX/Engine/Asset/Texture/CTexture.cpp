@@ -6,7 +6,7 @@
 
 CTexture::~CTexture()
 {
-	for (auto& Texture : Textures)
+	for (auto& Texture : TextureInfos)
 	{
 		SAFE_DELETE(Texture);
 	}
@@ -21,10 +21,10 @@ bool CTexture::LoadTexture(const TCHAR* FileName, const std::string& PathName)
 	lstrcpy(FullPath, BasePath);
 	lstrcat(FullPath, FileName);
 
-	return LoadTexture(FullPath);
+	return LoadTextureFullPath(FullPath);
 }
 
-bool CTexture::LoadTexture(const TCHAR* FullPath)
+bool CTexture::LoadTextureFullPath(const TCHAR* FullPath)
 {
 	auto Texture = new FTextureInfo;
 
@@ -82,58 +82,58 @@ bool CTexture::LoadTexture(const TCHAR* FullPath)
 
 	Texture->Image = Image;
 
-	Textures.push_back(Texture);
+	TextureInfos.push_back(Texture);
 
 	// Create a ShaderResourceView for rendering using the loaded image information.
-	return CreateResourceView(Textures.size() - 1);
+	return CreateResourceView(TextureInfos.size() - 1);
 }
 
-bool CTexture::LoadTexture(const std::vector<const TCHAR*>& FileNames, const std::string& PathName)
+bool CTexture::LoadTextures(const std::vector<const TCHAR*>& FileNames, const std::string& PathName)
 {
 	return false;
 }
 
-bool CTexture::LoadTexture(const std::vector<const TCHAR*>& FullPaths)
+bool CTexture::LoadTexturesFullPath(const std::vector<const TCHAR*>& FullPaths)
 {
 	return false;
 }
 
-void CTexture::SetShader(UINT Register, EShaderBufferType::Type ShaderBufferType, size_t TextureIndex)
+void CTexture::SetShader(UINT Register, int ShaderBufferType, int TextureIndex)
 {
 	if ((ShaderBufferType & EShaderBufferType::Vertex) != 0)
 	{
-		CDevice::GetInst()->GetContext()->VSSetShaderResources(Register, 1, &Textures[TextureIndex]->SRV);
+		CDevice::GetInst()->GetContext()->VSSetShaderResources(Register, 1, &TextureInfos[TextureIndex]->SRV);
 	}
 
 	if ((ShaderBufferType & EShaderBufferType::Pixel) != 0)
 	{
-		CDevice::GetInst()->GetContext()->PSSetShaderResources(Register, 1, &Textures[TextureIndex]->SRV);
+		CDevice::GetInst()->GetContext()->PSSetShaderResources(Register, 1, &TextureInfos[TextureIndex]->SRV);
 	}
 
 	if ((ShaderBufferType & EShaderBufferType::Domain) != 0)
 	{
-		CDevice::GetInst()->GetContext()->DSSetShaderResources(Register, 1, &Textures[TextureIndex]->SRV);
+		CDevice::GetInst()->GetContext()->DSSetShaderResources(Register, 1, &TextureInfos[TextureIndex]->SRV);
 	}
 
 	if ((ShaderBufferType & EShaderBufferType::Hull) != 0)
 	{
-		CDevice::GetInst()->GetContext()->HSSetShaderResources(Register, 1, &Textures[TextureIndex]->SRV);
+		CDevice::GetInst()->GetContext()->HSSetShaderResources(Register, 1, &TextureInfos[TextureIndex]->SRV);
 	}
 
 	if ((ShaderBufferType & EShaderBufferType::Geometry) != 0)
 	{
-		CDevice::GetInst()->GetContext()->GSSetShaderResources(Register, 1, &Textures[TextureIndex]->SRV);
+		CDevice::GetInst()->GetContext()->GSSetShaderResources(Register, 1, &TextureInfos[TextureIndex]->SRV);
 	}
 
 	if ((ShaderBufferType & EShaderBufferType::Compute) != 0)
 	{
-		CDevice::GetInst()->GetContext()->CSSetShaderResources(Register, 1, &Textures[TextureIndex]->SRV);
+		CDevice::GetInst()->GetContext()->CSSetShaderResources(Register, 1, &TextureInfos[TextureIndex]->SRV);
 	}
 }
 
 bool CTexture::CreateResourceView(size_t Index)
 {
-	FTextureInfo*& Texture = Textures[Index];
+	FTextureInfo*& Texture = TextureInfos[Index];
 	DirectX::ScratchImage*& Image = Texture->Image;
 
 	if (FAILED(DirectX::CreateShaderResourceView(

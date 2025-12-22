@@ -1,7 +1,12 @@
 #pragma once
 #include "../../CObject.h"
 
+#include "../Shader/CBufferContainer.h"
+
 class CCBufferMaterial;
+class CTexture;
+
+struct FMaterialTextureInfo;
 
 class CMaterial :
     public CObject
@@ -15,11 +20,22 @@ public:
 	void SetBaseColor(const FColor& Color);
 	void SetOpacity(float Opacity);
 
+	void AddTexture(const std::weak_ptr<CTexture>& Texture, int Register, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+
+	void AddTexture(const std::string& Key, int Register, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	void AddTexture(const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	void AddTextureFullPath(const std::string& Key, const TCHAR* FullPath, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+
+	void AddTextures(const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	void AddTexturesFullPath(const std::string& Key, std::vector<const TCHAR*>& FullPaths, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+
 protected:
 	FColor BaseColor = FColor::White;
 	float Opacity = 1.f;
 
 	std::shared_ptr<CCBufferMaterial> MaterialCBuffer;
+
+	std::vector<std::shared_ptr<FMaterialTextureInfo>> TextureInfos;
 
 public:
 	bool Init();
@@ -39,5 +55,14 @@ protected:
 
 public:
 	~CMaterial() override = default;
+};
+
+struct FMaterialTextureInfo
+{
+	std::string Name;
+	std::weak_ptr<CTexture> Texture;
+	int Register = 0;
+	int ShaderBufferType = EShaderBufferType::Pixel;
+	int Index = 0;
 };
 

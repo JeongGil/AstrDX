@@ -2,12 +2,12 @@
 
 bool CShaderMaterialColor2D::Init(const std::string& PathName)
 {
-	if (!LoadVertexShader("Color2DVS", TEXT("GlobalShader2D.hlsl", PathName)))
+	if (!LoadVertexShader("Color2DVS", TEXT("GlobalShader2D.hlsl"), PathName))
 	{
 		return false;
 	}
 
-	if (!LoadPixelShader("MaterialColor2DPS", TEXT("GlobalShader2D.hlsl", PathName)))
+	if (!LoadPixelShader("MaterialColor2DPS", TEXT("GlobalShader2D.hlsl"), PathName))
 	{
 		return false;
 	}

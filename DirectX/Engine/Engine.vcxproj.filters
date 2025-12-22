@@ -88,6 +88,9 @@
     <Filter Include="Asset\Texture">
       <UniqueIdentifier>{02ff4afd-224a-4bf5-a08e-62ca3ea610fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Shader\Shader\Texture2D">
+      <UniqueIdentifier>{8d0db9ba-4af4-4db4-87ee-498a6859b7f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -96,6 +99,9 @@
     <None Include="ClassDiagram.cd" />
     <None Include="..\Core\Bin\EngineAsset\Shader\Share.hlsli">
       <Filter>Asset\Shader\HLSL</Filter>
+    </None>
+    <None Include="Asset\Texture\DirectXTex.inl">
+      <Filter>Asset\Texture</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -213,6 +219,15 @@
     <ClInclude Include="Asset\Texture\CTexture.h">
       <Filter>Asset\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Texture\CTextureManager.h">
+      <Filter>Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Texture\DirectXTex.h">
+      <Filter>Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderTexture2D.h">
+      <Filter>Asset\Shader\Shader\Texture2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -323,6 +338,12 @@
     </ClCompile>
     <ClCompile Include="Asset\Texture\CTexture.cpp">
       <Filter>Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Texture\CTextureManager.cpp">
+      <Filter>Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderTexture2D.cpp">
+      <Filter>Asset\Shader\Shader\Texture2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
