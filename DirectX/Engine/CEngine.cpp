@@ -12,6 +12,7 @@
 #include "Object/CGameObject.h"
 #include "Component/CMeshComponent.h"
 #include "Component/CCameraComponent.h"
+#include "Render/CRenderManager.h"
 
 void CEngine::InitCDO()
 {
@@ -22,7 +23,7 @@ void CEngine::InitCDO()
 }
 
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
-                   const int Width, const int	Height, const bool WindowMode)
+                   const int Width, const int Height, const bool WindowMode)
 {
 	std::random_device RD;
 	MT = std::mt19937_64(RD());
@@ -34,6 +35,11 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 	InitCreateWindow(WindowName, Width, Height);
 
 	if (!CDevice::GetInst()->Init(hWnd, Width, Height, WindowMode))
+	{
+		return false;
+	}
+
+	if (!CRenderManager::GetInst()->Init())
 	{
 		return false;
 	}
@@ -89,7 +95,8 @@ void CEngine::Render()
 {
 	CDevice::GetInst()->BeginRender();
 
-	CWorldManager::GetInst()->Render();
+	//CWorldManager::GetInst()->Render();
+	CRenderManager::GetInst()->Render();
 
 	CDevice::GetInst()->EndRender();
 }
@@ -178,6 +185,8 @@ CEngine::~CEngine()
 	CWorldManager::DestroyInst();
 
 	CObject::ClearCDO();
+
+	CRenderManager::DestroyInst();
 
 	CAssetManager::DestroyInst();
 

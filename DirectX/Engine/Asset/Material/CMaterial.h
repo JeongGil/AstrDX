@@ -5,6 +5,7 @@
 
 class CCBufferMaterial;
 class CTexture;
+class CRenderState;
 
 struct FMaterialTextureInfo;
 
@@ -15,6 +16,9 @@ class CMaterial :
 	friend class CMesh;
 
 public:
+	void SetBlendState(const std::string& Key);
+	void SetBlendState(const std::weak_ptr<CRenderState>& State);
+
 	void SetBaseColor(float r, float g, float b, float a);
 	void SetBaseColor(int r, int g, int b, int a);
 	void SetBaseColor(const FColor& Color);
@@ -33,6 +37,8 @@ protected:
 	FColor BaseColor = FColor::White;
 	float Opacity = 1.f;
 
+	std::weak_ptr<CRenderState> BlendState;
+
 	std::shared_ptr<CCBufferMaterial> MaterialCBuffer;
 
 	std::vector<std::shared_ptr<FMaterialTextureInfo>> TextureInfos;
@@ -40,6 +46,7 @@ protected:
 public:
 	bool Init();
 	void UpdateConstantBuffer();
+	void Reset();
 	CMaterial* Clone() const;
 
 protected:

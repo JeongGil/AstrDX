@@ -1,5 +1,7 @@
 #include "CSceneComponent.h"
 
+#include "../Render/CRenderManager.h"
+
 void CSceneComponent::AddChild(const std::weak_ptr<CSceneComponent>& Child)
 {
 	if (auto Shared = Child.lock())
@@ -572,6 +574,16 @@ void CSceneComponent::InheritWorldPosition()
 
 bool CSceneComponent::Init()
 {
+	if (!CComponent::Init())
+	{
+		return false;
+	}
+
+	if (RenderType == EComponentRender::Render)
+	{
+		CRenderManager::GetInst()->AddRenderLayer(std::dynamic_pointer_cast<CSceneComponent>(shared_from_this()));
+	}
+
 	return true;
 }
 
@@ -601,13 +613,14 @@ void CSceneComponent::PostUpdate(const float DeltaTime)
 
 void CSceneComponent::Render()
 {
-	for (const auto& WeakChild : Children)
-	{
-		if (auto Child = WeakChild.lock())
-		{
-			Child->Render();
-		}
-	}
+	// All components that need to be rendered are rendered by the RenderManager.
+	//for (const auto& WeakChild : Children)
+	//{
+	//	if (auto Child = WeakChild.lock())
+	//	{
+	//		Child->Render();
+	//	}
+	//}
 }
 
 CSceneComponent* CSceneComponent::Clone() const

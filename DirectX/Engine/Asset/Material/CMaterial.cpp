@@ -1,9 +1,21 @@
 #include "CMaterial.h"
 
 #include "../CAssetManager.h"
+#include "../../Render/CRenderManager.h"
+#include "../../Render/CRenderState.h"
 #include "../Shader/CCBufferMaterial.h"
 #include "../Texture/CTexture.h"
 #include "../Texture/CTextureManager.h"
+
+void CMaterial::SetBlendState(const std::string& Key)
+{
+	BlendState = CRenderManager::GetInst()->FindRenderState(Key);
+}
+
+void CMaterial::SetBlendState(const std::weak_ptr<CRenderState>& State)
+{
+	BlendState = State;
+}
 
 void CMaterial::SetBaseColor(float r, float g, float b, float a)
 {
@@ -156,6 +168,19 @@ void CMaterial::UpdateConstantBuffer()
 	}
 
 	MaterialCBuffer->UpdateBuffer();
+
+	if (auto BlendState = this->BlendState.lock())
+	{
+		BlendState->SetState();
+	}
+}
+
+void CMaterial::Reset()
+{
+	if (auto BlendState = this->BlendState.lock())
+	{
+		BlendState->ResetState();
+	}
 }
 
 CMaterial* CMaterial::Clone() const

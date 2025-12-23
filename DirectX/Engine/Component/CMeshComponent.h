@@ -9,6 +9,7 @@ class CMesh;
 class CCBufferTransform;
 class CMaterial;
 class CTexture;
+class CRenderState;
 
 class CMeshComponent :
 	public CSceneComponent
@@ -26,6 +27,9 @@ public:
 	}
 
 	void SetShader(const std::string& Key);
+
+	void SetBlendState(int SlotIndex, const std::string& Key);
+	void SetBlendState(int SlotIndex, const std::weak_ptr<CRenderState>& State);
 
 	void SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a);
 	void SetMaterialBaseColor(int SlotIndex, int r, int g, int b, int a);
@@ -77,7 +81,7 @@ protected:
 	CMeshComponent* Clone() const override;
 
 protected:
-	CMeshComponent() = default;
+	CMeshComponent();
 
 	CMeshComponent(const CMeshComponent& other)
 		: CSceneComponent(other),

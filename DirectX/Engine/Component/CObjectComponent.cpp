@@ -2,7 +2,7 @@
 
 bool CObjectComponent::Init()
 {
-	return true;
+	return CComponent::Init();
 }
 
 void CObjectComponent::Update(const float Delta)

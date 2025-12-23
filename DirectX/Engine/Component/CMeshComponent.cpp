@@ -43,6 +43,16 @@ void CMeshComponent::SetShader(const std::string& Key)
 	}
 }
 
+void CMeshComponent::SetBlendState(int SlotIndex, const std::string& Key)
+{
+	MaterialSlot[SlotIndex]->SetBlendState(Key);
+}
+
+void CMeshComponent::SetBlendState(int SlotIndex, const std::weak_ptr<CRenderState>& State)
+{
+	MaterialSlot[SlotIndex]->SetBlendState(State);
+}
+
 void CMeshComponent::SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a)
 {
 	MaterialSlot[SlotIndex]->SetBaseColor(r, g, b, a);
@@ -100,6 +110,11 @@ void CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, st
 
 bool CMeshComponent::Init()
 {
+	if (!CSceneComponent::Init())
+	{
+		return false;
+	}
+
 	CBufferTransform.reset(new CCBufferTransform);
 	if (!CBufferTransform->Init())
 	{
@@ -142,12 +157,18 @@ void CMeshComponent::Render()
 	auto MeshSlotCount = MaterialSlot.size();
 	for (size_t i = 0; i < MeshSlotCount; i++)
 	{
-		if (MaterialSlot[i])
+		auto& Material = MaterialSlot[i];
+		if (Material)
 		{
-			MaterialSlot[i]->UpdateConstantBuffer();
+			Material->UpdateConstantBuffer();
 		}
 
 		Mesh->Render(i);
+
+		if (Material)
+		{
+			Material->Reset();
+		}
 	}
 
 	CSceneComponent::Render();
@@ -156,4 +177,9 @@ void CMeshComponent::Render()
 CMeshComponent* CMeshComponent::Clone() const
 {
 	return new CMeshComponent(*this);
+}
+
+CMeshComponent::CMeshComponent()
+{
+	RenderType = EComponentRender::Render;
 }

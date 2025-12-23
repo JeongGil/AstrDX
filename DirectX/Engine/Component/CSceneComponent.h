@@ -41,7 +41,21 @@ public:
 	 */
 	void UpdateTransform();
 
-public:
+	[[nodiscard]] EComponentRender GetRenderType() const
+	{
+		return RenderType;
+	}
+
+	[[nodiscard]] int GetRenderLayer() const
+	{
+		return RenderLayer;
+	}
+
+	void SetRenderLayer(const int RenderLayer)
+	{
+		this->RenderLayer = RenderLayer;
+	}
+
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;
 	const FVector& GetRelativeRotation() const;
@@ -138,6 +152,7 @@ public:
 protected:
 	std::weak_ptr<CSceneComponent> Parent;
 	EComponentRender RenderType = EComponentRender::None;
+	int RenderLayer = 0;
 	std::vector<std::weak_ptr<CSceneComponent>> Children;
 
 	bool bInheritScale = true;

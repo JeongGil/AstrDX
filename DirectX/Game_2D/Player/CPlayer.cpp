@@ -25,8 +25,9 @@ bool CPlayer::Init()
 		Mesh->SetMesh("CenterRectTex");
 		Mesh->SetWorldScale(100, 100);
 
-		Mesh->SetMaterialBaseColor(0, FColor::White);
-		Mesh->AddTexture(0, "Player", TEXT("Icon_Shield.PNG"));
+		Mesh->SetMaterialBaseColor(0, FColor(1, 0, 0, 0));
+		Mesh->AddTexture(0, "Player", TEXT("teemo.png"));
+		Mesh->SetBlendState(0, "AlphaBlend");
 	}
 
 	Rotation = CreateComponent<CSceneComponent>("Rotation");

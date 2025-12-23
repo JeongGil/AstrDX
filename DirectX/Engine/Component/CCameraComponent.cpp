@@ -36,6 +36,11 @@ CCameraComponent* CCameraComponent::Clone() const
 
 bool CCameraComponent::Init()
 {
+	if (!CSceneComponent::Init())
+	{
+		return false;
+	}
+
 	FResolution Resolution = CDevice::GetInst()->GetResolution();
 	SetProjection(EProjectionType::Perspective, 90, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
