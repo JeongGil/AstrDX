@@ -90,12 +90,28 @@ bool CTexture::LoadTextureFullPath(const TCHAR* FullPath)
 
 bool CTexture::LoadTextures(const std::vector<const TCHAR*>& FileNames, const std::string& PathName)
 {
-	return false;
+	for (const auto& FileName : FileNames)
+	{
+		if (!LoadTexture(FileName, PathName))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 bool CTexture::LoadTexturesFullPath(const std::vector<const TCHAR*>& FullPaths)
 {
-	return false;
+	for (const auto& FullPath : FullPaths)
+	{
+		if (!LoadTextureFullPath(FullPath))
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void CTexture::SetShader(UINT Register, int ShaderBufferType, int TextureIndex)

@@ -33,6 +33,8 @@ public:
 	void AddTextures(const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 	void AddTexturesFullPath(const std::string& Key, std::vector<const TCHAR*>& FullPaths, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 
+	void SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture);
+
 protected:
 	FColor BaseColor = FColor::White;
 	float Opacity = 1.f;

@@ -45,6 +45,8 @@ public:
 	void AddTextures(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 	void AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 
+	void SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
+
 protected:
 	std::weak_ptr<CShader> Shader;
 	std::weak_ptr<CMesh> Mesh;
@@ -82,25 +84,8 @@ protected:
 
 protected:
 	CMeshComponent();
-
-	CMeshComponent(const CMeshComponent& other)
-		: CSceneComponent(other),
-		Shader(other.Shader),
-		Mesh(other.Mesh),
-		CBufferTransform(other.CBufferTransform->Clone())
-	{
-	}
-
-	CMeshComponent(CMeshComponent&& other) noexcept
-		: CSceneComponent(std::move(other)),
-		Shader(std::move(other.Shader)),
-		Mesh(std::move(other.Mesh)),
-		CBufferTransform(std::move(other.CBufferTransform))
-	{
-		other.Shader.reset();
-		other.Mesh.reset();
-		other.CBufferTransform.reset();
-	}
+	CMeshComponent(const CMeshComponent& other);
+	CMeshComponent(CMeshComponent&& other) noexcept;
 
 public:
 	~CMeshComponent() override = default;

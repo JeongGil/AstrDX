@@ -97,7 +97,7 @@ struct FVertexTex
 
 	FVertexTex(FVertexTex&& other) noexcept
 		: Pos(std::move(other.Pos)),
-		  UV(std::move(other.UV))
+		UV(std::move(other.UV))
 	{
 	}
 
@@ -118,4 +118,50 @@ struct FVertexTex
 		UV = std::move(other.UV);
 		return *this;
 	}
+};
+
+struct FTextureFrame
+{
+	FTextureFrame() = default;
+
+	FTextureFrame(FVector2& start, FVector2& size)
+		: Start(std::move(start)),
+		Size(std::move(size))
+	{
+	}
+
+	FTextureFrame(float x, float y, float w, float h)
+		: Start(x, y),
+		Size(w, h)
+	{
+	}
+
+	FTextureFrame(const FTextureFrame& other) = default;
+
+	FTextureFrame(FTextureFrame&& other) noexcept
+		: Start(std::move(other.Start)),
+		Size(std::move(other.Size))
+	{
+	}
+
+	FTextureFrame& operator=(const FTextureFrame& other)
+	{
+		if (this == &other)
+			return *this;
+		Start = other.Start;
+		Size = other.Size;
+		return *this;
+	}
+
+	FTextureFrame& operator=(FTextureFrame&& other) noexcept
+	{
+		if (this == &other)
+			return *this;
+		Start = std::move(other.Start);
+		Size = std::move(other.Size);
+		return *this;
+	}
+
+	FVector2 Start;
+	FVector2 Size;
 };

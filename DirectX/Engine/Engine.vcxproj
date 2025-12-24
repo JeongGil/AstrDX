@@ -167,6 +167,8 @@
     <None Include="Copy.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Asset\Animation2D\CAnimation2D.h" />
+    <ClInclude Include="Asset\Animation2D\CAnimation2DManager.h" />
     <ClInclude Include="Asset\CAssetManager.h" />
     <ClInclude Include="Asset\CPathManager.h" />
     <ClInclude Include="Asset\Material\CMaterial.h" />
@@ -191,6 +193,8 @@
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
     <ClInclude Include="CObject.h" />
+    <ClInclude Include="Component\CAnimation2DComponent.h" />
+    <ClInclude Include="Component\CAnimation2DSequence.h" />
     <ClInclude Include="Component\CCameraComponent.h" />
     <ClInclude Include="Component\CComponent.h" />
     <ClInclude Include="Component\CMeshComponent.h" />
@@ -220,6 +224,8 @@
     <Image Include="icon1.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Asset\Animation2D\CAnimation2D.cpp" />
+    <ClCompile Include="Asset\Animation2D\CAnimation2DManager.cpp" />
     <ClCompile Include="Asset\CAssetManager.cpp" />
     <ClCompile Include="Asset\CPathManager.cpp" />
     <ClCompile Include="Asset\Material\CMaterial.cpp" />
@@ -242,6 +248,8 @@
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
     <ClCompile Include="CObject.cpp" />
+    <ClCompile Include="Component\CAnimation2DComponent.cpp" />
+    <ClCompile Include="Component\CAnimation2DSequence.cpp" />
     <ClCompile Include="Component\CCameraComponent.cpp" />
     <ClCompile Include="Component\CComponent.cpp" />
     <ClCompile Include="Component\CMeshComponent.cpp" />

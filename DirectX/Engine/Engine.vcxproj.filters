@@ -97,6 +97,12 @@
     <Filter Include="Render\RenderState">
       <UniqueIdentifier>{f5509b8b-c50c-48e5-8bfb-fcb79f389275}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compnent\ObjectComponent\Animation2D">
+      <UniqueIdentifier>{a1ffb431-da52-4156-870e-0c45c971b87c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Animation2D">
+      <UniqueIdentifier>{003e7991-0fb2-4ab6-8c72-cff96049f818}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -243,8 +249,20 @@
     <ClInclude Include="Render\CBlendState.h">
       <Filter>Render\RenderState</Filter>
     </ClInclude>
+    <ClInclude Include="Component\CAnimation2DSequence.h">
+      <Filter>Compnent\ObjectComponent\Animation2D</Filter>
+    </ClInclude>
     <ClInclude Include="Render\CDepthStencilState.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Render\RenderState</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CAnimation2DComponent.h">
+      <Filter>Compnent\ObjectComponent\Animation2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Animation2D\CAnimation2D.h">
+      <Filter>Asset\Animation2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Animation2D\CAnimation2DManager.h">
+      <Filter>Asset\Animation2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -372,8 +390,20 @@
     <ClCompile Include="Render\CBlendState.cpp">
       <Filter>Render\RenderState</Filter>
     </ClCompile>
+    <ClCompile Include="Component\CAnimation2DSequence.cpp">
+      <Filter>Compnent\ObjectComponent\Animation2D</Filter>
+    </ClCompile>
     <ClCompile Include="Render\CDepthStencilState.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Render\RenderState</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CAnimation2DComponent.cpp">
+      <Filter>Compnent\ObjectComponent\Animation2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Animation2D\CAnimation2D.cpp">
+      <Filter>Asset\Animation2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Animation2D\CAnimation2DManager.cpp">
+      <Filter>Asset\Animation2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,7 @@
 class CMeshComponent;
 class CCameraComponent;
 class CStateComponent;
+class CAnimation2DComponent;
 
 class CPlayer :
 	public CGameObject
@@ -17,6 +18,7 @@ private:
 	std::weak_ptr<CMeshComponent> SubMeshComponent;
 	std::weak_ptr<CCameraComponent> CameraComponent;
 	std::weak_ptr<CStateComponent> StateComponent;
+	std::weak_ptr<CAnimation2DComponent> Animation2DComponent;
 
 public:
 	bool Init() override;

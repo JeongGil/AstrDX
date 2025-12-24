@@ -147,6 +147,16 @@ void CMaterial::AddTexturesFullPath(const std::string& Key, std::vector<const TC
 	TextureInfos.push_back(TexInfo);
 }
 
+void CMaterial::SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture)
+{
+	if (TextureIndex >= TextureInfos.size())
+	{
+		return;
+	}
+
+	TextureInfos[TextureIndex]->Texture = Texture;
+}
+
 bool CMaterial::Init()
 {
 	MaterialCBuffer.reset(new CCBufferMaterial);

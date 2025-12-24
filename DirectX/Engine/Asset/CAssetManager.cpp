@@ -4,6 +4,7 @@
 #include "Mesh/CMeshManager.h"
 #include "Shader/CShaderManager.h"
 #include "Texture/CTextureManager.h"
+#include "Animation2D/CAnimation2DManager.h"
 
 bool CAssetManager::Init()
 {
@@ -26,6 +27,12 @@ bool CAssetManager::Init()
 
 	MeshManager.reset(new CMeshManager);
 	if (!MeshManager->Init())
+	{
+		return false;
+	}
+
+	Animation2DManager.reset(new CAnimation2DManager);
+	if (!Animation2DManager->Init())
 	{
 		return false;
 	}

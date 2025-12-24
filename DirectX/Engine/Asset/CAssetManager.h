@@ -5,6 +5,7 @@
 class CMeshManager;
 class CShaderManager;
 class CTextureManager;
+class CAnimation2DManager;
 
 class CAssetManager
 {
@@ -35,10 +36,16 @@ public:
 		return TextureManager;
 	}
 
+	[[nodiscard]] std::weak_ptr<CAnimation2DManager> GetAnimation2DManager() const
+	{
+		return Animation2DManager;
+	}
+
 private:
 	std::shared_ptr<CMeshManager> MeshManager;
 	std::shared_ptr<CShaderManager> ShaderManager;
 	std::shared_ptr<CTextureManager> TextureManager;
+	std::shared_ptr<CAnimation2DManager> Animation2DManager;
 
 public:
 	static CAssetManager* GetInst()

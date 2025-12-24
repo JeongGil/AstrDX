@@ -1,12 +1,19 @@
 #include "CMainWorld.h"
 
+#include <Asset/CAssetManager.h>
+#include <Asset/Animation2D/CAnimation2DManager.h>
 #include "../Monster/CMonster.h"
 #include "../Monster/CMonsterSpawnPoint.h"
 #include "../Player/CPlayer.h"
 
 bool CMainWorld::Init()
 {
-	CWorld::Init();
+	if (!CWorld::Init())
+	{
+		return false;
+	}
+
+	LoadAnimation2D();
 
 	auto WeakPlayer = CreateGameObject<CPlayer>("Player");
 
@@ -34,4 +41,33 @@ bool CMainWorld::Init()
 	}
 
 	return true;
+}
+
+void CMainWorld::LoadAnimation2D()
+{
+	if (auto AnimMgr = CAssetManager::GetInst()->GetAnimation2DManager().lock())
+	{
+		AnimMgr->CreateAnimation("PlayerIdle");
+		AnimMgr->SetAnimation2DTextureType("PlayerIdle", CAnimation2D::ETextureType::Frame);
+
+		std::vector<const TCHAR*> TexFileNames;
+
+		for (int i=0;i<7;i++)
+		{
+			auto FileName = new TCHAR[MAX_PATH];
+			wsprintf(FileName, TEXT("Player/PlayerFrame/adventurer-get-up-0%d.png"), i);
+			TexFileNames.push_back(FileName);
+		}
+
+		AnimMgr->SetTextures("PlayerIdle", "PlayerIdle", TexFileNames);
+
+		for (auto& FileName : TexFileNames)
+		{
+			delete[] FileName;
+		}
+
+		TexFileNames.clear();
+
+		AnimMgr->AddFrame("PlayerIdle", 7, 0.f, 0.f, 50.f, 37.f);
+	}
 }

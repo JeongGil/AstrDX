@@ -5,10 +5,12 @@ class CMainWorld :
     public CWorld
 {
 public:
-	bool Init() override;
-
-public:
 	CMainWorld() = default;
 	~CMainWorld() override = default;
+
+	bool Init() override;
+
+private:
+	void LoadAnimation2D();
 };
 

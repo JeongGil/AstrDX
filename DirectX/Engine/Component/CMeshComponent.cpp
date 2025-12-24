@@ -108,6 +108,11 @@ void CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, st
 	MaterialSlot[SlotIdx]->AddTexturesFullPath(Key, FullPaths, Register, ShaderBufferType, Index);
 }
 
+void CMeshComponent::SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture)
+{
+	MaterialSlot[SlotIndex]->SetTexture(TextureIndex, Texture);
+}
+
 bool CMeshComponent::Init()
 {
 	if (!CSceneComponent::Init())
@@ -182,4 +187,21 @@ CMeshComponent* CMeshComponent::Clone() const
 CMeshComponent::CMeshComponent()
 {
 	RenderType = EComponentRender::Render;
+}
+
+CMeshComponent::CMeshComponent(const CMeshComponent& other): CSceneComponent(other),
+                                                             Shader(other.Shader),
+                                                             Mesh(other.Mesh),
+                                                             CBufferTransform(other.CBufferTransform->Clone())
+{
+}
+
+CMeshComponent::CMeshComponent(CMeshComponent&& other) noexcept: CSceneComponent(std::move(other)),
+                                                                 Shader(std::move(other.Shader)),
+                                                                 Mesh(std::move(other.Mesh)),
+                                                                 CBufferTransform(std::move(other.CBufferTransform))
+{
+	other.Shader.reset();
+	other.Mesh.reset();
+	other.CBufferTransform.reset();
 }

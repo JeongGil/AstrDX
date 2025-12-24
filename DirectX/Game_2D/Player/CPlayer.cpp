@@ -10,6 +10,7 @@
 #include "Component/CCameraComponent.h"
 #include "../Monster/CMonster.h"
 #include "../Component/CStateComponent.h"
+#include "Component/CAnimation2DComponent.h"
 
 bool CPlayer::Init()
 {
@@ -61,6 +62,8 @@ bool CPlayer::Init()
 	}
 
 	StateComponent = CreateComponent<CStateComponent>("State");
+
+	Animation2DComponent = CreateComponent<CAnimation2DComponent>("Animation2D");
 
 	return true;
 }
