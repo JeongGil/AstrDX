@@ -64,6 +64,16 @@ bool CPlayer::Init()
 	StateComponent = CreateComponent<CStateComponent>("State");
 
 	Animation2DComponent = CreateComponent<CAnimation2DComponent>("Animation2D");
+	if (auto Anim = Animation2DComponent.lock())
+	{
+		Anim->SetUpdateComponent(MeshComponent);
+
+		Anim->AddAnimation("PlayerIdle");
+		Anim->AddAnimation("PlayerWalk");
+
+		Anim->SetLoop("PlayerIdle", true);
+		Anim->SetLoop("PlayerWalk", true);
+	}
 
 	return true;
 }

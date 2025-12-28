@@ -165,3 +165,10 @@ struct FTextureFrame
 	FVector2 Start;
 	FVector2 Size;
 };
+
+enum class EAnimation2DTextureType
+{
+	None = -1,
+	SpriteSheet,
+	Frame,
+};

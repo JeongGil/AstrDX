@@ -31,9 +31,9 @@ public:
 		Notifies.emplace_back(Key, Frame, false, std::bind(Func, Obj));
 	}
 
-	[[nodiscard]] int GetFrame() const
+	[[nodiscard]] int GetCurrFrame() const
 	{
-		return Frame;
+		return CurrFrame;
 	}
 
 	[[nodiscard]] float GetFrameTime() const
@@ -77,6 +77,11 @@ public:
 		this->bLoop = bLoop;
 	}
 
+	bool GetReverse() const
+	{
+		return bReverse;
+	}
+
 	void SetReverse(bool bReverse)
 	{
 		this->bReverse = bReverse;
@@ -85,11 +90,11 @@ public:
 		{
 			if (bReverse)
 			{
-				Frame = Animation->GetFrameCount() - 1;
+				CurrFrame = Animation->GetFrameCount() - 1;
 			}
 			else
 			{
-				Frame = 0;
+				CurrFrame = 0;
 			}
 		}
 	}
@@ -97,6 +102,26 @@ public:
 	void SetSymmetry(bool bSymmetry)
 	{
 		this->bSymmetry = bSymmetry;
+	}
+
+	EAnimation2DTextureType GetAnimationTextureType() const
+	{
+		if (auto Anim = Animation.lock())
+		{
+			return Anim->GetTextureType();
+		}
+
+		return EAnimation2DTextureType::None;
+	}
+
+	int GetFrameCount() const
+	{
+		if (auto Anim = Animation.lock())
+		{
+			return Anim->GetFrameCount();
+		}
+
+		return 0;
 	}
 
 private:
@@ -107,7 +132,7 @@ private:
 private:
 	std::weak_ptr<CAnimation2D> Animation;
 
-	int Frame = 0;
+	int CurrFrame = 0;
 	float FrameTime = 0.f;
 	float PlayTime = 1.f;
 	float PlayRate = 1.f;

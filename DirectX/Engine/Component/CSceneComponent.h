@@ -221,100 +221,15 @@ protected:
 	CSceneComponent* Clone() const override;
 
 protected:
-	CSceneComponent()
-	{
-		Type = EType::Scene;
-	}
+	CSceneComponent();
 
-	CSceneComponent(const CSceneComponent& other)
-		: CComponent(other),
-		  //Parent(other.Parent),
-		  RenderType(other.RenderType),
-		  //Children(other.Children),
-		  bInheritScale(other.bInheritScale),
-		  bInheritRotation(other.bInheritRotation),
-		  RelativeScale(other.RelativeScale),
-		  RelativeRotation(other.RelativeRotation),
-		  RelativePosition(other.RelativePosition),
-		  WorldScale(other.WorldScale),
-		  WorldRotation(other.WorldRotation),
-		  WorldPosition(other.WorldPosition),
-		  WorldAxis(other.WorldAxis),
-		  ScaleMatrix(other.ScaleMatrix),
-		  RotationMatrix(other.RotationMatrix),
-		  TranslateMatrix(other.TranslateMatrix),
-		  WorldMatrix(other.WorldMatrix)
-	{
-	}
+	CSceneComponent(const CSceneComponent& other);
 
-	CSceneComponent(CSceneComponent&& other) noexcept
-		: CComponent(std::move(other)),
-		  //Parent(std::move(other.Parent)),
-		  RenderType(other.RenderType),
-		  //Children(std::move(other.Children)),
-		  bInheritScale(other.bInheritScale),
-		  bInheritRotation(other.bInheritRotation),
-		  RelativeScale(std::move(other.RelativeScale)),
-		  RelativeRotation(std::move(other.RelativeRotation)),
-		  RelativePosition(std::move(other.RelativePosition)),
-		  WorldScale(std::move(other.WorldScale)),
-		  WorldRotation(std::move(other.WorldRotation)),
-		  WorldPosition(std::move(other.WorldPosition)),
-		  WorldAxis(std::move(other.WorldAxis)),
-		  ScaleMatrix(std::move(other.ScaleMatrix)),
-		  RotationMatrix(std::move(other.RotationMatrix)),
-		  TranslateMatrix(std::move(other.TranslateMatrix)),
-		  WorldMatrix(std::move(other.WorldMatrix))
-	{
-	}
+	CSceneComponent(CSceneComponent&& other) noexcept;
 
-	CSceneComponent& operator=(const CSceneComponent& other)
-	{
-		if (this == &other)
-			return *this;
-		CComponent::operator =(other);
-		//Parent = other.Parent;
-		RenderType = other.RenderType;
-		//Children = other.Children;
-		bInheritScale = other.bInheritScale;
-		bInheritRotation = other.bInheritRotation;
-		RelativeScale = other.RelativeScale;
-		RelativeRotation = other.RelativeRotation;
-		RelativePosition = other.RelativePosition;
-		WorldScale = other.WorldScale;
-		WorldRotation = other.WorldRotation;
-		WorldPosition = other.WorldPosition;
-		WorldAxis = other.WorldAxis;
-		ScaleMatrix = other.ScaleMatrix;
-		RotationMatrix = other.RotationMatrix;
-		TranslateMatrix = other.TranslateMatrix;
-		WorldMatrix = other.WorldMatrix;
-		return *this;
-	}
+	CSceneComponent& operator=(const CSceneComponent& other);
 
-	CSceneComponent& operator=(CSceneComponent&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CComponent::operator =(std::move(other));
-		//Parent = std::move(other.Parent);
-		RenderType = other.RenderType;
-		//Children = std::move(other.Children);
-		bInheritScale = other.bInheritScale;
-		bInheritRotation = other.bInheritRotation;
-		RelativeScale = std::move(other.RelativeScale);
-		RelativeRotation = std::move(other.RelativeRotation);
-		RelativePosition = std::move(other.RelativePosition);
-		WorldScale = std::move(other.WorldScale);
-		WorldRotation = std::move(other.WorldRotation);
-		WorldPosition = std::move(other.WorldPosition);
-		WorldAxis = std::move(other.WorldAxis);
-		ScaleMatrix = std::move(other.ScaleMatrix);
-		RotationMatrix = std::move(other.RotationMatrix);
-		TranslateMatrix = std::move(other.TranslateMatrix);
-		WorldMatrix = std::move(other.WorldMatrix);
-		return *this;
-	}
+	CSceneComponent& operator=(CSceneComponent&& other) noexcept;
 
 public:
 	~CSceneComponent() override = default;

@@ -1,7 +1,7 @@
 #include "CAnimation2DSequence.h"
 
 CAnimation2DSequence::CAnimation2DSequence(const CAnimation2DSequence& other): Animation(other.Animation),
-                                                                               Frame(other.Frame),
+                                                                               CurrFrame(other.CurrFrame),
                                                                                FrameTime(other.FrameTime),
                                                                                PlayTime(other.PlayTime),
                                                                                PlayRate(other.PlayRate),
@@ -14,7 +14,7 @@ CAnimation2DSequence::CAnimation2DSequence(const CAnimation2DSequence& other): A
 }
 
 CAnimation2DSequence::CAnimation2DSequence(CAnimation2DSequence&& other) noexcept: Animation(std::move(other.Animation)),
-	Frame(other.Frame),
+	CurrFrame(other.CurrFrame),
 	FrameTime(other.FrameTime),
 	PlayTime(other.PlayTime),
 	PlayRate(other.PlayRate),
@@ -31,7 +31,7 @@ CAnimation2DSequence& CAnimation2DSequence::operator=(const CAnimation2DSequence
 	if (this == &other)
 		return *this;
 	Animation = other.Animation;
-	Frame = other.Frame;
+	CurrFrame = other.CurrFrame;
 	FrameTime = other.FrameTime;
 	PlayTime = other.PlayTime;
 	PlayRate = other.PlayRate;
@@ -48,7 +48,7 @@ CAnimation2DSequence& CAnimation2DSequence::operator=(CAnimation2DSequence&& oth
 	if (this == &other)
 		return *this;
 	Animation = std::move(other.Animation);
-	Frame = other.Frame;
+	CurrFrame = other.CurrFrame;
 	FrameTime = other.FrameTime;
 	PlayTime = other.PlayTime;
 	PlayRate = other.PlayRate;
@@ -75,12 +75,12 @@ void CAnimation2DSequence::Update(float DeltaTime)
 
 		if (bReverse)
 		{
-			--Frame;
-			if (Frame < 0)
+			--CurrFrame;
+			if (CurrFrame < 0)
 			{
 				if (bLoop)
 				{
-					Frame = Animation->GetFrameCount() - 1;
+					CurrFrame = Animation->GetFrameCount() - 1;
 
 					for (auto& Notify : Notifies)
 					{
@@ -89,18 +89,18 @@ void CAnimation2DSequence::Update(float DeltaTime)
 				}
 				else
 				{
-					Frame = 0;
+					CurrFrame = 0;
 				}
 			}
 		}
 		else
 		{
-			++Frame;
-			if (Frame == Animation->GetFrameCount())
+			++CurrFrame;
+			if (CurrFrame == Animation->GetFrameCount())
 			{
 				if (bLoop)
 				{
-					Frame = 0;
+					CurrFrame = 0;
 
 					for (auto& Notify : Notifies)
 					{
@@ -109,7 +109,7 @@ void CAnimation2DSequence::Update(float DeltaTime)
 				}
 				else
 				{
-					Frame = Animation->GetFrameCount() - 1;
+					CurrFrame = Animation->GetFrameCount() - 1;
 				}
 			}
 		}
@@ -134,11 +134,11 @@ void CAnimation2DSequence::Clear()
 	{
 		if (bReverse)
 		{
-			Frame = Animation->GetFrameCount() - 1;
+			CurrFrame = Animation->GetFrameCount() - 1;
 		}
 		else
 		{
-			Frame = 0;
+			CurrFrame = 0;
 		}
 
 		ElapsedTime = 0.f;
@@ -167,7 +167,7 @@ void CAnimation2DSequence::CallNotify()
 {
 	for (auto& Notify : Notifies)
 	{
-		if (Notify.Frame == Frame && !Notify.bCalled)
+		if (Notify.Frame == CurrFrame && !Notify.bCalled)
 		{
 			Notify.bCalled = true;
 

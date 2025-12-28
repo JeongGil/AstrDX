@@ -33,7 +33,8 @@ public:
 	void AddTextures(const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 	void AddTexturesFullPath(const std::string& Key, std::vector<const TCHAR*>& FullPaths, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 
-	void SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture);
+	bool SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture);
+	bool SetTextureIndex(int TextureIndex);
 
 protected:
 	FColor BaseColor = FColor::White;
@@ -48,6 +49,7 @@ protected:
 public:
 	bool Init();
 	void UpdateConstantBuffer();
+	void UpdateConstantBuffer(int TextureIndex);
 	void Reset();
 	CMaterial* Clone() const;
 
