@@ -48,11 +48,11 @@ void CMainWorld::LoadAnimation2D()
 	if (auto AnimMgr = CAssetManager::GetInst()->GetAnimation2DManager().lock())
 	{
 		AnimMgr->CreateAnimation("PlayerIdle");
-		AnimMgr->SetAnimation2DTextureType("PlayerIdle", CAnimation2D::ETextureType::Frame);
+		AnimMgr->SetAnimation2DTextureType("PlayerIdle", EAnimation2DTextureType::Frame);
 
 		std::vector<const TCHAR*> TexFileNames;
 
-		for (int i=0;i<7;i++)
+		for (int i = 0; i < 7; i++)
 		{
 			auto FileName = new TCHAR[MAX_PATH];
 			wsprintf(FileName, TEXT("Player/PlayerFrame/adventurer-get-up-0%d.png"), i);
@@ -69,5 +69,19 @@ void CMainWorld::LoadAnimation2D()
 		TexFileNames.clear();
 
 		AnimMgr->AddFrame("PlayerIdle", 7, 0.f, 0.f, 50.f, 37.f);
+
+		AnimMgr->CreateAnimation("PlayerWalk");
+		AnimMgr->SetAnimation2DTextureType("PlayerWalk",
+			EAnimation2DTextureType::SpriteSheet);
+
+		AnimMgr->SetTexture("PlayerWalk", "PlayerSheet",
+			TEXT("Player/Player.png"));
+
+		AnimMgr->AddFrame("PlayerWalk", 200.f, 222.f, 50.f, 37.f);
+		AnimMgr->AddFrame("PlayerWalk", 250.f, 222.f, 50.f, 37.f);
+		AnimMgr->AddFrame("PlayerWalk", 300.f, 222.f, 50.f, 37.f);
+		AnimMgr->AddFrame("PlayerWalk", 0.f, 259.f, 50.f, 37.f);
+		AnimMgr->AddFrame("PlayerWalk", 50.f, 259.f, 50.f, 37.f);
+		AnimMgr->AddFrame("PlayerWalk", 100.f, 259.f, 50.f, 37.f);
 	}
 }

@@ -9,13 +9,6 @@ class CAnimation2D :
 	friend class CAnimation2DManager;
 
 public:
-	enum class ETextureType
-	{
-		SpriteSheet,
-		Frame,
-	};
-
-public:
 	[[nodiscard]] const std::string& GetKey() const
 	{
 		return Key;
@@ -26,12 +19,12 @@ public:
 		this->Key = Key;
 	}
 
-	[[nodiscard]] ETextureType GetTextureType() const
+	[[nodiscard]] EAnimation2DTextureType GetTextureType() const
 	{
 		return TextureType;
 	}
 
-	void SetTextureType(ETextureType TextureType)
+	void SetTextureType(EAnimation2DTextureType TextureType)
 	{
 		this->TextureType = TextureType;
 	}
@@ -69,7 +62,7 @@ public:
 protected:
 	std::string Key;
 	std::weak_ptr<CTexture> Texture;
-	ETextureType TextureType = ETextureType::SpriteSheet;
+	EAnimation2DTextureType TextureType = EAnimation2DTextureType::SpriteSheet;
 
 	std::vector<FTextureFrame> Frames;
 };

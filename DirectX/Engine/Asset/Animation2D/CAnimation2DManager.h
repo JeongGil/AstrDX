@@ -17,7 +17,7 @@ public:
 	bool CreateAnimation(const std::string& AnimKey);
 	std::weak_ptr<CAnimation2D> FindAnimation(const std::string& AnimKey);
 
-	bool SetAnimation2DTextureType(const std::string& AnimKey, CAnimation2D::ETextureType TextureType);
+	bool SetAnimation2DTextureType(const std::string& AnimKey, EAnimation2DTextureType TextureType);
 
 	bool SetTexture(const std::string& AnimKey, const std::weak_ptr<CTexture>& Texture);
 

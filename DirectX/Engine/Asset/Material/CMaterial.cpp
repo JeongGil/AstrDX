@@ -147,14 +147,39 @@ void CMaterial::AddTexturesFullPath(const std::string& Key, std::vector<const TC
 	TextureInfos.push_back(TexInfo);
 }
 
-void CMaterial::SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture)
+bool CMaterial::SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture)
 {
 	if (TextureIndex >= TextureInfos.size())
 	{
-		return;
+		return false;
 	}
 
 	TextureInfos[TextureIndex]->Texture = Texture;
+
+	return true;
+}
+
+bool CMaterial::SetTextureIndex(int TextureIndex)
+{
+	return true;
+}
+
+void CMaterial::UpdateConstantBuffer(int TextureIndex)
+{
+	for (auto& TextureInfo : TextureInfos)
+	{
+		if (auto Texture = TextureInfo->Texture.lock())
+		{
+			Texture->SetShader(TextureInfo->Register, TextureInfo->ShaderBufferType, TextureIndex);
+		}
+	}
+
+	MaterialCBuffer->UpdateBuffer();
+
+	if (auto BlendState = this->BlendState.lock())
+	{
+		BlendState->SetState();
+	}
 }
 
 bool CMaterial::Init()

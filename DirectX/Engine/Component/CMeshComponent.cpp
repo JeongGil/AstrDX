@@ -108,9 +108,24 @@ void CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, st
 	MaterialSlot[SlotIdx]->AddTexturesFullPath(Key, FullPaths, Register, ShaderBufferType, Index);
 }
 
-void CMeshComponent::SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture)
+bool CMeshComponent::SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture)
 {
-	MaterialSlot[SlotIndex]->SetTexture(TextureIndex, Texture);
+	if (static_cast<int>(MaterialSlot.size()) <= SlotIndex)
+	{
+		return false;
+	}
+
+	return MaterialSlot[SlotIndex]->SetTexture(TextureIndex, Texture);
+}
+
+bool CMeshComponent::SetTextureIndex(int SlotIndex, int TextureIndex)
+{
+	if (static_cast<int>(MaterialSlot.size()) <= SlotIndex)
+	{
+		return false;
+	}
+
+	return MaterialSlot[SlotIndex]->SetTextureIndex(TextureIndex);
 }
 
 bool CMeshComponent::Init()
@@ -165,7 +180,21 @@ void CMeshComponent::Render()
 		auto& Material = MaterialSlot[i];
 		if (Material)
 		{
-			Material->UpdateConstantBuffer();
+			if (bAnimationEnable)
+			{
+				if (AnimTextureType == EAnimation2DTextureType::SpriteSheet)
+				{
+					Material->UpdateConstantBuffer();
+				}
+				else
+				{
+					Material->UpdateConstantBuffer(AnimationFrame);
+				}
+			}
+			else
+			{
+				Material->UpdateConstantBuffer();
+			}
 		}
 
 		Mesh->Render(i);

@@ -45,13 +45,33 @@ public:
 	void AddTextures(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 	void AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 
-	void SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
+	bool SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
+	bool SetTextureIndex(int SlotIndex, int TextureIndex);
+
+	void SetAnimTextureType(EAnimation2DTextureType Type)
+	{
+		AnimTextureType = Type;
+	}
+
+	void SetAnimationFrame(int Frame)
+	{
+		AnimationFrame = Frame;
+	}
+
+	void SetAnimationEnable(bool bEnable)
+	{
+		bAnimationEnable = bEnable;
+	}
 
 protected:
 	std::weak_ptr<CShader> Shader;
 	std::weak_ptr<CMesh> Mesh;
 	std::vector<std::shared_ptr<CMaterial>> MaterialSlot;
 	std::shared_ptr<CCBufferTransform> CBufferTransform;
+
+	bool bAnimationEnable = false;
+	int AnimationFrame = 0;
+	EAnimation2DTextureType AnimTextureType = EAnimation2DTextureType::None;
 
 public:
 	/**

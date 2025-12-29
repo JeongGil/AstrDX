@@ -44,5 +44,7 @@ protected:
 	std::unordered_map <std::string, std::shared_ptr<CAnimation2DSequence>> Animations;
 
 	std::shared_ptr<CAnimation2DSequence> CurrentAnimation;
+
+	bool bUpdateEnable = false;
 };
 

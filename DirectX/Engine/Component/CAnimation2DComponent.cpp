@@ -56,7 +56,29 @@ void CAnimation2DComponent::Update(const float DeltaTime)
 
 	if (CurrentAnimation)
 	{
+		auto MeshComponent = UpdateComponent.lock();
+		if (MeshComponent)
+		{
+			if (!bUpdateEnable)
+			{
+				if (auto Asset = CurrentAnimation->GetAsset().lock())
+				{
+					if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
+					{
+						bUpdateEnable = true;
+						MeshComponent->SetAnimationEnable(true);
+					}
+				}
+			}
+		}
+
 		CurrentAnimation->Update(DeltaTime);
+
+		if (MeshComponent)
+		{
+			MeshComponent->SetAnimTextureType(CurrentAnimation->GetAnimationTextureType());
+			MeshComponent->SetAnimationFrame(CurrentAnimation->GetCurrFrame());
+		}
 	}
 }
 
@@ -73,6 +95,20 @@ void CAnimation2DComponent::Destroy()
 void CAnimation2DComponent::SetUpdateComponent(const std::weak_ptr<CMeshComponent>& Component)
 {
 	this->UpdateComponent = Component;
+
+	if (auto MeshComponent = UpdateComponent.lock())
+	{
+		if (CurrentAnimation)
+		{
+			if (auto Asset = CurrentAnimation->GetAsset().lock())
+			{
+				if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
+				{
+					bUpdateEnable = true;
+				}
+			}
+		}
+	}
 }
 
 void CAnimation2DComponent::AddAnimation(const std::weak_ptr<CAnimation2D>& Animation, float PlayTime, float PlayRate,
@@ -102,6 +138,20 @@ void CAnimation2DComponent::AddAnimation(const std::weak_ptr<CAnimation2D>& Anim
 	if (!CurrentAnimation)
 	{
 		CurrentAnimation = Sequence;
+
+		if (auto MeshComponent = UpdateComponent.lock())
+		{
+			if (CurrentAnimation)
+			{
+				if (auto Asset = CurrentAnimation->GetAsset().lock())
+				{
+					if (MeshComponent->SetTexture(0,0,Asset->GetTexture()))
+					{
+						bUpdateEnable = true;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -138,6 +188,20 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 	if (!CurrentAnimation)
 	{
 		CurrentAnimation = Sequence;
+
+		if (auto MeshComponent = UpdateComponent.lock())
+		{
+			if (CurrentAnimation)
+			{
+				if (auto Asset = CurrentAnimation->GetAsset().lock())
+				{
+					if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
+					{
+						bUpdateEnable = true;
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -205,6 +269,11 @@ void CAnimation2DComponent::ChangeAnimation(const std::string& AnimKey)
 	if (auto Asset = CurrentAnimation->GetAsset().lock())
 	{
 		MeshComponent->SetTexture(0, 0, Asset->GetTexture());
+	}
+
+	if (CurrentAnimation->GetReverse())
+	{
+		MeshComponent->SetAnimationFrame(CurrentAnimation->GetFrameCount() - 1);
 	}
 }
 
