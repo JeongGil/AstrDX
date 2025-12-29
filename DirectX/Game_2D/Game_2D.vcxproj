@@ -159,6 +159,7 @@
     <ClCompile Include="Monster\CMonster.cpp" />
     <ClCompile Include="Monster\CMonsterSpawnPoint.cpp" />
     <ClCompile Include="Player\CBullet.cpp" />
+    <ClCompile Include="Player\CBulletEffect.cpp" />
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Monster\CMonster.h" />
     <ClInclude Include="Monster\CMonsterSpawnPoint.h" />
     <ClInclude Include="Player\CBullet.h" />
+    <ClInclude Include="Player\CBulletEffect.h" />
     <ClInclude Include="Player\CMissile.h" />
     <ClInclude Include="Player\CPlayer.h" />
     <ClInclude Include="World\CMainWorld.h" />

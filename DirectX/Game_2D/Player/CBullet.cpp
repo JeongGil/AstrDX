@@ -1,5 +1,6 @@
 #include "CBullet.h"
 
+#include "CBulletEffect.h"
 #include "Component/CMeshComponent.h"
 #include "../Component/CStateComponent.h"
 
@@ -55,6 +56,12 @@ void CBullet::Update(const float DeltaTime)
 				// Collision occurred.
 				if (Other->GetWorldPosition().SqrDistance(GetWorldPosition()) <= RadiusSum * RadiusSum)
 				{
+					std::weak_ptr<CBulletEffect> WeakEffect = World->CreateGameObject<CBulletEffect>("BulletEffect");
+					if (auto Effect = WeakEffect.lock())
+					{
+						Effect->SetWorldPosition(GetWorldPosition());
+					}
+
 					// Process damage event.
 					auto WeakState = Other->FindComponent<CStateComponent>("State");
 					if (auto State = WeakState.lock())

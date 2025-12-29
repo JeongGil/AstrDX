@@ -3,6 +3,7 @@
 #include "../Player/CBullet.h"
 #include "World/CWorld.h"
 #include "Component/CMeshComponent.h"
+#include "Component/CAnimation2DComponent.h"
 
 bool CMonster::Init()
 {
@@ -14,9 +15,24 @@ bool CMonster::Init()
 	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
-		Mesh->SetShader("MaterialColor2D");
-		Mesh->SetMesh("CenterRectColor");
-		Mesh->SetRelativeScale(100, 100);
+		Mesh->SetShader("DefaultTexture2D");
+		Mesh->SetMesh("CenterRectTex");
+		Mesh->SetWorldScale(45.f, 60.f);
+		Mesh->SetBlendState(0, "AlphaBlend");
+	}
+
+	Animation2DComponent = CreateComponent<CAnimation2DComponent>("Animation2D");
+	if (auto Anim = Animation2DComponent.lock())
+	{
+		Anim->SetUpdateComponent(MeshComponent);
+
+		Anim->AddAnimation("MonsterIdle", 2.8f);
+		Anim->AddAnimation("MonsterAttack", 0.5f);
+
+		Anim->AddNotify<CMonster>("MonsterAttack", "AttackNotify", 2, this, &CMonster::AttackNotify);
+		Anim->SetFinishNotify<CMonster>("MonsterAttack", this, &CMonster::AttackFinish);
+
+		Anim->SetLoop("MonsterIdle", true);
 	}
 
 	if (auto World = this->World.lock())
@@ -43,12 +59,6 @@ void CMonster::Update(const float DeltaTime)
 			float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition());
 
 			SetWorldRotationZ(Degree);
-
-#ifdef _DEBUG
-			//char Log[256] = {};
-			//sprintf_s(Log, "Target Angle: %.4f°\n", Degree);
-			//OutputDebugStringA(Log);
-#endif
 		}
 
 		ElapsedFromShot += DeltaTime;
@@ -56,28 +66,10 @@ void CMonster::Update(const float DeltaTime)
 		{
 			ElapsedFromShot = 0.f;
 
-			if (auto World = this->World.lock())
+			if (auto Anim = Animation2DComponent.lock())
 			{
-				//static int Counter = 0;
-				//const std::string BulletName = "MonsterBullet_";
-				auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
-
-				if (auto Bullet = WeakBullet.lock())
-				{
-					FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
-					Bullet->SetWorldPosition(Position);
-					Bullet->SetWorldRotation(GetWorldRotation());
-					Bullet->SetCollisionTargetName("Player");
-					Bullet->CalcCollisionRadius();
-
-					if (Target)
-					{
-						FVector Dir = Target->GetWorldPosition() - Position;
-						Dir.Normalize();
-
-						Bullet->SetMoveDirection(Dir);
-					}
-				}
+				Anim->ChangeAnimation("MonsterAttack");
+				bOnAttack = true;
 			}
 		}
 	}
@@ -86,4 +78,37 @@ void CMonster::Update(const float DeltaTime)
 CMonster* CMonster::Clone()
 {
 	return new CMonster(*this);
+}
+
+void CMonster::AttackNotify()
+{
+	if (auto World = this->World.lock())
+	{
+		auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
+		if (auto Bullet = WeakBullet.lock())
+		{
+			FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
+			Bullet->SetWorldPosition(Position);
+			Bullet->SetWorldRotation(GetWorldRotation());
+			Bullet->SetCollisionTargetName("Player");
+			Bullet->CalcCollisionRadius();
+
+			if (auto Target = FireTarget.lock())
+			{
+				FVector Dir = Target->GetWorldPosition() - Position;
+				Dir.Normalize();
+
+				Bullet->SetMoveDirection(Dir);
+			}
+		}
+	}
+}
+
+void CMonster::AttackFinish()
+{
+	bOnAttack = false;
+	if (auto Anim = Animation2DComponent.lock())
+	{
+		Anim->ChangeAnimation("MonsterIdle");
+	}
 }

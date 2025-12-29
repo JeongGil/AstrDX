@@ -56,7 +56,6 @@ bool CPlayer::Init()
 		Mesh->SetWorldScale(100, 100);
 
 		Mesh->SetMaterialBaseColor(0, FColor(1, 0, 0, 0));
-		Mesh->AddTexture(0, "Player", TEXT("teemo.png"));
 		Mesh->SetBlendState(0, "AlphaBlend");
 	}
 

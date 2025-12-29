@@ -4,18 +4,16 @@
 class CAnimation2DComponent;
 class CMeshComponent;
 
-class CMonster :
+class CBulletEffect :
     public CGameObject
 {
 	friend class CWorld;
 	friend CObject;
 
 private:
-	float ElapsedFromShot = 0.f;
-	std::weak_ptr<CGameObject> FireTarget;
+	void FinishAnimation();
 
-	float DetectRange = 400.f;
-
+private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CAnimation2DComponent> Animation2DComponent;
 
@@ -24,20 +22,16 @@ public:
 	void Update(const float DeltaTime) override;
 
 protected:
-	CMonster* Clone() override;
+	CBulletEffect* Clone() override;
 
 protected:
-	CMonster() = default;
-	CMonster(const CMonster& other) = default;
-	CMonster(CMonster&& other) noexcept = default;
+	CBulletEffect() = default;
+	CBulletEffect(const CBulletEffect& other);
+	CBulletEffect(CBulletEffect&& other) noexcept;
+	CBulletEffect& operator=(const CBulletEffect& other);
+	CBulletEffect& operator=(CBulletEffect&& other) noexcept;
 
 public:
-	~CMonster() override = default;
-
-private:
-	void AttackNotify();
-	void AttackFinish();
-
-	bool bOnAttack = false;
+	~CBulletEffect() override = default;
 };
 

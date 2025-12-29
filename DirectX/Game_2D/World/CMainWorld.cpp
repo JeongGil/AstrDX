@@ -21,14 +21,14 @@ bool CMainWorld::Init()
 	if (auto Monster = WeakMonster.lock())
 	{
 		Monster->SetWorldPosition(-400, 300);
-		Monster->SetWorldRotationZ(180.f);
+		//Monster->SetWorldRotationZ(180.f);
 	}
 
 	WeakMonster = CreateGameObject<CMonster>("Monster");
 	if (auto Monster = WeakMonster.lock())
 	{
 		Monster->SetWorldPosition(400, 300);
-		Monster->SetWorldRotationZ(180.f);
+		//Monster->SetWorldRotationZ(180.f);
 	}
 
 	auto WeakMSP = CreateGameObject<CMonsterSpawnPoint>("SpawnPoint");
@@ -91,5 +91,53 @@ void CMainWorld::LoadAnimation2D()
 		AnimMgr->AddFrame("PlayerAttack", 50.f, 0.f, 50.f, 37.f);
 		AnimMgr->AddFrame("PlayerAttack", 100.f, 0.f, 50.f, 37.f);
 		AnimMgr->AddFrame("PlayerAttack", 150.f, 0.f, 50.f, 37.f);
+
+		//======= Monster =======
+		constexpr float w = 45.f;
+		constexpr float h = 60.f;
+
+		AnimMgr->CreateAnimation("MonsterIdle");
+		AnimMgr->SetAnimation2DTextureType("MonsterIdle", EAnimation2DTextureType::SpriteSheet);
+
+		AnimMgr->SetTexture("MonsterIdle", "MonsterSheet", TEXT("Monster.png"));
+
+		for (int i = 0; i < 14; i++)
+		{
+			AnimMgr->AddFrame("MonsterIdle", 0 + w * i, h * 1, w, h);
+		}
+
+		AnimMgr->CreateAnimation("MonsterAttack");
+		AnimMgr->SetAnimation2DTextureType("MonsterAttack", EAnimation2DTextureType::SpriteSheet);
+
+		AnimMgr->SetTexture("MonsterAttack", "MonsterSheet", TEXT("Monster.png"));
+
+		for (int i = 0; i < 5; i++)
+		{
+			AnimMgr->AddFrame("MonsterAttack", 0 + w * i, h * 2, w, h);
+		}
+
+		//======= Explosion =======
+		AnimMgr->CreateAnimation("Explosion");
+		AnimMgr->SetAnimation2DTextureType("Explosion", EAnimation2DTextureType::Frame);
+
+		for (int i = 1; i <= 89; i++)
+		{
+			auto FileName = new TCHAR[MAX_PATH];
+			memset(FileName, 0, sizeof(TCHAR) * MAX_PATH);
+
+			wsprintf(FileName, TEXT("Explosion/Explosion%d.png"), i);
+
+			TexFileNames.push_back(FileName);
+		}
+
+		AnimMgr->SetTextures("Explosion", "Explosion", TexFileNames);
+
+		for (auto& elem : TexFileNames)
+		{
+			delete[] elem;
+		}
+		TexFileNames.clear();
+
+		AnimMgr->AddFrame("Explosion", 89, 0, 0, 320, 240);
 	}
 }
