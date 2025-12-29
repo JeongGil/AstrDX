@@ -78,6 +78,11 @@ void CAnimation2DSequence::Update(float DeltaTime)
 			--CurrFrame;
 			if (CurrFrame < 0)
 			{
+				if (FinishNotify)
+				{
+					FinishNotify();
+				}
+
 				if (bLoop)
 				{
 					CurrFrame = Animation->GetFrameCount() - 1;
@@ -98,6 +103,11 @@ void CAnimation2DSequence::Update(float DeltaTime)
 			++CurrFrame;
 			if (CurrFrame == Animation->GetFrameCount())
 			{
+				if (FinishNotify)
+				{
+					FinishNotify();
+				}
+
 				if (bLoop)
 				{
 					CurrFrame = 0;

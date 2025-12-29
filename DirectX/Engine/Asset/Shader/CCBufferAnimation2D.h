@@ -41,6 +41,11 @@ public:
 		Data.TextureType = static_cast<int>(Type);
 	}
 
+	void SetTextureSymmetry(bool bSymmetry)
+	{
+		Data.TextureSymmetry = bSymmetry ? 1 : 0;
+	}
+
 	CCBufferAnimation2D() = default;
 	CCBufferAnimation2D(const CCBufferAnimation2D& other);
 	CCBufferAnimation2D(CCBufferAnimation2D&& other) noexcept;

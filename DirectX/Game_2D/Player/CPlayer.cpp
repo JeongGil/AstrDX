@@ -12,6 +12,35 @@
 #include "../Component/CStateComponent.h"
 #include "Component/CAnimation2DComponent.h"
 
+void CPlayer::TestNotify()
+{
+	OutputDebugString(TEXT("Test Notify\n"));
+}
+
+void CPlayer::AttackNotify()
+{
+	if (auto World = this->World.lock())
+	{
+		auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
+		if (auto Bullet = WeakBullet.lock())
+		{
+			Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75.f);
+			Bullet->SetWorldRotation(GetWorldRotation());
+			Bullet->SetCollisionTargetName("Monster");
+			Bullet->CalcCollisionRadius();
+		}
+	}
+}
+
+void CPlayer::AttackFinish()
+{
+	bOnAttack = false;
+	if (auto Anim = Animation2DComponent.lock())
+	{
+		Anim->ChangeAnimation("PlayerIdle");
+	}
+}
+
 bool CPlayer::Init()
 {
 	if (!CGameObject::Init())
@@ -70,7 +99,12 @@ bool CPlayer::Init()
 
 		Anim->AddAnimation("PlayerIdle");
 		Anim->AddAnimation("PlayerWalk");
-		Anim->ChangeAnimation("PlayerWalk");
+		Anim->AddAnimation("PlayerAttack", 0.5f);
+		//Anim->SetPlayRate("PlayerAttack", 2.f);
+		//Anim->ChangeAnimation("PlayerWalk");
+
+		Anim->AddNotify<CPlayer>("PlayerAttack", "AttackNotify", 2, this, &CPlayer::AttackNotify);
+		Anim->SetFinishNotify<CPlayer>("PlayerAttack", this, &CPlayer::AttackFinish);
 
 		Anim->SetLoop("PlayerIdle", true);
 		Anim->SetLoop("PlayerWalk", true);
@@ -104,14 +138,22 @@ void CPlayer::Update(float DeltaTime)
 
 	if (auto Mesh = MeshComponent.lock())
 	{
+		auto Anim = Animation2DComponent.lock();
+
+		bool bMove = false;
+
 		if (GetAsyncKeyState('W') & 0x8000)
 		{
 			Mesh->AddRelativePosition(Mesh->GetAxis(EAxis::Y) * 100 * DeltaTime);
+			Anim->ChangeAnimation("PlayerWalk");
+			bMove = true;
 		}
 
 		if (GetAsyncKeyState('S') & 0x8000)
 		{
 			Mesh->AddRelativePosition(Mesh->GetAxis(EAxis::Y) * -100 * DeltaTime);
+			Anim->ChangeAnimation("PlayerWalk");
+			bMove = true;
 		}
 
 		if (GetAsyncKeyState('A') & 0x8000)
@@ -126,19 +168,13 @@ void CPlayer::Update(float DeltaTime)
 
 		if (GetAsyncKeyState(VK_SPACE) & 0x8000)
 		{
-			if (auto World = this->World.lock())
-			{
-				//const std::string BulletName = "Bullet_";
-				//static int Counter = 0;
-				const auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
-				if (auto Bullet = WeakBullet.lock())
-				{
-					Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75);
-					Bullet->SetWorldRotation(GetWorldRotation());
-					Bullet->SetCollisionTargetName("Monster");
-					Bullet->CalcCollisionRadius();
-				}
-			}
+			Anim->ChangeAnimation("PlayerAttack");
+			bOnAttack = true;
+		}
+
+		if (!bMove && !bOnAttack)
+		{
+			Anim->ChangeAnimation("PlayerIdle");
 		}
 
 		if (GetAsyncKeyState('1') & 0x8000)

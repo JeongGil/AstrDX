@@ -31,6 +31,12 @@ public:
 		Notifies.emplace_back(Key, Frame, false, std::bind(Func, Obj));
 	}
 
+	template <typename T>
+	void SetFinishNotify(T* Obj, void (T::* Func)())
+	{
+		FinishNotify = std::bind(Func, Obj);
+	}
+
 	[[nodiscard]] int GetCurrFrame() const
 	{
 		return CurrFrame;
@@ -99,6 +105,11 @@ public:
 		}
 	}
 
+	bool GetSymmetry() const
+	{
+		return bSymmetry;
+	}
+
 	void SetSymmetry(bool bSymmetry)
 	{
 		this->bSymmetry = bSymmetry;
@@ -143,11 +154,12 @@ private:
 	float ElapsedTime = 0.f;
 
 	std::vector<FAnimation2DNotify> Notifies;
+	std::function<void()> FinishNotify;
 };
 
 struct FAnimation2DNotify
 {
-	std::string Name;
+	std::string Key;
 	int Frame = 0;
 	bool bCalled = false;
 	std::function<void()> Function;

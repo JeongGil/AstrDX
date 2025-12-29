@@ -13,12 +13,19 @@ class CPlayer :
 	friend CObject;
 
 private:
+	void TestNotify();
+	void AttackNotify();
+	void AttackFinish();
+
+private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CSceneComponent> Rotation;
 	std::weak_ptr<CMeshComponent> SubMeshComponent;
 	std::weak_ptr<CCameraComponent> CameraComponent;
 	std::weak_ptr<CStateComponent> StateComponent;
 	std::weak_ptr<CAnimation2DComponent> Animation2DComponent;
+
+	bool bOnAttack = false;
 
 public:
 	bool Init() override;

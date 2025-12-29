@@ -245,6 +245,17 @@ void CAnimation2DComponent::SetReverse(const std::string& AnimKey, bool bReverse
 	}
 }
 
+void CAnimation2DComponent::SetSymmetry(const std::string& AnimKey, bool bSymmetry)
+{
+	auto It = Animations.find(AnimKey);
+	if (It == Animations.end())
+	{
+		return;
+	}
+
+	It->second->SetSymmetry(bSymmetry);
+}
+
 void CAnimation2DComponent::ChangeAnimation(const std::string& AnimKey)
 {
 	auto MeshComponent = UpdateComponent.lock();
@@ -280,6 +291,8 @@ void CAnimation2DComponent::ChangeAnimation(const std::string& AnimKey)
 
 void CAnimation2DComponent::SetShader()
 {
+	AnimationCBuffer->SetTextureSymmetry(CurrentAnimation->GetSymmetry());
+
 	if (auto Asset = CurrentAnimation->GetAsset().lock())
 	{
 		if (Asset->GetTextureType() == EAnimation2DTextureType::SpriteSheet)

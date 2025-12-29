@@ -36,10 +36,35 @@ public:
 	void SetPlayRate(const std::string& AnimKey, float PlayRate);
 	void SetLoop(const std::string& AnimKey, bool bLoop);
 	void SetReverse(const std::string& AnimKey, bool bReverse);
+	void SetSymmetry(const std::string& AnimKey, bool bSymmetry);
 	void ChangeAnimation(const std::string& AnimKey);
 	void SetShader();
 	EAnimation2DTextureType GetTextureType() const;
 	int GetCurrentFrame() const;
+
+	template <typename T>
+	void AddNotify(const std::string& AnimKey, const std::string& NotiKey, int Frame, T* Obj, void (T::* Func)())
+	{
+		auto It = Animations.find(AnimKey);
+		if (It == Animations.end())
+		{
+			return;
+		}
+
+		It->second->AddNotify<T>(NotiKey, Frame, Obj, Func);
+	}
+
+	template <typename T>
+	void SetFinishNotify(const std::string& AnimKey, T* Obj, void (T::* Func)())
+	{
+		auto It = Animations.find(AnimKey);
+		if (It == Animations.end())
+		{
+			return;
+		}
+
+		It->second->SetFinishNotify<T>(Obj, Func);
+	}
 
 protected:
 	CAnimation2DComponent* Clone() const override;

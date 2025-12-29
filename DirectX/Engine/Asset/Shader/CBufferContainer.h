@@ -43,5 +43,6 @@ struct FCBufferAnimation2DData
 	FVector2 RBUV;
 	int bEnableAnimation2D = 0;
 	int TextureType = -1;
-	FVector2 Empty;
+	int TextureSymmetry = 0;
+	float Empty;
 };
