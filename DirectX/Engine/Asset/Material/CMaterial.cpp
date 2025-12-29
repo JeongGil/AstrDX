@@ -151,7 +151,16 @@ bool CMaterial::SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Text
 {
 	if (TextureIndex >= TextureInfos.size())
 	{
-		return false;
+		if (auto Tex = Texture.lock())
+		{
+			TextureInfos.emplace_back(new FMaterialTextureInfo
+			   {
+				   .Name = Tex->GetName(),
+				   .Register = 0,
+				   .ShaderBufferType = EShaderBufferType::Pixel,
+				   .Index = 0,
+			   });
+		}
 	}
 
 	TextureInfos[TextureIndex]->Texture = Texture;
