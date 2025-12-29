@@ -3,6 +3,8 @@
 #include "CMeshComponent.h"
 #include "../Asset/CAssetManager.h"
 #include "../Asset/Animation2D/CAnimation2DManager.h"
+#include "../Asset/Shader/CCBufferAnimation2D.h"
+#include "../Asset/Texture/CTexture.h"
 
 CAnimation2DComponent::CAnimation2DComponent(const CAnimation2DComponent& other): CObjectComponent(other),
                                                                                   UpdateComponent(other.UpdateComponent),
@@ -47,6 +49,11 @@ bool CAnimation2DComponent::Init()
 		return false;
 	}
 
+	AnimationCBuffer.reset(new CCBufferAnimation2D);
+
+	AnimationCBuffer->Init();
+	AnimationCBuffer->SetEnableAnimation2D(true);
+
 	return true;
 }
 
@@ -59,26 +66,23 @@ void CAnimation2DComponent::Update(const float DeltaTime)
 		auto MeshComponent = UpdateComponent.lock();
 		if (MeshComponent)
 		{
+			MeshComponent->SetAnimationComponent(std::dynamic_pointer_cast<CAnimation2DComponent>(shared_from_this()));
+
 			if (!bUpdateEnable)
 			{
 				if (auto Asset = CurrentAnimation->GetAsset().lock())
 				{
+					AnimationCBuffer->SetTextureType(Asset->GetTextureType());
+
 					if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
 					{
 						bUpdateEnable = true;
-						MeshComponent->SetAnimationEnable(true);
 					}
 				}
 			}
 		}
 
 		CurrentAnimation->Update(DeltaTime);
-
-		if (MeshComponent)
-		{
-			MeshComponent->SetAnimTextureType(CurrentAnimation->GetAnimationTextureType());
-			MeshComponent->SetAnimationFrame(CurrentAnimation->GetCurrFrame());
-		}
 	}
 }
 
@@ -96,16 +100,16 @@ void CAnimation2DComponent::SetUpdateComponent(const std::weak_ptr<CMeshComponen
 {
 	this->UpdateComponent = Component;
 
-	if (auto MeshComponent = UpdateComponent.lock())
+	if (auto MeshComponent = UpdateComponent.lock();
+		MeshComponent && CurrentAnimation)
 	{
-		if (CurrentAnimation)
+		if (auto Asset = CurrentAnimation->GetAsset().lock())
 		{
-			if (auto Asset = CurrentAnimation->GetAsset().lock())
+			AnimationCBuffer->SetTextureType(Asset->GetTextureType());
+
+			if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
 			{
-				if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
-				{
-					bUpdateEnable = true;
-				}
+				bUpdateEnable = true;
 			}
 		}
 	}
@@ -139,16 +143,16 @@ void CAnimation2DComponent::AddAnimation(const std::weak_ptr<CAnimation2D>& Anim
 	{
 		CurrentAnimation = Sequence;
 
-		if (auto MeshComponent = UpdateComponent.lock())
+		if (auto MeshComponent = UpdateComponent.lock();
+			MeshComponent && CurrentAnimation)
 		{
-			if (CurrentAnimation)
+			if (auto Asset = CurrentAnimation->GetAsset().lock())
 			{
-				if (auto Asset = CurrentAnimation->GetAsset().lock())
+				AnimationCBuffer->SetTextureType(Asset->GetTextureType());
+
+				if (MeshComponent->SetTexture(0,0,Asset->GetTexture()))
 				{
-					if (MeshComponent->SetTexture(0,0,Asset->GetTexture()))
-					{
-						bUpdateEnable = true;
-					}
+					bUpdateEnable = true;
 				}
 			}
 		}
@@ -170,7 +174,7 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 		return;
 	}
 
-	if (!Animations.contains(Anim->GetKey()))
+	if (Animations.contains(Anim->GetKey()))
 	{
 		return;
 	}
@@ -189,16 +193,16 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 	{
 		CurrentAnimation = Sequence;
 
-		if (auto MeshComponent = UpdateComponent.lock())
+		if (auto MeshComponent = UpdateComponent.lock();
+			MeshComponent && CurrentAnimation)
 		{
-			if (CurrentAnimation)
+			if (auto Asset = CurrentAnimation->GetAsset().lock())
 			{
-				if (auto Asset = CurrentAnimation->GetAsset().lock())
+				AnimationCBuffer->SetTextureType(Asset->GetTextureType());
+
+				if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
 				{
-					if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
-					{
-						bUpdateEnable = true;
-					}
+					bUpdateEnable = true;
 				}
 			}
 		}
@@ -268,13 +272,50 @@ void CAnimation2DComponent::ChangeAnimation(const std::string& AnimKey)
 
 	if (auto Asset = CurrentAnimation->GetAsset().lock())
 	{
+		AnimationCBuffer->SetTextureType(Asset->GetTextureType());
+
 		MeshComponent->SetTexture(0, 0, Asset->GetTexture());
 	}
+}
 
-	if (CurrentAnimation->GetReverse())
+void CAnimation2DComponent::SetShader()
+{
+	if (auto Asset = CurrentAnimation->GetAsset().lock())
 	{
-		MeshComponent->SetAnimationFrame(CurrentAnimation->GetFrameCount() - 1);
+		if (Asset->GetTextureType() == EAnimation2DTextureType::SpriteSheet)
+		{	
+			if (auto Texture = Asset->GetTexture().lock())
+			{
+				const auto& TexFrame = Asset->GetFrame(CurrentAnimation->GetCurrFrame());
+				const auto TexInfo = Texture->GetTexture();
+
+				AnimationCBuffer->SetLTUV(
+					TexFrame.Start.x / TexInfo->Width,
+					TexFrame.Start.y / TexInfo->Height);
+
+				AnimationCBuffer->SetRBUV(
+					(TexFrame.Start.x + TexFrame.Size.x) / TexInfo->Width,
+					(TexFrame.Start.y + TexFrame.Size.y) / TexInfo->Height);
+			}
+		}
 	}
+
+	AnimationCBuffer->UpdateBuffer();
+}
+
+EAnimation2DTextureType CAnimation2DComponent::GetTextureType() const
+{
+	if (auto Asset = CurrentAnimation->GetAsset().lock())
+	{
+		return Asset->GetTextureType();
+	}
+
+	return EAnimation2DTextureType::None;
+}
+
+int CAnimation2DComponent::GetCurrentFrame() const
+{
+	return CurrentAnimation->GetCurrFrame();
 }
 
 CAnimation2DComponent* CAnimation2DComponent::Clone() const

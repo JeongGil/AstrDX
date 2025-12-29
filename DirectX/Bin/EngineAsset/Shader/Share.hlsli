@@ -25,5 +25,45 @@ cbuffer CBMaterial : register(b1)
 	float3 cbMaterialEmpty;
 }
 
+cbuffer CBAnimation2D : register(b2)
+{
+	float2 cbLTUV;
+	float2 cbRBUV;
+	int cbEnableAnimation2D;
+	int cbAnimation2DTextureType;
+	float2 cbAnimation2DEmpty;
+}
+
 SamplerState sbPoint : register(s0);
 SamplerState sbLinear : register(s1);
+
+float2 ComputeAnimation2DUV(float2 UV)
+{
+	// cbAnimation2DTextureType: 0 is Sprite animation.
+	if (cbEnableAnimation2D == 0 || cbAnimation2DTextureType != 0)
+	{
+		return UV;
+	}
+
+	float2 Result;
+
+	if (UV.x == 0.0f)
+	{
+		Result.x = cbLTUV.x;
+	}
+	else
+	{
+		Result.x = cbRBUV.x;
+	}
+
+	if (UV.y == 0.0f)
+	{
+		Result.y = cbLTUV.y;
+	}
+	else
+	{
+		Result.y = cbRBUV.y;
+	}
+
+	return Result;
+}

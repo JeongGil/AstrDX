@@ -36,3 +36,12 @@ struct FCBufferMaterialData
 	float Opacity;
 	FVector Empty;
 };
+
+struct FCBufferAnimation2DData
+{
+	FVector2 LTUV;
+	FVector2 RBUV;
+	int bEnableAnimation2D = 0;
+	int TextureType = -1;
+	FVector2 Empty;
+};

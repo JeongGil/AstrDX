@@ -70,7 +70,7 @@ VS_OUTPUT_TEX DefaultTexVS(VS_INPUT_TEX input)
 	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
 
 	output.Pos = mul(float4(input.Pos, 1.f), cbWVP);
-	output.UV = input.UV;
+	output.UV = ComputeAnimation2DUV(input.UV);
 
 	return output;
 }

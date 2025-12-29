@@ -1,13 +1,17 @@
 #include "CMeshComponent.h"
 
+#include "CAnimation2DComponent.h"
+#include "../Asset/CAssetManager.h"
 #include "../Asset/Material/CMaterial.h"
 #include "../Asset/Mesh/CMesh.h"
-#include "../Asset/Shader/CCBufferTransform.h"
-#include "../World/CWorld.h"
-#include "../World/CCameraManager.h"
-#include "../Asset/CAssetManager.h"
 #include "../Asset/Mesh/CMeshManager.h"
+#include "../Asset/Shader/CCBufferAnimation2D.h"
+#include "../Asset/Shader/CCBufferTransform.h"
 #include "../Asset/Shader/CShaderManager.h"
+#include "../World/CCameraManager.h"
+#include "../World/CWorld.h"
+
+std::shared_ptr<CCBufferAnimation2D> CMeshComponent::EmptyAnimationCBuffer;
 
 void CMeshComponent::SetMesh(const std::weak_ptr<CMesh>& Mesh)
 {
@@ -128,6 +132,20 @@ bool CMeshComponent::SetTextureIndex(int SlotIndex, int TextureIndex)
 	return MaterialSlot[SlotIndex]->SetTextureIndex(TextureIndex);
 }
 
+void CMeshComponent::CreateEmptyAnimationCBuffer()
+{
+	EmptyAnimationCBuffer.reset(new CCBufferAnimation2D);
+
+	EmptyAnimationCBuffer->Init();
+
+	EmptyAnimationCBuffer->SetEnableAnimation2D(false);
+}
+
+void CMeshComponent::ClearEmptyAnimationCBuffer()
+{
+	EmptyAnimationCBuffer.reset();
+}
+
 bool CMeshComponent::Init()
 {
 	if (!CSceneComponent::Init())
@@ -174,21 +192,31 @@ void CMeshComponent::Render()
 
 	Shader->SetShader();
 
+	auto Anim = AnimationComponent.lock();
+	if (Anim)
+	{
+		Anim->SetShader();
+	}
+	else
+	{
+		EmptyAnimationCBuffer->UpdateBuffer();
+	}
+
 	auto MeshSlotCount = MaterialSlot.size();
 	for (size_t i = 0; i < MeshSlotCount; i++)
 	{
 		auto& Material = MaterialSlot[i];
 		if (Material)
 		{
-			if (bAnimationEnable)
+			if (Anim)
 			{
-				if (AnimTextureType == EAnimation2DTextureType::SpriteSheet)
+				if (Anim->GetTextureType() == EAnimation2DTextureType::SpriteSheet)
 				{
 					Material->UpdateConstantBuffer();
 				}
 				else
 				{
-					Material->UpdateConstantBuffer(AnimationFrame);
+					Material->UpdateConstantBuffer(Anim->GetCurrentFrame());
 				}
 			}
 			else

@@ -70,6 +70,7 @@ bool CPlayer::Init()
 
 		Anim->AddAnimation("PlayerIdle");
 		Anim->AddAnimation("PlayerWalk");
+		Anim->ChangeAnimation("PlayerWalk");
 
 		Anim->SetLoop("PlayerIdle", true);
 		Anim->SetLoop("PlayerWalk", true);

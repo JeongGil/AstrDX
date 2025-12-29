@@ -4,6 +4,8 @@
 #include "../Asset/Shader/CBufferContainer.h"
 #include "../Asset/Shader/CCBufferTransform.h"
 
+class CCBufferAnimation2D;
+class CAnimation2DComponent;
 class CShader;
 class CMesh;
 class CCBufferTransform;
@@ -48,20 +50,13 @@ public:
 	bool SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
 	bool SetTextureIndex(int SlotIndex, int TextureIndex);
 
-	void SetAnimTextureType(EAnimation2DTextureType Type)
+	void SetAnimationComponent(const std::weak_ptr<CAnimation2DComponent>& AnimComponent)
 	{
-		AnimTextureType = Type;
+		this->AnimationComponent = AnimComponent;
 	}
 
-	void SetAnimationFrame(int Frame)
-	{
-		AnimationFrame = Frame;
-	}
-
-	void SetAnimationEnable(bool bEnable)
-	{
-		bAnimationEnable = bEnable;
-	}
+	static void CreateEmptyAnimationCBuffer();
+	static void ClearEmptyAnimationCBuffer();
 
 protected:
 	std::weak_ptr<CShader> Shader;
@@ -69,9 +64,8 @@ protected:
 	std::vector<std::shared_ptr<CMaterial>> MaterialSlot;
 	std::shared_ptr<CCBufferTransform> CBufferTransform;
 
-	bool bAnimationEnable = false;
-	int AnimationFrame = 0;
-	EAnimation2DTextureType AnimTextureType = EAnimation2DTextureType::None;
+	std::weak_ptr<CAnimation2DComponent> AnimationComponent;
+	static std::shared_ptr<CCBufferAnimation2D> EmptyAnimationCBuffer;
 
 public:
 	/**

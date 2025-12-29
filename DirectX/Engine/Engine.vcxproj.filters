@@ -103,6 +103,9 @@
     <Filter Include="Asset\Animation2D">
       <UniqueIdentifier>{003e7991-0fb2-4ab6-8c72-cff96049f818}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Shader\ConstantBuffer\Animation2D">
+      <UniqueIdentifier>{7a94a71d-3782-4f92-bf74-a65dfca74f53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -264,6 +267,9 @@
     <ClInclude Include="Asset\Animation2D\CAnimation2DManager.h">
       <Filter>Asset\Animation2D</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Shader\CCBufferAnimation2D.h">
+      <Filter>Asset\Shader\ConstantBuffer\Animation2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -404,6 +410,9 @@
     </ClCompile>
     <ClCompile Include="Asset\Animation2D\CAnimation2DManager.cpp">
       <Filter>Asset\Animation2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CCBufferAnimation2D.cpp">
+      <Filter>Asset\Shader\ConstantBuffer\Animation2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

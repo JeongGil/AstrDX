@@ -18,6 +18,11 @@ bool CShaderManager::Init()
 		return false;
 	}
 
+	if (!CreateCBuffer("Animation2D", sizeof(FCBufferAnimation2DData), 2, EShaderBufferType::Vertex))
+	{
+		return false;
+	}
+
 	// Shader
 	if (!CreateShader<CShaderColor2D>("Color2D", "EngineShader"))
 	{

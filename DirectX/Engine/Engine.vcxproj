@@ -175,6 +175,7 @@
     <ClInclude Include="Asset\Material\CMaterialManager.h" />
     <ClInclude Include="Asset\Mesh\CMesh.h" />
     <ClInclude Include="Asset\Mesh\CMeshManager.h" />
+    <ClInclude Include="Asset\Shader\CCBufferAnimation2D.h" />
     <ClInclude Include="Asset\Shader\CBufferContainer.h" />
     <ClInclude Include="Asset\Shader\CCBufferMaterial.h" />
     <ClInclude Include="Asset\Shader\CCBufferTransform.h" />
@@ -232,6 +233,7 @@
     <ClCompile Include="Asset\Material\CMaterialManager.cpp" />
     <ClCompile Include="Asset\Mesh\CMesh.cpp" />
     <ClCompile Include="Asset\Mesh\CMeshManager.cpp" />
+    <ClCompile Include="Asset\Shader\CCBufferAnimation2D.cpp" />
     <ClCompile Include="Asset\Shader\CCBufferMaterial.cpp" />
     <ClCompile Include="Asset\Shader\CCBufferTransform.cpp" />
     <ClCompile Include="Asset\Shader\CComputeShader.cpp" />

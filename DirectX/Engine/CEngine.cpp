@@ -49,6 +49,8 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 		return false;
 	}
 
+	CMeshComponent::CreateEmptyAnimationCBuffer();
+
 	if (!CWorldManager::GetInst()->Init())
 	{
 		return false;
@@ -182,6 +184,8 @@ CEngine::CEngine()
 
 CEngine::~CEngine()
 {
+	CMeshComponent::ClearEmptyAnimationCBuffer();
+
 	CWorldManager::DestroyInst();
 
 	CObject::ClearCDO();

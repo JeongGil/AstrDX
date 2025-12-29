@@ -3,6 +3,7 @@
 
 #include "CAnimation2DSequence.h"
 
+class CCBufferAnimation2D;
 class CMeshComponent;
 class CAnimation2D;
 
@@ -36,6 +37,9 @@ public:
 	void SetLoop(const std::string& AnimKey, bool bLoop);
 	void SetReverse(const std::string& AnimKey, bool bReverse);
 	void ChangeAnimation(const std::string& AnimKey);
+	void SetShader();
+	EAnimation2DTextureType GetTextureType() const;
+	int GetCurrentFrame() const;
 
 protected:
 	CAnimation2DComponent* Clone() const override;
@@ -44,6 +48,8 @@ protected:
 	std::unordered_map <std::string, std::shared_ptr<CAnimation2DSequence>> Animations;
 
 	std::shared_ptr<CAnimation2DSequence> CurrentAnimation;
+
+	std::shared_ptr<CCBufferAnimation2D> AnimationCBuffer;
 
 	bool bUpdateEnable = false;
 };
