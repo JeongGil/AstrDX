@@ -12,6 +12,8 @@ class CMeshManager
 public:
 	bool Init();
 
+	void ReleaseAsset(const std::string& Key);
+
 	/**
 	 * @brief Initializes the mesh manager by creating predefined meshes for test.
 	 *

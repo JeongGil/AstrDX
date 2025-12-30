@@ -5,6 +5,7 @@
 #include "CCameraManager.h"
 #include "../EngineInfo.h"
 #include "../Object/CGameObject.h"
+#include "CWorldAssetManager.h"
 
 class CWorld : public std::enable_shared_from_this<CWorld>
 {
@@ -142,9 +143,12 @@ public:
 		return std::weak_ptr<T>();
 	}
 
+	[[nodiscard]] std::weak_ptr<CWorldAssetManager> GetWorldAssetManager() const { return WorldAssetManager; }
+
 protected:
 	std::unordered_multimap<std::string, std::shared_ptr<CGameObject>> Objects;
 	std::shared_ptr<CCameraManager> CameraManager;
+	std::shared_ptr<CWorldAssetManager> WorldAssetManager;
 
 public:
 	virtual bool Init();

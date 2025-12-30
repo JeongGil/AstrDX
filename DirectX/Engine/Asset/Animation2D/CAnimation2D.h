@@ -1,48 +1,21 @@
 #pragma once
-#include "../../CObject.h"
+#include "../CAsset.h"
 
 class CTexture;
 
 class CAnimation2D :
-    public CObject
+    public CAsset
 {
 	friend class CAnimation2DManager;
 
 public:
-	[[nodiscard]] const std::string& GetKey() const
-	{
-		return Key;
-	}
+	[[nodiscard]] const std::string& GetKey() const { return Key; }
+	void SetKey(const std::string& Key) { this->Key = Key; }
 
-	void SetKey(const std::string& Key)
-	{
-		this->Key = Key;
-	}
+	[[nodiscard]] EAnimation2DTextureType GetTextureType() const { return TextureType; }
+	void SetTextureType(EAnimation2DTextureType TextureType) { this->TextureType = TextureType; }
 
-	[[nodiscard]] EAnimation2DTextureType GetTextureType() const
-	{
-		return TextureType;
-	}
-
-	void SetTextureType(EAnimation2DTextureType TextureType)
-	{
-		this->TextureType = TextureType;
-	}
-
-	[[nodiscard]] const std::weak_ptr<CTexture>& GetTexture() const
-	{
-		return Texture;
-	}
-
-	[[nodiscard]] const FTextureFrame& GetFrame(int Index) const
-	{
-		return Frames[Index];
-	}
-
-	[[nodiscard]] int GetFrameCount() const
-	{
-		return static_cast<int>(Frames.size());
-	}
+	[[nodiscard]] const std::weak_ptr<CTexture>& GetTexture() const { return Texture; }
 
 	void SetTexture(const std::weak_ptr<CTexture>& Texture);
 
@@ -52,6 +25,9 @@ public:
 
 	void SetTextures(const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture");
 	void SetTexturesFullPath(const std::string& Key, std::vector<const TCHAR*>& FullPaths);
+
+	[[nodiscard]] const FTextureFrame& GetFrame(int Index) const { return Frames[Index]; }
+	[[nodiscard]] int GetFrameCount() const { return static_cast<int>(Frames.size()); }
 
 	void AddFrame(FVector2 Start, FVector2 Size);
 	void AddFrame(float x, float y, float w, float h);
@@ -65,5 +41,15 @@ protected:
 	EAnimation2DTextureType TextureType = EAnimation2DTextureType::SpriteSheet;
 
 	std::vector<FTextureFrame> Frames;
+
+protected:
+	CAnimation2D();
+	CAnimation2D(const CAnimation2D& other);
+	CAnimation2D(CAnimation2D&& other) noexcept;
+	CAnimation2D& operator=(const CAnimation2D& other);
+	CAnimation2D& operator=(CAnimation2D&& other) noexcept;
+
+public:
+	~CAnimation2D() override = default;
 };
 

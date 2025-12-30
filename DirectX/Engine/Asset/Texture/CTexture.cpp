@@ -4,6 +4,11 @@
 #include "../../CDevice.h"
 #include "../Shader/CBufferContainer.h"
 
+CTexture::CTexture()
+{
+	AssetType = EAssetType::Texture;
+}
+
 CTexture::~CTexture()
 {
 	for (auto& Texture : TextureInfos)

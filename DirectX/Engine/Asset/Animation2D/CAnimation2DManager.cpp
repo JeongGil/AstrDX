@@ -5,6 +5,18 @@ bool CAnimation2DManager::Init()
 	return true;
 }
 
+void CAnimation2DManager::ReleaseAsset(const std::string& Key)
+{
+	auto It = Animations.find(Key);
+	if (It != Animations.end())
+	{
+		if (It->second.use_count() == 1)
+		{
+			Animations.erase(It);
+		}
+	}
+}
+
 bool CAnimation2DManager::CreateAnimation(const std::string& AnimKey)
 {
 	if (Animations.contains(AnimKey))

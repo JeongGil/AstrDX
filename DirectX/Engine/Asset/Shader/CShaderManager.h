@@ -23,6 +23,9 @@ public:
 	 */
 	bool Init();
 
+	void ReleaseShader(const std::string& Key);
+	void ReleaseCBuffer(const std::string& Key);
+
 	std::weak_ptr<CShader> FindShader(const std::string& Key);
 	std::weak_ptr<CConstantBuffer> FindCBuffer(const std::string& Key);
 
@@ -54,6 +57,8 @@ public:
 		{
 			return false;
 		}
+
+		NewShader->SetName(Key);
 
 		Shaders.emplace(Key, NewShader);
 

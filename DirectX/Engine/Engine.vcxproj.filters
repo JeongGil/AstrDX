@@ -270,6 +270,12 @@
     <ClInclude Include="Asset\Shader\CCBufferAnimation2D.h">
       <Filter>Asset\Shader\ConstantBuffer\Animation2D</Filter>
     </ClInclude>
+    <ClInclude Include="World\CWorldAssetManager.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\CAsset.h">
+      <Filter>Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -413,6 +419,12 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CCBufferAnimation2D.cpp">
       <Filter>Asset\Shader\ConstantBuffer\Animation2D</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CWorldAssetManager.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\CAsset.cpp">
+      <Filter>Asset</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -182,6 +182,7 @@ bool CMesh::CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data
 
 CMesh::CMesh()
 {
+	AssetType = EAssetType::Mesh;
 }
 
 CMesh::~CMesh()

@@ -232,9 +232,14 @@ CMaterial* CMaterial::Clone() const
 	return new CMaterial(*this);
 }
 
-CMaterial::CMaterial(const CMaterial& other) : CObject(other),
-BaseColor(other.BaseColor),
-Opacity(other.Opacity)
+CMaterial::CMaterial()
+{
+	AssetType = EAssetType::Material;
+}
+
+CMaterial::CMaterial(const CMaterial& other) : CAsset(other),
+                                               BaseColor(other.BaseColor),
+                                               Opacity(other.Opacity)
 //MaterialCBuffer(other.MaterialCBuffer)
 {
 	MaterialCBuffer.reset(new CCBufferMaterial);
@@ -243,7 +248,7 @@ Opacity(other.Opacity)
 	MaterialCBuffer->SetOpacity(Opacity);
 }
 
-CMaterial::CMaterial(CMaterial&& other) noexcept : CObject(std::move(other)),
+CMaterial::CMaterial(CMaterial&& other) noexcept : CAsset(std::move(other)),
 BaseColor(std::move(other.BaseColor)),
 Opacity(other.Opacity),
 MaterialCBuffer(std::move(other.MaterialCBuffer))
@@ -254,7 +259,7 @@ CMaterial& CMaterial::operator=(const CMaterial& other)
 {
 	if (this == &other)
 		return *this;
-	CObject::operator =(other);
+	CAsset::operator =(other);
 	BaseColor = other.BaseColor;
 	Opacity = other.Opacity;
 	//MaterialCBuffer = other.MaterialCBuffer;
@@ -269,7 +274,7 @@ CMaterial& CMaterial::operator=(CMaterial&& other) noexcept
 {
 	if (this == &other)
 		return *this;
-	CObject::operator =(std::move(other));
+	CAsset::operator =(std::move(other));
 	BaseColor = std::move(other.BaseColor);
 	Opacity = other.Opacity;
 	MaterialCBuffer = std::move(other.MaterialCBuffer);

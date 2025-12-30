@@ -1,5 +1,5 @@
 #pragma once
-#include "../../CObject.h"
+#include "../CAsset.h"
 
 #include "../Shader/CBufferContainer.h"
 
@@ -10,7 +10,7 @@ class CRenderState;
 struct FMaterialTextureInfo;
 
 class CMaterial :
-    public CObject
+    public CAsset
 {
 	friend class CMaterialManager;
 	friend class CMesh;
@@ -54,7 +54,7 @@ public:
 	CMaterial* Clone() const;
 
 protected:
-	CMaterial() = default;
+	CMaterial();
 
 	CMaterial(const CMaterial& other);
 

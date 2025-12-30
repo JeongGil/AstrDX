@@ -45,7 +45,9 @@ public:
 	template <typename T>
 	void AddNotify(const std::string& AnimKey, const std::string& NotiKey, int Frame, T* Obj, void (T::* Func)())
 	{
-		auto It = Animations.find(AnimKey);
+		auto InnerKey = "Animation2D_" + AnimKey;
+
+		auto It = Animations.find(InnerKey);
 		if (It == Animations.end())
 		{
 			return;
@@ -57,7 +59,9 @@ public:
 	template <typename T>
 	void SetFinishNotify(const std::string& AnimKey, T* Obj, void (T::* Func)())
 	{
-		auto It = Animations.find(AnimKey);
+		auto InnerKey = "Animation2D_" + AnimKey;
+
+		auto It = Animations.find(InnerKey);
 		if (It == Animations.end())
 		{
 			return;

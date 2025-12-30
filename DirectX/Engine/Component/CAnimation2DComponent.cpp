@@ -5,6 +5,7 @@
 #include "../Asset/Animation2D/CAnimation2DManager.h"
 #include "../Asset/Shader/CCBufferAnimation2D.h"
 #include "../Asset/Texture/CTexture.h"
+#include "../World/CWorld.h"
 
 CAnimation2DComponent::CAnimation2DComponent(const CAnimation2DComponent& other): CObjectComponent(other),
                                                                                   UpdateComponent(other.UpdateComponent),
@@ -162,32 +163,47 @@ void CAnimation2DComponent::AddAnimation(const std::weak_ptr<CAnimation2D>& Anim
 void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayTime, float PlayRate, bool bLoop,
 	bool bReverse)
 {
-	auto AnimMgr = CAssetManager::GetInst()->GetAnimation2DManager().lock();
-	if (!AnimMgr)
+	std::weak_ptr<CAnimation2D> WeakAnim;
+	
+	if (auto World = this->World.lock())
+	{
+		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		{
+			WeakAnim = WorldAssetMgr->FindAnimation(AnimKey);
+			if (WeakAnim.expired())
+			{
+				return;
+			}
+		}
+	}
+	else
+	{
+		if (auto Mgr = CAssetManager::GetInst()->GetAnimation2DManager().lock())
+		{
+			auto InnerKey = "Animation2D_" + AnimKey;
+			WeakAnim = Mgr->FindAnimation(InnerKey);
+			if (WeakAnim.expired())
+			{
+				return;
+			}
+		}
+	}
+
+	auto Anim = WeakAnim.lock();
+
+	auto [It, Result] = Animations.try_emplace(Anim->GetKey(), std::shared_ptr<CAnimation2DSequence>(new CAnimation2DSequence));
+	if (!Result)
 	{
 		return;
 	}
-
-	auto Anim = AnimMgr->FindAnimation(AnimKey).lock();
-	if (!Anim)
-	{
-		return;
-	}
-
-	if (Animations.contains(Anim->GetKey()))
-	{
-		return;
-	}
-
-	std::shared_ptr<CAnimation2DSequence> Sequence(new CAnimation2DSequence);
+	
+	auto Sequence = It->second;
 
 	Sequence->SetAnimation2D(Anim);
 	Sequence->SetPlayTime(PlayTime);
 	Sequence->SetPlayRate(PlayRate);
 	Sequence->SetLoop(bLoop);
 	Sequence->SetReverse(bReverse);
-
-	Animations.emplace(Anim->GetKey(), Sequence);
 
 	if (!CurrentAnimation)
 	{
@@ -211,7 +227,9 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 
 void CAnimation2DComponent::SetPlayTime(const std::string& AnimKey, float PlayTime)
 {
-	auto It = Animations.find(AnimKey);
+	auto InnerKey = "Animation2D_" + AnimKey;
+
+	auto It = Animations.find(InnerKey);
 	if (It != Animations.end())
 	{
 		It->second->SetPlayTime(PlayTime);
@@ -220,7 +238,9 @@ void CAnimation2DComponent::SetPlayTime(const std::string& AnimKey, float PlayTi
 
 void CAnimation2DComponent::SetPlayRate(const std::string& AnimKey, float PlayRate)
 {
-	auto It = Animations.find(AnimKey);
+	auto InnerKey = "Animation2D_" + AnimKey;
+
+	auto It = Animations.find(InnerKey);
 	if (It != Animations.end())
 	{
 		It->second->SetPlayRate(PlayRate);
@@ -229,7 +249,9 @@ void CAnimation2DComponent::SetPlayRate(const std::string& AnimKey, float PlayRa
 
 void CAnimation2DComponent::SetLoop(const std::string& AnimKey, bool bLoop)
 {
-	auto It = Animations.find(AnimKey);
+	auto InnerKey = "Animation2D_" + AnimKey;
+
+	auto It = Animations.find(InnerKey);
 	if (It != Animations.end())
 	{
 		It->second->SetLoop(bLoop);
@@ -238,7 +260,9 @@ void CAnimation2DComponent::SetLoop(const std::string& AnimKey, bool bLoop)
 
 void CAnimation2DComponent::SetReverse(const std::string& AnimKey, bool bReverse)
 {
-	auto It = Animations.find(AnimKey);
+	auto InnerKey = "Animation2D_" + AnimKey;
+
+	auto It = Animations.find(InnerKey);
 	if (It != Animations.end())
 	{
 		It->second->SetReverse(bReverse);
@@ -247,7 +271,9 @@ void CAnimation2DComponent::SetReverse(const std::string& AnimKey, bool bReverse
 
 void CAnimation2DComponent::SetSymmetry(const std::string& AnimKey, bool bSymmetry)
 {
-	auto It = Animations.find(AnimKey);
+	auto InnerKey = "Animation2D_" + AnimKey;
+
+	auto It = Animations.find(InnerKey);
 	if (It == Animations.end())
 	{
 		return;
@@ -258,6 +284,8 @@ void CAnimation2DComponent::SetSymmetry(const std::string& AnimKey, bool bSymmet
 
 void CAnimation2DComponent::ChangeAnimation(const std::string& AnimKey)
 {
+	auto InnerKey = "Animation2D_" + AnimKey;
+
 	auto MeshComponent = UpdateComponent.lock();
 	if (!MeshComponent)
 	{
@@ -265,12 +293,12 @@ void CAnimation2DComponent::ChangeAnimation(const std::string& AnimKey)
 	}
 
 	if (!CurrentAnimation
-		|| CurrentAnimation->GetKey() == AnimKey)
+		|| CurrentAnimation->GetKey() == InnerKey)
 	{
 		return;
 	}
 
-	auto It = Animations.find(AnimKey);
+	auto It = Animations.find(InnerKey);
 	if (It == Animations.end())
 	{
 		return;

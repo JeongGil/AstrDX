@@ -14,6 +14,8 @@ public:
 
 	bool Init();
 
+	void ReleaseAsset(const std::string& Key);
+
 	bool CreateAnimation(const std::string& AnimKey);
 	std::weak_ptr<CAnimation2D> FindAnimation(const std::string& AnimKey);
 

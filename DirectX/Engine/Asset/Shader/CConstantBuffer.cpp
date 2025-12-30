@@ -1,6 +1,7 @@
 #include "CConstantBuffer.h"
 
 #include "../../CDevice.h"
+#include "CBufferContainer.h"
 
 bool CConstantBuffer::Init(int Size, int Register, int ShaderBuffer)
 {
@@ -71,6 +72,11 @@ void CConstantBuffer::Update(const void* Data) const
 	{
 		CDevice::GetInst()->GetContext()->CSSetConstantBuffers(Register, 1, &Buffer);
 	}
+}
+
+CConstantBuffer::CConstantBuffer()
+{
+	AssetType = EAssetType::ConstantBuffer;
 }
 
 CConstantBuffer::~CConstantBuffer()

@@ -169,6 +169,7 @@
   <ItemGroup>
     <ClInclude Include="Asset\Animation2D\CAnimation2D.h" />
     <ClInclude Include="Asset\Animation2D\CAnimation2DManager.h" />
+    <ClInclude Include="Asset\CAsset.h" />
     <ClInclude Include="Asset\CAssetManager.h" />
     <ClInclude Include="Asset\CPathManager.h" />
     <ClInclude Include="Asset\Material\CMaterial.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="World\CCameraManager.h" />
     <ClInclude Include="World\CWorld.h" />
+    <ClInclude Include="World\CWorldAssetManager.h" />
     <ClInclude Include="World\CWorldManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -227,6 +229,7 @@
   <ItemGroup>
     <ClCompile Include="Asset\Animation2D\CAnimation2D.cpp" />
     <ClCompile Include="Asset\Animation2D\CAnimation2DManager.cpp" />
+    <ClCompile Include="Asset\CAsset.cpp" />
     <ClCompile Include="Asset\CAssetManager.cpp" />
     <ClCompile Include="Asset\CPathManager.cpp" />
     <ClCompile Include="Asset\Material\CMaterial.cpp" />
@@ -268,6 +271,7 @@
     <ClCompile Include="Render\CRenderState.cpp" />
     <ClCompile Include="World\CCameraManager.cpp" />
     <ClCompile Include="World\CWorld.cpp" />
+    <ClCompile Include="World\CWorldAssetManager.cpp" />
     <ClCompile Include="World\CWorldManager.cpp" />
   </ItemGroup>
   <ItemGroup>

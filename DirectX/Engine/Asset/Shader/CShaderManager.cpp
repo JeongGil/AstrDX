@@ -8,38 +8,62 @@
 bool CShaderManager::Init()
 {
 	// ConstantBuffer
-	if (!CreateCBuffer("Transform", sizeof(FCBufferTransformData), 0, EShaderBufferType::GRAPHIC))
+	if (!CreateCBuffer("CBuffer_Transform", sizeof(FCBufferTransformData), 0, EShaderBufferType::GRAPHIC))
 	{
 		return false;
 	}
 
-	if (!CreateCBuffer("Material", sizeof(FCBufferMaterialData), 1, EShaderBufferType::Pixel))
+	if (!CreateCBuffer("CBuffer_Material", sizeof(FCBufferMaterialData), 1, EShaderBufferType::Pixel))
 	{
 		return false;
 	}
 
-	if (!CreateCBuffer("Animation2D", sizeof(FCBufferAnimation2DData), 2, EShaderBufferType::Vertex))
+	if (!CreateCBuffer("CBuffer_Animation2D", sizeof(FCBufferAnimation2DData), 2, EShaderBufferType::Vertex))
 	{
 		return false;
 	}
 
 	// Shader
-	if (!CreateShader<CShaderColor2D>("Color2D", "EngineShader"))
+	if (!CreateShader<CShaderColor2D>("Shader_Color2D", "EngineShader"))
 	{
 		return false;
 	}
 
-	if (!CreateShader<CShaderMaterialColor2D>("MaterialColor2D", "EngineShader"))
+	if (!CreateShader<CShaderMaterialColor2D>("Shader_MaterialColor2D", "EngineShader"))
 	{
 		return false;
 	}
 
-	if (!CreateShader<CShaderTexture2D>("DefaultTexture2D", "EngineShader"))
+	if (!CreateShader<CShaderTexture2D>("Shader_DefaultTexture2D", "EngineShader"))
 	{
 		return false;
 	}
 
 	return true;
+}
+
+void CShaderManager::ReleaseShader(const std::string& Key)
+{
+	auto It = Shaders.find(Key);
+	if (It != Shaders.end())
+	{
+		if (It->second.use_count() == 1)
+		{
+			Shaders.erase(It);
+		}
+	}
+}
+
+void CShaderManager::ReleaseCBuffer(const std::string& Key)
+{
+	auto It = CBuffers.find(Key);
+	if (It != CBuffers.end())
+	{
+		if (It->second.use_count() == 1)
+		{
+			CBuffers.erase(It);
+		}
+	}
 }
 
 std::weak_ptr<CShader> CShaderManager::FindShader(const std::string& Key)
@@ -66,6 +90,8 @@ bool CShaderManager::CreateCBuffer(const std::string& Key, int Size, int Registe
 	{
 		return false;
 	}
+
+	Shared->SetName(Key);
 
 	CBuffers.emplace(Key, Shared);
 

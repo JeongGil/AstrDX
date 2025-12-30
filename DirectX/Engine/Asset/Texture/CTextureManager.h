@@ -15,6 +15,8 @@ public:
 
 	bool Init();
 
+	void ReleaseAsset(const std::string& Key);
+
 	std::weak_ptr<CTexture> FindTexture(const std::string& Key);
 
 	bool LoadTexture(const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture");

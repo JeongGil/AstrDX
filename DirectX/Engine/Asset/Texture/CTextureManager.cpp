@@ -23,6 +23,18 @@ bool CTextureManager::Init()
 	return true;
 }
 
+void CTextureManager::ReleaseAsset(const std::string& Key)
+{
+	auto It = Textures.find(Key);
+	if (It != Textures.end())
+	{
+		if (It->second.use_count() == 1)
+		{
+			Textures.erase(It);
+		}
+	}
+}
+
 std::weak_ptr<CTexture> CTextureManager::FindTexture(const std::string& Key)
 {
 	auto It = Textures.find(Key);
@@ -33,7 +45,7 @@ bool CTextureManager::LoadTexture(const std::string& Key, const TCHAR* FileName,
 {
 	if (Textures.contains(Key))
 	{
-		return false;
+		return true;
 	}
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);
@@ -54,7 +66,7 @@ bool CTextureManager::LoadTextureFullPath(const std::string& Key, const TCHAR* F
 {
 	if (Textures.contains(Key))
 	{
-		return false;
+		return true;
 	}
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);
@@ -76,7 +88,7 @@ bool CTextureManager::LoadTextures(const std::string& Key, const std::vector<con
 {
 	if (Textures.contains(Key))
 	{
-		return false;
+		return true;
 	}
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);
@@ -98,7 +110,7 @@ bool CTextureManager::LoadTexturesFullPath(const std::string& Key, const std::ve
 {
 	if (Textures.contains(Key))
 	{
-		return false;
+		return true;
 	}
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);

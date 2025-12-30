@@ -45,99 +45,96 @@ bool CMainWorld::Init()
 
 void CMainWorld::LoadAnimation2D()
 {
-	if (auto AnimMgr = CAssetManager::GetInst()->GetAnimation2DManager().lock())
+	WorldAssetManager->CreateAnimation("PlayerIdle");
+	WorldAssetManager->SetAnimation2DTextureType("PlayerIdle", EAnimation2DTextureType::Frame);
+
+	std::vector<const TCHAR*> TexFileNames;
+
+	for (int i = 0; i < 7; i++)
 	{
-		AnimMgr->CreateAnimation("PlayerIdle");
-		AnimMgr->SetAnimation2DTextureType("PlayerIdle", EAnimation2DTextureType::Frame);
-
-		std::vector<const TCHAR*> TexFileNames;
-
-		for (int i = 0; i < 7; i++)
-		{
-			auto FileName = new TCHAR[MAX_PATH];
-			wsprintf(FileName, TEXT("Player/PlayerFrame/adventurer-get-up-0%d.png"), i);
-			TexFileNames.push_back(FileName);
-		}
-
-		AnimMgr->SetTextures("PlayerIdle", "PlayerIdle", TexFileNames);
-
-		for (auto& FileName : TexFileNames)
-		{
-			delete[] FileName;
-		}
-
-		TexFileNames.clear();
-
-		AnimMgr->AddFrame("PlayerIdle", 7, 0.f, 0.f, 50.f, 37.f);
-
-		AnimMgr->CreateAnimation("PlayerWalk");
-		AnimMgr->SetAnimation2DTextureType("PlayerWalk", EAnimation2DTextureType::SpriteSheet);
-
-		AnimMgr->SetTexture("PlayerWalk", "PlayerSheet", TEXT("Player/Player.png"));
-
-		AnimMgr->AddFrame("PlayerWalk", 200.f, 222.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerWalk", 250.f, 222.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerWalk", 300.f, 222.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerWalk", 0.f, 259.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerWalk", 50.f, 259.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerWalk", 100.f, 259.f, 50.f, 37.f);
-
-		AnimMgr->CreateAnimation("PlayerAttack");
-		AnimMgr->SetAnimation2DTextureType("PlayerAttack", EAnimation2DTextureType::SpriteSheet);
-
-		AnimMgr->SetTexture("PlayerAttack", "PlayerSheet", TEXT("Player/Player.png"));
-
-		AnimMgr->AddFrame("PlayerAttack", 0.f, 0.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerAttack", 50.f, 0.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerAttack", 100.f, 0.f, 50.f, 37.f);
-		AnimMgr->AddFrame("PlayerAttack", 150.f, 0.f, 50.f, 37.f);
-
-		//======= Monster =======
-		constexpr float w = 45.f;
-		constexpr float h = 60.f;
-
-		AnimMgr->CreateAnimation("MonsterIdle");
-		AnimMgr->SetAnimation2DTextureType("MonsterIdle", EAnimation2DTextureType::SpriteSheet);
-
-		AnimMgr->SetTexture("MonsterIdle", "MonsterSheet", TEXT("Monster.png"));
-
-		for (int i = 0; i < 14; i++)
-		{
-			AnimMgr->AddFrame("MonsterIdle", 0 + w * i, h * 1, w, h);
-		}
-
-		AnimMgr->CreateAnimation("MonsterAttack");
-		AnimMgr->SetAnimation2DTextureType("MonsterAttack", EAnimation2DTextureType::SpriteSheet);
-
-		AnimMgr->SetTexture("MonsterAttack", "MonsterSheet", TEXT("Monster.png"));
-
-		for (int i = 0; i < 5; i++)
-		{
-			AnimMgr->AddFrame("MonsterAttack", 0 + w * i, h * 2, w, h);
-		}
-
-		//======= Explosion =======
-		AnimMgr->CreateAnimation("Explosion");
-		AnimMgr->SetAnimation2DTextureType("Explosion", EAnimation2DTextureType::Frame);
-
-		for (int i = 1; i <= 89; i++)
-		{
-			auto FileName = new TCHAR[MAX_PATH];
-			memset(FileName, 0, sizeof(TCHAR) * MAX_PATH);
-
-			wsprintf(FileName, TEXT("Explosion/Explosion%d.png"), i);
-
-			TexFileNames.push_back(FileName);
-		}
-
-		AnimMgr->SetTextures("Explosion", "Explosion", TexFileNames);
-
-		for (auto& elem : TexFileNames)
-		{
-			delete[] elem;
-		}
-		TexFileNames.clear();
-
-		AnimMgr->AddFrame("Explosion", 89, 0, 0, 320, 240);
+		auto FileName = new TCHAR[MAX_PATH];
+		wsprintf(FileName, TEXT("Player/PlayerFrame/adventurer-get-up-0%d.png"), i);
+		TexFileNames.push_back(FileName);
 	}
+
+	WorldAssetManager->SetTextures("PlayerIdle", "PlayerIdle", TexFileNames);
+
+	for (auto& FileName : TexFileNames)
+	{
+		delete[] FileName;
+	}
+
+	TexFileNames.clear();
+
+	WorldAssetManager->AddFrame("PlayerIdle", 7, 0.f, 0.f, 50.f, 37.f);
+
+	WorldAssetManager->CreateAnimation("PlayerWalk");
+	WorldAssetManager->SetAnimation2DTextureType("PlayerWalk", EAnimation2DTextureType::SpriteSheet);
+
+	WorldAssetManager->SetTexture("PlayerWalk", "PlayerSheet", TEXT("Player/Player.png"));
+
+	WorldAssetManager->AddFrame("PlayerWalk", 200.f, 222.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerWalk", 250.f, 222.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerWalk", 300.f, 222.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerWalk", 0.f, 259.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerWalk", 50.f, 259.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerWalk", 100.f, 259.f, 50.f, 37.f);
+
+	WorldAssetManager->CreateAnimation("PlayerAttack");
+	WorldAssetManager->SetAnimation2DTextureType("PlayerAttack", EAnimation2DTextureType::SpriteSheet);
+
+	WorldAssetManager->SetTexture("PlayerAttack", "PlayerSheet", TEXT("Player/Player.png"));
+
+	WorldAssetManager->AddFrame("PlayerAttack", 0.f, 0.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerAttack", 50.f, 0.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerAttack", 100.f, 0.f, 50.f, 37.f);
+	WorldAssetManager->AddFrame("PlayerAttack", 150.f, 0.f, 50.f, 37.f);
+
+	//======= Monster =======
+	constexpr float w = 45.f;
+	constexpr float h = 60.f;
+
+	WorldAssetManager->CreateAnimation("MonsterIdle");
+	WorldAssetManager->SetAnimation2DTextureType("MonsterIdle", EAnimation2DTextureType::SpriteSheet);
+
+	WorldAssetManager->SetTexture("MonsterIdle", "MonsterSheet", TEXT("Monster.png"));
+
+	for (int i = 0; i < 14; i++)
+	{
+		WorldAssetManager->AddFrame("MonsterIdle", 0 + w * i, h * 1, w, h);
+	}
+
+	WorldAssetManager->CreateAnimation("MonsterAttack");
+	WorldAssetManager->SetAnimation2DTextureType("MonsterAttack", EAnimation2DTextureType::SpriteSheet);
+
+	WorldAssetManager->SetTexture("MonsterAttack", "MonsterSheet", TEXT("Monster.png"));
+
+	for (int i = 0; i < 5; i++)
+	{
+		WorldAssetManager->AddFrame("MonsterAttack", 0 + w * i, h * 2, w, h);
+	}
+
+	//======= Explosion =======
+	WorldAssetManager->CreateAnimation("Explosion");
+	WorldAssetManager->SetAnimation2DTextureType("Explosion", EAnimation2DTextureType::Frame);
+
+	for (int i = 1; i <= 89; i++)
+	{
+		auto FileName = new TCHAR[MAX_PATH];
+		memset(FileName, 0, sizeof(TCHAR) * MAX_PATH);
+
+		wsprintf(FileName, TEXT("Explosion/Explosion%d.png"), i);
+
+		TexFileNames.push_back(FileName);
+	}
+
+	WorldAssetManager->SetTextures("Explosion", "Explosion", TexFileNames);
+
+	for (auto& elem : TexFileNames)
+	{
+		delete[] elem;
+	}
+	TexFileNames.clear();
+
+	WorldAssetManager->AddFrame("Explosion", 89, 0, 0, 320, 240);
 }

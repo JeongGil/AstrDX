@@ -2,6 +2,7 @@
 
 CShader::CShader()
 {
+	AssetType = EAssetType::Shader;
 }
 
 CShader::~CShader()

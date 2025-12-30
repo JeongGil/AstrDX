@@ -8,6 +8,12 @@ bool CWorld::Init()
 		return false;
 	}
 
+	WorldAssetManager.reset(new CWorldAssetManager);
+	if (!WorldAssetManager->Init())
+	{
+		return false;
+	}
+
 	Objects.reserve(10000);
 
 	return true;
@@ -30,6 +36,8 @@ void CWorld::Update(const float DeltaTime)
 	}
 
 	CameraManager->Update(DeltaTime);
+
+	WorldAssetManager->Update(DeltaTime);
 }
 
 void CWorld::PostUpdate(const float DeltaTime)

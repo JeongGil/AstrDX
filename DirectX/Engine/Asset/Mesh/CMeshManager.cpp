@@ -15,7 +15,7 @@ bool CMeshManager::Init()
 
 	unsigned short CenterRectColorIdx[6] = { 0, 1, 3, 0, 3, 2 };
 
-	if (!CreateMesh("CenterRectColor", CenterRectColor, sizeof(FVertexColor),
+	if (!CreateMesh("Mesh_CenterRectColor", CenterRectColor, sizeof(FVertexColor),
 		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT,
 		D3D11_USAGE_IMMUTABLE))
@@ -32,7 +32,7 @@ bool CMeshManager::Init()
 		FVertexTex(0.5f, -0.5f, 0.f, 1.f, 1.f)
 	};
 
-	if (!CreateMesh("CenterRectTex", CenterRectTexture, sizeof(FVertexTex),
+	if (!CreateMesh("Mesh_CenterRectTex", CenterRectTexture, sizeof(FVertexTex),
 		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
@@ -55,7 +55,7 @@ bool CMeshManager::Init()
 		1, 5, 7, 1, 7, 3, 5, 4, 6, 5, 6, 7, 4, 0, 2, 4, 2, 6,
 		4, 5, 1, 4, 1, 0, 2, 3, 7, 2, 7, 6 };
 
-	if (!CreateMesh("CenterCubeColor", CenterCubeColor,
+	if (!CreateMesh("Mesh_CenterCubeColor", CenterCubeColor,
 		sizeof(FVertexColor),
 		8, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
 		CenterCubeColorIdx, 2, 36, DXGI_FORMAT_R16_UINT,
@@ -67,13 +67,25 @@ bool CMeshManager::Init()
 	return true;
 }
 
+void CMeshManager::ReleaseAsset(const std::string& Key)
+{
+	auto It = Meshes.find(Key);
+	if (It != Meshes.end())
+	{
+		if (It->second.use_count() == 1)
+		{
+			Meshes.erase(It);
+		}
+	}
+}
+
 bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int VertexSize, int VertexCount,
-	D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
-	DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
+                              D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
+                              DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
 {
 	if (Meshes.contains(Key))
 	{
-		return false;
+		return true;
 	}
 
 	std::shared_ptr<CMesh> NewMesh(new CMesh);
@@ -82,6 +94,8 @@ bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int Vertex
 	{
 		return false;
 	}
+
+	NewMesh->SetName(Key);
 
 	Meshes.emplace(Key, NewMesh);
 

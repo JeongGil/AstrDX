@@ -37,8 +37,8 @@ struct FResolution
 
 struct FVertexColor
 {
-	FVector3 Pos;
-	FVector4 Color;
+	FVector Pos;
+	FColor Color;
 
 	FVertexColor() = default;
 
@@ -47,7 +47,7 @@ struct FVertexColor
 	{
 	}
 
-	FVertexColor(FVector3 pos, FVector4 color)
+	FVertexColor(FVector pos, FColor color)
 		: Pos(std::move(pos)),
 		Color(std::move(color))
 	{
@@ -82,7 +82,7 @@ struct FVertexColor
 
 struct FVertexTex
 {
-	FVector3 Pos;
+	FVector Pos;
 	FVector2 UV;
 
 	FVertexTex() = default;
@@ -171,4 +171,15 @@ enum class EAnimation2DTextureType
 	None = -1,
 	SpriteSheet,
 	Frame,
+};
+
+enum class EAssetType
+{
+	None = -1,
+	Mesh,
+	Shader,
+	ConstantBuffer,
+	Material,
+	Texture,
+	Animation2D,
 };

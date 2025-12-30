@@ -1,10 +1,8 @@
 #pragma once
-
-#include "../../CObject.h"
-#include "CBufferContainer.h"
+#include "../CAsset.h"
 
 class CConstantBuffer :
-    public CObject
+    public CAsset
 {
 	friend class CShaderManager;
 
@@ -61,7 +59,7 @@ private:
 	int ShaderBuffer = 0;
 
 private:
-	CConstantBuffer() = default;
+	CConstantBuffer();
 
 public:
 	~CConstantBuffer() override;

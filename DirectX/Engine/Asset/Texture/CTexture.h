@@ -1,7 +1,7 @@
 #pragma once
-#include "../../CObject.h"
+#include "../CAsset.h"
+
 #include "DirectXTex.h"
-#include "../Shader/CBufferContainer.h"
 
 #ifdef _DEBUG
 
@@ -16,12 +16,12 @@
 struct FTextureInfo;
 
 class CTexture :
-	public CObject
+	public CAsset
 {
 	friend class CTextureManager;
 
 protected:
-	CTexture() = default;
+	CTexture();
 
 public:
 	~CTexture() override;
@@ -32,11 +32,6 @@ public:
 	bool LoadTexturesFullPath(const std::vector<const TCHAR*>& FullPaths);
 
 	void SetShader(UINT Register, int ShaderBufferType, int TextureIndex);
-
-	const std::string& GetName() const
-	{
-		return Name;
-	}
 
 	const FTextureInfo* GetTexture(size_t Index = 0) const
 	{
@@ -49,7 +44,6 @@ public:
 	}
 
 protected:
-	std::string Name;
 	// Designed to allow multiple images to be composed into a single texture.
 	std::vector<FTextureInfo*> TextureInfos;
 

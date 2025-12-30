@@ -1,8 +1,8 @@
 #pragma once
+#include "../CAsset.h"
 
-#include "../../CObject.h"
-
-class CShader
+class CShader :
+	public CAsset
 {
 	friend class CShaderManager;
 

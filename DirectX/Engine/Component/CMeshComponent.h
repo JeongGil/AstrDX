@@ -23,10 +23,7 @@ public:
 	void SetMesh(const std::weak_ptr<CMesh>& Mesh);
 	void SetMesh(const std::string& Key);
 
-	void SetShader(const std::weak_ptr<CShader>& Shader)
-	{
-		this->Shader = Shader;
-	}
+	void SetShader(const std::weak_ptr<CShader>& Shader) { this->Shader = Shader; }
 
 	void SetShader(const std::string& Key);
 
