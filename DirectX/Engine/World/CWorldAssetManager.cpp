@@ -1,5 +1,6 @@
 #include "CWorldAssetManager.h"
 
+#include "../Asset/CAssetManager.h"
 #include "../Asset/Animation2D/CAnimation2DManager.h"
 #include "../Asset/Mesh/CMeshManager.h"
 #include "../Asset/Texture/CTextureManager.h"
@@ -30,9 +31,9 @@ std::weak_ptr<CMesh> CWorldAssetManager::FindMesh(const std::string& Key)
 {
 	auto InnerKey = "Mesh_" + Key;
 
-	if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
+	if (!Assets.contains(InnerKey))
 	{
-		if (!Assets.contains(InnerKey))
+		if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
 		{
 			if (auto Mesh = MeshMgr->FindMesh(InnerKey).lock())
 			{
@@ -46,69 +47,6 @@ std::weak_ptr<CMesh> CWorldAssetManager::FindMesh(const std::string& Key)
 	}
 
 	return std::dynamic_pointer_cast<CMesh>(Assets[InnerKey]);
-}
-
-bool CWorldAssetManager::CreateCBuffer(const std::string& Key, int Size, int Register, int ShaderBuffer)
-{
-	auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock();
-	if (!ShaderMgr)
-	{
-		return false;
-	}
-
-	auto InnerKey = "CBuffer_" + Key;
-	if (!ShaderMgr->CreateCBuffer(InnerKey, Size, Register, ShaderBuffer))
-	{
-		return false;
-	}
-
-	Assets.try_emplace(InnerKey, ShaderMgr->FindCBuffer(InnerKey));
-
-	return true;
-}
-
-std::weak_ptr<CConstantBuffer> CWorldAssetManager::FindCBuffer(const std::string& Key)
-{
-	auto InnerKey = "CBuffer_" + Key;
-
-	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
-	{
-		if (!Assets.contains(InnerKey))
-		{
-			if (auto CBuffer = ShaderMgr->FindCBuffer(InnerKey).lock())
-			{
-				Assets.emplace(InnerKey, CBuffer);
-			}
-			else
-			{
-				return std::weak_ptr<CConstantBuffer>();
-			}
-		}
-	}
-
-	return std::dynamic_pointer_cast<CConstantBuffer>(Assets[InnerKey]);
-}
-
-std::weak_ptr<CShader> CWorldAssetManager::FindShader(const std::string& Key)
-{
-	auto InnerKey = "Shader_" + Key;
-
-	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
-	{
-		if (!Assets.contains(InnerKey))
-		{
-			if (auto Mesh = ShaderMgr->FindShader(InnerKey).lock())
-			{
-				Assets.emplace(InnerKey, Mesh);
-			}
-			else
-			{
-				return std::weak_ptr<CShader>();
-			}
-		}
-	}
-
-	return std::dynamic_pointer_cast<CShader>(Assets[InnerKey]);
 }
 
 bool CWorldAssetManager::LoadTexture(const std::string& Key, const TCHAR* FileName, const std::string& PathName)
@@ -192,9 +130,9 @@ std::weak_ptr<CTexture> CWorldAssetManager::FindTexture(const std::string& Key)
 {
 	auto InnerKey = "Texture_" + Key;
 
-	if (auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock())
+	if (!Assets.contains(InnerKey))
 	{
-		if (!Assets.contains(InnerKey))
+		if (auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock())
 		{
 			if (auto Mesh = TexMgr->FindTexture(InnerKey).lock())
 			{
@@ -303,15 +241,12 @@ bool CWorldAssetManager::SetTexture(const std::string& AnimKey, const std::strin
 		return false;
 	}
 
-	auto Anim = std::dynamic_pointer_cast<CAnimation2D>(It->second);
-	if (!Anim)
+	if (auto Tex = FindTexture(TexKey).lock())
 	{
-		return false;
+		std::dynamic_pointer_cast<CAnimation2D>(It->second)->SetTexture(Tex);
 	}
 
-	Anim->SetTexture(FindTexture(TexKey));
-
-	return true;
+	return false;
 }
 
 bool CWorldAssetManager::SetTexture(const std::string& AnimKey, const std::string& TexKey, const TCHAR* FileName,

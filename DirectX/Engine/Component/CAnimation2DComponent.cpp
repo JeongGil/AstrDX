@@ -170,28 +170,18 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
 		{
 			WeakAnim = WorldAssetMgr->FindAnimation(AnimKey);
-			if (WeakAnim.expired())
-			{
-				return;
-			}
-		}
-	}
-	else
-	{
-		if (auto Mgr = CAssetManager::GetInst()->GetAnimation2DManager().lock())
-		{
-			auto InnerKey = "Animation2D_" + AnimKey;
-			WeakAnim = Mgr->FindAnimation(InnerKey);
-			if (WeakAnim.expired())
-			{
-				return;
-			}
 		}
 	}
 
 	auto Anim = WeakAnim.lock();
+	if (!Anim)
+	{
+		return;
+	}
 
 	auto [It, Result] = Animations.try_emplace(Anim->GetKey(), std::shared_ptr<CAnimation2DSequence>(new CAnimation2DSequence));
+	
+	// Already exist.
 	if (!Result)
 	{
 		return;

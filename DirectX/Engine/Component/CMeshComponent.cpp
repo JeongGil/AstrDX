@@ -47,35 +47,20 @@ void CMeshComponent::SetMesh(const std::string& Key)
 	}
 	else
 	{
-		auto InnerKey = "Mesh_" + Key;
 		if (auto Mgr = CAssetManager::GetInst()->GetMeshManager().lock())
 		{
-			SetMesh(Mgr->FindMesh(InnerKey));
+			SetMesh(Mgr->FindMesh(Key));
 		}
 	}
 }
 
 void CMeshComponent::SetShader(const std::string& Key)
 {
-	if (auto World = this->World.lock())
+	if (auto Mgr = CAssetManager::GetInst()->GetShaderManager().lock())
 	{
-		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		if (auto Shader = Mgr->FindShader(Key).lock())
 		{
-			auto Mesh = WorldAssetMgr->FindShader(Key);
-			if (Mesh.expired())
-			{
-				return;
-			}
-
-			SetShader(Mesh);
-		}
-	}
-	else
-	{
-		auto InnerKey = "Shader_" + Key;
-		if (auto Mgr = CAssetManager::GetInst()->GetShaderManager().lock())
-		{
-			SetShader(Mgr->FindShader(InnerKey));
+			this->Shader = Shader;
 		}
 	}
 }
@@ -118,124 +103,96 @@ void CMeshComponent::AddTexture(int SlotIdx, const std::weak_ptr<CTexture>& Text
 
 void CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, int Register, int ShaderBufferType, int Index)
 {
-	std::weak_ptr<CTexture> Texture;
 	if (auto World = this->World.lock())
 	{
-		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		if (auto Mgr = World->GetWorldAssetManager().lock())
 		{
-			Texture = WorldAssetMgr->FindTexture(Key);
+			if (auto Tex = Mgr->FindTexture(Key).lock())
+			{
+				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+			}
 		}
 	}
-	else
-	{
-		auto InnerKey = "Texture_" + Key;
-		if (auto Mgr = CAssetManager::GetInst()->GetTextureManager().lock())
-		{
-			Texture = Mgr->FindTexture(InnerKey);
-		}
-	}
-
-	MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
 }
 
 void CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, const TCHAR* FileName, const std::string& PathName,
 	int Register, int ShaderBufferType, int Index)
 {
-	std::weak_ptr<CTexture> Texture;
 	if (auto World = this->World.lock())
 	{
-		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		if (auto Mgr = World->GetWorldAssetManager().lock())
 		{
-			WorldAssetMgr->LoadTexture(Key, FileName, PathName);
-			Texture = WorldAssetMgr->FindTexture(Key);
-		}
-	}
-	else
-	{
-		auto InnerKey = "Texture_" + Key;
-		if (auto Mgr = CAssetManager::GetInst()->GetTextureManager().lock())
-		{
-			Mgr->LoadTexture(InnerKey, FileName, PathName);
-			Texture = Mgr->FindTexture(InnerKey);
-		}
-	}
+			if (!Mgr->LoadTexture(Key, FileName, PathName))
+			{
+				return;
+			}
 
-	MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
+			if (auto Tex = Mgr->FindTexture(Key).lock())
+			{
+				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+			}
+		}
+	}
 }
 
 void CMeshComponent::AddTextureFullPath(int SlotIdx, const std::string& Key, const TCHAR* FullPath, int Register,
 	int ShaderBufferType, int Index)
 {
-	std::weak_ptr<CTexture> Texture;
 	if (auto World = this->World.lock())
 	{
-		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		if (auto Mgr = World->GetWorldAssetManager().lock())
 		{
-			WorldAssetMgr->LoadTextureFullPath(Key, FullPath);
-			Texture = WorldAssetMgr->FindTexture(Key);
-		}
-	}
-	else
-	{
-		auto InnerKey = "Texture_" + Key;
-		if (auto Mgr = CAssetManager::GetInst()->GetTextureManager().lock())
-		{
-			Mgr->LoadTextureFullPath(InnerKey, FullPath);
-			Texture = Mgr->FindTexture(InnerKey);
-		}
-	}
+			if (!Mgr->LoadTextureFullPath(Key, FullPath))
+			{
+				return;
+			}
 
-	MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
+			if (auto Tex = Mgr->FindTexture(Key).lock())
+			{
+				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+			}
+		}
+	}
 }
 
 void CMeshComponent::AddTextures(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FileNames,
 	const std::string& PathName, int Register, int ShaderBufferType, int Index)
 {
-	std::weak_ptr<CTexture> Texture;
 	if (auto World = this->World.lock())
 	{
-		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		if (auto Mgr = World->GetWorldAssetManager().lock())
 		{
-			WorldAssetMgr->LoadTextures(Key, FileNames, PathName);
-			Texture = WorldAssetMgr->FindTexture(Key);
-		}
-	}
-	else
-	{
-		auto InnerKey = "Texture_" + Key;
-		if (auto Mgr = CAssetManager::GetInst()->GetTextureManager().lock())
-		{
-			Mgr->LoadTextures(InnerKey, FileNames, PathName);
-			Texture = Mgr->FindTexture(InnerKey);
-		}
-	}
+			if (!Mgr->LoadTextures(Key, FileNames, PathName))
+			{
+				return;
+			}
 
-	MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
+			if (auto Tex = Mgr->FindTexture(Key).lock())
+			{
+				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+			}
+		}
+	}
 }
 
 void CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths,
 	int Register, int ShaderBufferType, int Index)
 {
-	std::weak_ptr<CTexture> Texture;
 	if (auto World = this->World.lock())
 	{
-		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		if (auto Mgr = World->GetWorldAssetManager().lock())
 		{
-			WorldAssetMgr->LoadTexturesFullPath(Key, FullPaths);
-			Texture = WorldAssetMgr->FindTexture(Key);
-		}
-	}
-	else
-	{
-		auto InnerKey = "Texture_" + Key;
-		if (auto Mgr = CAssetManager::GetInst()->GetTextureManager().lock())
-		{
-			Mgr->LoadTexturesFullPath(InnerKey, FullPaths);
-			Texture = Mgr->FindTexture(InnerKey);
-		}
-	}
+			if (!Mgr->LoadTexturesFullPath(Key, FullPaths))
+			{
+				return;
+			}
 
-	MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
+			if (auto Tex = Mgr->FindTexture(Key).lock())
+			{
+				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+			}
+		}
+	}
 }
 
 bool CMeshComponent::SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture)

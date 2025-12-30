@@ -1,13 +1,9 @@
 #pragma once
 
 #include "../EngineInfo.h"
-#include "../Asset/CAssetManager.h"
 #include "../Asset/Animation2D/CAnimation2D.h"
 #include "../Asset/Mesh/CMesh.h"
-#include "../Asset/Shader/CBufferContainer.h"
 #include "../Asset/Shader/CConstantBuffer.h"
-#include "../Asset/Shader/CShader.h"
-#include "../Asset/Shader/CShaderManager.h"
 #include "../Asset/Texture/CTexture.h"
 
 class CWorldAssetManager
@@ -23,44 +19,6 @@ public:
 		D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
 	std::weak_ptr<CMesh> FindMesh(const std::string& Key);
-
-#pragma endregion
-
-#pragma region Shader
-
-	bool CreateCBuffer(const std::string& Key, int Size, int Register, int ShaderBuffer = EShaderBufferType::VP);
-	
-	std::weak_ptr<CConstantBuffer> FindCBuffer(const std::string& Key);
-
-	template <typename T>
-	bool CreateShader(const std::string& Key, const std::string& PathName = "Shader")
-	{
-		if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
-		{
-			std::string InnerKey = "Shader_" + Key;
-
-			if (!FindShader(Key).expired())
-			{
-				return false;
-			}
-
-			if (!ShaderMgr->CreateShader<T>(InnerKey, PathName))
-			{
-				return false;
-			}
-
-			if (!Assets.contains(InnerKey))
-			{
-				Assets.emplace(InnerKey, ShaderMgr->FindShader(InnerKey));
-			}
-
-			return true;
-		}
-
-		return false;
-	}
-
-	std::weak_ptr<CShader> FindShader(const std::string& Key);
 
 #pragma endregion
 
