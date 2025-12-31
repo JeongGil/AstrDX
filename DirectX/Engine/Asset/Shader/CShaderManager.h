@@ -47,7 +47,7 @@ public:
 	{
 		if (Shaders.contains(Key))
 		{
-			return false;
+			return true;
 		}
 
 		auto ShaderInstance = new T;

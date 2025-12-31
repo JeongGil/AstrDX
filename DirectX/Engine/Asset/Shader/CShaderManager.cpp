@@ -8,33 +8,33 @@
 bool CShaderManager::Init()
 {
 	// ConstantBuffer
-	if (!CreateCBuffer("CBuffer_Transform", sizeof(FCBufferTransformData), 0, EShaderBufferType::GRAPHIC))
+	if (!CreateCBuffer("Transform", sizeof(FCBufferTransformData), 0, EShaderBufferType::GRAPHIC))
 	{
 		return false;
 	}
 
-	if (!CreateCBuffer("CBuffer_Material", sizeof(FCBufferMaterialData), 1, EShaderBufferType::Pixel))
+	if (!CreateCBuffer("Material", sizeof(FCBufferMaterialData), 1, EShaderBufferType::Pixel))
 	{
 		return false;
 	}
 
-	if (!CreateCBuffer("CBuffer_Animation2D", sizeof(FCBufferAnimation2DData), 2, EShaderBufferType::Vertex))
+	if (!CreateCBuffer("Animation2D", sizeof(FCBufferAnimation2DData), 2, EShaderBufferType::Vertex))
 	{
 		return false;
 	}
 
 	// Shader
-	if (!CreateShader<CShaderColor2D>("Shader_Color2D", "EngineShader"))
+	if (!CreateShader<CShaderColor2D>("Color2D", "EngineShader"))
 	{
 		return false;
 	}
 
-	if (!CreateShader<CShaderMaterialColor2D>("Shader_MaterialColor2D", "EngineShader"))
+	if (!CreateShader<CShaderMaterialColor2D>("MaterialColor2D", "EngineShader"))
 	{
 		return false;
 	}
 
-	if (!CreateShader<CShaderTexture2D>("Shader_DefaultTexture2D", "EngineShader"))
+	if (!CreateShader<CShaderTexture2D>("DefaultTexture2D", "EngineShader"))
 	{
 		return false;
 	}
@@ -82,7 +82,7 @@ bool CShaderManager::CreateCBuffer(const std::string& Key, int Size, int Registe
 {
 	if (CBuffers.contains(Key))
 	{
-		return false;
+		return true;
 	}
 
 	std::shared_ptr<CConstantBuffer> Shared(new CConstantBuffer);

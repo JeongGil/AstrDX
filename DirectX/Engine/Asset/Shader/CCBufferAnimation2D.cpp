@@ -4,7 +4,7 @@
 
 bool CCBufferAnimation2D::Init()
 {
-	SetConstantBuffer("CBuffer_Animation2D");
+	SetConstantBuffer("Animation2D");
 
 	return true;
 }

@@ -4,7 +4,7 @@
 
 bool CCBufferTransform::Init()
 {
-	SetConstantBuffer("CBuffer_Transform");
+	SetConstantBuffer("Transform");
 
 	return true;
 }

@@ -4,7 +4,7 @@
 
 bool CCBufferMaterial::Init()
 {
-	SetConstantBuffer("CBuffer_Material");
+	SetConstantBuffer("Material");
 
 	return true;
 }
