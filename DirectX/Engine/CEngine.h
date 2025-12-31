@@ -17,6 +17,9 @@ public:
 		return MT;
 	}
 
+	[[nodiscard]] HINSTANCE GetWindowInstance() const { return hInst; }
+	[[nodiscard]] HWND GetWindowHandle() const { return hWnd; }
+
 private:
 	void InitCDO();
 

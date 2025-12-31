@@ -185,6 +185,7 @@ void CSceneComponent::AddRelativeRotationZ(float Z)
 
 void CSceneComponent::SetRelativePosition(const FVector& Position)
 {
+	Velocity += (Position - RelativePosition);
 	RelativePosition = Position;
 
 	InheritRelativePosition();
@@ -430,7 +431,11 @@ void CSceneComponent::AddWorldRotationZ(float Z)
 
 void CSceneComponent::SetWorldPosition(const FVector& Position)
 {
-	UpdateChildWorldPosition(Position - WorldPosition);
+	const FVector DelPos = Position - WorldPosition;
+
+	Velocity += DelPos;
+
+	UpdateChildWorldPosition(DelPos);
 
 	InheritWorldPosition();
 }
@@ -623,6 +628,11 @@ void CSceneComponent::Render()
 	//}
 }
 
+void CSceneComponent::PostRender()
+{
+	Velocity = FVector::Zero;
+}
+
 CSceneComponent* CSceneComponent::Clone() const
 {
 	return new CSceneComponent(*this);
@@ -633,43 +643,45 @@ CSceneComponent::CSceneComponent()
 	Type = EType::Scene;
 }
 
-CSceneComponent::CSceneComponent(const CSceneComponent& other): CComponent(other),
-                                                                //Parent(other.Parent),
-                                                                RenderType(other.RenderType),
-                                                                //Children(other.Children),
-                                                                bInheritScale(other.bInheritScale),
-                                                                bInheritRotation(other.bInheritRotation),
-                                                                RelativeScale(other.RelativeScale),
-                                                                RelativeRotation(other.RelativeRotation),
-                                                                RelativePosition(other.RelativePosition),
-                                                                WorldScale(other.WorldScale),
-                                                                WorldRotation(other.WorldRotation),
-                                                                WorldPosition(other.WorldPosition),
-                                                                WorldAxis(other.WorldAxis),
-                                                                ScaleMatrix(other.ScaleMatrix),
-                                                                RotationMatrix(other.RotationMatrix),
-                                                                TranslateMatrix(other.TranslateMatrix),
-                                                                WorldMatrix(other.WorldMatrix)
+CSceneComponent::CSceneComponent(const CSceneComponent& other) : CComponent(other),
+//Parent(other.Parent),
+RenderType(other.RenderType),
+//Children(other.Children),
+bInheritScale(other.bInheritScale),
+bInheritRotation(other.bInheritRotation),
+RelativeScale(other.RelativeScale),
+RelativeRotation(other.RelativeRotation),
+RelativePosition(other.RelativePosition),
+WorldScale(other.WorldScale),
+WorldRotation(other.WorldRotation),
+WorldPosition(other.WorldPosition),
+Velocity(other.Velocity),
+WorldAxis(other.WorldAxis),
+ScaleMatrix(other.ScaleMatrix),
+RotationMatrix(other.RotationMatrix),
+TranslateMatrix(other.TranslateMatrix),
+WorldMatrix(other.WorldMatrix)
 {
 }
 
-CSceneComponent::CSceneComponent(CSceneComponent&& other) noexcept: CComponent(std::move(other)),
-                                                                    //Parent(std::move(other.Parent)),
-                                                                    RenderType(other.RenderType),
-                                                                    //Children(std::move(other.Children)),
-                                                                    bInheritScale(other.bInheritScale),
-                                                                    bInheritRotation(other.bInheritRotation),
-                                                                    RelativeScale(std::move(other.RelativeScale)),
-                                                                    RelativeRotation(std::move(other.RelativeRotation)),
-                                                                    RelativePosition(std::move(other.RelativePosition)),
-                                                                    WorldScale(std::move(other.WorldScale)),
-                                                                    WorldRotation(std::move(other.WorldRotation)),
-                                                                    WorldPosition(std::move(other.WorldPosition)),
-                                                                    WorldAxis(std::move(other.WorldAxis)),
-                                                                    ScaleMatrix(std::move(other.ScaleMatrix)),
-                                                                    RotationMatrix(std::move(other.RotationMatrix)),
-                                                                    TranslateMatrix(std::move(other.TranslateMatrix)),
-                                                                    WorldMatrix(std::move(other.WorldMatrix))
+CSceneComponent::CSceneComponent(CSceneComponent&& other) noexcept : CComponent(std::move(other)),
+//Parent(std::move(other.Parent)),
+RenderType(other.RenderType),
+//Children(std::move(other.Children)),
+bInheritScale(other.bInheritScale),
+bInheritRotation(other.bInheritRotation),
+RelativeScale(std::move(other.RelativeScale)),
+RelativeRotation(std::move(other.RelativeRotation)),
+RelativePosition(std::move(other.RelativePosition)),
+WorldScale(std::move(other.WorldScale)),
+WorldRotation(std::move(other.WorldRotation)),
+WorldPosition(std::move(other.WorldPosition)),
+Velocity(std::move(other.Velocity)),
+WorldAxis(std::move(other.WorldAxis)),
+ScaleMatrix(std::move(other.ScaleMatrix)),
+RotationMatrix(std::move(other.RotationMatrix)),
+TranslateMatrix(std::move(other.TranslateMatrix)),
+WorldMatrix(std::move(other.WorldMatrix))
 {
 }
 
@@ -689,6 +701,7 @@ CSceneComponent& CSceneComponent::operator=(const CSceneComponent& other)
 	WorldScale = other.WorldScale;
 	WorldRotation = other.WorldRotation;
 	WorldPosition = other.WorldPosition;
+	Velocity = other.Velocity;
 	WorldAxis = other.WorldAxis;
 	ScaleMatrix = other.ScaleMatrix;
 	RotationMatrix = other.RotationMatrix;
@@ -713,6 +726,7 @@ CSceneComponent& CSceneComponent::operator=(CSceneComponent&& other) noexcept
 	WorldScale = std::move(other.WorldScale);
 	WorldRotation = std::move(other.WorldRotation);
 	WorldPosition = std::move(other.WorldPosition);
+	Velocity = std::move(other.Velocity);
 	WorldAxis = std::move(other.WorldAxis);
 	ScaleMatrix = std::move(other.ScaleMatrix);
 	RotationMatrix = std::move(other.RotationMatrix);

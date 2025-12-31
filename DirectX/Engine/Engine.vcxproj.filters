@@ -106,6 +106,12 @@
     <Filter Include="Asset\Shader\ConstantBuffer\Animation2D">
       <UniqueIdentifier>{7a94a71d-3782-4f92-bf74-a65dfca74f53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="World\Asset">
+      <UniqueIdentifier>{f64755df-19bc-478a-892b-27acd9967ad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="World\Input">
+      <UniqueIdentifier>{64e4baf6-212d-47dc-80aa-781720957c33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -270,11 +276,14 @@
     <ClInclude Include="Asset\Shader\CCBufferAnimation2D.h">
       <Filter>Asset\Shader\ConstantBuffer\Animation2D</Filter>
     </ClInclude>
-    <ClInclude Include="World\CWorldAssetManager.h">
-      <Filter>World</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\CAsset.h">
       <Filter>Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CWorldAssetManager.h">
+      <Filter>World\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CInput.h">
+      <Filter>World\Input</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -420,11 +429,14 @@
     <ClCompile Include="Asset\Shader\CCBufferAnimation2D.cpp">
       <Filter>Asset\Shader\ConstantBuffer\Animation2D</Filter>
     </ClCompile>
-    <ClCompile Include="World\CWorldAssetManager.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\CAsset.cpp">
       <Filter>Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CWorldAssetManager.cpp">
+      <Filter>World\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CInput.cpp">
+      <Filter>World\Input</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

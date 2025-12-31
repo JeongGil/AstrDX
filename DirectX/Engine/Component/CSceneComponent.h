@@ -41,20 +41,11 @@ public:
 	 */
 	void UpdateTransform();
 
-	[[nodiscard]] EComponentRender GetRenderType() const
-	{
-		return RenderType;
-	}
+	[[nodiscard]] EComponentRender GetRenderType() const { return RenderType; }
 
-	[[nodiscard]] int GetRenderLayer() const
-	{
-		return RenderLayer;
-	}
+	[[nodiscard]] int GetRenderLayer() const { return RenderLayer; }
 
-	void SetRenderLayer(const int RenderLayer)
-	{
-		this->RenderLayer = RenderLayer;
-	}
+	void SetRenderLayer(const int RenderLayer) { this->RenderLayer = RenderLayer; }
 
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;
@@ -63,6 +54,9 @@ public:
 	const FVector& GetWorldScale() const;
 	const FVector& GetWorldRotation() const;
 	const FVector& GetWorldPosition() const;
+
+	[[nodiscard]] FVector GetVelocity() const { return Velocity; }
+	[[nodiscard]] float GetSpeed() const { return Velocity.Length(); }
 
 	void SetInheritScale(bool bInherit);
 	void SetInheritRotation(bool bInherit);
@@ -166,6 +160,8 @@ protected:
 	FVector WorldRotation;
 	FVector WorldPosition;
 
+	FVector Velocity;
+
 	std::array<FVector, EAxis::End> WorldAxis =
 	{
 		FVector::Axis[EAxis::X],
@@ -215,6 +211,7 @@ public:
 	 * to draw the component and its children to the screen.
 	 */
 	void Render() override;
+	virtual void PostRender();
 	void Destroy() override;
 
 protected:

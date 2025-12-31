@@ -5,6 +5,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	this->window = window;
 	Resolution.Width = width;
 	Resolution.Height = height;
+	bWindowMode = windowMode;
 	
 	UINT flag{ 0u };
 #ifdef _DEBUG

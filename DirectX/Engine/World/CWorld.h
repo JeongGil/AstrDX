@@ -3,6 +3,7 @@
 #include <ranges>
 
 #include "CCameraManager.h"
+#include "CInput.h"
 #include "../EngineInfo.h"
 #include "../Object/CGameObject.h"
 #include "CWorldAssetManager.h"
@@ -83,10 +84,7 @@ public:
 		return NewObject;
 	}
 
-	[[nodiscard]] std::weak_ptr<CCameraManager> GetCameraManager() const
-	{
-		return CameraManager;
-	}
+	[[nodiscard]] std::weak_ptr<CCameraManager> GetCameraManager() const { return CameraManager; }
 
 	template <typename T>
 	std::weak_ptr<T> FindObject(const std::string& Key)
@@ -145,10 +143,13 @@ public:
 
 	[[nodiscard]] std::weak_ptr<CWorldAssetManager> GetWorldAssetManager() const { return WorldAssetManager; }
 
+	[[nodiscard]] std::weak_ptr<CInput> GetInput() const { return Input; }
+
 protected:
 	std::unordered_multimap<std::string, std::shared_ptr<CGameObject>> Objects;
 	std::shared_ptr<CCameraManager> CameraManager;
 	std::shared_ptr<CWorldAssetManager> WorldAssetManager;
+	std::shared_ptr<CInput> Input;
 
 public:
 	virtual bool Init();

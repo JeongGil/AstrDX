@@ -14,6 +14,12 @@ bool CWorld::Init()
 		return false;
 	}
 
+	Input.reset(new CInput);
+	if (!Input->Init())
+	{
+		return false;
+	}
+
 	Objects.reserve(10000);
 
 	return true;
@@ -21,6 +27,8 @@ bool CWorld::Init()
 
 void CWorld::Update(const float DeltaTime)
 {
+	Input->Update(DeltaTime);
+
 	auto Curr = Objects.begin();
 	const auto End = Objects.end();
 	while (Curr != End)

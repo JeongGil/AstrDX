@@ -17,6 +17,12 @@ private:
 	void AttackNotify();
 	void AttackFinish();
 
+	void MoveUp();
+	void MoveDown();
+	void Skill1Press();
+	void Skill1Hold();
+	void Skill1Release();
+
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CSceneComponent> Rotation;
