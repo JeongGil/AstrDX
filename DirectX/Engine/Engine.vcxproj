@@ -200,7 +200,10 @@
     <ClInclude Include="Component\CCameraComponent.h" />
     <ClInclude Include="Component\CComponent.h" />
     <ClInclude Include="Component\CMeshComponent.h" />
+    <ClInclude Include="Component\CMovementComponent.h" />
     <ClInclude Include="Component\CObjectComponent.h" />
+    <ClInclude Include="Component\CObjectMovementComponent.h" />
+    <ClInclude Include="Component\CProjectileMovementComponent.h" />
     <ClInclude Include="Component\CSceneComponent.h" />
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="EngineInfo.h" />
@@ -259,7 +262,10 @@
     <ClCompile Include="Component\CCameraComponent.cpp" />
     <ClCompile Include="Component\CComponent.cpp" />
     <ClCompile Include="Component\CMeshComponent.cpp" />
+    <ClCompile Include="Component\CMovementComponent.cpp" />
     <ClCompile Include="Component\CObjectComponent.cpp" />
+    <ClCompile Include="Component\CObjectMovementComponent.cpp" />
+    <ClCompile Include="Component\CProjectileMovementComponent.cpp" />
     <ClCompile Include="Component\CSceneComponent.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="FMatrix.cpp" />

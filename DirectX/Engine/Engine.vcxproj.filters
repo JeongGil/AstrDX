@@ -112,6 +112,9 @@
     <Filter Include="World\Input">
       <UniqueIdentifier>{64e4baf6-212d-47dc-80aa-781720957c33}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compnent\ObjectComponent\Movement">
+      <UniqueIdentifier>{c0f7170d-a63e-4624-8055-918900069b26}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -285,6 +288,15 @@
     <ClInclude Include="World\CInput.h">
       <Filter>World\Input</Filter>
     </ClInclude>
+    <ClInclude Include="Component\CMovementComponent.h">
+      <Filter>Compnent\ObjectComponent\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CProjectileMovementComponent.h">
+      <Filter>Compnent\ObjectComponent\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CObjectMovementComponent.h">
+      <Filter>Compnent\ObjectComponent\Movement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -437,6 +449,15 @@
     </ClCompile>
     <ClCompile Include="World\CInput.cpp">
       <Filter>World\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CMovementComponent.cpp">
+      <Filter>Compnent\ObjectComponent\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CProjectileMovementComponent.cpp">
+      <Filter>Compnent\ObjectComponent\Movement</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CObjectMovementComponent.cpp">
+      <Filter>Compnent\ObjectComponent\Movement</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

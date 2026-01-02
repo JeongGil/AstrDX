@@ -2,14 +2,19 @@
 
 bool CObjectComponent::Init()
 {
-	return CComponent::Init();
+	if (!CComponent::Init())
+	{
+		return false;
+	}
+
+	return true;
 }
 
-void CObjectComponent::Update(const float Delta)
+void CObjectComponent::Update(const float DeltaTime)
 {
 }
 
-void CObjectComponent::PostUpdate(const float Delta)
+void CObjectComponent::PostUpdate(const float DeltaTime)
 {
 }
 

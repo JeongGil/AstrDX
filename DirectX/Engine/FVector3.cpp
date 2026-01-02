@@ -215,6 +215,11 @@ FVector3 FVector3::operator - (int Value)	const
 	return result;
 }
 
+FVector3 FVector3::operator-() const
+{
+	return FVector3{ -x, -y, -z };
+}
+
 // -=
 const FVector3& FVector3::operator -= (const FVector3& v)
 {

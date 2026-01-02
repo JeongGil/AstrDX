@@ -583,27 +583,123 @@ bool CGameObject::Init()
 
 void CGameObject::Update(const float DeltaTime)
 {
-	if (auto Root = this->Root.lock())
+	// Scene components
+	auto SceneIt = SceneComponents.begin();
+	auto SceneEnd = SceneComponents.end();
+	while (SceneIt != SceneEnd)
 	{
-		Root->Update(DeltaTime);
+		auto Cmp = *SceneIt;
+		if (Cmp.use_count()==0)
+		{
+			SceneIt = SceneComponents.erase(SceneIt);
+			SceneEnd = SceneComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetAlive())
+		{
+			SceneIt = SceneComponents.erase(SceneIt);
+			SceneEnd = SceneComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetEnable())
+		{
+			SceneIt = SceneComponents.erase(SceneIt);
+			SceneEnd = SceneComponents.end();
+			continue;
+		}
+
+		Cmp->Update(DeltaTime);
+		++SceneIt;
 	}
 
-	for (const auto& ObjCmp : ObjectComponents)
+	// Object components
+	auto ObjectIt = ObjectComponents.begin();
+	auto ObjectEnd = ObjectComponents.end();
+	while (ObjectIt != ObjectEnd)
 	{
-		ObjCmp->Update(DeltaTime);
+		auto Cmp = *ObjectIt;
+		if (Cmp.use_count() == 0)
+		{
+			ObjectIt = ObjectComponents.erase(ObjectIt);
+			ObjectEnd = ObjectComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetAlive())
+		{
+			ObjectIt = ObjectComponents.erase(ObjectIt);
+			ObjectEnd = ObjectComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetEnable())
+		{
+			ObjectIt = ObjectComponents.erase(ObjectIt);
+			ObjectEnd = ObjectComponents.end();
+			continue;
+		}
+
+		Cmp->Update(DeltaTime);
+		++ObjectIt;
 	}
 }
 
 void CGameObject::PostUpdate(const float DeltaTime)
 {
-	if (auto Root = this->Root.lock())
+	// Scene components
+	auto SceneIt = SceneComponents.begin();
+	auto SceneEnd = SceneComponents.end();
+	while (SceneIt != SceneEnd)
 	{
-		Root->PostUpdate(DeltaTime);
+		auto Cmp = *SceneIt;
+		if (Cmp.use_count() == 0)
+		{
+			SceneIt = SceneComponents.erase(SceneIt);
+			SceneEnd = SceneComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetAlive())
+		{
+			SceneIt = SceneComponents.erase(SceneIt);
+			SceneEnd = SceneComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetEnable())
+		{
+			SceneIt = SceneComponents.erase(SceneIt);
+			SceneEnd = SceneComponents.end();
+			continue;
+		}
+
+		Cmp->PostUpdate(DeltaTime);
+		++SceneIt;
 	}
 
-	for (const auto& ObjCmp : ObjectComponents)
+	// Object components
+	auto ObjectIt = ObjectComponents.begin();
+	auto ObjectEnd = ObjectComponents.end();
+	while (ObjectIt != ObjectEnd)
 	{
-		ObjCmp->Update(DeltaTime);
+		auto Cmp = *ObjectIt;
+		if (Cmp.use_count() == 0)
+		{
+			ObjectIt = ObjectComponents.erase(ObjectIt);
+			ObjectEnd = ObjectComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetAlive())
+		{
+			ObjectIt = ObjectComponents.erase(ObjectIt);
+			ObjectEnd = ObjectComponents.end();
+			continue;
+		}
+		else if (!Cmp->GetEnable())
+		{
+			ObjectIt = ObjectComponents.erase(ObjectIt);
+			ObjectEnd = ObjectComponents.end();
+			continue;
+		}
+
+		Cmp->PostUpdate(DeltaTime);
+		++ObjectIt;
 	}
 }
 

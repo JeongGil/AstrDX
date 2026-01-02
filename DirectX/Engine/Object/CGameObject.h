@@ -13,32 +13,20 @@ class CGameObject :
 	friend CObject;
 
 public:
-	std::weak_ptr<CWorld> GetWorld() const
-	{
-		return World;
-	}
+	std::weak_ptr<CWorld> GetWorld() const { return World; }
 
 	void SetWorld(const std::weak_ptr<CWorld>& World);
 
-	std::weak_ptr<CSceneComponent> GetRootComponent() const
-	{
-		return Root;
-	}
+	std::weak_ptr<CSceneComponent> GetRootComponent() const { return Root; }
 
-	[[nodiscard]] std::string GetName() const
-	{
-		return Name;
-	}
+	[[nodiscard]] std::string GetName() const { return Name; }
 
-	void SetName(const std::string& Name)
-	{
-		this->Name = Name;
-	}
+	void SetName(const std::string& Name) { this->Name = Name; }
 
-	bool GetAlive() const
-	{
-		return bAlive;
-	}
+	bool GetAlive() const { return bAlive; }
+
+	bool GetEnable() const { return bEnable; }
+	void SetEnable(bool bEnable) { this->bEnable = bEnable; }
 
 public:
 	const FVector& GetAxis(EAxis::Type Axis) const;
@@ -130,6 +118,7 @@ protected:
 	std::vector<std::shared_ptr<CObjectComponent>> ObjectComponents;
 	std::weak_ptr<CSceneComponent> Root;
 	std::string Name;
+	bool bEnable = true;
 	bool bAlive = true;
 
 public:
@@ -253,8 +242,6 @@ public:
 	}
 
 protected:
-	CGameObject() = default;
-
 	/**
 	 * @brief Clones the hierarchy of scene components from another game object and sets them for the current object.
 	 *
@@ -308,12 +295,15 @@ protected:
 		}
 	}
 
+	CGameObject() = default;
+
 	CGameObject(const CGameObject& other)
 		: CObject(other),
 		World(other.World),
 		//SceneComponents(other.SceneComponents),
 		//Root(other.Root),
 		Name(other.Name),
+		bEnable(other.bEnable),
 		bAlive(other.bAlive)
 	{
 		CloneAndSetHierarchyComponents(other);
@@ -325,6 +315,7 @@ protected:
 		SceneComponents(std::move(other.SceneComponents)),
 		Root(std::move(other.Root)),
 		Name(std::move(other.Name)),
+		bEnable(other.bEnable),
 		bAlive(other.bAlive)
 	{
 		other.SceneComponents.clear();
@@ -342,6 +333,7 @@ protected:
 		//Root = other.Root;
 		CloneAndSetHierarchyComponents(other);
 		Name = other.Name;
+		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		return *this;
 	}
@@ -355,6 +347,7 @@ protected:
 		SceneComponents = std::move(other.SceneComponents);
 		Root = std::move(other.Root);
 		Name = std::move(other.Name);
+		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		other.bAlive = false;
 		return *this;

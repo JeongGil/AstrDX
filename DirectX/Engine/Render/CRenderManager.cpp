@@ -274,8 +274,11 @@ void CRenderManager::Render()
 		{
 			if (auto Cmp = WeakCmp.lock())
 			{
-				Cmp->Render();
-				Cmp->PostRender();
+				if (Cmp->GetEnable())
+				{
+					Cmp->Render();
+					Cmp->PostRender();
+				}
 			}
 		}
 	}

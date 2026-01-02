@@ -1,8 +1,53 @@
 #include "CBullet.h"
 
+#include <Component/CProjectileMovementComponent.h>
+
 #include "CBulletEffect.h"
-#include "Component/CMeshComponent.h"
+#include <Component/CMeshComponent.h>
 #include "../Component/CStateComponent.h"
+
+void CBullet::SetMoveDirection(const FVector& MoveDirection)
+{
+	bUseMoveDirection = true;
+	this->MoveDirection = MoveDirection;
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->SetMoveDirection(MoveDirection);
+	}
+}
+
+void CBullet::SetEnableMove(bool bEnable)
+{
+	bEnableMove = bEnable;
+
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->SetEnable(bEnable);
+	}
+}
+
+void CBullet::SetDistance(float Distance)
+{
+	this->Distance = Distance;
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->SetRange(Distance);
+	}
+}
+
+void CBullet::SetSpeed(float Speed)
+{
+	this->Speed = Speed;
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->SetSpeed(Speed);
+	}
+}
+
+void CBullet::MoveEndFunction()
+{
+	Destroy();
+}
 
 bool CBullet::Init()
 {
@@ -19,27 +64,29 @@ bool CBullet::Init()
 		Mesh->SetRelativeScale(50, 50);
 	}
 
+	MovementComponent = CreateComponent<CProjectileMovementComponent>("Movement");
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->SetMoveDirection(GetAxis(EAxis::Y));
+		Move->SetRangeFunction<CBullet>(this,
+			&CBullet::MoveEndFunction);
+		Move->SetRange(Distance);
+		Move->SetSpeed(Speed);
+		Move->SetUpdateComponent(MeshComponent);
+	}
+
 	return true;
 }
 
 void CBullet::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
+}
 
-	constexpr float Speed = 300;
-	float DelDist = Speed * DeltaTime;
+void CBullet::PostUpdate(const float DeltaTime)
+{
+	CGameObject::PostUpdate(DeltaTime);
 
-	FVector MoveDirection = bUseMoveDirection ? this->MoveDirection : GetAxis(EAxis::Y);
-	FVector DelPos = MoveDirection * DelDist;
-
-	Distance -= DelDist;
-
-	AddWorldPosition(DelPos);
-
-	if (Distance <= 0.f)
-	{
-		Destroy();
-	}
 
 	if (auto World = this->World.lock())
 	{

@@ -3,6 +3,7 @@
 
 #include "Object/CGameObject.h"
 
+class CProjectileMovementComponent;
 class CMeshComponent;
 
 class CBullet :
@@ -12,11 +13,7 @@ class CBullet :
 	friend CObject;
 
 public:
-	void SetMoveDirection(const FVector& MoveDirection)
-	{
-		bUseMoveDirection = true;
-		this->MoveDirection = MoveDirection;
-	}
+	void SetMoveDirection(const FVector& MoveDirection);
 
 	template <typename T>
 	bool SetCloseTarget()
@@ -61,13 +58,20 @@ public:
 		CollisionRadius = sqrtf(HalfExtent.x * HalfExtent.x + HalfExtent.y * HalfExtent.y);
 	}
 
-	void SetCollisionTargetName(const std::string& CollisionTargetName)
-	{
-		this->CollisionTargetName = CollisionTargetName;
-	}
+	void SetCollisionTargetName(const std::string& CollisionTargetName) { this->CollisionTargetName = CollisionTargetName; }
+
+	void SetEnableMove(bool bEnable);
+
+	void SetDistance(float Distance);
+
+	void SetSpeed(float Speed);
+
+private:
+	void MoveEndFunction();
 
 private:
 	float Distance = 600;
+	float Speed = 300.f;
 
 	FVector MoveDirection;
 	bool bUseMoveDirection = false;
@@ -77,12 +81,16 @@ private:
 	std::string CollisionTargetName;
 	float CollisionRadius = 0.f;
 
+	bool bEnableMove = true;
+
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
+	std::weak_ptr<CProjectileMovementComponent> MovementComponent;
 
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
+	void PostUpdate(const float DeltaTime) override;
 
 protected:
 	CBullet* Clone() override;

@@ -1,6 +1,8 @@
 #pragma once
 #include "Object/CGameObject.h"
 
+class CObjectMovementComponent;
+class CBullet;
 class CMeshComponent;
 class CCameraComponent;
 class CStateComponent;
@@ -19,6 +21,7 @@ private:
 
 	void MoveUp();
 	void MoveDown();
+	void AttackKey();
 	void Skill1Press();
 	void Skill1Hold();
 	void Skill1Release();
@@ -30,8 +33,11 @@ private:
 	std::weak_ptr<CCameraComponent> CameraComponent;
 	std::weak_ptr<CStateComponent> StateComponent;
 	std::weak_ptr<CAnimation2DComponent> Animation2DComponent;
+	std::weak_ptr<CObjectMovementComponent> MovementComponent;
 
-	bool bOnAttack = false;
+	bool bAutoIdle = false;
+
+	std::weak_ptr<CBullet> Skill1Bullet;
 
 public:
 	bool Init() override;

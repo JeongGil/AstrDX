@@ -594,26 +594,26 @@ bool CSceneComponent::Init()
 
 void CSceneComponent::Update(const float DeltaTime)
 {
-	for (const auto& WeakChild : Children)
-	{
-		if (auto Child = WeakChild.lock())
-		{
-			Child->Update(DeltaTime);
-		}
-	}
+	//for (const auto& WeakChild : Children)
+	//{
+	//	if (auto Child = WeakChild.lock())
+	//	{
+	//		Child->Update(DeltaTime);
+	//	}
+	//}
 }
 
 void CSceneComponent::PostUpdate(const float DeltaTime)
 {
 	UpdateTransform();
 
-	for (const auto& WeakChild : Children)
-	{
-		if (auto Child = WeakChild.lock())
-		{
-			Child->PostUpdate(DeltaTime);
-		}
-	}
+	//for (const auto& WeakChild : Children)
+	//{
+	//	if (auto Child = WeakChild.lock())
+	//	{
+	//		Child->PostUpdate(DeltaTime);
+	//	}
+	//}
 }
 
 void CSceneComponent::Render()

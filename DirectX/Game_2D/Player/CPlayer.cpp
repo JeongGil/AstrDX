@@ -4,15 +4,13 @@
 
 #include "CBullet.h"
 #include "CDevice.h"
-#include "CMissile.h"
-#include <CEngine.h>
 
 #include "CTimer.h"
-#include "Component/CMeshComponent.h"
-#include "Component/CCameraComponent.h"
-#include "../Monster/CMonster.h"
 #include "../Component/CStateComponent.h"
 #include "Component/CAnimation2DComponent.h"
+#include "Component/CCameraComponent.h"
+#include "Component/CMeshComponent.h"
+#include "Component/CObjectMovementComponent.h"
 
 void CPlayer::TestNotify()
 {
@@ -36,41 +34,82 @@ void CPlayer::AttackNotify()
 
 void CPlayer::AttackFinish()
 {
-	bOnAttack = false;
-	if (auto Anim = Animation2DComponent.lock())
-	{
-		Anim->ChangeAnimation("PlayerIdle");
-	}
+	bAutoIdle = true;
+
+	//if (auto Anim = Animation2DComponent.lock())
+	//{
+	//	Anim->ChangeAnimation("PlayerIdle");
+	//}
 }
 
 void CPlayer::MoveUp()
 {
+	bAutoIdle = true;
+
+	auto Move = MovementComponent.lock();
 	auto Mesh = MeshComponent.lock();
 	auto Anim = Animation2DComponent.lock();
 
-	Mesh->AddRelativePosition(Mesh->GetAxis(EAxis::Y) * 100.f * CTimer::GetDeltaTime());
+	Move->AddMove(Mesh->GetAxis(EAxis::Y));
 	Anim->ChangeAnimation("PlayerWalk");
 }
 
 void CPlayer::MoveDown()
 {
+	bAutoIdle = true;
+
+	auto Move = MovementComponent.lock();
 	auto Mesh = MeshComponent.lock();
 	auto Anim = Animation2DComponent.lock();
 
-	Mesh->AddRelativePosition(Mesh->GetAxis(EAxis::Y) * -100.f * CTimer::GetDeltaTime());
+	Move->AddMove(-Mesh->GetAxis(EAxis::Y));
 	Anim->ChangeAnimation("PlayerWalk");
+}
+
+void CPlayer::AttackKey()
+{
+	bAutoIdle = false;
+
+	if (auto Anim = Animation2DComponent.lock())
+	{
+		Anim->ChangeAnimation("PlayerAttack");
+	}
 }
 
 void CPlayer::Skill1Press()
 {
+	bAutoIdle = true;
+
+	if (auto World = this->World.lock())
+	{
+		auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
+		if (auto Bullet = WeakBullet.lock())
+		{
+			Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75.f);
+			Bullet->SetWorldRotation(GetWorldRotation());
+			Bullet->SetCollisionTargetName("Monster");
+			Bullet->CalcCollisionRadius();
+			Bullet->SetEnableMove(false);
+		}
+	}
 }
 
 void CPlayer::Skill1Hold()
 {
+	bAutoIdle = false;
+	if (auto Bullet = Skill1Bullet.lock())
+	{
+		Bullet->AddRelativeScale(50.f * CTimer::GetDeltaTime(), 50.f * CTimer::GetDeltaTime());
+	}
 }
 
 void CPlayer::Skill1Release()
 {
+	bAutoIdle = true;
+	if (auto Bullet = Skill1Bullet.lock())
+	{
+		Bullet->SetEnableMove(true);
+	}
 }
 
 bool CPlayer::Init()
@@ -147,16 +186,28 @@ bool CPlayer::Init()
 		{
 			Input->AddBindKey("MoveUp", 'W');
 			Input->SetBindFunction<CPlayer>("MoveUp", EInputType::Hold, this, &CPlayer::MoveUp);
-			Input->SetKeyCtrl("MoveUp", true);
+			//Input->SetKeyCtrl("MoveUp", true);
 
 			Input->AddBindKey("MoveDown", 'S');
 			Input->SetBindFunction<CPlayer>("MoveDown", EInputType::Hold, this, &CPlayer::MoveDown);
 
 			Input->AddBindKey("Skill1", VK_LBUTTON);
+			Input->SetKeyAlt("Skill1", true);
+			Input->SetKeyCtrl("Skill1", true);
+
 			Input->SetBindFunction<CPlayer>("Skill1", EInputType::Press, this, &CPlayer::Skill1Press);
 			Input->SetBindFunction<CPlayer>("Skill1", EInputType::Hold, this, &CPlayer::Skill1Hold);
 			Input->SetBindFunction<CPlayer>("Skill1", EInputType::Release, this, &CPlayer::Skill1Release);
+
+			Input->AddBindKey("Attack", VK_SPACE);
+			Input->SetBindFunction<CPlayer>("Attack", EInputType::Press, this, &CPlayer::AttackKey);
 		}
+	}
+
+	MovementComponent = CreateComponent<CObjectMovementComponent>("Movement");
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->SetUpdateComponent(MeshComponent);
 	}
 
 	return true;
@@ -169,8 +220,9 @@ void CPlayer::Update(float DeltaTime)
 	auto Mesh = MeshComponent.lock();
 	auto Anim = Animation2DComponent.lock();
 
-	if (Mesh->GetSpeed() ==0.f)
+	if (Mesh->GetSpeed() == 0.f && bAutoIdle)
 	{
+		bAutoIdle = false;
 		Anim->ChangeAnimation("PlayerIdle");
 	}
 

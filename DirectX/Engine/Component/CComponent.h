@@ -18,51 +18,31 @@ public:
 	};
 
 public:
-	bool GetAlive() const
-	{
-		return bAlive;
-	}
+	bool GetAlive() const { return bAlive; }
 
-	std::weak_ptr<CWorld> GetWorld() const
-	{
-		return World;
-	}
+	std::weak_ptr<CWorld> GetWorld() const { return World; }
 
-	void SetWorld(std::weak_ptr<CWorld> World)
-	{
-		this->World = World;
-	}
+	void SetWorld(std::weak_ptr<CWorld> World) { this->World = World; }
 
-	std::weak_ptr<CGameObject> GetOwner() const
-	{
-		return Owner;
-	}
+	std::weak_ptr<CGameObject> GetOwner() const { return Owner; }
 
-	void SetOwner(std::weak_ptr<CGameObject> Owner)
-	{
-		this->Owner = Owner;
-	}
+	void SetOwner(std::weak_ptr<CGameObject> Owner) { this->Owner = Owner; }
 
-	const std::string& GetName() const
-	{
-		return Name;
-	}
+	const std::string& GetName() const { return Name; }
 
-	void SetName(const std::string& Name)
-	{
-		this->Name = Name;
-	}
+	void SetName(const std::string& Name) { this->Name = Name; }
 
-	[[nodiscard]] EType GetType() const
-	{
-		return Type;
-	}
+	[[nodiscard]] EType GetType() const { return Type; }
+
+	bool GetEnable() const { return bEnable; }
+	void SetEnable(bool bEnable) { this->bEnable = bEnable; }
 
 protected:
 	std::weak_ptr<CWorld> World;
 	std::weak_ptr<CGameObject> Owner;
 	std::string Name;
 	bool bAlive = true;
+	bool bEnable = true;
 	EType Type = EType::None;
 
 public:
@@ -84,6 +64,7 @@ protected:
 		//Owner(other.Owner),
 		Name(other.Name),
 		bAlive(other.bAlive),
+		bEnable(other.bEnable),
 		Type(other.Type)
 	{
 	}
@@ -93,6 +74,7 @@ protected:
 		//World(std::move(other.World)),
 		//Owner(std::move(other.Owner)),
 		Name(std::move(other.Name)),
+		bEnable(other.bEnable),
 		bAlive(other.bAlive),
 		Type(other.Type)
 	{
@@ -106,6 +88,7 @@ protected:
 		//World = other.World;
 		//Owner = other.Owner;
 		Name = other.Name;
+		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		Type = other.Type;
 		return *this;
@@ -119,6 +102,7 @@ protected:
 		//World = std::move(other.World);
 		//Owner = std::move(other.Owner);
 		Name = std::move(other.Name);
+		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		Type = other.Type;
 		return *this;

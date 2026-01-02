@@ -8,8 +8,8 @@ class CObjectComponent :
 
 public:
 	bool Init() override;
-	void Update(const float Delta) override;
-	void PostUpdate(const float Delta) override;
+	void Update(const float DeltaTime) override;
+	void PostUpdate(const float DeltaTime) override;
 	void Destroy() override;
 
 protected:

@@ -53,6 +53,7 @@ struct FVector3
 	FVector3 operator-(float Value) const;
 	FVector3 operator-(double Value) const;
 	FVector3 operator-(int Value) const;
+	FVector3 operator-() const;
 
 	// -=
 	const FVector3& operator-=(const FVector3& v);
@@ -127,6 +128,11 @@ struct FVector3
 	float GetAngleDegree2D(const FVector3& v) const;
 	float GetViewTargetAngleDegree2D(const FVector3& v, EAxis::Type AxisType = EAxis::Y) const;
 	static float GetAngleDegree2D(const FVector3& v1, const FVector3& v2);
+
+	bool IsZero() const
+	{
+		return x == 0.f && y == 0.f && z == 0.f;
+	}
 
 	//FVector3 GetRotation(const FVector3& Rot) const;
 	//
