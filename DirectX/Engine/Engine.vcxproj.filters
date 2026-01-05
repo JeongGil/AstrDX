@@ -115,6 +115,18 @@
     <Filter Include="Compnent\ObjectComponent\Movement">
       <UniqueIdentifier>{c0f7170d-a63e-4624-8055-918900069b26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Shader\ConstantBuffer\Collider">
+      <UniqueIdentifier>{6a27589c-5e1d-4160-9bf0-6485ee207836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compnent\SceneComponent\Collider">
+      <UniqueIdentifier>{8d1be71a-c31a-44a4-9467-59e48dccd270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Compnent\SceneComponent\Collider\2D">
+      <UniqueIdentifier>{de3bbcef-a0fa-4099-91b2-a56c77267c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\Shader\Collider">
+      <UniqueIdentifier>{08bcaf7c-a80b-4f66-b0a8-1d48060caa8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -297,6 +309,18 @@
     <ClInclude Include="Component\CObjectMovementComponent.h">
       <Filter>Compnent\ObjectComponent\Movement</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Shader\CCBufferCollider.h">
+      <Filter>Asset\Shader\ConstantBuffer\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CCollider.h">
+      <Filter>Compnent\SceneComponent\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="CColliderBox2D.h">
+      <Filter>Compnent\SceneComponent\Collider\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderCollider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -459,6 +483,18 @@
     <ClCompile Include="Component\CObjectMovementComponent.cpp">
       <Filter>Compnent\ObjectComponent\Movement</Filter>
     </ClCompile>
+    <ClCompile Include="Asset\Shader\CCBufferCollider.cpp">
+      <Filter>Asset\Shader\ConstantBuffer\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CCollider.cpp">
+      <Filter>Compnent\SceneComponent\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="CColliderBox2D.cpp">
+      <Filter>Compnent\SceneComponent\Collider\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderCollider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Asset\Shader\SpaceTransformation.txt">
@@ -467,6 +503,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Core\Bin\EngineAsset\Shader\GlobalShader2D.hlsl">
+      <Filter>Asset\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Core\Bin\EngineAsset\Shader\Collider.hlsl">
       <Filter>Asset\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

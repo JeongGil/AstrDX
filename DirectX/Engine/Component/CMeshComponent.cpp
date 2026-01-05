@@ -269,7 +269,7 @@ void CMeshComponent::Render()
 
 	CBufferTransform->SetWorldMatrix(WorldMatrix);
 	CBufferTransform->SetViewMatrix(ViewMat);
-	CBufferTransform->SetProjMatrix(ProjMat);
+	CBufferTransform->SetProjectionMatrix(ProjMat);
 
 	CBufferTransform->UpdateBuffer();
 

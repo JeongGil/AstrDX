@@ -23,8 +23,26 @@ bool CMeshManager::Init()
 		return false;
 	}
 
+	FVector3 CenterFrameRect[4]
+	{
+		FVector3(-0.5f, 0.5f, 0.f),
+		FVector3(0.5f, 0.5f, 0.f),
+		FVector3(-0.5f, -0.5f, 0.f),
+		FVector3(0.5f, -0.5f, 0.f)
+	};
+
+	unsigned short CenterFrameRectIdx[5]{ 0, 1, 3, 2, 0 };
+
+	if (!CreateMesh("Mesh_CenterFrameRect", CenterFrameRect, sizeof(FVector),
+		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
+		CenterFrameRectIdx, 2, 5, DXGI_FORMAT_R16_UINT,
+		D3D11_USAGE_IMMUTABLE))
+	{
+		return false;
+	}
+
 	// TextureMesh rectangle.
-	FVertexTex CenterRectTexture[4] =
+	FVertexTex CenterRectTexture[4]
 	{
 		FVertexTex(-0.5f, 0.5f, 0.f, 0.f, 0.f),
 		FVertexTex(0.5f, 0.5f, 0.f, 1.f, 0.f),

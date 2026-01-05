@@ -11,6 +11,7 @@
 #include "Component/CCameraComponent.h"
 #include "Component/CMeshComponent.h"
 #include "Component/CObjectMovementComponent.h"
+#include <CColliderBox2D.h>
 
 void CPlayer::TestNotify()
 {
@@ -120,6 +121,7 @@ bool CPlayer::Init()
 	}
 
 	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
+	Body = CreateComponent<CColliderBox2D>("Body");
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");
@@ -128,6 +130,14 @@ bool CPlayer::Init()
 
 		Mesh->SetMaterialBaseColor(0, FColor(1, 0, 0, 0));
 		Mesh->SetBlendState(0, "AlphaBlend");
+	}
+
+	//Body = CreateComponent<CColliderBox2D>("Body");
+	if (auto Body = this->Body.lock())
+	{
+		Body->SetBoxExtend(100.f, 100.f);
+		Body->SetDrawDebug(true);
+		Body->SetInheritScale(false);
 	}
 
 	Rotation = CreateComponent<CSceneComponent>("Rotation");

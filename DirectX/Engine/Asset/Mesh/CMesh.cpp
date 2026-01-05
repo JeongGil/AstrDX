@@ -9,6 +9,7 @@ bool CMesh::CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_US
 {
 	VertexBuffer.Size = VertexSize;
 	VertexBuffer.Count = VertexCount;
+	this->Topology = Topology;
 
 	if (!CreateBuffer(&VertexBuffer.Buffer, D3D11_BIND_VERTEX_BUFFER, Vertices, VertexSize, VertexCount, VertexUsage))
 	{

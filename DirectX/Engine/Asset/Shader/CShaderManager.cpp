@@ -1,6 +1,7 @@
 #include "CShaderManager.h"
 
 #include "CConstantBuffer.h"
+#include "CShaderCollider.h"
 #include "CShaderColor2D.h"
 #include "CShaderMaterialColor2D.h"
 #include "CShaderTexture2D.h"
@@ -23,6 +24,11 @@ bool CShaderManager::Init()
 		return false;
 	}
 
+	if (!CreateCBuffer("Collider", sizeof(FCBufferColliderData), 10, EShaderBufferType::Pixel))
+	{
+		return false;
+	}
+
 	// Shader
 	if (!CreateShader<CShaderColor2D>("Color2D", "EngineShader"))
 	{
@@ -35,6 +41,11 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderTexture2D>("DefaultTexture2D", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderCollider>("Collider", "EngineShader"))
 	{
 		return false;
 	}

@@ -1,6 +1,7 @@
 #pragma once
 #include "Object/CGameObject.h"
 
+class CColliderBox2D;
 class CObjectMovementComponent;
 class CBullet;
 class CMeshComponent;
@@ -34,6 +35,7 @@ private:
 	std::weak_ptr<CStateComponent> StateComponent;
 	std::weak_ptr<CAnimation2DComponent> Animation2DComponent;
 	std::weak_ptr<CObjectMovementComponent> MovementComponent;
+	std::weak_ptr<CColliderBox2D> Body;
 
 	bool bAutoIdle = false;
 

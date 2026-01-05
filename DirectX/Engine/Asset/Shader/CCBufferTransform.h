@@ -21,7 +21,7 @@ public:
 		Data.View = View;
 	}
 
-	void SetProjMatrix(const FMatrix& Proj)
+	void SetProjectionMatrix(const FMatrix& Proj)
 	{
 		Data.Proj = Proj;
 	}
