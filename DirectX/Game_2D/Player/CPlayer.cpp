@@ -25,6 +25,7 @@ void CPlayer::AttackNotify()
 		auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
 		if (auto Bullet = WeakBullet.lock())
 		{
+			Bullet->SetCollision("PlayerAttack");
 			Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75.f);
 			Bullet->SetWorldRotation(GetWorldRotation());
 			Bullet->SetCollisionTargetName("Monster");
@@ -64,6 +65,30 @@ void CPlayer::MoveDown()
 	auto Anim = Animation2DComponent.lock();
 
 	Move->AddMove(-Mesh->GetAxis(EAxis::Y));
+	Anim->ChangeAnimation("PlayerWalk");
+}
+
+void CPlayer::MoveLeft()
+{
+	bAutoIdle = true;
+
+	auto Move = MovementComponent.lock();
+	auto Mesh = MeshComponent.lock();
+	auto Anim = Animation2DComponent.lock();
+
+	Move->AddMove(-Mesh->GetAxis(EAxis::X));
+	Anim->ChangeAnimation("PlayerWalk");
+}
+
+void CPlayer::MoveRight()
+{
+	bAutoIdle = true;
+
+	auto Move = MovementComponent.lock();
+	auto Mesh = MeshComponent.lock();
+	auto Anim = Animation2DComponent.lock();
+
+	Move->AddMove(Mesh->GetAxis(EAxis::X));
 	Anim->ChangeAnimation("PlayerWalk");
 }
 
@@ -121,7 +146,6 @@ bool CPlayer::Init()
 	}
 
 	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
-	Body = CreateComponent<CColliderBox2D>("Body");
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");
@@ -132,9 +156,10 @@ bool CPlayer::Init()
 		Mesh->SetBlendState(0, "AlphaBlend");
 	}
 
-	//Body = CreateComponent<CColliderBox2D>("Body");
+	Body = CreateComponent<CColliderBox2D>("Body");
 	if (auto Body = this->Body.lock())
 	{
+		Body->SetCollisionProfile("Player");
 		Body->SetBoxExtend(100.f, 100.f);
 		Body->SetDrawDebug(true);
 		Body->SetInheritScale(false);
@@ -200,6 +225,12 @@ bool CPlayer::Init()
 
 			Input->AddBindKey("MoveDown", 'S');
 			Input->SetBindFunction<CPlayer>("MoveDown", EInputType::Hold, this, &CPlayer::MoveDown);
+
+			Input->AddBindKey("MoveLeft", 'A');
+			Input->SetBindFunction<CPlayer>("MoveLeft", EInputType::Hold, this, &CPlayer::MoveLeft);
+
+			Input->AddBindKey("MoveRight", 'D');
+			Input->SetBindFunction<CPlayer>("MoveRight", EInputType::Hold, this, &CPlayer::MoveRight);
 
 			Input->AddBindKey("Skill1", VK_LBUTTON);
 			Input->SetKeyAlt("Skill1", true);

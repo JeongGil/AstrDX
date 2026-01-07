@@ -194,14 +194,18 @@
     <ClInclude Include="Asset\Texture\CTexture.h" />
     <ClInclude Include="Asset\Texture\CTextureManager.h" />
     <ClInclude Include="Asset\Texture\DirectXTex.h" />
-    <ClInclude Include="CColliderBox2D.h" />
+    <ClInclude Include="CCollisionInfoManager.h" />
     <ClInclude Include="CDevice.h" />
     <ClInclude Include="CEngine.h" />
+    <ClInclude Include="CEngineSetting.h" />
     <ClInclude Include="CObject.h" />
     <ClInclude Include="Component\CAnimation2DComponent.h" />
     <ClInclude Include="Component\CAnimation2DSequence.h" />
     <ClInclude Include="Component\CCameraComponent.h" />
     <ClInclude Include="Component\CCollider.h" />
+    <ClInclude Include="Component\CColliderBox2D.h" />
+    <ClInclude Include="Component\CColliderSphere2D.h" />
+    <ClInclude Include="Component\CCollision.h" />
     <ClInclude Include="Component\CComponent.h" />
     <ClInclude Include="Component\CMeshComponent.h" />
     <ClInclude Include="Component\CMovementComponent.h" />
@@ -226,6 +230,7 @@
     <ClInclude Include="World\CInput.h" />
     <ClInclude Include="World\CWorld.h" />
     <ClInclude Include="World\CWorldAssetManager.h" />
+    <ClInclude Include="World\CWorldCollision.h" />
     <ClInclude Include="World\CWorldManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -260,14 +265,18 @@
     <ClCompile Include="Asset\Shader\CShaderTexture2D.cpp" />
     <ClCompile Include="Asset\Texture\CTexture.cpp" />
     <ClCompile Include="Asset\Texture\CTextureManager.cpp" />
-    <ClCompile Include="CColliderBox2D.cpp" />
+    <ClCompile Include="CCollisionInfoManager.cpp" />
     <ClCompile Include="CDevice.cpp" />
     <ClCompile Include="CEngine.cpp" />
+    <ClCompile Include="CEngineSetting.cpp" />
     <ClCompile Include="CObject.cpp" />
     <ClCompile Include="Component\CAnimation2DComponent.cpp" />
     <ClCompile Include="Component\CAnimation2DSequence.cpp" />
     <ClCompile Include="Component\CCameraComponent.cpp" />
     <ClCompile Include="Component\CCollider.cpp" />
+    <ClCompile Include="Component\CColliderBox2D.cpp" />
+    <ClCompile Include="Component\CColliderSphere2D.cpp" />
+    <ClCompile Include="Component\CCollision.cpp" />
     <ClCompile Include="Component\CComponent.cpp" />
     <ClCompile Include="Component\CMeshComponent.cpp" />
     <ClCompile Include="Component\CMovementComponent.cpp" />
@@ -288,6 +297,7 @@
     <ClCompile Include="World\CInput.cpp" />
     <ClCompile Include="World\CWorld.cpp" />
     <ClCompile Include="World\CWorldAssetManager.cpp" />
+    <ClCompile Include="World\CWorldCollision.cpp" />
     <ClCompile Include="World\CWorldManager.cpp" />
   </ItemGroup>
   <ItemGroup>

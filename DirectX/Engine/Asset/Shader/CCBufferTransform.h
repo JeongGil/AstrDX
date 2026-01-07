@@ -11,56 +11,20 @@ public:
 	CCBufferTransform* Clone() override;
 
 public:
-	void SetWorldMatrix(const FMatrix& World)
-	{
-		Data.World = World;
-	}
-
-	void SetViewMatrix(const FMatrix& View)
-	{
-		Data.View = View;
-	}
-
-	void SetProjectionMatrix(const FMatrix& Proj)
-	{
-		Data.Proj = Proj;
-	}
+	void SetWorldMatrix(const FMatrix& World) { Data.World = World; }
+	void SetViewMatrix(const FMatrix& View) { Data.View = View; }
+	void SetProjectionMatrix(const FMatrix& Proj) { Data.Proj = Proj; }
+	void SetPivotSize(const FVector& PivotSize) { Data.PivotSize = PivotSize; }
 
 private:
 	FCBufferTransformData Data;
 
 public:
 	CCBufferTransform() = default;
+	CCBufferTransform(const CCBufferTransform& other) = default;
+	CCBufferTransform(CCBufferTransform&& other) noexcept = default;
+	CCBufferTransform& operator=(const CCBufferTransform& other) = default;
+	CCBufferTransform& operator=(CCBufferTransform&& other) noexcept = default;
 	~CCBufferTransform() override = default;
-
-	CCBufferTransform(const CCBufferTransform& other)
-		: CConstantBufferData(other),
-		  Data(other.Data)
-	{
-	}
-
-	CCBufferTransform(CCBufferTransform&& other) noexcept
-		: CConstantBufferData(std::move(other)),
-		  Data(std::move(other.Data))
-	{
-	}
-
-	CCBufferTransform& operator=(const CCBufferTransform& other)
-	{
-		if (this == &other)
-			return *this;
-		CConstantBufferData::operator =(other);
-		Data = other.Data;
-		return *this;
-	}
-
-	CCBufferTransform& operator=(CCBufferTransform&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CConstantBufferData::operator =(std::move(other));
-		Data = std::move(other.Data);
-		return *this;
-	}
 };
 

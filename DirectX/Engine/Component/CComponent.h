@@ -46,6 +46,7 @@ protected:
 	EType Type = EType::None;
 
 public:
+	virtual void Begin();
 	virtual bool Init();
 	virtual void Update(const float Delta);
 	virtual void PostUpdate(const float Delta);

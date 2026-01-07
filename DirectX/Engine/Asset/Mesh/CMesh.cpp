@@ -3,7 +3,7 @@
 #include "../../CDevice.h"
 #include "../Material/CMaterial.h"
 
-bool CMesh::CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_USAGE VertexUsage,
+bool CMesh::CreateMesh(void* VertexData, int VertexSize, int VertexCount, D3D11_USAGE VertexUsage,
                        D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount, DXGI_FORMAT Format,
                        D3D11_USAGE IndexUsage)
 {
@@ -11,10 +11,24 @@ bool CMesh::CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_US
 	VertexBuffer.Count = VertexCount;
 	this->Topology = Topology;
 
-	if (!CreateBuffer(&VertexBuffer.Buffer, D3D11_BIND_VERTEX_BUFFER, Vertices, VertexSize, VertexCount, VertexUsage))
+	if (!CreateBuffer(&VertexBuffer.Buffer, D3D11_BIND_VERTEX_BUFFER, VertexData, VertexSize, VertexCount, VertexUsage))
 	{
 		return false;
 	}
+
+	auto Vertices = (char*)VertexData;
+	for (int i = 0; i < VertexCount; ++i)
+	{
+		FVector Position = *((FVector*)Vertices);
+		Min.x = min(Min.x, Position.x);
+		Min.y = min(Min.y, Position.y);
+		Min.z = min(Min.z, Position.z);
+		Max.x = max(Max.x, Position.x);
+		Max.y = max(Max.y, Position.y);
+		Max.z = max(Max.z, Position.z);
+	}
+
+	MeshSize = Max - Min;
 
 	if (Indices)
 	{

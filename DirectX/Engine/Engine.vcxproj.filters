@@ -127,6 +127,15 @@
     <Filter Include="Asset\Shader\Shader\Collider">
       <UniqueIdentifier>{08bcaf7c-a80b-4f66-b0a8-1d48060caa8c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="World\Collision">
+      <UniqueIdentifier>{3fd52098-f844-4f67-ad1d-c14c29360569}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{47400b9e-8652-4d85-8f09-ab922fdc5e8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Setting">
+      <UniqueIdentifier>{8f3fb4a7-0ceb-4665-b67f-11a41542e087}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -315,11 +324,26 @@
     <ClInclude Include="Component\CCollider.h">
       <Filter>Compnent\SceneComponent\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="CColliderBox2D.h">
+    <ClInclude Include="Component\CColliderBox2D.h">
       <Filter>Compnent\SceneComponent\Collider\2D</Filter>
     </ClInclude>
+    <ClInclude Include="World\CWorldCollision.h">
+      <Filter>World\Collision</Filter>
+    </ClInclude>
     <ClInclude Include="Asset\Shader\CShaderCollider.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Asset\Shader\Shader\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="CCollisionInfoManager.h">
+      <Filter>Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CCollision.h">
+      <Filter>Compnent\SceneComponent\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="CEngineSetting.h">
+      <Filter>Core\Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CColliderSphere2D.h">
+      <Filter>Compnent\SceneComponent\Collider\2D</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -489,11 +513,26 @@
     <ClCompile Include="Component\CCollider.cpp">
       <Filter>Compnent\SceneComponent\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="CColliderBox2D.cpp">
+    <ClCompile Include="Component\CColliderBox2D.cpp">
       <Filter>Compnent\SceneComponent\Collider\2D</Filter>
     </ClCompile>
+    <ClCompile Include="World\CWorldCollision.cpp">
+      <Filter>World\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="CCollisionInfoManager.cpp">
+      <Filter>Collision</Filter>
+    </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderCollider.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Asset\Shader\Shader\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CCollision.cpp">
+      <Filter>Compnent\SceneComponent\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="CEngineSetting.cpp">
+      <Filter>Core\Setting</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CColliderSphere2D.cpp">
+      <Filter>Compnent\SceneComponent\Collider\2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

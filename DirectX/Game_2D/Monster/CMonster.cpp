@@ -4,6 +4,7 @@
 #include "World/CWorld.h"
 #include "Component/CMeshComponent.h"
 #include "Component/CAnimation2DComponent.h"
+#include "Component/CColliderSphere2D.h"
 
 bool CMonster::Init()
 {
@@ -33,6 +34,15 @@ bool CMonster::Init()
 		Anim->SetFinishNotify<CMonster>("MonsterAttack", this, &CMonster::AttackFinish);
 
 		Anim->SetLoop("MonsterIdle", true);
+	}
+
+	Body = CreateComponent<CColliderSphere2D>("Body");
+	if (auto Body = this->Body.lock())
+	{
+		Body->SetCollisionProfile("Monster");
+		Body->SetRadius(sqrtf(100.f * 100.f + 100.f * 100.f) * 0.5f);
+		Body->SetDrawDebug(true);
+		Body->SetInheritScale(false);
 	}
 
 	if (auto World = this->World.lock())
@@ -88,6 +98,8 @@ void CMonster::AttackNotify()
 		if (auto Bullet = WeakBullet.lock())
 		{
 			FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
+
+			Bullet->SetCollision("MonsterAttack");
 			Bullet->SetWorldPosition(Position);
 			Bullet->SetWorldRotation(GetWorldRotation());
 			Bullet->SetCollisionTargetName("Player");

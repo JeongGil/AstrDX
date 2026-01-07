@@ -162,7 +162,8 @@ const std::string& CAnimation2DSequence::GetKey() const
 		return Animation->GetKey();
 	}
 
-	return std::string();
+	static const std::string Empty = "";
+	return Empty;
 }
 
 void CAnimation2DSequence::CalcFrameTime()

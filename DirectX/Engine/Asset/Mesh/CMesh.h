@@ -54,7 +54,7 @@ class CMesh :
 	friend class CMeshManager;
 
 public:
-	bool CreateMesh(void* Vertices, int VertexSize, int VertexCount, D3D11_USAGE VertexUsage,
+	bool CreateMesh(void* VertexData, int VertexSize, int VertexCount, D3D11_USAGE VertexUsage,
 		D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices = nullptr, int IndexSize = 0, int IndexCount = 0,
 		DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN, D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
@@ -68,15 +68,13 @@ public:
 	void SetMaterialOpacity(int SlotIndex, float Opacity);
 
 public:
-	size_t GetSlotCount() const
-	{
-		return Slots.size();
-	}
+	FVector GetMin() const { return Min; }
+	FVector GetMax() const { return Max; }
+	FVector GetMeshSize() const { return MeshSize; }
 
-	std::shared_ptr<FMeshSlot> GetSlot(size_t Index) const
-	{
-		return Slots[Index];
-	}
+	size_t GetSlotCount() const { return Slots.size(); }
+
+	std::shared_ptr<FMeshSlot> GetSlot(size_t Index) const { return Slots[Index]; }
 
 protected:
 	static bool CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count, D3D11_USAGE Usage);
@@ -85,6 +83,10 @@ protected:
 	FVertexBuffer VertexBuffer;
 	std::vector<std::shared_ptr<FMeshSlot>> Slots;
 	D3D11_PRIMITIVE_TOPOLOGY Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	FVector Min = FVector(FLT_MAX, FLT_MAX, FLT_MAX);
+	FVector Max = FVector(FLT_MIN, FLT_MIN, FLT_MIN);
+	FVector MeshSize;
 
 protected:
 	CMesh();

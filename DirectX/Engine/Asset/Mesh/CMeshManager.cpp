@@ -23,12 +23,12 @@ bool CMeshManager::Init()
 		return false;
 	}
 
-	FVector3 CenterFrameRect[4]
+	FVector CenterFrameRect[4]
 	{
-		FVector3(-0.5f, 0.5f, 0.f),
-		FVector3(0.5f, 0.5f, 0.f),
-		FVector3(-0.5f, -0.5f, 0.f),
-		FVector3(0.5f, -0.5f, 0.f)
+		FVector(-0.5f, 0.5f, 0.f),
+		FVector(0.5f, 0.5f, 0.f),
+		FVector(-0.5f, -0.5f, 0.f),
+		FVector(0.5f, -0.5f, 0.f)
 	};
 
 	unsigned short CenterFrameRectIdx[5]{ 0, 1, 3, 2, 0 };
@@ -37,6 +37,48 @@ bool CMeshManager::Init()
 		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
 		CenterFrameRectIdx, 2, 5, DXGI_FORMAT_R16_UINT,
 		D3D11_USAGE_IMMUTABLE))
+	{
+		return false;
+	}
+
+	FVector LBFrameRect[4] =
+	{
+		FVector(0.f, 1.f, 0.f),
+		FVector(1.f, 1.f, 0.f),
+		FVector(0.f, 0.f, 0.f),
+		FVector(1.f, 0.f, 0.f)
+	};
+
+	unsigned short LBFrameRectIdx[5]{ 0, 1, 3, 2, 0 };
+
+	if (!CreateMesh("Mesh_LBFrameRect", LBFrameRect, sizeof(FVector),
+		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
+		LBFrameRectIdx, 2, 5, DXGI_FORMAT_R16_UINT,
+		D3D11_USAGE_IMMUTABLE))
+	{
+		return false;
+	}
+
+	std::vector<FVector> FrameSphere2D;
+	for (int i = 0; i < 360; i += 12)
+	{
+		float Radian = DirectX::XMConvertToRadians(static_cast<float>(i));
+		FrameSphere2D.emplace_back(cosf(Radian), sinf(Radian), 0.f);
+	}
+
+	std::vector<unsigned short> FrameSphere2DIdx;
+	for (size_t i = 0; i < FrameSphere2D.size(); ++i)
+	{
+		FrameSphere2DIdx.push_back(static_cast<unsigned short>(i));
+	}
+
+	FrameSphere2DIdx.push_back(0);
+
+	if (!CreateMesh("Mesh_FrameSphere2D", &FrameSphere2D[0], sizeof(FVector),
+		static_cast<int>(FrameSphere2D.size()), D3D11_USAGE_IMMUTABLE,
+		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP, &FrameSphere2DIdx[0],
+		2, static_cast<int>(FrameSphere2DIdx.size()),
+		DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}

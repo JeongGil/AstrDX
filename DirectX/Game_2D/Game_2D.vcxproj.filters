@@ -31,6 +31,9 @@
     <Filter Include="Component\State">
       <UniqueIdentifier>{7556fa80-b64f-48d2-8a3b-6892d031bfa5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Setting">
+      <UniqueIdentifier>{fa1cec0b-9c3e-4bff-ab9c-687795ca52c1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -63,6 +66,9 @@
     <ClCompile Include="Player\CBulletEffect.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="CGlobalSetting.cpp">
+      <Filter>Setting</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -91,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="Player\CBulletEffect.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="CGlobalSetting.h">
+      <Filter>Setting</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,9 @@
 #include "CComponent.h"
 
+void CComponent::Begin()
+{
+}
+
 bool CComponent::Init()
 {
 	return true;

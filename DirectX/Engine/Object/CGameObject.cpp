@@ -576,6 +576,19 @@ void CGameObject::AddWorldPosition(float X, float Y) const
 	}
 }
 
+void CGameObject::Begin()
+{
+	for (const auto& Cmp : SceneComponents)
+	{
+		Cmp->Begin();
+	}
+
+	for (const auto& Cmp : ObjectComponents)
+	{
+		Cmp->Begin();
+	}
+}
+
 bool CGameObject::Init()
 {
 	return true;

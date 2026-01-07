@@ -15,18 +15,49 @@ public:
 	bool GetDrawDebug() const { return bDrawDebug; }
 	virtual void SetDrawDebug(bool bDrawDebug);
 
+	FCollisionProfile* GetCollisionProfile() const { return Profile; }
+	void SetCollisionProfile(const std::string& Key);
+
+	bool CheckCollidingObject(CCollider* Other) const;
+	void EraseCollidingObject(CCollider* Other);
+
+	void CallOnCollisionBegin(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
+	void CallOnCollisionEnd(CCollider* Other);
+
+	virtual bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) = 0;
+
+	template <typename T>
+	void SetOnCollisionBegin(T* Obj, void (T::* Func)(const FVector&, CCollider*))
+	{
+		OnCollisionBegin = std::bind(Func, Obj, std::placeholders::_1, std::placeholders::_2);
+	}
+
+	template <typename T>
+	void SetOnCollisionEnd(T* Obj, void (T::* Func)(CCollider*))
+	{
+		OnCollisionEnd = std::bind(Func, Obj, std::placeholders::_1);
+	}
+
+protected:
+	bool IsColliding() const { return CollidingObjects.empty(); }
+
 protected:
 	EColliderType ColliderType;
 	FVector Min;
 	FVector Max;
 	FVector RenderScale;
 	bool bDrawDebug = false;
-	bool bCollide = false;
+	FCollisionProfile* Profile = nullptr;
+
+	std::unordered_map<CCollider*, std::weak_ptr<CCollider>> CollidingObjects;
 
 	std::weak_ptr<CShader> Shader;
 	std::weak_ptr<CMesh> Mesh;
 	std::shared_ptr<CCBufferTransform> TransformCBuffer;
 	std::shared_ptr<CCBufferCollider> ColliderCBuffer;
+
+	std::function<void(const FVector&, CCollider*)> OnCollisionBegin;
+	std::function<void(CCollider*)> OnCollisionEnd;
 
 public:
 	bool Init() override;
@@ -39,53 +70,25 @@ protected:
 
 	CCollider() = default;
 
-	CCollider(const CCollider& other)
-		: CSceneComponent(other),
-		  ColliderType(other.ColliderType),
-		  Min(other.Min),
-		  Max(other.Max),
-		  RenderScale(other.RenderScale),
-		  bDrawDebug(other.bDrawDebug),
-		  bCollide(other.bCollide),
-		  Shader(other.Shader),
-		  Mesh(other.Mesh),
-		  TransformCBuffer(other.TransformCBuffer),
-		  ColliderCBuffer(other.ColliderCBuffer)
-	{
-	}
+	CCollider(const CCollider& other) = default;
 
 	CCollider(CCollider&& other) noexcept
 		: CSceneComponent(std::move(other)),
-		  ColliderType(other.ColliderType),
-		  Min(std::move(other.Min)),
-		  Max(std::move(other.Max)),
-		  RenderScale(std::move(other.RenderScale)),
-		  bDrawDebug(other.bDrawDebug),
-		  bCollide(other.bCollide),
-		  Shader(std::move(other.Shader)),
-		  Mesh(std::move(other.Mesh)),
-		  TransformCBuffer(std::move(other.TransformCBuffer)),
-		  ColliderCBuffer(std::move(other.ColliderCBuffer))
+		ColliderType(other.ColliderType),
+		Min(std::move(other.Min)),
+		Max(std::move(other.Max)),
+		RenderScale(std::move(other.RenderScale)),
+		bDrawDebug(other.bDrawDebug),
+		Profile(other.Profile),
+		Shader(std::move(other.Shader)),
+		Mesh(std::move(other.Mesh)),
+		TransformCBuffer(std::move(other.TransformCBuffer)),
+		ColliderCBuffer(std::move(other.ColliderCBuffer))
 	{
+		other.Profile = nullptr;
 	}
 
-	CCollider& operator=(const CCollider& other)
-	{
-		if (this == &other)
-			return *this;
-		CSceneComponent::operator =(other);
-		ColliderType = other.ColliderType;
-		Min = other.Min;
-		Max = other.Max;
-		RenderScale = other.RenderScale;
-		bDrawDebug = other.bDrawDebug;
-		bCollide = other.bCollide;
-		Shader = other.Shader;
-		Mesh = other.Mesh;
-		TransformCBuffer = other.TransformCBuffer;
-		ColliderCBuffer = other.ColliderCBuffer;
-		return *this;
-	}
+	CCollider& operator=(const CCollider& other) = default;
 
 	CCollider& operator=(CCollider&& other) noexcept
 	{
@@ -97,7 +100,7 @@ protected:
 		Max = std::move(other.Max);
 		RenderScale = std::move(other.RenderScale);
 		bDrawDebug = other.bDrawDebug;
-		bCollide = other.bCollide;
+		Profile = std::move(other.Profile);
 		Shader = std::move(other.Shader);
 		Mesh = std::move(other.Mesh);
 		TransformCBuffer = std::move(other.TransformCBuffer);
@@ -106,6 +109,6 @@ protected:
 	}
 
 public:
-	~CCollider() override = default;
+	~CCollider() override;
 };
 

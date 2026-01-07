@@ -122,6 +122,7 @@ protected:
 	bool bAlive = true;
 
 public:
+	virtual void Begin();
 	virtual bool Init();
 	virtual void Update(const float DeltaTime);
 	virtual void PostUpdate(const float DeltaTime);

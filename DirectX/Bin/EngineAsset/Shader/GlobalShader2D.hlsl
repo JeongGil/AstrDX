@@ -25,7 +25,9 @@ VS_OUTPUT_COLOR2D Color2DVS(VS_INPUT_COLOR2D input)
 {
 	VS_OUTPUT_COLOR2D output = (VS_OUTPUT_COLOR2D) 0;
 
-	output.Pos = mul(float4(input.Pos, 1.f), cbWVP);
+	float3 Pos = input.Pos - cbPivotSize;
+
+	output.Pos = mul(float4(Pos, 1.f), cbWVP);
 	output.Color = input.Color;
 
 	return output;
@@ -69,7 +71,9 @@ VS_OUTPUT_TEX DefaultTexVS(VS_INPUT_TEX input)
 {
 	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
 
-	output.Pos = mul(float4(input.Pos, 1.f), cbWVP);
+	float3 Pos = input.Pos - cbPivotSize;
+
+	output.Pos = mul(float4(Pos, 1.f), cbWVP);
 	output.UV = ComputeAnimation2DUV(input.UV);
 
 	return output;

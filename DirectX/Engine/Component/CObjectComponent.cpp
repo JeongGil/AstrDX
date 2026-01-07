@@ -1,5 +1,10 @@
 #include "CObjectComponent.h"
 
+void CObjectComponent::Begin()
+{
+	CComponent::Begin();
+}
+
 bool CObjectComponent::Init()
 {
 	if (!CComponent::Init())

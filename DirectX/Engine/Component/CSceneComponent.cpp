@@ -9,9 +9,9 @@ void CSceneComponent::AddChild(const std::weak_ptr<CSceneComponent>& Child)
 		Shared->Parent = std::dynamic_pointer_cast<CSceneComponent>(shared_from_this());
 		Children.push_back(Child);
 
-		Shared->SetRelativeScale(RelativeScale);
-		Shared->SetRelativeRotation(RelativeRotation);
-		Shared->SetRelativePosition(RelativePosition);
+		//Shared->SetRelativeScale(RelativeScale);
+		//Shared->SetRelativeRotation(RelativeRotation);
+		//Shared->SetRelativePosition(RelativePosition);
 	}
 }
 
@@ -575,6 +575,15 @@ void CSceneComponent::InheritWorldPosition()
 			Child->InheritWorldPosition();
 		}
 	}
+}
+
+void CSceneComponent::Begin()
+{
+	CComponent::Begin();
+
+	InheritRelativeScale();
+	InheritRelativeRotation();
+	InheritRelativePosition();
 }
 
 bool CSceneComponent::Init()

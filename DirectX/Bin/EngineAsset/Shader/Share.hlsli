@@ -16,6 +16,8 @@ cbuffer CBTransform : register(b0)
 	matrix cbProj;
 	matrix cbWV;
 	matrix cbWVP;
+	float3 cbPivotSize;
+	float cbTransformEmpty;
 }
 
 cbuffer CBMaterial : register(b1)

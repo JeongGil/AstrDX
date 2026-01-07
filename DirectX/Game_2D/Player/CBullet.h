@@ -3,6 +3,7 @@
 
 #include "Object/CGameObject.h"
 
+class CColliderBox2D;
 class CProjectileMovementComponent;
 class CMeshComponent;
 
@@ -58,6 +59,7 @@ public:
 		CollisionRadius = sqrtf(HalfExtent.x * HalfExtent.x + HalfExtent.y * HalfExtent.y);
 	}
 
+	void SetCollision(const std::string& Key);
 	void SetCollisionTargetName(const std::string& CollisionTargetName) { this->CollisionTargetName = CollisionTargetName; }
 
 	void SetEnableMove(bool bEnable);
@@ -68,6 +70,9 @@ public:
 
 private:
 	void MoveEndFunction();
+
+	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
+	void OnCollisionEnd(CCollider* Other);
 
 private:
 	float Distance = 600;
@@ -86,6 +91,7 @@ private:
 private:
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CProjectileMovementComponent> MovementComponent;
+	std::weak_ptr<CColliderBox2D> Body;
 
 public:
 	bool Init() override;

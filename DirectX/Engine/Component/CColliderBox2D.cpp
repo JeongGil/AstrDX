@@ -1,10 +1,25 @@
 #include "CColliderBox2D.h"
 
-#include "Asset/CAssetManager.h"
-#include "Asset/Mesh/CMeshManager.h"
-#include "Asset/Shader/CCBufferCollider.h"
-#include "Asset/Shader/CShaderManager.h"
-#include "World/CWorld.h"
+#include "CCollision.h"
+#include "../Asset/CAssetManager.h"
+#include "../Asset/Mesh/CMeshManager.h"
+#include "../Asset/Shader/CCBufferCollider.h"
+#include "../Asset/Shader/CShaderManager.h"
+#include "../World/CWorld.h"
+#include "CColliderSphere2D.h"
+
+bool CColliderBox2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other)
+{
+	switch (Other->GetColliderType()) 
+	{
+	case EColliderType::Box2D:
+		return CCollision::CollideBox2DToBox2D(OutHitPoint, this, dynamic_cast<CColliderBox2D*>(Other.get()));
+	case EColliderType::Sphere2D:
+		return false;
+	default:
+		return false;
+	}
+}
 
 void CColliderBox2D::SetDrawDebug(bool bDrawDebug)
 {

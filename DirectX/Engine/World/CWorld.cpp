@@ -20,13 +20,22 @@ bool CWorld::Init()
 		return false;
 	}
 
+	Collision.reset(new CWorldCollision);
+	if (!Collision->Init())
+	{
+		return false;
+	}
+
 	Objects.reserve(10000);
+	StartObjects.reserve(200);
 
 	return true;
 }
 
 void CWorld::Update(const float DeltaTime)
 {
+	Begin();
+
 	Input->Update(DeltaTime);
 
 	auto Curr = Objects.begin();
@@ -50,6 +59,8 @@ void CWorld::Update(const float DeltaTime)
 
 void CWorld::PostUpdate(const float DeltaTime)
 {
+	Begin();
+
 	auto Curr = Objects.begin();
 	const auto End = Objects.end();
 	while (Curr != End)
@@ -63,10 +74,14 @@ void CWorld::PostUpdate(const float DeltaTime)
 		Curr->second->PostUpdate(DeltaTime);
 		++Curr;
 	}
+
+	Collision->Update(DeltaTime);
 }
 
 void CWorld::Render()
 {
+	Begin();
+
 	auto Curr = Objects.begin();
 	const auto End = Objects.end();
 	while (Curr != End)
@@ -80,6 +95,19 @@ void CWorld::Render()
 		Curr->second->Render();
 		++Curr;
 	}
+}
+
+void CWorld::Begin()
+{
+	for (const auto& WeakObject : StartObjects)
+	{
+		if (auto Object = WeakObject.lock())
+		{
+			Object->Begin();
+		}
+	}
+
+	StartObjects.clear();
 }
 
 CWorld::CWorld()

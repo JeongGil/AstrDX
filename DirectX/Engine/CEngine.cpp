@@ -1,5 +1,6 @@
 #include "CEngine.h"
 
+#include "CCollisionInfoManager.h"
 #include "CDevice.h"
 #include "CTimer.h"
 #include "Asset/CAssetManager.h"
@@ -44,12 +45,19 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 		return false;
 	}
 
+	if (!CCollisionInfoManager::GetInst()->Init())
+	{
+		return false;
+	}
+
 	if (!CAssetManager::GetInst()->Init())
 	{
 		return false;
 	}
 
 	CMeshComponent::CreateEmptyAnimationCBuffer();
+
+	Setting->Init();
 
 	if (!CWorldManager::GetInst()->Init())
 	{
@@ -180,6 +188,8 @@ CEngine::CEngine()
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	// put a breakpoint on memory allocation number from _CrtSetDbgFlag.
 	//_crtBreakAlloc(151);
+
+	Setting.reset(new CEngineSetting);
 }
 
 CEngine::~CEngine()
@@ -191,6 +201,8 @@ CEngine::~CEngine()
 	CObject::ClearCDO();
 
 	CRenderManager::DestroyInst();
+
+	CCollisionInfoManager::DestroyInst();
 
 	CAssetManager::DestroyInst();
 

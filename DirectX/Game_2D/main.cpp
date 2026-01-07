@@ -8,6 +8,7 @@
 #include "World/CMainWorld.h"
 #include "World/CWorldManager.h"
 #include "Component/CStateComponent.h"
+#include "CGlobalSetting.h"
 
 #ifdef _DEBUG
 // link debug lib
@@ -24,6 +25,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ LPWSTR    lpCmdLine,
 	_In_ int       nCmdShow)
 {
+	CEngine::GetInst()->CreateEngineSetting<CGlobalSetting>();
+
 	if (!CEngine::GetInst()->Init(hInstance, TEXT("GameClient"),
 		IDI_ICON1, IDI_ICON1,
 		1280, 720, true))

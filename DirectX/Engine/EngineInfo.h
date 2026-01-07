@@ -201,3 +201,54 @@ struct FBox2DInfo
 
 	FVector2 HalfExtent = FVector2(1.f, 1.f);
 };
+
+namespace ECollisionChannel
+{
+	enum Type
+	{
+		Static,
+		Player,
+		Monster,
+		Custom1,
+		Custom2,
+		Custom3,
+		Custom4,
+		Custom5,
+		Custom6,
+		Custom7,
+		Custom8,
+		Custom9,
+		Custom10,
+		End,
+	};
+}
+
+namespace ECollisionInteraction
+{
+	enum Type
+	{
+		Ignore,
+		Collision,
+		End,
+	};
+}
+
+struct FCollisionChannel
+{
+	std::string Name;
+	ECollisionChannel::Type Channel = ECollisionChannel::Static;
+};
+
+struct FCollisionProfile
+{
+	std::string Name;
+	FCollisionChannel* Channel;
+	bool bEnable;
+	ECollisionInteraction::Type Interaction[ECollisionInteraction::End] = {};
+};
+
+struct FSphere2DInfo
+{
+	FVector Center;
+	float Radius = 0.f;
+};

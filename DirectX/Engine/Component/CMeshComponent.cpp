@@ -271,6 +271,8 @@ void CMeshComponent::Render()
 	CBufferTransform->SetViewMatrix(ViewMat);
 	CBufferTransform->SetProjectionMatrix(ProjMat);
 
+	FVector PivotSize = Pivot * Mesh->GetMeshSize();
+
 	CBufferTransform->UpdateBuffer();
 
 	Shader->SetShader();

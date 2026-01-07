@@ -22,6 +22,8 @@ private:
 
 	void MoveUp();
 	void MoveDown();
+	void MoveLeft();
+	void MoveRight();
 	void AttackKey();
 	void Skill1Press();
 	void Skill1Hold();

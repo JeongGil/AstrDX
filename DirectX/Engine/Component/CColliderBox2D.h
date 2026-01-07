@@ -1,5 +1,5 @@
 #pragma once
-#include "Component/CCollider.h"
+#include "CCollider.h"
 
 class CColliderBox2D :
     public CCollider
@@ -19,6 +19,8 @@ protected:
 	FBox2DInfo Info;
 
 public:
+	bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) override;
+
 	void SetDrawDebug(bool bDrawDebug) override;
 	bool Init() override;
 	void Update(const float DeltaTime) override;

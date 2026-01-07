@@ -1,7 +1,8 @@
 #pragma once
 
-#include "EngineInfo.h"
+#include "CEngineSetting.h"
 #include "CObject.h"
+#include "EngineInfo.h"
 
 class CEngine
 {
@@ -12,10 +13,15 @@ public:
 		CObject::CreateCDO<T>();
 	}
 
-	std::mt19937_64& GetMT()
+	template <typename T>
+	std::weak_ptr<T> CreateEngineSetting()
 	{
-		return MT;
+		Setting.reset(new T);
+
+		return std::dynamic_pointer_cast<T>(Setting);
 	}
+
+	std::mt19937_64& GetMT() { return MT; }
 
 	[[nodiscard]] HINSTANCE GetWindowInstance() const { return hInst; }
 	[[nodiscard]] HWND GetWindowHandle() const { return hWnd; }
@@ -117,6 +123,8 @@ private:
 private:
 	HINSTANCE hInst = nullptr;
 	HWND hWnd = nullptr;
+
+	std::shared_ptr<CEngineSetting> Setting;
 
 	inline static bool bLoop = true;
 

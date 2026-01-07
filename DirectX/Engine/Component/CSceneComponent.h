@@ -58,6 +58,12 @@ public:
 	[[nodiscard]] FVector GetVelocity() const { return Velocity; }
 	[[nodiscard]] float GetSpeed() const { return Velocity.Length(); }
 
+	[[nodiscard]] FVector GetPivot() const { return Pivot; }
+	void SetPivot(const FVector& Pivot) { this->Pivot = Pivot; }
+	void SetPivot(const FVector2& Pivot) { this->Pivot = FVector(Pivot.x, Pivot.y, 0.f); }
+	void SetPivot(float x, float y, float z) { Pivot = FVector(x, y, z); }
+	void SetPivot(float x, float y) { Pivot = FVector(x, y, 0.f); }
+
 	void SetInheritScale(bool bInherit);
 	void SetInheritRotation(bool bInherit);
 
@@ -152,6 +158,8 @@ protected:
 	bool bInheritScale = true;
 	bool bInheritRotation = true;
 
+	FVector Pivot;
+
 	FVector RelativeScale = FVector::One;
 	FVector RelativeRotation;
 	FVector RelativePosition;
@@ -186,6 +194,7 @@ protected:
 	FMatrix WorldMatrix;
 
 public:
+	void Begin() override;
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 

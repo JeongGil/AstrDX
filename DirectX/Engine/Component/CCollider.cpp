@@ -1,5 +1,6 @@
 #include "CCollider.h"
 
+#include "../CCollisionInfoManager.h"
 #include "../Asset/Shader/CCBufferCollider.h"
 #include "../Asset/Shader/CCBufferTransform.h"
 #include "../Asset/Shader/CShader.h"
@@ -21,6 +22,48 @@ void CCollider::SetDrawDebug(bool bDrawDebug)
 	}
 }
 
+void CCollider::SetCollisionProfile(const std::string& Key)
+{
+	Profile = CCollisionInfoManager::GetInst()->FindProfile(Key);
+}
+
+bool CCollider::CheckCollidingObject(CCollider* Other) const
+{
+	return CollidingObjects.contains(Other);
+}
+
+void CCollider::EraseCollidingObject(CCollider* Other)
+{
+	auto It = CollidingObjects.find(Other);
+	if (It != CollidingObjects.end())
+	{
+		CollidingObjects.erase(It);
+	}
+}
+
+void CCollider::CallOnCollisionBegin(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other)
+{
+	if (auto Dest = Other.lock())
+	{
+		CollidingObjects.emplace(Dest.get(), Other);
+
+		if (OnCollisionBegin)
+		{
+			OnCollisionBegin(HitPoint, Dest.get());
+		}
+	}
+}
+
+void CCollider::CallOnCollisionEnd(CCollider* Other)
+{
+	CollidingObjects.erase(Other);
+
+	if (OnCollisionEnd)
+	{
+		OnCollisionEnd(Other);
+	}
+}
+
 bool CCollider::Init()
 {
 	if (!CSceneComponent::Init())
@@ -32,6 +75,16 @@ bool CCollider::Init()
 	{
 		TransformCBuffer.reset(new CCBufferTransform);
 		TransformCBuffer->Init();
+	}
+
+	Profile = CCollisionInfoManager::GetInst()->FindProfile("Static");
+
+	if (auto World = this->World.lock())
+	{
+		if (auto ColMgr = World->GetCollision().lock())
+		{
+			ColMgr->AddCollider(std::dynamic_pointer_cast<CCollider>(shared_from_this()));
+		}
 	}
 
 	return true;
@@ -65,6 +118,8 @@ void CCollider::Render()
 			}
 		}
 
+		auto Mesh = this->Mesh.lock();
+
 		FMatrix ScaleMat;
 		FMatrix RotMat;
 		FMatrix TransMat;
@@ -80,9 +135,12 @@ void CCollider::Render()
 		TransformCBuffer->SetViewMatrix(ViewMat);
 		TransformCBuffer->SetProjectionMatrix(ProjMat);
 
+		//FVector PivotSize = Pivot * Mesh->GetMeshSize();
+		TransformCBuffer->SetPivotSize(Pivot);
+
 		TransformCBuffer->UpdateBuffer();
 
-		ColliderCBuffer->SetColor(bCollide ? FColor::Red : FColor::Green);
+		ColliderCBuffer->SetColor(IsColliding() ? FColor::Red : FColor::Green);
 
 		ColliderCBuffer->UpdateBuffer();
 
@@ -91,9 +149,17 @@ void CCollider::Render()
 			Shader->SetShader();
 		}
 
-		if (auto Mesh = this->Mesh.lock())
+		Mesh->Render();
+	}
+}
+
+CCollider::~CCollider()
+{
+	for (auto WeakOther : CollidingObjects | std::views::values)
+	{
+		if (auto Other = WeakOther.lock())
 		{
-			Mesh->Render();
+			Other->EraseCollidingObject(this);
 		}
 	}
 }
