@@ -34,13 +34,27 @@ protected:
 	{
 		std::type_index Key(typeid(T));
 		auto It = CDOs.find(Key);
-		return It == CDOs.end() ? std::weak_ptr<T>() : std::dynamic_pointer_cast<T>(It->second);
+		if (It == CDOs.end())
+		{
+			return std::weak_ptr<T>();
+		}
+		else
+		{
+			return std::dynamic_pointer_cast<T>(It->second);
+		}
 	}
 
 	static std::weak_ptr<CObject> FindCDO(std::type_index Key)
 	{
 		auto It = CDOs.find(Key);
-		return It == CDOs.end() ? std::weak_ptr<CObject>() : It->second;
+		if (It == CDOs.end())
+		{
+			return std::weak_ptr<CObject>();
+		}
+		else
+		{
+			return It->second;
+		}
 	}
 
 private:

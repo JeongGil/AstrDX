@@ -38,7 +38,14 @@ void CTextureManager::ReleaseAsset(const std::string& Key)
 std::weak_ptr<CTexture> CTextureManager::FindTexture(const std::string& Key)
 {
 	auto It = Textures.find(Key);
-	return It == Textures.end() ? std::weak_ptr<CTexture>() : It->second;
+	if (It == Textures.end())
+	{
+		return std::weak_ptr<CTexture>();
+	}
+	else
+	{
+		return It->second;
+	}
 }
 
 bool CTextureManager::LoadTexture(const std::string& Key, const TCHAR* FileName, const std::string& PathName)
@@ -170,7 +177,14 @@ bool CTextureManager::CreateSampler(const std::string& Key, D3D11_FILTER Filter,
 ID3D11SamplerState* CTextureManager::FindSampler(const std::string& Key)
 {
 	auto It = Samplers.find(Key);
-	return It == Samplers.end() ? nullptr : It->second;
+	if (It == Samplers.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return It->second;
+	}
 }
 
 void CTextureManager::SetSampler(const std::string& Key, int Register, unsigned int ShaderBufferType)

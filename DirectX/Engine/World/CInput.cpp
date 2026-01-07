@@ -66,13 +66,27 @@ void CInput::SetKeyShift(const std::string& Key, bool Shift)
 FKeyState* CInput::FindKeyState(unsigned char KeyCode)
 {
 	auto It = KeyStates.find(KeyCode);
-	return It == KeyStates.end() ? nullptr : It->second;
+	if (It == KeyStates.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return It->second;
+	}
 }
 
 FBindKey* CInput::FindBindKey(const std::string& Key)
 {
 	auto It = BindKeys.find(Key);
-	return It == BindKeys.end() ? nullptr : It->second.get();
+	if (It == BindKeys.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return It->second.get();
+	}
 }
 
 unsigned char CInput::ConvertKey(unsigned char KeyCode)

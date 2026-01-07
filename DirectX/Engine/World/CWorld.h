@@ -93,8 +93,14 @@ public:
 	std::weak_ptr<T> FindObject(const std::string& Key)
 	{
 		const auto It = Objects.find(Key);
-
-		return It == Objects.end() ? std::weak_ptr<T>() : std::dynamic_pointer_cast<T>(It->second);
+		if (It == Objects.end())
+		{
+			return std::weak_ptr<T>();
+		}
+		else
+		{
+			return std::dynamic_pointer_cast<T>(It->second);
+		}
 	}
 
 	template <typename T>

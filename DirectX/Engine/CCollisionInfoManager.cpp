@@ -175,13 +175,27 @@ bool CCollisionInfoManager::SetProfileEnable(const std::string& Key, bool bEnabl
 FCollisionProfile* CCollisionInfoManager::FindProfile(const std::string& Key)
 {
 	auto It = Profiles.find(Key);
-	return It == Profiles.end() ? nullptr : It->second;
+	if (It == Profiles.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return It->second;
+	}
 }
 
 FCollisionChannel* CCollisionInfoManager::FindChannel(const std::string& Key)
 {
 	auto It = Channels.find(Key);
-	return It == Channels.end() ? nullptr : It->second;
+	if (It == Channels.end())
+	{
+		return nullptr;
+	}
+	else
+	{
+		return It->second;
+	}
 }
 
 CCollisionInfoManager::~CCollisionInfoManager()

@@ -80,13 +80,27 @@ void CShaderManager::ReleaseCBuffer(const std::string& Key)
 std::weak_ptr<CShader> CShaderManager::FindShader(const std::string& Key)
 {
 	const auto it = Shaders.find(Key);
-	return it == Shaders.end() ? std::weak_ptr<CShader>() : it->second;
+	if (it == Shaders.end())
+	{
+		return std::weak_ptr<CShader>();
+	}
+	else
+	{
+		return it->second;
+	}
 }
 
 std::weak_ptr<CConstantBuffer> CShaderManager::FindCBuffer(const std::string& Key)
 {
 	const auto it = CBuffers.find(Key);
-	return it == CBuffers.end() ? std::weak_ptr<CConstantBuffer>() : it->second;
+	if (it == CBuffers.end())
+	{
+		return std::weak_ptr<CConstantBuffer>();
+	}
+	else
+	{
+		return it->second;
+	}
 }
 
 bool CShaderManager::CreateCBuffer(const std::string& Key, int Size, int Register, int ShaderBuffer)

@@ -35,7 +35,14 @@ bool CAnimation2DManager::CreateAnimation(const std::string& AnimKey)
 std::weak_ptr<CAnimation2D> CAnimation2DManager::FindAnimation(const std::string& AnimKey)
 {
 	auto It =Animations.find(AnimKey);
-	return It == Animations.end() ? std::weak_ptr<CAnimation2D>() : It->second;
+	if (It == Animations.end())
+	{
+		return std::weak_ptr<CAnimation2D>();
+	}
+	else
+	{
+		return It->second;
+	}
 }
 
 bool CAnimation2DManager::SetAnimation2DTextureType(const std::string& AnimKey, EAnimation2DTextureType TextureType)

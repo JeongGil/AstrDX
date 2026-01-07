@@ -215,7 +215,14 @@ void CRenderManager::ResetState(const std::string& Key)
 std::weak_ptr<CRenderState> CRenderManager::FindRenderState(const std::string& Key)
 {
 	auto It = RenderStates.find(Key);
-	return It == RenderStates.end() ? std::weak_ptr<CRenderState>() : It->second;
+	if (It == RenderStates.end())
+	{
+		return std::weak_ptr<CRenderState>();
+	}
+	else
+	{
+		return It->second;
+	}
 }
 
 bool CRenderManager::Init()

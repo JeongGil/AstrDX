@@ -140,7 +140,14 @@ void CCollider::Render()
 
 		TransformCBuffer->UpdateBuffer();
 
-		ColliderCBuffer->SetColor(IsColliding() ? FColor::Red : FColor::Green);
+		if (IsColliding())
+		{
+			ColliderCBuffer->SetColor(FColor::Red);
+		}
+		else
+		{
+			ColliderCBuffer->SetColor(FColor::Green);
+		}
 
 		ColliderCBuffer->UpdateBuffer();
 
