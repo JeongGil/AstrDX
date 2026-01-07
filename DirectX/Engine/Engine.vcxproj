@@ -204,6 +204,7 @@
     <ClInclude Include="Component\CCameraComponent.h" />
     <ClInclude Include="Component\CCollider.h" />
     <ClInclude Include="Component\CColliderBox2D.h" />
+    <ClInclude Include="Component\CColliderLine2D.h" />
     <ClInclude Include="Component\CColliderSphere2D.h" />
     <ClInclude Include="Component\CCollision.h" />
     <ClInclude Include="Component\CComponent.h" />
@@ -275,6 +276,7 @@
     <ClCompile Include="Component\CCameraComponent.cpp" />
     <ClCompile Include="Component\CCollider.cpp" />
     <ClCompile Include="Component\CColliderBox2D.cpp" />
+    <ClCompile Include="Component\CColliderLine2D.cpp" />
     <ClCompile Include="Component\CColliderSphere2D.cpp" />
     <ClCompile Include="Component\CCollision.cpp" />
     <ClCompile Include="Component\CComponent.cpp" />

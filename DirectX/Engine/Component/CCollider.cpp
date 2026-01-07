@@ -127,7 +127,7 @@ void CCollider::Render()
 
 		ScaleMat.Scaling(RenderScale);
 		RotMat.Rotation(WorldRotation);
-		TransMat.Translation(WorldPosition);
+		TransMat.Translation(WorldPosition + Offset);
 
 		WorldMat = ScaleMat * RotMat * TransMat;
 
@@ -135,8 +135,8 @@ void CCollider::Render()
 		TransformCBuffer->SetViewMatrix(ViewMat);
 		TransformCBuffer->SetProjectionMatrix(ProjMat);
 
-		//FVector PivotSize = Pivot * Mesh->GetMeshSize();
-		TransformCBuffer->SetPivotSize(Pivot);
+		FVector PivotSize = Pivot * Mesh->GetMeshSize();
+		TransformCBuffer->SetPivotSize(PivotSize);
 
 		TransformCBuffer->UpdateBuffer();
 

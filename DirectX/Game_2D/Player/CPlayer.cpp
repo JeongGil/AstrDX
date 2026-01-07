@@ -5,13 +5,15 @@
 #include "CBullet.h"
 #include "CDevice.h"
 
+#include <CColliderBox2D.h>
 #include "CTimer.h"
 #include "../Component/CStateComponent.h"
 #include "Component/CAnimation2DComponent.h"
 #include "Component/CCameraComponent.h"
+#include "Component/CColliderLine2D.h"
+#include "Component/CColliderSphere2D.h"
 #include "Component/CMeshComponent.h"
 #include "Component/CObjectMovementComponent.h"
-#include <CColliderBox2D.h>
 
 void CPlayer::TestNotify()
 {
@@ -149,11 +151,12 @@ bool CPlayer::Init()
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");
-		Mesh->SetMesh("CenterRectTex");
+		Mesh->SetMesh("RectTex");
 		Mesh->SetWorldScale(100, 100);
 
 		Mesh->SetMaterialBaseColor(0, FColor(1, 0, 0, 0));
 		Mesh->SetBlendState(0, "AlphaBlend");
+		Mesh->SetPivot(0.5f, 0.f);
 	}
 
 	Body = CreateComponent<CColliderBox2D>("Body");
@@ -163,6 +166,28 @@ bool CPlayer::Init()
 		Body->SetBoxExtend(100.f, 100.f);
 		Body->SetDrawDebug(true);
 		Body->SetInheritScale(false);
+		Body->SetCenterOffset(0.f, 50.f, 0.f);
+	}
+
+	Sphere2D = CreateComponent<CColliderSphere2D>("Sphere2D");
+	if (auto Sphere2D = this->Sphere2D.lock())
+	{
+		Sphere2D->SetCollisionProfile("Player");
+		Sphere2D->SetRadius(sqrtf(20000.f) * 0.5f);
+		Sphere2D->SetDrawDebug(true);
+		Sphere2D->SetInheritScale(false);
+		Sphere2D->SetCenterOffset(0.f, 50.f, 0.f);
+	}
+
+	Line2D = CreateComponent<CColliderLine2D>("Line2D");
+	if (auto Line2D = this->Line2D.lock())
+	{
+		Line2D->SetCollisionProfile("Player");
+		//Line2D->SetRadius(sqrtf(20000.f) * 0.5f);
+		Line2D->SetLineDistance(200.f);
+		Line2D->SetDrawDebug(true);
+		Line2D->SetInheritScale(false);
+		Line2D->SetCenterOffset(0.f, 100.f, 0.f);
 	}
 
 	Rotation = CreateComponent<CSceneComponent>("Rotation");

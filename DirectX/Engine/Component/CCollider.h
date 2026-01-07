@@ -10,12 +10,23 @@ class CCollider abstract :
 	public CSceneComponent
 {
 public:
-	EColliderType GetColliderType() const { return ColliderType; }
+	EColliderType GetColliderType() const
+	{
+		return ColliderType;
+	}
 
-	bool GetDrawDebug() const { return bDrawDebug; }
+	bool GetDrawDebug() const
+	{
+		return bDrawDebug;
+	}
+
 	virtual void SetDrawDebug(bool bDrawDebug);
 
-	FCollisionProfile* GetCollisionProfile() const { return Profile; }
+	FCollisionProfile* GetCollisionProfile() const
+	{
+		return Profile;
+	}
+
 	void SetCollisionProfile(const std::string& Key);
 
 	bool CheckCollidingObject(CCollider* Other) const;
@@ -38,6 +49,16 @@ public:
 		OnCollisionEnd = std::bind(Func, Obj, std::placeholders::_1);
 	}
 
+	void SetCenterOffset(const FVector& Offset)
+	{
+		this->Offset = Offset;
+	}
+
+	void SetCenterOffset(float x, float y, float z)
+	{
+		Offset = FVector(x, y, z);
+	}
+
 protected:
 	bool IsColliding() const { return CollidingObjects.empty(); }
 
@@ -48,6 +69,8 @@ protected:
 	FVector RenderScale;
 	bool bDrawDebug = false;
 	FCollisionProfile* Profile = nullptr;
+
+	FVector Offset;
 
 	std::unordered_map<CCollider*, std::weak_ptr<CCollider>> CollidingObjects;
 

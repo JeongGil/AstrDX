@@ -5,7 +5,7 @@
 bool CMeshManager::Init()
 {
 	// Create ColorMesh rectangle
-	FVertexColor CenterRectColor[4] =
+	FVertexColor CenterRectColor[4]
 	{
 		FVertexColor(-0.5f, 0.5f, 0.f, 1.f, 0.f, 0.f, 1.f),
 		FVertexColor(0.5f, 0.5f, 0.f, 0.f, 1.f, 0.f, 1.f),
@@ -41,7 +41,7 @@ bool CMeshManager::Init()
 		return false;
 	}
 
-	FVector LBFrameRect[4] =
+	FVector LBFrameRect[4]
 	{
 		FVector(0.f, 1.f, 0.f),
 		FVector(1.f, 1.f, 0.f),
@@ -99,7 +99,24 @@ bool CMeshManager::Init()
 		return false;
 	}
 
-		FVertexColor CenterCubeColor[8] =
+	FVertexTex	RectTexture[4]
+	{
+		FVertexTex(0.f, 1.f, 0.f, 0.f, 0.f),
+		FVertexTex(1.f, 1.f, 0.f, 1.f, 0.f),
+		FVertexTex(0.f, 0.f, 0.f, 0.f, 1.f),
+		FVertexTex(1.f, 0.f, 0.f, 1.f, 1.f)
+	};
+
+	if (!CreateMesh("Mesh_RectTex", RectTexture,
+		sizeof(FVertexTex),
+		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
+		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT,
+		D3D11_USAGE_IMMUTABLE))
+	{
+		return false;
+	}
+
+	FVertexColor CenterCubeColor[8]
 	{
 		FVertexColor(-0.5f, 0.5f, -0.5f, 1.f, 0.f, 0.f, 1.f),
 		FVertexColor(0.5f, 0.5f, -0.5f, 0.f, 1.f, 0.f, 1.f),
@@ -124,6 +141,32 @@ bool CMeshManager::Init()
 		return false;
 	}
 
+	FVector LineUp[2]
+	{
+		FVector(0.f, 0.f, 0.f),
+		FVector(0.f, 1.f, 0.f)
+	};
+
+	if (!CreateMesh("Mesh_LineUP2D", LineUp,
+		sizeof(FVector),
+		2, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP))
+	{
+		return false;
+	}
+
+	FVector LineRight[2]
+	{
+		FVector(0.f, 0.f, 0.f),
+		FVector(1.f, 0.f, 0.f)
+	};
+
+	if (!CreateMesh("Mesh_LineRight2D", LineRight,
+		sizeof(FVector),
+		2, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -140,8 +183,8 @@ void CMeshManager::ReleaseAsset(const std::string& Key)
 }
 
 bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int VertexSize, int VertexCount,
-                              D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
-                              DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
+	D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
+	DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
 {
 	if (Meshes.contains(Key))
 	{

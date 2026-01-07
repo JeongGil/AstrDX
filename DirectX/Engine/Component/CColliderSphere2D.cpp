@@ -1,5 +1,6 @@
 #include "CColliderSphere2D.h"
 
+#include "CCollision.h"
 #include "../Asset/CAssetManager.h"
 #include "../Asset/Shader/CShaderManager.h"
 #include "../World/CWorld.h"
@@ -99,8 +100,11 @@ bool CColliderSphere2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider
 	{
 	case EColliderType::Box2D:
 		return false;
+		//return CCollision::CollideBox2DToBox2D(OutHitPoint, dynamic_cast<CColliderBox2D*>(Other.get()), this);
 	case EColliderType::Sphere2D:
 		return false;
+	case EColliderType::Line2D:
+		break;
 	default:
 		return false;
 	}

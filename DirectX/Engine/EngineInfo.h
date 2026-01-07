@@ -188,6 +188,7 @@ enum class EColliderType
 {
 	Box2D,
 	Sphere2D,
+	Line2D,
 };
 
 struct FBox2DInfo
@@ -251,4 +252,10 @@ struct FSphere2DInfo
 {
 	FVector Center;
 	float Radius = 0.f;
+};
+
+struct FLine2DInfo
+{
+	FVector Start;
+	FVector End;
 };

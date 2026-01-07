@@ -136,6 +136,9 @@
     <Filter Include="Core\Setting">
       <UniqueIdentifier>{8f3fb4a7-0ceb-4665-b67f-11a41542e087}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Compnent\SceneComponent\Collider\3D">
+      <UniqueIdentifier>{2fd3b142-3409-4f5c-b320-e1b04233d630}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -345,6 +348,9 @@
     <ClInclude Include="Component\CColliderSphere2D.h">
       <Filter>Compnent\SceneComponent\Collider\2D</Filter>
     </ClInclude>
+    <ClInclude Include="Component\CColliderLine2D.h">
+      <Filter>Compnent\SceneComponent\Collider\2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -532,6 +538,9 @@
       <Filter>Core\Setting</Filter>
     </ClCompile>
     <ClCompile Include="Component\CColliderSphere2D.cpp">
+      <Filter>Compnent\SceneComponent\Collider\2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CColliderLine2D.cpp">
       <Filter>Compnent\SceneComponent\Collider\2D</Filter>
     </ClCompile>
   </ItemGroup>

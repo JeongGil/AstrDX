@@ -1,10 +1,11 @@
 #include "CMonster.h"
 
+#include <CColliderBox2D.h>
 #include "../Player/CBullet.h"
-#include "World/CWorld.h"
-#include "Component/CMeshComponent.h"
 #include "Component/CAnimation2DComponent.h"
 #include "Component/CColliderSphere2D.h"
+#include "Component/CMeshComponent.h"
+#include "World/CWorld.h"
 
 bool CMonster::Init()
 {
@@ -36,11 +37,11 @@ bool CMonster::Init()
 		Anim->SetLoop("MonsterIdle", true);
 	}
 
-	Body = CreateComponent<CColliderSphere2D>("Body");
+	Body = CreateComponent<CColliderBox2D>("Body");
 	if (auto Body = this->Body.lock())
 	{
 		Body->SetCollisionProfile("Monster");
-		Body->SetRadius(sqrtf(100.f * 100.f + 100.f * 100.f) * 0.5f);
+		Body->SetBoxExtend(100.f, 100.f);
 		Body->SetDrawDebug(true);
 		Body->SetInheritScale(false);
 	}

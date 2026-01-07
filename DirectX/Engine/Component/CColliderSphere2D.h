@@ -22,14 +22,11 @@ public:
 
 	[[nodiscard]] FSphere2DInfo GetInfo() const { return Info; }
 
-	void SetCenterOffset(const FVector& Offset) { this->Offset = Offset; }
-	void SetCenterOffset(float x, float y, float z) { this->Offset = FVector(x, y, z); }
 	void SetRadius(float Radius) { Info.Radius = Radius; }
 
 protected:
 	FSphere2DInfo Info;
-	FVector Offset;
-
+	
 protected:
 	CColliderSphere2D();
 	CColliderSphere2D(const CColliderSphere2D& other) = default;
