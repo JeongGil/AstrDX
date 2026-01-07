@@ -8,12 +8,27 @@ class CColliderBox2D :
 	friend CObject;
 
 public:
-	[[nodiscard]] FBox2DInfo GetInfo() const { return Info; }
+	[[nodiscard]] FBox2DInfo GetInfo() const
+	{
+		return Info;
+	}
 
-	void SetBoxExtend(const FVector2& Extend) { Info.HalfExtent = Extend * 0.5f; }
-	void SetBoxExtend(float X, float Y) { Info.HalfExtent = FVector2(X * 0.5f, Y * 0.5f); }
-	void SetBoxHalfExtend(const FVector2& HalfExtent) { Info.HalfExtent = HalfExtent; }
-	void SetBoxHalfExtend(float X, float Y) { Info.HalfExtent = FVector2(X, Y); }
+	void SetBoxExtend(const FVector2& Extend)
+	{
+		Info.HalfExtent = Extend * 0.5f;
+	}
+	void SetBoxExtend(float X, float Y)
+	{
+		Info.HalfExtent = FVector2(X * 0.5f, Y * 0.5f);
+	}
+	void SetBoxHalfExtend(const FVector2& HalfExtent)
+	{
+		Info.HalfExtent = HalfExtent;
+	}
+	void SetBoxHalfExtend(float X, float Y)
+	{
+		Info.HalfExtent = FVector2(X, Y);
+	}
 
 protected:
 	FBox2DInfo Info;

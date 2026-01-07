@@ -8,9 +8,19 @@ class CAsset :
 	friend class CWorldAssetManager;
 
 public:
-	[[nodiscard]] EAssetType GetAssetType() const { return AssetType; }
-	[[nodiscard]] const std::string& GetName() const { return Name; }
-	void SetName(const std::string& Name) { this->Name = Name; }
+	[[nodiscard]] EAssetType GetAssetType() const
+	{
+		return AssetType;
+	}
+
+	[[nodiscard]] const std::string& GetName() const
+	{
+		return Name;
+	}
+	void SetName(const std::string& Name)
+	{
+		this->Name = Name;
+	}
 
 protected:
 	std::string Name;

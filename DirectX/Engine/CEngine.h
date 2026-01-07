@@ -21,10 +21,20 @@ public:
 		return std::dynamic_pointer_cast<T>(Setting);
 	}
 
-	std::mt19937_64& GetMT() { return MT; }
+	std::mt19937_64& GetMT()
+	{
+		return MT;
+	}
 
-	[[nodiscard]] HINSTANCE GetWindowInstance() const { return hInst; }
-	[[nodiscard]] HWND GetWindowHandle() const { return hWnd; }
+	[[nodiscard]] HINSTANCE GetWindowInstance() const
+	{
+		return hInst;
+	}
+
+	[[nodiscard]] HWND GetWindowHandle() const
+	{
+		return hWnd;
+	}
 
 private:
 	void InitCDO();

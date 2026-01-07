@@ -4,7 +4,10 @@ class CCBufferCollider :
     public CConstantBufferData
 {
 public:
-	void SetColor(const FColor& Color) { Data.Color = Color; }
+	void SetColor(const FColor& Color)
+	{
+		Data.Color = Color;
+	}
 
 private:
 	FCBufferColliderData Data;

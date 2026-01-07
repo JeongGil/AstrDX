@@ -99,15 +99,17 @@ bool CColliderSphere2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider
 	switch (Other->GetColliderType())
 	{
 	case EColliderType::Box2D:
-		return false;
+		break;
 		//return CCollision::CollideBox2DToBox2D(OutHitPoint, dynamic_cast<CColliderBox2D*>(Other.get()), this);
 	case EColliderType::Sphere2D:
-		return false;
+		break;
 	case EColliderType::Line2D:
 		break;
 	default:
-		return false;
+		break;
 	}
+
+	return false;
 }
 
 CColliderSphere2D::CColliderSphere2D()

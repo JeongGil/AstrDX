@@ -18,24 +18,52 @@ public:
 	};
 
 public:
-	bool GetAlive() const { return bAlive; }
+	bool GetAlive() const
+	{
+		return bAlive;
+	}
 
-	std::weak_ptr<CWorld> GetWorld() const { return World; }
+	std::weak_ptr<CWorld> GetWorld() const {
+		return World; }
 
-	void SetWorld(std::weak_ptr<CWorld> World) { this->World = World; }
+	void SetWorld(std::weak_ptr<CWorld> World)
+	{
+		this->World = World;
+	}
 
-	std::weak_ptr<CGameObject> GetOwner() const { return Owner; }
+	std::weak_ptr<CGameObject> GetOwner() const
+	{
+		return Owner;
+	}
 
-	void SetOwner(std::weak_ptr<CGameObject> Owner) { this->Owner = Owner; }
+	void SetOwner(std::weak_ptr<CGameObject> Owner)
+	{
+		this->Owner = Owner;
+	}
 
-	const std::string& GetName() const { return Name; }
+	const std::string& GetName() const
+	{
+		return Name;
+	}
 
-	void SetName(const std::string& Name) { this->Name = Name; }
+	void SetName(const std::string& Name)
+	{
+		this->Name = Name;
+	}
 
-	[[nodiscard]] EType GetType() const { return Type; }
+	[[nodiscard]] EType GetType() const
+	{
+		return Type;
+	}
 
-	bool GetEnable() const { return bEnable; }
-	void SetEnable(bool bEnable) { this->bEnable = bEnable; }
+	bool GetEnable() const
+	{
+		return bEnable;
+	}
+	void SetEnable(bool bEnable)
+	{
+		this->bEnable = bEnable;
+	}
 
 protected:
 	std::weak_ptr<CWorld> World;

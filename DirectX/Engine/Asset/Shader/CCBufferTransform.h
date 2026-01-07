@@ -11,10 +11,22 @@ public:
 	CCBufferTransform* Clone() override;
 
 public:
-	void SetWorldMatrix(const FMatrix& World) { Data.World = World; }
-	void SetViewMatrix(const FMatrix& View) { Data.View = View; }
-	void SetProjectionMatrix(const FMatrix& Proj) { Data.Proj = Proj; }
-	void SetPivotSize(const FVector& PivotSize) { Data.PivotSize = PivotSize; }
+	void SetWorldMatrix(const FMatrix& World)
+	{
+		Data.World = World;
+	}
+	void SetViewMatrix(const FMatrix& View)
+	{
+		Data.View = View;
+	}
+	void SetProjectionMatrix(const FMatrix& Proj)
+	{
+		Data.Proj = Proj;
+	}
+	void SetPivotSize(const FVector& PivotSize)
+	{
+		Data.PivotSize = PivotSize;
+	}
 
 private:
 	FCBufferTransformData Data;

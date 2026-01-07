@@ -68,13 +68,29 @@ public:
 	void SetMaterialOpacity(int SlotIndex, float Opacity);
 
 public:
-	FVector GetMin() const { return Min; }
-	FVector GetMax() const { return Max; }
-	FVector GetMeshSize() const { return MeshSize; }
+	FVector GetMin() const
+	{
+		return Min;
+	}
+	FVector GetMax() const
+	{
+		return Max;
+	}
 
-	size_t GetSlotCount() const { return Slots.size(); }
+	FVector GetMeshSize() const
+	{
+		return MeshSize;
+	}
 
-	std::shared_ptr<FMeshSlot> GetSlot(size_t Index) const { return Slots[Index]; }
+	size_t GetSlotCount() const
+	{
+		return Slots.size();
+	}
+
+	std::shared_ptr<FMeshSlot> GetSlot(size_t Index) const
+	{
+		return Slots[Index];
+	}
 
 protected:
 	static bool CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count, D3D11_USAGE Usage);

@@ -60,7 +60,10 @@ public:
 	}
 
 protected:
-	bool IsColliding() const { return CollidingObjects.empty(); }
+	bool IsColliding() const
+	{
+		return !CollidingObjects.empty();
+	}
 
 protected:
 	EColliderType ColliderType;

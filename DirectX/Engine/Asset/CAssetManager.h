@@ -23,13 +23,25 @@ public:
 
 	void ReleaseAsset(const std::string& Key, EAssetType AssetType);
 
-	[[nodiscard]] std::weak_ptr<CMeshManager> GetMeshManager() const { return MeshManager; }
+	[[nodiscard]] std::weak_ptr<CMeshManager> GetMeshManager() const
+	{
+		return MeshManager;
+	}
 
-	[[nodiscard]] std::weak_ptr<CShaderManager> GetShaderManager() const { return ShaderManager; }
+	[[nodiscard]] std::weak_ptr<CShaderManager> GetShaderManager() const
+	{
+		return ShaderManager;
+	}
 
-	[[nodiscard]] std::weak_ptr<CTextureManager> GetTextureManager() const { return TextureManager; }
+	[[nodiscard]] std::weak_ptr<CTextureManager> GetTextureManager() const
+	{
+		return TextureManager;
+	}
 
-	[[nodiscard]] std::weak_ptr<CAnimation2DManager> GetAnimation2DManager() const { return Animation2DManager; }
+	[[nodiscard]] std::weak_ptr<CAnimation2DManager> GetAnimation2DManager() const
+	{
+		return Animation2DManager;
+	}
 
 private:
 	std::shared_ptr<CMeshManager> MeshManager;

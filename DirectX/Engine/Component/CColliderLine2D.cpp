@@ -39,16 +39,19 @@ void CColliderLine2D::SetDrawDebug(bool bDrawDebug)
 
 bool CColliderLine2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other)
 {
-	switch (Other->GetColliderType()) {
-	case EColliderType::Box2D:
-		return false;
-	case EColliderType::Sphere2D:
-		return false;
-	case EColliderType::Line2D:
-		return false;
-	default:
-		return false;
+	switch (Other->GetColliderType())
+	{
+		case EColliderType::Box2D:
+			break;
+		case EColliderType::Sphere2D:
+			break;
+		case EColliderType::Line2D:
+			break;
+		default:
+			break;
 	}
+
+	return false;
 }
 
 bool CColliderLine2D::Init()

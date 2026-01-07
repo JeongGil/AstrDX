@@ -9,13 +9,28 @@ class CAnimation2D :
 	friend class CAnimation2DManager;
 
 public:
-	[[nodiscard]] const std::string& GetKey() const { return Key; }
-	void SetKey(const std::string& Key) { this->Key = Key; }
+	[[nodiscard]] const std::string& GetKey() const
+	{
+		return Key;
+	}
+	void SetKey(const std::string& Key)
+	{
+		this->Key = Key;
+	}
 
-	[[nodiscard]] EAnimation2DTextureType GetTextureType() const { return TextureType; }
-	void SetTextureType(EAnimation2DTextureType TextureType) { this->TextureType = TextureType; }
+	[[nodiscard]] EAnimation2DTextureType GetTextureType() const
+	{
+		return TextureType;
+	}
+	void SetTextureType(EAnimation2DTextureType TextureType)
+	{
+		this->TextureType = TextureType;
+	}
 
-	[[nodiscard]] const std::weak_ptr<CTexture>& GetTexture() const { return Texture; }
+	[[nodiscard]] const std::weak_ptr<CTexture>& GetTexture() const
+	{
+		return Texture;
+	}
 
 	void SetTexture(const std::weak_ptr<CTexture>& Texture);
 
@@ -26,8 +41,14 @@ public:
 	void SetTextures(const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture");
 	void SetTexturesFullPath(const std::string& Key, std::vector<const TCHAR*>& FullPaths);
 
-	[[nodiscard]] const FTextureFrame& GetFrame(int Index) const { return Frames[Index]; }
-	[[nodiscard]] int GetFrameCount() const { return static_cast<int>(Frames.size()); }
+	[[nodiscard]] const FTextureFrame& GetFrame(int Index) const
+	{
+		return Frames[Index];
+	}
+	[[nodiscard]] int GetFrameCount() const
+	{
+		return static_cast<int>(Frames.size());
+	}
 
 	void AddFrame(FVector2 Start, FVector2 Size);
 	void AddFrame(float x, float y, float w, float h);

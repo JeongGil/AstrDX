@@ -13,20 +13,41 @@ class CGameObject :
 	friend CObject;
 
 public:
-	std::weak_ptr<CWorld> GetWorld() const { return World; }
+	std::weak_ptr<CWorld> GetWorld() const
+	{
+		return World;
+	}
 
 	void SetWorld(const std::weak_ptr<CWorld>& World);
 
-	std::weak_ptr<CSceneComponent> GetRootComponent() const { return Root; }
+	std::weak_ptr<CSceneComponent> GetRootComponent() const
+	{
+		return Root;
+	}
 
-	[[nodiscard]] std::string GetName() const { return Name; }
+	[[nodiscard]] std::string GetName() const
+	{
+		return Name;
+	}
 
-	void SetName(const std::string& Name) { this->Name = Name; }
+	void SetName(const std::string& Name)
+	{
+		this->Name = Name;
+	}
 
-	bool GetAlive() const { return bAlive; }
+	bool GetAlive() const
+	{
+		return bAlive;
+	}
 
-	bool GetEnable() const { return bEnable; }
-	void SetEnable(bool bEnable) { this->bEnable = bEnable; }
+	bool GetEnable() const
+	{
+		return bEnable;
+	}
+	void SetEnable(bool bEnable)
+	{
+		this->bEnable = bEnable;
+	}
 
 public:
 	const FVector& GetAxis(EAxis::Type Axis) const;

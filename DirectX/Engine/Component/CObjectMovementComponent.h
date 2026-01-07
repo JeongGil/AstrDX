@@ -7,13 +7,35 @@ class CObjectMovementComponent :
 	friend class CGameObject;
 
 public:
-	[[nodiscard]] FVector GetMoveDirection() const { return MoveDirection; }
-	void AddMove(const FVector& Dir) { MoveDirection += Dir; }
+	[[nodiscard]] FVector GetMoveDirection() const
+	{
+		return MoveDirection;
+	}
+	void AddMove(const FVector& Dir)
+	{
+		MoveDirection += Dir;
+	}
 
-	[[nodiscard]] float GetSpeed() const { return Speed; }
-	void SetSpeed(float Speed) { this->Speed = Speed; }
+	[[nodiscard]] float GetSpeed() const
+	{
+		return Speed;
+	}
+	void SetSpeed(float Speed)
+	{
+		this->Speed = Speed;
+	}
 
-	[[nodiscard]] float GetDeltaMovement() const { return MoveDirection.IsZero() ? 0.f : Speed * CTimer::GetDeltaTime(); }
+	[[nodiscard]] float GetDeltaMovement() const
+	{
+		if (MoveDirection.IsZero())
+		{
+			return 0.f;
+		}
+		else
+		{
+			return Speed * CTimer::GetDeltaTime();
+		}
+	}
 
 protected:
 	FVector MoveDirection = FVector::Zero;

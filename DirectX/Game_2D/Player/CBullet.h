@@ -60,7 +60,10 @@ public:
 	}
 
 	void SetCollision(const std::string& Key);
-	void SetCollisionTargetName(const std::string& CollisionTargetName) { this->CollisionTargetName = CollisionTargetName; }
+	void SetCollisionTargetName(const std::string& CollisionTargetName)
+	{
+		this->CollisionTargetName = CollisionTargetName;
+	}
 
 	void SetEnableMove(bool bEnable);
 

@@ -41,11 +41,20 @@ public:
 	 */
 	void UpdateTransform();
 
-	[[nodiscard]] EComponentRender GetRenderType() const { return RenderType; }
+	[[nodiscard]] EComponentRender GetRenderType() const
+	{
+		return RenderType;
+	}
 
-	[[nodiscard]] int GetRenderLayer() const { return RenderLayer; }
+	[[nodiscard]] int GetRenderLayer() const
+	{
+		return RenderLayer;
+	}
 
-	void SetRenderLayer(const int RenderLayer) { this->RenderLayer = RenderLayer; }
+	void SetRenderLayer(const int RenderLayer)
+	{
+		this->RenderLayer = RenderLayer;
+	}
 
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;
@@ -55,14 +64,35 @@ public:
 	const FVector& GetWorldRotation() const;
 	const FVector& GetWorldPosition() const;
 
-	[[nodiscard]] FVector GetVelocity() const { return Velocity; }
-	[[nodiscard]] float GetSpeed() const { return Velocity.Length(); }
+	[[nodiscard]] FVector GetVelocity() const
+	{
+		return Velocity;
+	}
+	[[nodiscard]] float GetSpeed() const
+	{
+		return Velocity.Length();
+	}
 
-	[[nodiscard]] FVector GetPivot() const { return Pivot; }
-	void SetPivot(const FVector& Pivot) { this->Pivot = Pivot; }
-	void SetPivot(const FVector2& Pivot) { this->Pivot = FVector(Pivot.x, Pivot.y, 0.f); }
-	void SetPivot(float x, float y, float z) { Pivot = FVector(x, y, z); }
-	void SetPivot(float x, float y) { Pivot = FVector(x, y, 0.f); }
+	[[nodiscard]] FVector GetPivot() const
+	{
+		return Pivot;
+	}
+	void SetPivot(const FVector& Pivot)
+	{
+		this->Pivot = Pivot;
+	}
+	void SetPivot(const FVector2& Pivot)
+	{
+		this->Pivot = FVector(Pivot.x, Pivot.y, 0.f);
+	}
+	void SetPivot(float x, float y, float z)
+	{
+		Pivot = FVector(x, y, z);
+	}
+	void SetPivot(float x, float y)
+	{
+		Pivot = FVector(x, y, 0.f);
+	}
 
 	void SetInheritScale(bool bInherit);
 	void SetInheritRotation(bool bInherit);

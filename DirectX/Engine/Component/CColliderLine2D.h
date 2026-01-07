@@ -18,7 +18,10 @@ protected:
 	CColliderLine2D* Clone() const override;
 
 public:
-	[[nodiscard]] FLine2DInfo GetInfo() const { return Info; }
+	[[nodiscard]] FLine2DInfo GetInfo() const
+	{
+		return Info;
+	}
 
 	void SetLineDir(const FVector& Dir)
 	{

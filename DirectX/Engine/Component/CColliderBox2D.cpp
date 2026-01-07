@@ -15,10 +15,12 @@ bool CColliderBox2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> O
 	case EColliderType::Box2D:
 		return CCollision::CollideBox2DToBox2D(OutHitPoint, this, dynamic_cast<CColliderBox2D*>(Other.get()));
 	case EColliderType::Sphere2D:
-		return false;
+		break;
 	default:
-		return false;
+		break;
 	}
+
+	return false;
 }
 
 void CColliderBox2D::SetDrawDebug(bool bDrawDebug)

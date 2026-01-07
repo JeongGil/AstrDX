@@ -87,7 +87,10 @@ public:
 		return NewObject;
 	}
 
-	std::weak_ptr<CCameraManager> GetCameraManager() const { return CameraManager; }
+	std::weak_ptr<CCameraManager> GetCameraManager() const
+	{
+		return CameraManager;
+	}
 
 	template <typename T>
 	std::weak_ptr<T> FindObject(const std::string& Key)
@@ -150,11 +153,20 @@ public:
 		return std::weak_ptr<T>();
 	}
 
-	std::weak_ptr<CWorldAssetManager> GetWorldAssetManager() const { return WorldAssetManager; }
+	std::weak_ptr<CWorldAssetManager> GetWorldAssetManager() const
+	{
+		return WorldAssetManager;
+	}
 
-	std::weak_ptr<CInput> GetInput() const { return Input; }
+	std::weak_ptr<CInput> GetInput() const
+	{
+		return Input;
+	}
 
-	std::weak_ptr<CWorldCollision> GetCollision() const { return Collision; }
+	std::weak_ptr<CWorldCollision> GetCollision() const
+	{
+		return Collision;
+	}
 
 protected:
 	std::unordered_multimap<std::string, std::shared_ptr<CGameObject>> Objects;

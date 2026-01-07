@@ -7,20 +7,51 @@ class CProjectileMovementComponent :
 	friend class CGameObject;
 
 public:
-	[[nodiscard]] FVector GetVelocity() const { return Velocity; }
+	[[nodiscard]] FVector GetVelocity() const
+	{
+		return Velocity;
+	}
 
-	[[nodiscard]] FVector GetMoveDirection() const { return MoveDirection; }
-	void SetMoveDirection(const FVector& Dir) { MoveDirection = Dir.GetNormalized(); }
+	[[nodiscard]] FVector GetMoveDirection() const
+	{
+		return MoveDirection;
+	}
+	void SetMoveDirection(const FVector& Dir)
+	{
+		MoveDirection = Dir.GetNormalized();
+	}
 
-	[[nodiscard]] float GetSpeed() const { return Speed; }
-	void SetSpeed(float Speed) { this->Speed = Speed; }
+	[[nodiscard]] float GetSpeed() const
+	{
+		return Speed;
+	}
+	void SetSpeed(float Speed)
+	{
+		this->Speed = Speed;
+	}
 
-	[[nodiscard]] float GetDeltaMovement() const { return MoveDirection.IsZero() ? 0.f : Speed * CTimer::GetDeltaTime(); }
+	[[nodiscard]] float GetDeltaMovement() const
+	{
+		if (MoveDirection.IsZero())
+		{
+			return 0.f;
+		}
+		else
+		{
+			return Speed * CTimer::GetDeltaTime();
+		}
+	}
 
-	void SetRange(float Range) { this->Range = Range; }
+	void SetRange(float Range)
+	{
+		this->Range = Range;
+	}
 
 	template <typename T>
-	void SetRangeFunction(T* Obj, void (T::* Func)()) { RangeFunction = std::bind(Func, Obj); }
+	void SetRangeFunction(T* Obj, void (T::* Func)())
+	{
+		RangeFunction = std::bind(Func, Obj);
+	}
 
 protected:
 	FVector MoveDirection = FVector::Zero;

@@ -84,13 +84,25 @@ public:
 	 */
 	void EndRender();
 
-	[[nodiscard]] ID3D11Device* GetDevice() const { return Device; }
+	[[nodiscard]] ID3D11Device* GetDevice() const
+	{
+		return Device;
+	}
 
-	[[nodiscard]] ID3D11DeviceContext* GetContext() const { return Context; }
+	[[nodiscard]] ID3D11DeviceContext* GetContext() const
+	{
+		return Context;
+	}
 
-	[[nodiscard]] const FResolution& GetResolution() const { return Resolution; }
+	[[nodiscard]] const FResolution& GetResolution() const
+	{
+		return Resolution;
+	}
 
-	[[nodiscard]] bool GetWindowMode() const { return bWindowMode; }
+	[[nodiscard]] bool GetWindowMode() const
+	{
+		return bWindowMode;
+	}
 
 private:
 	// It is mainly used when creating resources.

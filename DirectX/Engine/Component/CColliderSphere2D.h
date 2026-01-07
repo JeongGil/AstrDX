@@ -20,9 +20,15 @@ public:
 	void SetDrawDebug(bool bDrawDebug) override;
 	bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) override;
 
-	[[nodiscard]] FSphere2DInfo GetInfo() const { return Info; }
+	[[nodiscard]] FSphere2DInfo GetInfo() const
+	{
+		return Info;
+	}
 
-	void SetRadius(float Radius) { Info.Radius = Radius; }
+	void SetRadius(float Radius)
+	{
+		Info.Radius = Radius;
+	}
 
 protected:
 	FSphere2DInfo Info;
