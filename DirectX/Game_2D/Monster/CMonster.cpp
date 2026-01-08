@@ -77,20 +77,13 @@ void CMonster::Update(const float DeltaTime)
 		// Look at target;
 		if (bIsInRange)
 		{
-			float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition());
+			float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition(), EAxis::Y);
 
 			SetWorldRotationZ(Degree);
-		}
-
-		ElapsedFromShot += DeltaTime;
-		if (bIsInRange && ElapsedFromShot >= 1.f)
-		{
-			ElapsedFromShot = 0.f;
 
 			if (auto Anim = Animation2DComponent.lock())
 			{
 				Anim->ChangeAnimation("MonsterAttack");
-				bOnAttack = true;
 			}
 		}
 	}

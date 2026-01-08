@@ -263,8 +263,7 @@ void CSceneComponent::InheritRelativeRotation()
 
 	for (int i = 0; i < EAxis::End; i++)
 	{
-		WorldAxis[i] = FVector::Axis[i].TransformNormal(RotationMatrix);
-		WorldAxis[i].Normalize();
+		WorldAxis[i] = FVector::Axis[i].TransformNormal(RotationMatrix).GetNormalized();
 	}
 
 	for (const auto& WeakChild : Children)
@@ -532,7 +531,7 @@ void CSceneComponent::InheritWorldRotation()
 	{
 		if (auto Child = WeakChild.lock())
 		{
-			Child->InheritWorldRotation();
+			Child->InheritRelativeRotation();
 		}
 	}
 
