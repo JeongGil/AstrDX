@@ -525,8 +525,7 @@ void CSceneComponent::InheritWorldRotation()
 
 	for (int i = 0; i < EAxis::End; i++)
 	{
-		WorldAxis[i] = FVector::Axis[i].TransformNormal(RotationMatrix);
-		WorldAxis[i].Normalize();
+		WorldAxis[i] = FVector::Axis[i].TransformNormal(RotationMatrix).GetNormalized();
 	}
 
 	for (const auto& WeakChild : Children)
@@ -560,6 +559,8 @@ void CSceneComponent::InheritWorldPosition()
 		FVector ParentPosition = Parent->GetWorldPosition();
 		// _41, _42, _43 are the translation components.
 		memcpy(&ParentMatrix._41, &ParentPosition, sizeof(FVector));
+
+		ParentMatrix.Inverse();
 
 		RelativePosition = WorldPosition.TransformCoord(ParentMatrix);
 	}

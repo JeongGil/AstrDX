@@ -206,7 +206,7 @@ public:
 					else
 					{
 						std::shared_ptr<CSceneComponent> Parent;
-						for (auto SceneComponent : SceneComponents)
+						for (const auto& SceneComponent : SceneComponents)
 						{
 							if (SceneComponent->Name == ParentName)
 							{

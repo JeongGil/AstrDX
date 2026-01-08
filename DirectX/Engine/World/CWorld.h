@@ -116,7 +116,7 @@ public:
 			return false;
 		}
 
-		for (auto Pair : std::ranges::subrange(Range.first, Range.second))
+		for (const auto& Pair : std::ranges::subrange(Range.first, Range.second))
 		{
 			OutObjects.push_back(std::dynamic_pointer_cast<T>(Pair.second));
 		}

@@ -162,7 +162,7 @@ void CCollider::Render()
 
 CCollider::~CCollider()
 {
-	for (auto WeakOther : CollidingObjects | std::views::values)
+	for (const auto& WeakOther : CollidingObjects | std::views::values)
 	{
 		if (auto Other = WeakOther.lock())
 		{

@@ -94,8 +94,7 @@ bool CBullet::Init()
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->SetMoveDirection(GetAxis(EAxis::Y));
-		Move->SetRangeFunction<CBullet>(this,
-			&CBullet::MoveEndFunction);
+		Move->SetRangeFunction<CBullet>(this, &CBullet::MoveEndFunction);
 		Move->SetRange(Distance);
 		Move->SetSpeed(Speed);
 		Move->SetUpdateComponent(MeshComponent);

@@ -67,7 +67,7 @@ void CMesh::Render() const
 	}
 	else
 	{
-		for (auto Slot : Slots)
+		for (const auto& Slot : Slots)
 		{
 			if (Slot->Material)
 			{
