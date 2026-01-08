@@ -6,6 +6,7 @@
 #include "Component/CColliderSphere2D.h"
 #include "Component/CMeshComponent.h"
 #include "World/CWorld.h"
+#include "Component/CColliderLine2D.h"
 
 bool CMonster::Init()
 {
@@ -37,13 +38,22 @@ bool CMonster::Init()
 		Anim->SetLoop("MonsterIdle", true);
 	}
 
-	Body = CreateComponent<CColliderBox2D>("Body");
+	Body = CreateComponent<CColliderSphere2D>("Body");
 	if (auto Body = this->Body.lock())
 	{
 		Body->SetCollisionProfile("Monster");
-		Body->SetBoxExtend(100.f, 100.f);
+		Body->SetRadius(sqrtf(100.f * 100.f + 100.f * 100.f) * 0.5f);
 		Body->SetDrawDebug(true);
 		Body->SetInheritScale(false);
+	}
+
+	Line2D = CreateComponent<CColliderLine2D>("Line2D");
+	if (auto Line2D = this->Line2D.lock())
+	{
+		Line2D->SetCollisionProfile("Monster");
+		Line2D->SetLineDistance(200.f);
+		Line2D->SetDrawDebug(true);
+		Line2D->SetInheritScale(false);
 	}
 
 	if (auto World = this->World.lock())

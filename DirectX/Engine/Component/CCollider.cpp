@@ -127,7 +127,7 @@ void CCollider::Render()
 
 		ScaleMat.Scaling(RenderScale);
 		RotMat.Rotation(WorldRotation);
-		TransMat.Translation(WorldPosition + Offset);
+		TransMat.Translation(WorldPosition);
 
 		WorldMat = ScaleMat * RotMat * TransMat;
 

@@ -166,7 +166,7 @@ bool CPlayer::Init()
 		Body->SetBoxExtend(100.f, 100.f);
 		Body->SetDrawDebug(true);
 		Body->SetInheritScale(false);
-		Body->SetCenterOffset(0.f, 50.f, 0.f);
+		Body->SetRelativePosition(0.f, 50.f, 0.f);
 	}
 
 	Sphere2D = CreateComponent<CColliderSphere2D>("Sphere2D");
@@ -176,7 +176,7 @@ bool CPlayer::Init()
 		Sphere2D->SetRadius(sqrtf(20000.f) * 0.5f);
 		Sphere2D->SetDrawDebug(true);
 		Sphere2D->SetInheritScale(false);
-		Sphere2D->SetCenterOffset(0.f, 50.f, 0.f);
+		Sphere2D->SetRelativePosition(0.f, 50.f, 0.f);
 	}
 
 	Line2D = CreateComponent<CColliderLine2D>("Line2D");
@@ -187,7 +187,7 @@ bool CPlayer::Init()
 		Line2D->SetLineDistance(200.f);
 		Line2D->SetDrawDebug(true);
 		Line2D->SetInheritScale(false);
-		Line2D->SetCenterOffset(0.f, 100.f, 0.f);
+		Line2D->SetRelativePosition(0.f, 100.f, 0.f);
 	}
 
 	Rotation = CreateComponent<CSceneComponent>("Rotation");

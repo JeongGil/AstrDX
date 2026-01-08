@@ -1,5 +1,6 @@
 #include "CColliderLine2D.h"
 
+#include "CCollision.h"
 #include "../Asset/CAssetManager.h"
 #include "../Asset/Mesh/CMeshManager.h"
 #include "../Asset/Shader/CCBufferCollider.h"
@@ -42,11 +43,11 @@ bool CColliderLine2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> 
 	switch (Other->GetColliderType())
 	{
 		case EColliderType::Box2D:
-			break;
+			return CCollision::CollideBox2DToLine2D(OutHitPoint, dynamic_cast<CColliderBox2D*>(Other.get()), this);
 		case EColliderType::Sphere2D:
-			break;
+			return CCollision::CollideSphere2DToLine2D(OutHitPoint, dynamic_cast<CColliderSphere2D*>(Other.get()), this);
 		case EColliderType::Line2D:
-			break;
+			return CCollision::CollideLine2DToLine2D(OutHitPoint, dynamic_cast<CColliderLine2D*>(Other.get()), this);
 		default:
 			break;
 	}
@@ -99,8 +100,16 @@ void CColliderLine2D::PostUpdate(const float DeltaTime)
 {
 	CCollider::PostUpdate(DeltaTime);
 
-	Info.Start = WorldPosition + Offset;
-	Info.End = Info.Start + LineDirection * Distance;
+	Info.Start = WorldPosition;
+
+	FVector Dir = LineDirection.TransformNormal(RotationMatrix).GetNormalized();
+	Info.End = Info.Start + Dir * Distance;
+
+	Min.x = std::fminf(Info.Start.x, Info.End.x);
+	Min.y = std::fminf(Info.Start.y, Info.End.y);
+
+	Max.x = std::fmaxf(Info.Start.x, Info.End.x);
+	Max.y = std::fmaxf(Info.Start.y, Info.End.y);
 
 	RenderScale.x = 1.f;
 	RenderScale.y = Distance;

@@ -40,7 +40,7 @@ public:
 
 protected:
 	FLine2DInfo Info;
-	FVector LineDirection;
+	FVector LineDirection = FVector3::Axis[EAxis::Y];
 	float Distance = 100;
 
 protected:

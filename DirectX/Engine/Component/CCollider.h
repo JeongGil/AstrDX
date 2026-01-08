@@ -49,16 +49,6 @@ public:
 		OnCollisionEnd = std::bind(Func, Obj, std::placeholders::_1);
 	}
 
-	void SetCenterOffset(const FVector& Offset)
-	{
-		this->Offset = Offset;
-	}
-
-	void SetCenterOffset(float x, float y, float z)
-	{
-		Offset = FVector(x, y, z);
-	}
-
 protected:
 	bool IsColliding() const
 	{
@@ -67,13 +57,11 @@ protected:
 
 protected:
 	EColliderType ColliderType;
-	FVector Min;
-	FVector Max;
-	FVector RenderScale;
+	FVector Min = FVector::Zero;
+	FVector Max = FVector::Zero;
+	FVector RenderScale = FVector::One;
 	bool bDrawDebug = false;
 	FCollisionProfile* Profile = nullptr;
-
-	FVector Offset;
 
 	std::unordered_map<CCollider*, std::weak_ptr<CCollider>> CollidingObjects;
 
@@ -106,10 +94,13 @@ protected:
 		RenderScale(std::move(other.RenderScale)),
 		bDrawDebug(other.bDrawDebug),
 		Profile(other.Profile),
+		CollidingObjects(std::move(other.CollidingObjects)),
 		Shader(std::move(other.Shader)),
 		Mesh(std::move(other.Mesh)),
 		TransformCBuffer(std::move(other.TransformCBuffer)),
-		ColliderCBuffer(std::move(other.ColliderCBuffer))
+		ColliderCBuffer(std::move(other.ColliderCBuffer)),
+		OnCollisionBegin(std::move(other.OnCollisionBegin)),
+		OnCollisionEnd(std::move(other.OnCollisionEnd))
 	{
 		other.Profile = nullptr;
 	}
@@ -127,10 +118,14 @@ protected:
 		RenderScale = std::move(other.RenderScale);
 		bDrawDebug = other.bDrawDebug;
 		Profile = std::move(other.Profile);
+		other.Profile = nullptr;
+		CollidingObjects = std::move(other.CollidingObjects);
 		Shader = std::move(other.Shader);
 		Mesh = std::move(other.Mesh);
 		TransformCBuffer = std::move(other.TransformCBuffer);
 		ColliderCBuffer = std::move(other.ColliderCBuffer);
+		OnCollisionBegin = std::move(other.OnCollisionBegin);
+		OnCollisionEnd = std::move(other.OnCollisionEnd);
 		return *this;
 	}
 

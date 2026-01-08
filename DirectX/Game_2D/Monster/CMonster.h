@@ -1,6 +1,7 @@
 #pragma once
 #include "Object/CGameObject.h"
 
+class CColliderLine2D;
 class CColliderBox2D;
 class CColliderSphere2D;
 class CAnimation2DComponent;
@@ -20,7 +21,8 @@ private:
 
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CAnimation2DComponent> Animation2DComponent;
-	std::weak_ptr<CColliderBox2D> Body;
+	std::weak_ptr<CColliderSphere2D> Body;
+	std::weak_ptr<CColliderLine2D> Line2D;
 
 public:
 	bool Init() override;

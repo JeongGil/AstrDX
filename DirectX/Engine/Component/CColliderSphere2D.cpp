@@ -51,7 +51,7 @@ void CColliderSphere2D::PostUpdate(const float DeltaTime)
 {
 	CCollider::PostUpdate(DeltaTime);
 
-	Info.Center = WorldPosition + Offset;
+	Info.Center = WorldPosition;
 
 	RenderScale.x = WorldScale.x = Info.Radius;
 	RenderScale.y = WorldScale.y = Info.Radius;
@@ -99,12 +99,11 @@ bool CColliderSphere2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider
 	switch (Other->GetColliderType())
 	{
 	case EColliderType::Box2D:
-		break;
-		//return CCollision::CollideBox2DToBox2D(OutHitPoint, dynamic_cast<CColliderBox2D*>(Other.get()), this);
+		return CCollision::CollideBox2DToSphere2D(OutHitPoint, dynamic_cast<CColliderBox2D*>(Other.get()), this);
 	case EColliderType::Sphere2D:
-		break;
+		return CCollision::CollideSphere2DtoSphere2D(OutHitPoint, dynamic_cast<CColliderSphere2D*>(Other.get()), this);
 	case EColliderType::Line2D:
-		break;
+		return CCollision::CollideSphere2DToLine2D(OutHitPoint, this, dynamic_cast<CColliderLine2D*>(Other.get()));
 	default:
 		break;
 	}
