@@ -154,6 +154,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CGlobalSetting.cpp" />
+    <ClCompile Include="Character\CCharacter.cpp" />
+    <ClCompile Include="Character\CNonPlayerCharacter.cpp" />
+    <ClCompile Include="Character\CPlayerCharacter.cpp" />
+    <ClCompile Include="Character\CWeapon.cpp" />
+    <ClCompile Include="CHitPointComponent.cpp" />
     <ClCompile Include="Component\CStateComponent.cpp" />
     <ClCompile Include="Interface\CStateInterface.cpp" />
     <ClCompile Include="main.cpp" />
@@ -167,8 +172,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGlobalSetting.h" />
+    <ClInclude Include="Character\CCharacter.h" />
+    <ClInclude Include="Character\CNonPlayerCharacter.h" />
+    <ClInclude Include="Character\CPlayerCharacter.h" />
+    <ClInclude Include="Character\CWeapon.h" />
+    <ClInclude Include="CHitPointComponent.h" />
     <ClInclude Include="Component\CStateComponent.h" />
     <ClInclude Include="Interface\CStateInterface.h" />
+    <ClInclude Include="Strings.h" />
     <ClInclude Include="Monster\CMonster.h" />
     <ClInclude Include="Monster\CMonsterSpawnPoint.h" />
     <ClInclude Include="Player\CBullet.h" />

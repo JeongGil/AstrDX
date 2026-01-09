@@ -34,6 +34,9 @@
     <Filter Include="Setting">
       <UniqueIdentifier>{fa1cec0b-9c3e-4bff-ab9c-687795ca52c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Character">
+      <UniqueIdentifier>{fe92c45b-5b7e-45e0-ae45-0a3ac018cc88}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,6 +72,21 @@
     <ClCompile Include="CGlobalSetting.cpp">
       <Filter>Setting</Filter>
     </ClCompile>
+    <ClCompile Include="Character\CPlayerCharacter.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\CCharacter.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\CNonPlayerCharacter.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CHitPointComponent.cpp">
+      <Filter>Component\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\CWeapon.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -100,6 +118,24 @@
     </ClInclude>
     <ClInclude Include="CGlobalSetting.h">
       <Filter>Setting</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CPlayerCharacter.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CCharacter.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CNonPlayerCharacter.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Strings.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CHitPointComponent.h">
+      <Filter>Component\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CWeapon.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

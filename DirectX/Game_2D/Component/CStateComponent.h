@@ -19,40 +19,10 @@ protected:
 
 protected:
 	CStateComponent() = default;
-
-	CStateComponent(const CStateComponent& other)
-		: CObjectComponent(other),
-		  HP(other.HP),
-		  MaxHP(other.MaxHP)
-	{
-	}
-
-	CStateComponent(CStateComponent&& other) noexcept
-		: CObjectComponent(std::move(other)),
-		  HP(other.HP),
-		  MaxHP(other.MaxHP)
-	{
-	}
-
-	CStateComponent& operator=(const CStateComponent& other)
-	{
-		if (this == &other)
-			return *this;
-		CObjectComponent::operator =(other);
-		HP = other.HP;
-		MaxHP = other.MaxHP;
-		return *this;
-	}
-
-	CStateComponent& operator=(CStateComponent&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CObjectComponent::operator =(std::move(other));
-		HP = other.HP;
-		MaxHP = other.MaxHP;
-		return *this;
-	}
+	CStateComponent(const CStateComponent& other) = default;
+	CStateComponent(CStateComponent&& other) noexcept = default;
+	CStateComponent& operator=(const CStateComponent& other) = default;
+	CStateComponent& operator=(CStateComponent&& other) noexcept = default;
 
 public:
 	~CStateComponent() override = default;

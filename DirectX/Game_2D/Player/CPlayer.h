@@ -52,10 +52,6 @@ public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
 	void Destroy() override;
-	void Render() override
-	{
-		CGameObject::Render();
-	}
 
 protected:
 	CPlayer() = default;
