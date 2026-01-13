@@ -76,6 +76,7 @@ private:
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
 	void OnCollisionEnd(CCollider* Other);
+	void OnCollisionBlock(const FVector& HitPoint, CCollider* Other);
 
 private:
 	float Distance = 600;

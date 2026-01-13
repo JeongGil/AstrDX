@@ -47,14 +47,14 @@ bool CMonster::Init()
 		Body->SetInheritScale(false);
 	}
 
-	Line2D = CreateComponent<CColliderLine2D>("Line2D");
-	if (auto Line2D = this->Line2D.lock())
-	{
-		Line2D->SetCollisionProfile("Monster");
-		Line2D->SetLineDistance(200.f);
-		Line2D->SetDrawDebug(true);
-		Line2D->SetInheritScale(false);
-	}
+	//Line2D = CreateComponent<CColliderLine2D>("Line2D");
+	//if (auto Line2D = this->Line2D.lock())
+	//{
+	//	Line2D->SetCollisionProfile("Monster");
+	//	Line2D->SetLineDistance(200.f);
+	//	Line2D->SetDrawDebug(true);
+	//	Line2D->SetInheritScale(false);
+	//}
 
 	if (auto World = this->World.lock())
 	{
@@ -96,28 +96,28 @@ CMonster* CMonster::Clone()
 
 void CMonster::AttackNotify()
 {
-	if (auto World = this->World.lock())
-	{
-		auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
-		if (auto Bullet = WeakBullet.lock())
-		{
-			FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
+	//if (auto World = this->World.lock())
+	//{
+	//	auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
+	//	if (auto Bullet = WeakBullet.lock())
+	//	{
+	//		FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
 
-			Bullet->SetCollision("MonsterAttack");
-			Bullet->SetWorldPosition(Position);
-			Bullet->SetWorldRotation(GetWorldRotation());
-			Bullet->SetCollisionTargetName("Player");
-			Bullet->CalcCollisionRadius();
+	//		Bullet->SetCollision("MonsterAttack");
+	//		Bullet->SetWorldPosition(Position);
+	//		Bullet->SetWorldRotation(GetWorldRotation());
+	//		Bullet->SetCollisionTargetName("Player");
+	//		Bullet->CalcCollisionRadius();
 
-			if (auto Target = FireTarget.lock())
-			{
-				FVector Dir = Target->GetWorldPosition() - Position;
-				Dir.Normalize();
+	//		if (auto Target = FireTarget.lock())
+	//		{
+	//			FVector Dir = Target->GetWorldPosition() - Position;
+	//			Dir.Normalize();
 
-				Bullet->SetMoveDirection(Dir);
-			}
-		}
-	}
+	//			Bullet->SetMoveDirection(Dir);
+	//		}
+	//	}
+	//}
 }
 
 void CMonster::AttackFinish()

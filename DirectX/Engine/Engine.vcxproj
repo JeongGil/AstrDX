@@ -227,6 +227,8 @@
     <ClInclude Include="Render\CRenderManager.h" />
     <ClInclude Include="Render\CRenderState.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Table\TableBase.h" />
+    <ClInclude Include="Table\TableInfoBase.h" />
     <ClInclude Include="World\CCameraManager.h" />
     <ClInclude Include="World\CInput.h" />
     <ClInclude Include="World\CWorld.h" />

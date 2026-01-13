@@ -70,53 +70,11 @@ public:
 protected:
 	CProjectileMovementComponent* Clone() const override;
 
-	CProjectileMovementComponent(const CProjectileMovementComponent& other)
-		: CMovementComponent(other),
-		  MoveDirection(other.MoveDirection),
-		  Speed(other.Speed),
-		  Velocity(other.Velocity),
-		  Range(other.Range),
-		  RangeFunction(other.RangeFunction)
-	{
-	}
-
-	CProjectileMovementComponent(CProjectileMovementComponent&& other) noexcept
-		: CMovementComponent(std::move(other)),
-		  MoveDirection(std::move(other.MoveDirection)),
-		  Speed(other.Speed),
-		  Velocity(std::move(other.Velocity)),
-		  Range(other.Range),
-		  RangeFunction(std::move(other.RangeFunction))
-	{
-	}
-
-	CProjectileMovementComponent& operator=(const CProjectileMovementComponent& other)
-	{
-		if (this == &other)
-			return *this;
-		CMovementComponent::operator =(other);
-		MoveDirection = other.MoveDirection;
-		Speed = other.Speed;
-		Velocity = other.Velocity;
-		Range = other.Range;
-		RangeFunction = other.RangeFunction;
-		return *this;
-	}
-
-	CProjectileMovementComponent& operator=(CProjectileMovementComponent&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CMovementComponent::operator =(std::move(other));
-		MoveDirection = std::move(other.MoveDirection);
-		Speed = other.Speed;
-		Velocity = std::move(other.Velocity);
-		Range = other.Range;
-		RangeFunction = std::move(other.RangeFunction);
-		return *this;
-	}
-
 	CProjectileMovementComponent() = default;
+	CProjectileMovementComponent(const CProjectileMovementComponent& other) = default;
+	CProjectileMovementComponent(CProjectileMovementComponent&& other) noexcept = default;
+	CProjectileMovementComponent& operator=(const CProjectileMovementComponent& other) = default;
+	CProjectileMovementComponent& operator=(CProjectileMovementComponent&& other) noexcept = default;	
 
 public:
 	~CProjectileMovementComponent() override = default;

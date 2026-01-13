@@ -104,6 +104,15 @@ void CPlayer::AttackKey()
 	}
 }
 
+void CPlayer::JumpKey()
+{
+	if (auto Mesh = MeshComponent.lock())
+	{
+		Mesh->SetSimulatePhysics(true);
+		Mesh->SetUseGravity(true);
+	}
+}
+
 void CPlayer::Skill1Press()
 {
 	bAutoIdle = true;
@@ -159,15 +168,15 @@ bool CPlayer::Init()
 		Mesh->SetPivot(0.5f, 0.f);
 	}
 
-	Body = CreateComponent<CColliderBox2D>("Body");
-	if (auto Body = this->Body.lock())
-	{
-		Body->SetCollisionProfile("Player");
-		Body->SetBoxExtend(100.f, 100.f);
-		Body->SetDrawDebug(true);
-		Body->SetInheritScale(false);
-		Body->SetRelativePosition(0.f, 50.f, 0.f);
-	}
+	//Body = CreateComponent<CColliderBox2D>("Body");
+	//if (auto Body = this->Body.lock())
+	//{
+	//	Body->SetCollisionProfile("Player");
+	//	Body->SetBoxExtend(100.f, 100.f);
+	//	Body->SetDrawDebug(true);
+	//	Body->SetInheritScale(false);
+	//	Body->SetRelativePosition(0.f, 50.f, 0.f);
+	//}
 
 	Sphere2D = CreateComponent<CColliderSphere2D>("Sphere2D");
 	if (auto Sphere2D = this->Sphere2D.lock())
@@ -179,16 +188,16 @@ bool CPlayer::Init()
 		Sphere2D->SetRelativePosition(0.f, 50.f, 0.f);
 	}
 
-	Line2D = CreateComponent<CColliderLine2D>("Line2D");
-	if (auto Line2D = this->Line2D.lock())
-	{
-		Line2D->SetCollisionProfile("Player");
-		//Line2D->SetRadius(sqrtf(20000.f) * 0.5f);
-		Line2D->SetLineDistance(200.f);
-		Line2D->SetDrawDebug(true);
-		Line2D->SetInheritScale(false);
-		Line2D->SetRelativePosition(0.f, 100.f, 0.f);
-	}
+	//Line2D = CreateComponent<CColliderLine2D>("Line2D");
+	//if (auto Line2D = this->Line2D.lock())
+	//{
+	//	Line2D->SetCollisionProfile("Player");
+	//	//Line2D->SetRadius(sqrtf(20000.f) * 0.5f);
+	//	Line2D->SetLineDistance(200.f);
+	//	Line2D->SetDrawDebug(true);
+	//	Line2D->SetInheritScale(false);
+	//	Line2D->SetRelativePosition(0.f, 100.f, 0.f);
+	//}
 
 	Rotation = CreateComponent<CSceneComponent>("Rotation");
 	if (auto RotCmp = Rotation.lock())
@@ -267,6 +276,9 @@ bool CPlayer::Init()
 
 			Input->AddBindKey("Attack", VK_SPACE);
 			Input->SetBindFunction<CPlayer>("Attack", EInputType::Press, this, &CPlayer::AttackKey);
+
+			Input->AddBindKey("Jump", VK_RETURN);
+			Input->SetBindFunction<CPlayer>("Jump", EInputType::Press, this, &CPlayer::JumpKey);
 		}
 	}
 

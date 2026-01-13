@@ -34,6 +34,8 @@ public:
 
 	void CallOnCollisionBegin(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
 	void CallOnCollisionEnd(CCollider* Other);
+	void CallOnCollisionBlock(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
+	void OnCollisionBlockEnd();
 
 	virtual bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) = 0;
 
@@ -47,6 +49,12 @@ public:
 	void SetOnCollisionEnd(T* Obj, void (T::* Func)(CCollider*))
 	{
 		OnCollisionEnd = std::bind(Func, Obj, std::placeholders::_1);
+	}
+
+	template <typename T>
+	void SetOnCollisionBlock(T* Obj, void (T::* Func)(const FVector&, CCollider*))
+	{
+		OnCollisionBlock = std::bind(Func, Obj, std::placeholders::_1, std::placeholders::_2);
 	}
 
 protected:
@@ -72,15 +80,17 @@ protected:
 
 	std::function<void(const FVector&, CCollider*)> OnCollisionBegin;
 	std::function<void(CCollider*)> OnCollisionEnd;
+	std::function<void(const FVector&, CCollider*)> OnCollisionBlock;
 
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
 	void Render() override;
+	virtual void UpdateInfo() = 0;
 
 protected:
-	CCollider* Clone() const = 0;
+	CCollider* Clone() const override = 0;
 
 	CCollider() = default;
 
@@ -100,7 +110,8 @@ protected:
 		TransformCBuffer(std::move(other.TransformCBuffer)),
 		ColliderCBuffer(std::move(other.ColliderCBuffer)),
 		OnCollisionBegin(std::move(other.OnCollisionBegin)),
-		OnCollisionEnd(std::move(other.OnCollisionEnd))
+		OnCollisionEnd(std::move(other.OnCollisionEnd)),
+		OnCollisionBlock(std::move(other.OnCollisionBlock))
 	{
 		other.Profile = nullptr;
 	}
@@ -126,6 +137,7 @@ protected:
 		ColliderCBuffer = std::move(other.ColliderCBuffer);
 		OnCollisionBegin = std::move(other.OnCollisionBegin);
 		OnCollisionEnd = std::move(other.OnCollisionEnd);
+		OnCollisionBlock = std::move(other.OnCollisionBlock);
 		return *this;
 	}
 

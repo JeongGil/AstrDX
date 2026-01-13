@@ -94,6 +94,27 @@ public:
 		Pivot = FVector(x, y, 0.f);
 	}
 
+	void SetSimulatePhysics(bool bSimulate)
+	{
+		bSimulatePhysics = bSimulate;
+	}
+
+	void SetUseGravity(bool bUse)
+	{
+		bUseGravity = bUse;
+	}
+
+	void AddForce(const FVector& Force)
+	{
+		Accel += Force * (1.f / max(Mass, 0.0001f));
+	}
+
+	void ClearPhysics()
+	{
+		Accel = FVector::Zero;
+		PhysicsVelocity = FVector::Zero;
+	}
+
 	void SetInheritScale(bool bInherit);
 	void SetInheritRotation(bool bInherit);
 
@@ -199,6 +220,12 @@ protected:
 	FVector WorldPosition;
 
 	FVector Velocity;
+
+	bool bSimulatePhysics = false;
+	bool bUseGravity = false;
+	float Mass = 1.f;
+	FVector Accel;
+	FVector PhysicsVelocity;
 
 	std::array<FVector, EAxis::End> WorldAxis =
 	{

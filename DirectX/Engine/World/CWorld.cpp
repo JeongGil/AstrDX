@@ -61,21 +61,46 @@ void CWorld::PostUpdate(const float DeltaTime)
 {
 	Begin();
 
-	auto Curr = Objects.begin();
-	const auto End = Objects.end();
-	while (Curr != End)
+	auto It = Objects.begin();
+	while (It != Objects.end())
 	{
-		if (!Curr->second->GetAlive())
+		if (!It->second->GetAlive())
 		{
-			Curr = Objects.erase(Curr);
+			It = Objects.erase(It);
 			continue;
 		}
 
-		Curr->second->PostUpdate(DeltaTime);
-		++Curr;
+		It->second->PostUpdate(DeltaTime);
+		++It;
 	}
 
 	Collision->Update(DeltaTime);
+
+	It = Objects.begin();
+	while (It != Objects.end())
+	{
+		auto Obj = It->second;
+		if (Obj.use_count() == 0)
+		{
+			It = Objects.erase(It);
+			continue;
+		}
+
+		if (!Obj->GetAlive())
+		{
+			It = Objects.erase(It);
+			continue;
+		}
+
+		if (!Obj->GetEnable())
+		{
+			It = Objects.erase(It);
+			continue;
+		}
+
+		Obj->UpdateTransform();
+		++It;
+	}
 }
 
 void CWorld::Render()

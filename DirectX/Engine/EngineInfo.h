@@ -10,6 +10,8 @@
 #include <functional>
 #include <typeindex>
 #include <random>
+#include <charconv>
+#include <array>
 
 // check memory leak
 #include <crtdbg.h>
@@ -28,6 +30,8 @@
 #define SAFE_DELETE(p) { if(p) { delete (p); (p)=nullptr; } }
 #define SAFE_DELETE_ARRAY(P) { if (p) {delete[] (p); (p) = nullptr; } }
 #define SAFE_RELEASE(p) { if (p) { (p)->Release(); (p) = nullptr; } }
+
+#define GRAVITY2D (980.f)
 
 struct FResolution
 {
@@ -54,30 +58,9 @@ struct FVertexColor
 	}
 
 	FVertexColor(const FVertexColor& other) = default;
-
-	FVertexColor(FVertexColor&& other) noexcept
-		: Pos(std::move(other.Pos)),
-		Color(std::move(other.Color))
-	{
-	}
-
-	FVertexColor& operator=(const FVertexColor& other)
-	{
-		if (this == &other)
-			return *this;
-		Pos = other.Pos;
-		Color = other.Color;
-		return *this;
-	}
-
-	FVertexColor& operator=(FVertexColor&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		Pos = std::move(other.Pos);
-		Color = std::move(other.Color);
-		return *this;
-	}
+	FVertexColor(FVertexColor&& other) noexcept = default;
+	FVertexColor& operator=(const FVertexColor& other) = default;
+	FVertexColor& operator=(FVertexColor&& other) noexcept = default;
 };
 
 struct FVertexTex
@@ -94,37 +77,22 @@ struct FVertexTex
 	}
 
 	FVertexTex(const FVertexTex& other) = default;
-
-	FVertexTex(FVertexTex&& other) noexcept
-		: Pos(std::move(other.Pos)),
-		UV(std::move(other.UV))
-	{
-	}
-
-	FVertexTex& operator=(const FVertexTex& other)
-	{
-		if (this == &other)
-			return *this;
-		Pos = other.Pos;
-		UV = other.UV;
-		return *this;
-	}
-
-	FVertexTex& operator=(FVertexTex&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		Pos = std::move(other.Pos);
-		UV = std::move(other.UV);
-		return *this;
-	}
+	FVertexTex(FVertexTex&& other) noexcept = default;
+	FVertexTex& operator=(const FVertexTex& other) = default;
+	FVertexTex& operator=(FVertexTex&& other) noexcept = default;
 };
 
 struct FTextureFrame
 {
 	FTextureFrame() = default;
 
-	FTextureFrame(FVector2& start, FVector2& size)
+	FTextureFrame(const FVector2& start, const FVector2& size)
+		: Start(start),
+		Size(size)
+	{
+	}
+
+	FTextureFrame(FVector2&& start, FVector2&& size)
 		: Start(std::move(start)),
 		Size(std::move(size))
 	{
@@ -137,30 +105,9 @@ struct FTextureFrame
 	}
 
 	FTextureFrame(const FTextureFrame& other) = default;
-
-	FTextureFrame(FTextureFrame&& other) noexcept
-		: Start(std::move(other.Start)),
-		Size(std::move(other.Size))
-	{
-	}
-
-	FTextureFrame& operator=(const FTextureFrame& other)
-	{
-		if (this == &other)
-			return *this;
-		Start = other.Start;
-		Size = other.Size;
-		return *this;
-	}
-
-	FTextureFrame& operator=(FTextureFrame&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		Start = std::move(other.Start);
-		Size = std::move(other.Size);
-		return *this;
-	}
+	FTextureFrame(FTextureFrame&& other) noexcept = default;
+	FTextureFrame& operator=(const FTextureFrame& other) = default;
+	FTextureFrame& operator=(FTextureFrame&& other) noexcept = default;
 
 	FVector2 Start;
 	FVector2 Size;
@@ -229,7 +176,8 @@ namespace ECollisionInteraction
 	enum Type
 	{
 		Ignore,
-		Collision,
+		Overlap,
+		Block,
 		End,
 	};
 }
@@ -259,3 +207,32 @@ struct FLine2DInfo
 	FVector Start;
 	FVector End;
 };
+
+struct TableID
+{
+	int value;
+
+	explicit TableID(int v) : value(v) {}
+	explicit TableID(unsigned int v) : value(static_cast<int>(v)) {}
+
+	operator int() const
+	{
+		return value;
+	}
+
+	bool operator==(const TableID& other) const { return value == other.value; }
+	bool operator!=(const TableID& other) const { return value != other.value; }
+	bool operator<(const TableID& other) const { return value < other.value; }
+};
+
+namespace std
+{
+	template <>
+	struct hash<TableID>
+	{
+		size_t operator()(const TableID& t) const noexcept
+		{
+			return hash<unsigned int>{}(t.value);
+		}
+	};
+}

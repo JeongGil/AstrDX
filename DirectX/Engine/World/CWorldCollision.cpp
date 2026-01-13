@@ -1,6 +1,7 @@
 #include "CWorldCollision.h"
 
 #include "../Component/CCollider.h"
+#include "../Object/CGameObject.h"
 
 bool CWorldCollision::Init()
 {
@@ -9,48 +10,50 @@ bool CWorldCollision::Init()
 
 void CWorldCollision::Update(const float DeltaTime)
 {
-	if (Interval > 0.f)
+	//if (Interval > 0.f)
+	//{
+	//	Elapsed += DeltaTime;
+	//
+	//	if (Elapsed < Interval)
+	//	{
+	//		return;
+	//	}
+	//
+	//	Elapsed -= Interval;
+	//}
+
+	UpdateInfo();
+
+	auto SrcIt = Colliders.begin();
+	while (SrcIt != Colliders.end())
 	{
-		Elapsed += DeltaTime;
-
-		if (Elapsed < Interval)
-		{
-			return;
-		}
-
-		Elapsed -= Interval;
-	}
-
-	auto It = Colliders.begin();
-	while (It != Colliders.end())
-	{
-		auto SrcCollider = It->lock();
+		auto SrcCollider = SrcIt->lock();
 		if (!SrcCollider)
 		{
-			It = Colliders.erase(It);
+			SrcIt = Colliders.erase(SrcIt);
 			continue;
 		}
 
 		if (!SrcCollider->GetAlive())
 		{
-			It = Colliders.erase(It);
+			SrcIt = Colliders.erase(SrcIt);
 			continue;
 		}
 
 		if (!SrcCollider->GetEnable())
 		{
-			++It;
+			++SrcIt;
 			continue;
 		}
 
 		auto SrcProfile = SrcCollider->GetCollisionProfile();
 		if (!SrcProfile || !SrcProfile->bEnable)
 		{
-			++It;
+			++SrcIt;
 			continue;
 		}
 
-		auto DestIt = std::next(It);
+		auto DestIt = std::next(SrcIt);
 		while (DestIt != Colliders.end())
 		{
 			std::shared_ptr<CCollider> DestCollider = DestIt->lock();
@@ -79,9 +82,18 @@ void CWorldCollision::Update(const float DeltaTime)
 				continue;
 			}
 
+			auto Src2Dest = SrcProfile->Interaction[DestProfile->Channel->Channel];
+			auto Dest2Src = DestProfile->Interaction[SrcProfile->Channel->Channel];
+
 			// Check interaction
-			if (SrcProfile->Interaction[DestProfile->Channel->Channel] == ECollisionInteraction::Ignore
-				|| DestProfile->Interaction[SrcProfile->Channel->Channel] == ECollisionInteraction::Ignore)
+			if (Src2Dest == ECollisionInteraction::Ignore
+				|| Dest2Src == ECollisionInteraction::Ignore)
+			{
+				++DestIt;
+				continue;
+			}
+
+			if (Src2Dest != Dest2Src)
 			{
 				++DestIt;
 				continue;
@@ -90,26 +102,91 @@ void CWorldCollision::Update(const float DeltaTime)
 			FVector3 HitPoint;
 			if (SrcCollider->Collide(HitPoint, DestCollider))
 			{
-				// OnCollisionBegin
-				if (!SrcCollider->CheckCollidingObject(DestCollider.get()))
+				auto SrcObj = SrcCollider->GetOwner().lock();
+				auto DestObj = DestCollider->GetOwner().lock();
+
+				if (Src2Dest == ECollisionInteraction::Block)
 				{
-					SrcCollider->CallOnCollisionBegin(HitPoint, DestCollider);
-					DestCollider->CallOnCollisionBegin(HitPoint, SrcCollider);
+					auto SrcVelocity = SrcObj->GetVelocity();
+					auto DestVelocity = DestObj->GetVelocity();
+
+					if (!SrcVelocity.IsZero() && DestVelocity.IsZero())
+					{
+						SrcObj->AddWorldPosition((SrcVelocity / -2.f) * 1.01f);
+						DestObj->AddWorldPosition((DestVelocity / -2.f) * 1.01f);
+
+						SrcCollider->UpdateInfo();
+					}
+					else if (!SrcVelocity.IsZero())
+					{
+						SrcObj->AddWorldPosition(-(SrcVelocity * 1.01f));
+
+						SrcCollider->UpdateInfo();
+					}
+					else if (!DestVelocity.IsZero())
+					{
+						DestObj->AddWorldPosition(-(DestVelocity * 1.01f));
+
+						DestCollider->UpdateInfo();
+					}
+
+					SrcObj->ClearPhysics();
+					DestObj->ClearPhysics();
+
+					SrcCollider->CallOnCollisionBlock(HitPoint, DestCollider);
+					DestCollider->CallOnCollisionBlock(HitPoint, SrcCollider);
+				}
+				else
+				{
+					// OnCollisionBegin
+					if (!SrcCollider->CheckCollidingObject(DestCollider.get()))
+					{
+						SrcCollider->CallOnCollisionBegin(HitPoint, DestCollider);
+						DestCollider->CallOnCollisionBegin(HitPoint, SrcCollider);
+					}
 				}
 			}
-			else
+			else if (SrcCollider->CheckCollidingObject(DestCollider.get()))
 			{
 				// OnCollisionEnd
-				if (SrcCollider->CheckCollidingObject(DestCollider.get()))
+				if (SrcProfile->Interaction[DestProfile->Channel->Channel] == ECollisionInteraction::Overlap)
 				{
 					SrcCollider->CallOnCollisionEnd(DestCollider.get());
 					DestCollider->CallOnCollisionEnd(SrcCollider.get());
+				}
+				else
+				{
+					
 				}
 			}
 
 			++DestIt;
 		}
 
+		++SrcIt;
+	}
+}
+
+void CWorldCollision::UpdateInfo()
+{
+	auto It = Colliders.begin();
+
+	while (It != Colliders.end())
+	{
+		auto Collider = It->lock();
+		if (!Collider)
+		{
+			It = Colliders.erase(It);
+			continue;
+		}
+
+		if (!Collider->GetAlive())
+		{
+			It = Colliders.erase(It);
+			continue;
+		}
+
+		Collider->UpdateInfo();
 		++It;
 	}
 }

@@ -1,5 +1,7 @@
 #include "CCharacter.h"
 
+#include "Component/CColliderBox2D.h"
+
 #include "../Strings.h"
 
 bool CCharacter::Init()
@@ -9,7 +11,15 @@ bool CCharacter::Init()
 		return false;
 	}
 
+	Root = CreateComponent<CSceneComponent>(Comp::Root);
+
 	Collider = CreateComponent<CColliderBox2D>(Comp::Collider);
+	if (auto Collider = this->Collider.lock())
+	{
+		Collider->SetCollisionProfile("Character");
+		Collider->SetDrawDebug(false);
+		Collider->SetInheritScale(false);
+	}
 
 	return true;
 }

@@ -139,6 +139,9 @@
     <Filter Include="Compnent\SceneComponent\Collider\3D">
       <UniqueIdentifier>{2fd3b142-3409-4f5c-b320-e1b04233d630}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Table">
+      <UniqueIdentifier>{89a2b37a-bd07-4a50-9588-80d11b1cf1f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -350,6 +353,12 @@
     </ClInclude>
     <ClInclude Include="Component\CColliderLine2D.h">
       <Filter>Compnent\SceneComponent\Collider\2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\TableBase.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\TableInfoBase.h">
+      <Filter>Table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

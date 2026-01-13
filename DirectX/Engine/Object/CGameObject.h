@@ -13,6 +13,11 @@ class CGameObject :
 	friend CObject;
 
 public:
+	void SetSimulatePhysics(bool bSimulate);
+	void SetUseGravity(bool bUse);
+	void AddForce(const FVector& Force);
+	void ClearPhysics();
+
 	std::weak_ptr<CWorld> GetWorld() const
 	{
 		return World;
@@ -50,6 +55,10 @@ public:
 	}
 
 public:
+	const FVector& GetPivot() const;
+	const FVector& GetVelocity() const;
+	float GetSpeed() const;
+
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;
 	const FVector& GetRelativeRotation() const;
@@ -147,6 +156,7 @@ public:
 	virtual bool Init();
 	virtual void Update(const float DeltaTime);
 	virtual void PostUpdate(const float DeltaTime);
+	virtual void UpdateTransform();
 	virtual void Render();
 	virtual void Destroy();
 

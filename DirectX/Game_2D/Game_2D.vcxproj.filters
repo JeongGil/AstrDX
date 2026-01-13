@@ -37,6 +37,12 @@
     <Filter Include="Character">
       <UniqueIdentifier>{fe92c45b-5b7e-45e0-ae45-0a3ac018cc88}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Table">
+      <UniqueIdentifier>{4613ae85-46c9-465f-aa21-5927779fd99d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Inventory">
+      <UniqueIdentifier>{e0512f9b-0e11-4458-a418-1a31e7ed58c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -136,6 +142,21 @@
     </ClInclude>
     <ClInclude Include="Character\CWeapon.h">
       <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\WeaponInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\WeaponTable.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\ItemInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\ItemTable.h">
+      <Filter>Table</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

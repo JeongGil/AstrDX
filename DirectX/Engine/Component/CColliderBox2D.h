@@ -40,6 +40,7 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
+	void UpdateInfo() override;
 
 protected:
 	CColliderBox2D* Clone() const override;

@@ -98,6 +98,11 @@ void CColliderBox2D::PostUpdate(const float DeltaTime)
 {
 	CCollider::PostUpdate(DeltaTime);
 
+	UpdateInfo();
+}
+
+void CColliderBox2D::UpdateInfo()
+{
 	Info.Center = WorldPosition;
 
 	Info.Axis[EAxis::X] = WorldAxis[EAxis::X];

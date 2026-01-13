@@ -100,6 +100,11 @@ void CColliderLine2D::PostUpdate(const float DeltaTime)
 {
 	CCollider::PostUpdate(DeltaTime);
 
+	UpdateInfo();
+}
+
+void CColliderLine2D::UpdateInfo()
+{
 	Info.Start = WorldPosition;
 
 	FVector Dir = LineDirection.TransformNormal(RotationMatrix).GetNormalized();

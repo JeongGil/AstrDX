@@ -44,6 +44,7 @@ protected:
 	ETeam Team;
 	ETargetState TargetState = ETargetState::Normal;
 
+	std::weak_ptr<CSceneComponent> Root;
 	std::weak_ptr<CColliderBox2D> Collider;
 	std::weak_ptr<CMeshComponent> Mesh;
 

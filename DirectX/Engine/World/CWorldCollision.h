@@ -22,6 +22,9 @@ public:
 	}
 
 private:
+	void UpdateInfo();
+
+private:
 	std::list<std::weak_ptr<CCollider>> Colliders;
 
 	float Interval = 0.f;

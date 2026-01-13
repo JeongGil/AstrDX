@@ -584,6 +584,8 @@ void CSceneComponent::Begin()
 	InheritRelativeScale();
 	InheritRelativeRotation();
 	InheritRelativePosition();
+
+	Velocity = FVector::Zero;
 }
 
 bool CSceneComponent::Init()
@@ -603,6 +605,17 @@ bool CSceneComponent::Init()
 
 void CSceneComponent::Update(const float DeltaTime)
 {
+	if (bSimulatePhysics)
+	{
+		if (bUseGravity)
+		{
+			Accel.y -= GRAVITY2D;
+		}
+
+		PhysicsVelocity += Accel * DeltaTime;
+
+		AddRelativePosition(PhysicsVelocity * DeltaTime);
+	}
 	//for (const auto& WeakChild : Children)
 	//{
 	//	if (auto Child = WeakChild.lock())
@@ -614,7 +627,7 @@ void CSceneComponent::Update(const float DeltaTime)
 
 void CSceneComponent::PostUpdate(const float DeltaTime)
 {
-	UpdateTransform();
+	//UpdateTransform();
 
 	//for (const auto& WeakChild : Children)
 	//{
@@ -640,6 +653,8 @@ void CSceneComponent::Render()
 void CSceneComponent::PostRender()
 {
 	Velocity = FVector::Zero;
+
+	Accel = FVector::Zero;
 }
 
 CSceneComponent* CSceneComponent::Clone() const

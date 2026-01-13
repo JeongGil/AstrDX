@@ -53,44 +53,10 @@ protected:
 
 protected:
 	CObjectMovementComponent() = default;
-
-	CObjectMovementComponent(const CObjectMovementComponent& other)
-		: CMovementComponent(other),
-		  MoveDirection(other.MoveDirection),
-		  Speed(other.Speed),
-		  Velocity(other.Velocity)
-	{
-	}
-
-	CObjectMovementComponent(CObjectMovementComponent&& other) noexcept
-		: CMovementComponent(std::move(other)),
-		  MoveDirection(std::move(other.MoveDirection)),
-		  Speed(other.Speed),
-		  Velocity(std::move(other.Velocity))
-	{
-	}
-
-	CObjectMovementComponent& operator=(const CObjectMovementComponent& other)
-	{
-		if (this == &other)
-			return *this;
-		CMovementComponent::operator =(other);
-		MoveDirection = other.MoveDirection;
-		Speed = other.Speed;
-		Velocity = other.Velocity;
-		return *this;
-	}
-
-	CObjectMovementComponent& operator=(CObjectMovementComponent&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CMovementComponent::operator =(std::move(other));
-		MoveDirection = std::move(other.MoveDirection);
-		Speed = other.Speed;
-		Velocity = std::move(other.Velocity);
-		return *this;
-	}
+	CObjectMovementComponent(const CObjectMovementComponent& other) = default;
+	CObjectMovementComponent(CObjectMovementComponent&& other) noexcept = default;
+	CObjectMovementComponent& operator=(const CObjectMovementComponent& other) = default;
+	CObjectMovementComponent& operator=(CObjectMovementComponent&& other) noexcept = default;
 
 public:
 	~CObjectMovementComponent() override = default;

@@ -1,5 +1,37 @@
 #include "CGameObject.h"
 
+void CGameObject::SetSimulatePhysics(bool bSimulate)
+{
+	if (auto Root = this->Root.lock())
+	{
+		Root->SetSimulatePhysics(bSimulate);
+	}
+}
+
+void CGameObject::SetUseGravity(bool bUse)
+{
+	if (auto Root = this->Root.lock())
+	{
+		Root->SetUseGravity(bUse);
+	}
+}
+
+void CGameObject::AddForce(const FVector& Force)
+{
+	if (auto Root = this->Root.lock())
+	{
+		Root->AddForce(Force);
+	}
+}
+
+void CGameObject::ClearPhysics()
+{
+	if (auto Root = this->Root.lock())
+	{
+		Root->ClearPhysics();
+	}
+}
+
 void CGameObject::SetWorld(const std::weak_ptr<CWorld>& World)
 {
 	this->World = World;
@@ -8,6 +40,36 @@ void CGameObject::SetWorld(const std::weak_ptr<CWorld>& World)
 	{
 		Cmp->SetWorld(World);
 	}
+}
+
+const FVector& CGameObject::GetPivot() const
+{
+	if (auto Root = this->Root.lock())
+	{
+		return Root->GetPivot();
+	}
+
+	return FVector::Zero;
+}
+
+const FVector& CGameObject::GetVelocity() const
+{
+	if (auto Root = this->Root.lock())
+	{
+		return Root->GetVelocity();
+	}
+
+	return FVector::Zero;
+}
+
+float CGameObject::GetSpeed() const
+{
+	if (auto Root = this->Root.lock())
+	{
+		return Root->GetSpeed();
+	}
+
+	return 0.f;
 }
 
 const FVector& CGameObject::GetAxis(EAxis::Type Axis) const
@@ -602,7 +664,7 @@ void CGameObject::Update(const float DeltaTime)
 	while (SceneIt != SceneEnd)
 	{
 		auto Cmp = *SceneIt;
-		if (Cmp.use_count()==0)
+		if (Cmp.use_count() == 0)
 		{
 			SceneIt = SceneComponents.erase(SceneIt);
 			SceneEnd = SceneComponents.end();
@@ -713,6 +775,35 @@ void CGameObject::PostUpdate(const float DeltaTime)
 
 		Cmp->PostUpdate(DeltaTime);
 		++ObjectIt;
+	}
+}
+
+void CGameObject::UpdateTransform()
+{
+	auto It = SceneComponents.begin();
+	while (It != SceneComponents.end())
+	{
+		auto Cmp = *It;
+		if (Cmp.use_count() == 0)
+		{
+			It = SceneComponents.erase(It);
+			continue;
+		}
+
+		if (!Cmp->GetAlive())
+		{
+			It = SceneComponents.erase(It);
+			continue;
+		}
+
+		if (!Cmp->GetEnable())
+		{
+			++It;
+			continue;
+		}
+
+		Cmp->UpdateTransform();
+		++It;
 	}
 }
 

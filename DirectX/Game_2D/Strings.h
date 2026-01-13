@@ -62,4 +62,5 @@ namespace Path
 namespace Comp
 {
 	inline const std::string Collider = "Collider";
+	inline const std::string Root = "Root";
 }

@@ -9,8 +9,8 @@ public:
 
 	void CreateChannel(const std::string& Key);
 	
-	bool CreateProfile(const std::string& Key, const std::string& ChannelKey, bool bEnable, ECollisionInteraction::Type DefaultInteraction = ECollisionInteraction::Collision);
-	bool CreateProfile(const std::string& Key, ECollisionChannel::Type Channel, bool bEnable, ECollisionInteraction::Type DefaultInteraction = ECollisionInteraction::Collision);
+	bool CreateProfile(const std::string& Key, const std::string& ChannelKey, bool bEnable, ECollisionInteraction::Type DefaultInteraction = ECollisionInteraction::Block);
+	bool CreateProfile(const std::string& Key, ECollisionChannel::Type Channel, bool bEnable, ECollisionInteraction::Type DefaultInteraction = ECollisionInteraction::Block);
 
 	bool SetProfileInteraction(const std::string& Key, const std::string& ChannelKey, ECollisionInteraction::Type Interaction);
 	bool SetProfileInteraction(const std::string& Key, ECollisionChannel::Type Channel, ECollisionInteraction::Type Interaction);

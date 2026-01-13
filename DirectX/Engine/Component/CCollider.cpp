@@ -64,6 +64,21 @@ void CCollider::CallOnCollisionEnd(CCollider* Other)
 	}
 }
 
+void CCollider::CallOnCollisionBlock(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other)
+{
+	if (auto _Other = Other.lock())
+	{
+		if (OnCollisionBlock)
+		{
+			OnCollisionBlock(HitPoint, _Other.get());
+		}
+	}
+}
+
+void CCollider::OnCollisionBlockEnd()
+{
+}
+
 bool CCollider::Init()
 {
 	if (!CSceneComponent::Init())

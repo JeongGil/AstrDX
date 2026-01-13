@@ -1,10 +1,10 @@
 #include "CBullet.h"
 
-#include <CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 #include <Component/CProjectileMovementComponent.h>
 #include "CBulletEffect.h"
 #include "../Component/CStateComponent.h"
+#include "Component/CColliderBox2D.h"
 
 void CBullet::SetMoveDirection(const FVector& MoveDirection)
 {
@@ -59,6 +59,24 @@ void CBullet::MoveEndFunction()
 
 void CBullet::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 {
+	//Destroy();
+	//
+	//if (auto World = this->World.lock())
+	//{
+	//	std::weak_ptr<CBulletEffect> WeakEffect = World->CreateGameObject<CBulletEffect>("BulletEffect");
+	//	if (auto Effect = WeakEffect.lock())
+	//	{
+	//		Effect->SetWorldPosition(HitPoint);
+	//	}
+	//}
+}
+
+void CBullet::OnCollisionEnd(CCollider* Other)
+{
+}
+
+void CBullet::OnCollisionBlock(const FVector& HitPoint, CCollider* Other)
+{
 	Destroy();
 
 	if (auto World = this->World.lock())
@@ -69,10 +87,6 @@ void CBullet::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 			Effect->SetWorldPosition(HitPoint);
 		}
 	}
-}
-
-void CBullet::OnCollisionEnd(CCollider* Other)
-{
 }
 
 bool CBullet::Init()
@@ -105,6 +119,7 @@ bool CBullet::Init()
 	{
 		Body->SetOnCollisionBegin<CBullet>(this, &CBullet::OnCollisionBegin);
 		Body->SetOnCollisionEnd<CBullet>(this, &CBullet::OnCollisionEnd);
+		Body->SetOnCollisionBlock<CBullet>(this, &CBullet::OnCollisionBlock);
 
 		Body->SetCollisionProfile("PlayerAttack");
 		Body->SetBoxExtend(50.f, 50.f);

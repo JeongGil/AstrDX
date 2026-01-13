@@ -51,6 +51,11 @@ void CColliderSphere2D::PostUpdate(const float DeltaTime)
 {
 	CCollider::PostUpdate(DeltaTime);
 
+	UpdateInfo();
+}
+
+void CColliderSphere2D::UpdateInfo()
+{
 	Info.Center = WorldPosition;
 
 	RenderScale.x = WorldScale.x = Info.Radius;
