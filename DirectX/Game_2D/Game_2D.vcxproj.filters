@@ -90,8 +90,17 @@
     <ClCompile Include="CHitPointComponent.cpp">
       <Filter>Component\State</Filter>
     </ClCompile>
-    <ClCompile Include="Character\CWeapon.cpp">
+    <ClCompile Include="Character\CWeapon_Battle.cpp">
       <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory\CShop.cpp">
+      <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory\CInventory.cpp">
+      <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory\CWeaponData.cpp">
+      <Filter>Inventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -140,7 +149,7 @@
     <ClInclude Include="CHitPointComponent.h">
       <Filter>Component\State</Filter>
     </ClInclude>
-    <ClInclude Include="Character\CWeapon.h">
+    <ClInclude Include="Character\CWeapon_Battle.h">
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Table\WeaponInfo.h">
@@ -157,6 +166,27 @@
     </ClInclude>
     <ClInclude Include="Table\ItemTable.h">
       <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\CharacterVisualInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\CharacterVisualTable.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\MiscInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\MisnTable.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory\CShop.h">
+      <Filter>Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory\CInventory.h">
+      <Filter>Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory\CWeapon_Inventory.h">
+      <Filter>Inventory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

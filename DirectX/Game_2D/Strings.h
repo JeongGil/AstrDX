@@ -63,4 +63,7 @@ namespace Comp
 {
 	inline const std::string Collider = "Collider";
 	inline const std::string Root = "Root";
+	inline const std::string Potato = "Potato";
+	inline const std::string Leg = "Leg";
+	inline const std::string Deco = "Deco";
 }

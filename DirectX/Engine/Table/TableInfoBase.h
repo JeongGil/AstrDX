@@ -4,6 +4,8 @@
 
 struct FTableInfoBase abstract
 {
+	inline const static char Delim = ',';
+
 	TableID ID;
 
 	virtual bool Load(std::stringstream& Stream) = 0;
@@ -15,9 +17,4 @@ protected:
 		auto [Ptr, Errc] = std::from_chars(Str.data(), Str.data() + Str.size(), OutValue);
 		return Errc == std::errc() && Ptr == Str.data() + Str.size();
 	}
-
-	FTableInfoBase() = default;
-	virtual ~FTableInfoBase() = default;
-
-	inline const static char Delim = ',';
 };

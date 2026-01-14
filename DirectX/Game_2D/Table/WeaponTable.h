@@ -6,4 +6,7 @@ class WeaponTable : public TableBase<WeaponTable, FWeaponInfo>
 {
 private:
 	WeaponTable() = default;
+
+protected:
+	~WeaponTable() override = default;
 };

@@ -18,8 +18,6 @@ struct FSpecialEffect
 struct FWeaponInfo
 	: FTableInfoBase
 {
-	friend class WeaponTable;
-
 	std::string Name;
 	EWeaponType::Type Type;
 	
@@ -121,7 +119,6 @@ struct FWeaponInfo
 		return true;
 	}
 
-protected:
 	FWeaponInfo() = default;
 	~FWeaponInfo() override = default;
 };

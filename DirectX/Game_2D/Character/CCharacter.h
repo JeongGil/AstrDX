@@ -40,13 +40,26 @@ public:
 	{
 		Team = InTeam;
 	}
+
+protected:
+	void SetSquashAndStretchParams(float Intensity, float Period)
+	{
+		SSIntensity = Intensity;
+		SSPeriod = 1.f;
+	}
+
+private:
+	void SquashAndStretch(float DeltaTime, float Intensity, float Period);
+	float SSElapsed = 0.f;
+	float SSIntensity = 0.2f;
+	float SSPeriod = 1.f;
+
 protected:
 	ETeam Team;
 	ETargetState TargetState = ETargetState::Normal;
 
 	std::weak_ptr<CSceneComponent> Root;
 	std::weak_ptr<CColliderBox2D> Collider;
-	std::weak_ptr<CMeshComponent> Mesh;
 
 protected:
 	CCharacter() = default;

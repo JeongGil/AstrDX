@@ -1,6 +1,10 @@
 #pragma once
 #include "CCharacter.h"
 
+#include "../Table/CharacterVisualInfo.h"
+
+struct FCharacterVisualInfo;
+
 class CPlayerCharacter :
     public CCharacter
 {
@@ -9,14 +13,17 @@ public:
 	void Update(const float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
 
+	void SetCharacterVisual(const FCharacterVisualInfo& VisualInfo);
+
 protected:
 	CPlayerCharacter* Clone() override;
 
 protected:
-	std::weak_ptr<CMeshComponent> EyesMesh;
-	std::weak_ptr<CMeshComponent> MouthMesh;
-	std::weak_ptr<CMeshComponent> DecoMesh;
-	std::weak_ptr<CMeshComponent> LegMesh;
+	FCharacterVisualInfo CharacterVisualInfo;
+
+	std::weak_ptr<CMeshComponent> Potato;
+	std::weak_ptr<CMeshComponent> Leg;
+	std::vector<std::weak_ptr<CMeshComponent>> Decos;
 
 protected:
 	CPlayerCharacter() = default;

@@ -63,9 +63,7 @@ bool CWorldAssetManager::LoadTexture(const std::string& Key, const TCHAR* FileNa
 		return false;
 	}
 
-	Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey));
-
-	return true;
+	return Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey)).second;
 }
 
 bool CWorldAssetManager::LoadTextureFullPath(const std::string& Key, const TCHAR* FullPath)
@@ -82,9 +80,7 @@ bool CWorldAssetManager::LoadTextureFullPath(const std::string& Key, const TCHAR
 		return false;
 	}
 
-	Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey));
-
-	return true;
+	return Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey)).second;
 }
 
 bool CWorldAssetManager::LoadTextures(const std::string& Key, const std::vector<const TCHAR*>& FileNames,
@@ -102,9 +98,7 @@ bool CWorldAssetManager::LoadTextures(const std::string& Key, const std::vector<
 		return false;
 	}
 
-	Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey));
-
-	return true;
+	return Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey)).second;
 }
 
 bool CWorldAssetManager::LoadTexturesFullPath(const std::string& Key, const std::vector<const TCHAR*>& FullPaths)
@@ -121,9 +115,7 @@ bool CWorldAssetManager::LoadTexturesFullPath(const std::string& Key, const std:
 		return false;
 	}
 
-	Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey));
-
-	return true;
+	return Assets.try_emplace(InnerKey, TexMgr->FindTexture(InnerKey)).second;
 }
 
 std::weak_ptr<CTexture> CWorldAssetManager::FindTexture(const std::string& Key)
@@ -162,9 +154,7 @@ bool CWorldAssetManager::CreateAnimation(const std::string& AnimKey)
 		return false;
 	}
 
-	Assets.try_emplace(InnerKey, Mgr->FindAnimation(InnerKey));
-
-	return true;
+	return Assets.try_emplace(InnerKey, Mgr->FindAnimation(InnerKey)).second;
 }
 
 std::weak_ptr<CAnimation2D> CWorldAssetManager::FindAnimation(const std::string& AnimKey)

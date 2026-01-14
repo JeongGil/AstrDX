@@ -12,6 +12,8 @@
 #include <random>
 #include <charconv>
 #include <array>
+#include <atlbase.h>
+#include <atlconv.h>
 
 // check memory leak
 #include <crtdbg.h>

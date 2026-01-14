@@ -1,9 +1,11 @@
 #pragma once
 #include <Table/TableInfoBase.h>
 
-struct FItemInfo : FTableInfoBase
+struct FCharacterVisualInfo : FTableInfoBase
 {
-	std::string Name;
+	std::string Eye;
+	std::string Mouth;
+	std::array<std::string, 5> Decos;
 
 	bool Load(std::stringstream& Stream) override
 	{
@@ -19,7 +21,16 @@ struct FItemInfo : FTableInfoBase
 			ID = TableID(IntVal);
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			Name = Segment;
+			Eye = Segment;
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			Mouth = Segment;
+
+			for (auto& Deco : Decos)
+			{
+				if (!std::getline(Stream, Segment, Delim)) { return false; }
+				Deco = Segment;
+			}
 		}
 		catch (...)
 		{
@@ -29,6 +40,6 @@ struct FItemInfo : FTableInfoBase
 		return true;
 	}
 
-	FItemInfo() = default;
-	~FItemInfo() override = default;
+	FCharacterVisualInfo() = default;
+	~FCharacterVisualInfo() override = default;
 };
