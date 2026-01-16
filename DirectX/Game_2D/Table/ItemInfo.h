@@ -12,7 +12,7 @@ struct FItemInfo : FTableInfoBase
 			std::string Segment;
 
 			int IntVal;
-			uint8_t Uint8Val;
+			//uint8_t Uint8Val;
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, IntVal)) { return false; }
@@ -30,5 +30,5 @@ struct FItemInfo : FTableInfoBase
 	}
 
 	FItemInfo() = default;
-	~FItemInfo() override = default;
+	~FItemInfo() = default;
 };

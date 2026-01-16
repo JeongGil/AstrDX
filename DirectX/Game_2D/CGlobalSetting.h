@@ -13,6 +13,6 @@ private:
 	CGlobalSetting() = default;
 
 public:
-	~CGlobalSetting() override = default;
+	~CGlobalSetting() = default;
 };
 

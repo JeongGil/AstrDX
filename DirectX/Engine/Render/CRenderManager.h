@@ -19,6 +19,7 @@ class CRenderManager
 public:
 	bool CreateLayer(const std::string& Name, int RenderOrder, ERenderListSort SortType);
 	void AddRenderLayer(const std::weak_ptr<CSceneComponent>& Component);
+	bool TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSceneComponent>& WeakComponent);
 	void ClearRenderLayer(int LayerOrder);
 
 	void AddBlendRenderTargetDesc(const std::string& Key,

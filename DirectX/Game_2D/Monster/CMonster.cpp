@@ -1,12 +1,12 @@
 #include "CMonster.h"
 
-#include <CColliderBox2D.h>
+#include <Component/CAnimation2DComponent.h>
+#include <Component/CColliderBox2D.h>
+#include <Component/CColliderLine2D.h>
+#include <Component/CColliderSphere2D.h>
+#include <Component/CMeshComponent.h>
+#include <World/CWorld.h>
 #include "../Player/CBullet.h"
-#include "Component/CAnimation2DComponent.h"
-#include "Component/CColliderSphere2D.h"
-#include "Component/CMeshComponent.h"
-#include "World/CWorld.h"
-#include "Component/CColliderLine2D.h"
 
 bool CMonster::Init()
 {

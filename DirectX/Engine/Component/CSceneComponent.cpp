@@ -24,6 +24,19 @@ void CSceneComponent::UpdateTransform()
 	WorldMatrix = ScaleMatrix * RotationMatrix * TranslateMatrix;
 }
 
+bool CSceneComponent::TrySetRenderLayer(const int NewRenderLayer)
+{
+	int OldRenderLayer = RenderLayer;
+
+	bool Result = CRenderManager::GetInst()->TrySetRenderLayer(OldRenderLayer, NewRenderLayer, std::dynamic_pointer_cast<CSceneComponent>(shared_from_this()));
+	if (Result)
+	{
+		RenderLayer = NewRenderLayer;
+	}
+	
+	return Result;
+}
+
 const FVector& CSceneComponent::GetAxis(EAxis::Type Axis) const
 {
 	return WorldAxis[Axis];

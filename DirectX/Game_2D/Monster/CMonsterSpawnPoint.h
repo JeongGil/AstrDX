@@ -34,48 +34,10 @@ public:
 
 protected:
 	CMonsterSpawnPoint() = default;
-
-	CMonsterSpawnPoint(const CMonsterSpawnPoint& other)
-		: CGameObject(other),
-		  SpawnType(other.SpawnType),
-		  ElapsedFromSpawn(other.ElapsedFromSpawn),
-		  SpawnTime(other.SpawnTime),
-		  Spawned(other.Spawned)
-	{
-	}
-
-	CMonsterSpawnPoint(CMonsterSpawnPoint&& other) noexcept
-		: CGameObject(std::move(other)),
-		  SpawnType(std::move(other.SpawnType)),
-		  ElapsedFromSpawn(other.ElapsedFromSpawn),
-		  SpawnTime(other.SpawnTime),
-		  Spawned(std::move(other.Spawned))
-	{
-	}
-
-	CMonsterSpawnPoint& operator=(const CMonsterSpawnPoint& other)
-	{
-		if (this == &other)
-			return *this;
-		CGameObject::operator =(other);
-		SpawnType = other.SpawnType;
-		ElapsedFromSpawn = other.ElapsedFromSpawn;
-		SpawnTime = other.SpawnTime;
-		Spawned = other.Spawned;
-		return *this;
-	}
-
-	CMonsterSpawnPoint& operator=(CMonsterSpawnPoint&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CGameObject::operator =(std::move(other));
-		SpawnType = std::move(other.SpawnType);
-		ElapsedFromSpawn = other.ElapsedFromSpawn;
-		SpawnTime = other.SpawnTime;
-		Spawned = std::move(other.Spawned);
-		return *this;
-	}
+	CMonsterSpawnPoint(const CMonsterSpawnPoint& other) = default;
+	CMonsterSpawnPoint(CMonsterSpawnPoint&& other) noexcept = default;
+	CMonsterSpawnPoint& operator=(const CMonsterSpawnPoint& other) = default;
+	CMonsterSpawnPoint& operator=(CMonsterSpawnPoint&& other) noexcept = default;
 
 public:
 	~CMonsterSpawnPoint() override = default;

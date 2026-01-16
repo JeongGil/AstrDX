@@ -5,9 +5,8 @@
 
 class MiscTable : public TableBase<MiscTable, FMiscInfo>
 {
+	friend class TableBase;
 private:
 	MiscTable() = default;
-
-protected:
 	~MiscTable() override = default;
 };

@@ -1,11 +1,10 @@
 #include "CPlayer.h"
 
+#include <Component/CColliderBox2D.h>
 #include <World/CWorld.h>
 
 #include "CBullet.h"
 #include "CDevice.h"
-
-#include <CColliderBox2D.h>
 #include "CTimer.h"
 #include "../Component/CStateComponent.h"
 #include "Component/CAnimation2DComponent.h"

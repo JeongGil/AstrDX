@@ -1,10 +1,11 @@
 #include "CPlayerCharacter.h"
 
 #include <Component/CMeshComponent.h>
+#include <Component/CObjectMovementComponent.h>
 #include <World/CWorld.h>
 
 #include "../Strings.h"
-#include "../Table/MisnTable.h"
+#include "../Table/MiscTable.h"
 
 #include <atlbase.h>
 #include <atlconv.h>
@@ -16,7 +17,7 @@ bool CPlayerCharacter::Init()
 		return false;
 	}
 
-	Potato = CreateComponent<CMeshComponent>(Comp::Potato);
+	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato);
 	if (auto Body = this->Potato.lock())
 	{
 		Body->SetShader("DefaultTexture2D");
@@ -26,18 +27,18 @@ bool CPlayerCharacter::Init()
 		Body->SetMaterialBaseColor(0, FColor::White);
 		Body->SetBlendState(0, "AlphaBlend");
 
-		FMiscInfo Misc;
+		FMiscInfo* Misc;
 		if (MiscTable::Instance().TryGet(TableID(1), Misc))
 		{
-			CA2T FileName(Misc.PotatoBodyTexPath.c_str());
-			Body->AddTexture(0, Misc.PotatoBodyTexPath, FileName, Path::Brotato);
+			CA2T FileName(Misc->PotatoBodyTexPath.c_str());
+			Body->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
 		}
 
 		Body->SetInheritScale(true);
 		Body->SetInheritRotation(true);
 	}
 
-	Leg = CreateComponent<CMeshComponent>(Comp::Leg, Comp::Potato);
+	Leg = CreateComponent<CMeshComponent>(Key::Comp::Leg, Key::Comp::Potato);
 	if (auto Leg = this->Leg.lock())
 	{
 		Leg->SetShader("DefaultTexture2D");
@@ -50,6 +51,30 @@ bool CPlayerCharacter::Init()
 
 		Leg->SetInheritScale(true);
 		Leg->SetInheritRotation(true);
+	}
+
+	MovementComponent = CreateComponent<CObjectMovementComponent>(Key::Comp::ObjMove);
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->SetUpdateComponent(Root);
+	}
+
+	if (auto World = this->World.lock())
+	{
+		if (auto Input = World->GetInput().lock())
+		{
+			Input->AddBindKey(Key::Input::MoveUp, 'W');
+			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveUp);
+
+			Input->AddBindKey(Key::Input::MoveDown, 'S');
+			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveDown);
+
+			Input->AddBindKey(Key::Input::MoveLeft, 'A');
+			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveLeft);
+
+			Input->AddBindKey(Key::Input::MoveRight, 'D');
+			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveRight);
+		}
 	}
 
 	return true;
@@ -74,7 +99,7 @@ void CPlayerCharacter::SetCharacterVisual(const FCharacterVisualInfo& VisualInfo
 		if (!DecoPath.empty())
 		{
 			CA2T Path(DecoPath.c_str());
-			auto WeakDeco = CreateComponent<CMeshComponent>(Comp::Deco, Comp::Potato);
+			auto WeakDeco = CreateComponent<CMeshComponent>(Key::Comp::Deco, Key::Comp::Potato);
 			if (auto Deco = WeakDeco.lock())
 			{
 				Deco->SetShader("DefaultTexture2D");
@@ -85,8 +110,23 @@ void CPlayerCharacter::SetCharacterVisual(const FCharacterVisualInfo& VisualInfo
 				Deco->SetBlendState(0, "AlphaBlend");
 
 				CA2T FileName(DecoPath.c_str());
-				Deco->AddTexture(0, DecoPath, FileName, Path::Brotato);
+				Deco->AddTexture(0, DecoPath, FileName, Key::Path::Brotato);
 			}
+		}
+	}
+}
+
+void CPlayerCharacter::SetWeapon(const std::weak_ptr<CWeapon_Inventory>& Weapon, size_t SlotIdx)
+{
+	assert(SlotIdx < INVENTORY_MAX_WEAPON);
+
+	if (auto World = this->World.lock())
+	{
+		auto WeakWeapon = World->CreateGameObject<CWeapon_Battle>(Key::Obj::Weapon);
+		if (auto Weapon = WeakWeapon.lock())
+		{
+			// TODO: Set Weapon status.
+			Weapons.push_back(Weapon);
 		}
 	}
 }
@@ -94,4 +134,36 @@ void CPlayerCharacter::SetCharacterVisual(const FCharacterVisualInfo& VisualInfo
 CPlayerCharacter* CPlayerCharacter::Clone()
 {
 	return new CPlayerCharacter(*this);
+}
+
+void CPlayerCharacter::MoveUp()
+{
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->AddMove(FVector::Axis[EAxis::Y]);
+	}
+}
+
+void CPlayerCharacter::MoveDown()
+{
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->AddMove(-FVector::Axis[EAxis::Y]);
+	}
+}
+
+void CPlayerCharacter::MoveLeft()
+{
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->AddMove(-FVector::Axis[EAxis::X]);
+	}
+}
+
+void CPlayerCharacter::MoveRight()
+{
+	if (auto Move = MovementComponent.lock())
+	{
+		Move->AddMove(FVector::Axis[EAxis::X]);
+	}
 }

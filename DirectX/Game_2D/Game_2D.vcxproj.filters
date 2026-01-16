@@ -99,8 +99,20 @@
     <ClCompile Include="Inventory\CInventory.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="Inventory\CWeaponData.cpp">
+    <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Table\CTableManager.cpp">
+      <Filter>Table</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory\CInventoryItem.cpp">
       <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="Character\CCharacterData.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,7 +188,7 @@
     <ClInclude Include="Table\MiscInfo.h">
       <Filter>Table</Filter>
     </ClInclude>
-    <ClInclude Include="Table\MisnTable.h">
+    <ClInclude Include="Table\MiscTable.h">
       <Filter>Table</Filter>
     </ClInclude>
     <ClInclude Include="Inventory\CShop.h">
@@ -185,8 +197,23 @@
     <ClInclude Include="Inventory\CInventory.h">
       <Filter>Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="Inventory\CWeapon_Inventory.h">
+    <ClInclude Include="World\CBrotatoWorld_Battle.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\CTableManager.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory\CInventoryItem.h">
       <Filter>Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CCharacterData.h">
+      <Filter>Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory\CInventoryItem_Weapon.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

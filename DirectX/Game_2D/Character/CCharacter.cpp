@@ -11,9 +11,9 @@ bool CCharacter::Init()
 		return false;
 	}
 
-	Root = CreateComponent<CSceneComponent>(Comp::Root);
+	Root = CreateComponent<CSceneComponent>(Key::Comp::Root);
 
-	Collider = CreateComponent<CColliderBox2D>(Comp::Collider);
+	Collider = CreateComponent<CColliderBox2D>(Key::Comp::Collider);
 	if (auto Collider = this->Collider.lock())
 	{
 		Collider->SetCollisionProfile("Character");

@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClCompile Include="CGlobalSetting.cpp" />
     <ClCompile Include="Character\CCharacter.cpp" />
+    <ClCompile Include="Character\CCharacterData.cpp" />
     <ClCompile Include="Character\CNonPlayerCharacter.cpp" />
     <ClCompile Include="Character\CPlayerCharacter.cpp" />
     <ClCompile Include="Character\CWeapon_Battle.cpp" />
@@ -162,8 +163,9 @@
     <ClCompile Include="Component\CStateComponent.cpp" />
     <ClCompile Include="Interface\CStateInterface.cpp" />
     <ClCompile Include="Inventory\CInventory.cpp" />
+    <ClCompile Include="Inventory\CInventoryItem.cpp" />
+    <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp" />
     <ClCompile Include="Inventory\CShop.cpp" />
-    <ClCompile Include="Inventory\CWeaponData.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Monster\CMonster.cpp" />
     <ClCompile Include="Monster\CMonsterSpawnPoint.cpp" />
@@ -171,11 +173,14 @@
     <ClCompile Include="Player\CBulletEffect.cpp" />
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
+    <ClCompile Include="Table\CTableManager.cpp" />
+    <ClCompile Include="World\CBrotatoWorld_Battle.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGlobalSetting.h" />
     <ClInclude Include="Character\CCharacter.h" />
+    <ClInclude Include="Character\CCharacterData.h" />
     <ClInclude Include="Character\CNonPlayerCharacter.h" />
     <ClInclude Include="Character\CPlayerCharacter.h" />
     <ClInclude Include="Character\CWeapon_Battle.h" />
@@ -184,8 +189,9 @@
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Interface\CStateInterface.h" />
     <ClInclude Include="Inventory\CInventory.h" />
+    <ClInclude Include="Inventory\CInventoryItem.h" />
+    <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />
     <ClInclude Include="Inventory\CShop.h" />
-    <ClInclude Include="Inventory\CWeapon_Inventory.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Monster\CMonster.h" />
     <ClInclude Include="Monster\CMonsterSpawnPoint.h" />
@@ -195,12 +201,15 @@
     <ClInclude Include="Player\CPlayer.h" />
     <ClInclude Include="Table\CharacterVisualInfo.h" />
     <ClInclude Include="Table\CharacterVisualTable.h" />
+    <ClInclude Include="Table\CTableManager.h" />
     <ClInclude Include="Table\ItemInfo.h" />
     <ClInclude Include="Table\ItemTable.h" />
     <ClInclude Include="Table\MiscInfo.h" />
-    <ClInclude Include="Table\MisnTable.h" />
+    <ClInclude Include="Table\MiscTable.h" />
     <ClInclude Include="Table\WeaponInfo.h" />
     <ClInclude Include="Table\WeaponTable.h" />
+    <ClInclude Include="Utility.h" />
+    <ClInclude Include="World\CBrotatoWorld_Battle.h" />
     <ClInclude Include="World\CMainWorld.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

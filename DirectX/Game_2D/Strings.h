@@ -47,23 +47,34 @@ namespace Key
 		inline const std::string BulletEnemy = "BulletEnemy";
 	}
 
+	namespace Input
+	{
+		inline const std::string MoveUp = "MoveUp";
+		inline const std::string MoveDown = "MoveDown";
+		inline const std::string MoveLeft = "MoveLeft";
+		inline const std::string MoveRight = "MoveRight";
+	}
+
 	namespace Path
 	{
+		inline const std::string Asset = "Asset";
 		inline const std::string Brotato = "Brotato";
+		inline const std::string Table = "Table";
 	}
-}
 
-namespace Path
-{
-	inline const std::string Asset = "Asset";
-	inline const std::string Brotato = "Brotato";
-}
+	namespace Comp
+	{
+		inline const std::string Collider = "Collider";
+		inline const std::string Root = "Root";
+		inline const std::string Potato = "Potato";
+		inline const std::string Leg = "Leg";
+		inline const std::string Deco = "Deco";
+		inline const std::string ObjMove = "ObjMove";
+	}
 
-namespace Comp
-{
-	inline const std::string Collider = "Collider";
-	inline const std::string Root = "Root";
-	inline const std::string Potato = "Potato";
-	inline const std::string Leg = "Leg";
-	inline const std::string Deco = "Deco";
+	namespace Obj
+	{
+		inline const std::string PC = "PC";
+		inline const std::string Weapon = "Weapon";
+	}
 }

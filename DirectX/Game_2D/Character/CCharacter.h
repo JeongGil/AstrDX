@@ -45,7 +45,7 @@ protected:
 	void SetSquashAndStretchParams(float Intensity, float Period)
 	{
 		SSIntensity = Intensity;
-		SSPeriod = 1.f;
+		SSPeriod = Period;
 	}
 
 private:

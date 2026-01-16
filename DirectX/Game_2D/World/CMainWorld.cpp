@@ -142,26 +142,26 @@ void CMainWorld::LoadAnimation2D()
 	WorldAssetManager->AddFrame("Explosion", 89, 0, 0, 320, 240);
 
 #pragma region Brotato
-	CPathManager::CreatePath(Key::Path::Brotato, TEXT("Brotato\\"), Path::Asset);
+	CPathManager::CreatePath(Key::Path::Brotato, TEXT("Brotato\\"), Key::Path::Asset);
 
 	//======= Character =======
-	WorldAssetManager->LoadTexture(Key::Tex::Legs, TEXT("entities/units/player/legs.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::Potato, TEXT("entities/units/player/potato.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::Legs, TEXT("entities/units/player/legs.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::Potato, TEXT("entities/units/player/potato.png"), Key::Path::Brotato);
 
-	WorldAssetManager->LoadTexture(Key::Tex::EngineerEyes, TEXT("items/characters/engineer/engineer_eyes.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::EngineerMouth, TEXT("items/characters/engineer/engineer_mouth.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::EngineerIcon, TEXT("items/characters/engineer/engineer_icon.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::EngineerEyes, TEXT("items/characters/engineer/engineer_eyes.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::EngineerMouth, TEXT("items/characters/engineer/engineer_mouth.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::EngineerIcon, TEXT("items/characters/engineer/engineer_icon.png"), Key::Path::Brotato);
 
-	WorldAssetManager->LoadTexture(Key::Tex::RangerEyes, TEXT("items/characters/ranger/ranger_eyes.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::RangerMouth, TEXT("items/characters/ranger/ranger_mouth.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::RangerIcon, TEXT("items/characters/ranger/ranger_icon.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::RangerEyes, TEXT("items/characters/ranger/ranger_eyes.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::RangerMouth, TEXT("items/characters/ranger/ranger_mouth.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::RangerIcon, TEXT("items/characters/ranger/ranger_icon.png"), Key::Path::Brotato);
 
 	//======= NPCs =======
-	WorldAssetManager->LoadTexture(Key::Tex::BabyAlien, TEXT("entities/units/enemies/baby_alien/baby_alien.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::BabyAlienIcon, TEXT("entities/units/enemies/baby_alien/baby_alien_icon.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::BabyAlien, TEXT("entities/units/enemies/baby_alien/baby_alien.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::BabyAlienIcon, TEXT("entities/units/enemies/baby_alien/baby_alien_icon.png"), Key::Path::Brotato);
 
-	WorldAssetManager->LoadTexture(Key::Tex::Spitter, TEXT("entities/units/enemies/Spitter/spitter.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::SpitterIcon, TEXT("entities/units/enemies/Spitter/SpitterIcon.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::Spitter, TEXT("entities/units/enemies/Spitter/spitter.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::SpitterIcon, TEXT("entities/units/enemies/Spitter/SpitterIcon.png"), Key::Path::Brotato);
 
 	//======= HitEffect =======
 	WorldAssetManager->CreateAnimation(Key::Anim::HitEffect);
@@ -177,7 +177,7 @@ void CMainWorld::LoadAnimation2D()
 		TexFileNames.push_back(FileName);
 	}
 
-	WorldAssetManager->SetTextures(Key::Anim::HitEffect, Key::Tex::HitEffect, TexFileNames, Path::Brotato);
+	WorldAssetManager->SetTextures(Key::Anim::HitEffect, Key::Tex::HitEffect, TexFileNames, Key::Path::Brotato);
 
 	for (auto& elem : TexFileNames)
 	{
@@ -186,21 +186,21 @@ void CMainWorld::LoadAnimation2D()
 	TexFileNames.clear();
 
 	//====== Weapons ======
-	WorldAssetManager->LoadTexture(Key::Tex::Wrench, TEXT("weapons/melee/wrench/wrench.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::WrenchIcon, TEXT("weapons/melee/wrench/wrench_icon.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::Wrench, TEXT("weapons/melee/wrench/wrench.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::WrenchIcon, TEXT("weapons/melee/wrench/wrench_icon.png"), Key::Path::Brotato);
 
-	WorldAssetManager->LoadTexture(Key::Tex::Fist, TEXT("weapons/melee/fist/fist_short.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::FistIcon, TEXT("weapons/melee/wrench/fist_icon.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::Fist, TEXT("weapons/melee/fist/fist_short.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::FistIcon, TEXT("weapons/melee/fist/fist_icon.png"), Key::Path::Brotato);
 
-	WorldAssetManager->LoadTexture(Key::Tex::Crossbow, TEXT("weapons/ranged/crossbow/crossbow.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::CrossbowEmpty, TEXT("weapons/ranged/crossbow/crossbow_empty.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::CrossbowProjectile, TEXT("weapons/ranged/crossbow/crossbow_projectile.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::CrossbowIcon, TEXT("weapons/ranged/crossbow/crossbow_icon.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::Crossbow, TEXT("weapons/ranged/crossbow/crossbow.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::CrossbowEmpty, TEXT("weapons/ranged/crossbow/crossbow_empty.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::CrossbowProjectile, TEXT("weapons/ranged/crossbow/crossbow_projectile.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::CrossbowIcon, TEXT("weapons/ranged/crossbow/crossbow_icon.png"), Key::Path::Brotato);
 
 	//======= Etc =======
-	WorldAssetManager->LoadTexture(Key::Tex::BulletEnemy, TEXT("projectiles/bullet_enemy/bullet_enemy.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::BulletEnemy, TEXT("projectiles/bullet_enemy/bullet_enemy.png"), Key::Path::Brotato);
 
-	WorldAssetManager->LoadTexture(Key::Tex::EntityBirth, TEXT("entities/birth/entity_birth.png"), Path::Brotato);
-	WorldAssetManager->LoadTexture(Key::Tex::StructureBirth, TEXT("entities/birth/structure_birth.png"), Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::EntityBirth, TEXT("entities/birth/entity_birth.png"), Key::Path::Brotato);
+	WorldAssetManager->LoadTexture(Key::Tex::StructureBirth, TEXT("entities/birth/structure_birth.png"), Key::Path::Brotato);
 #pragma endregion Brotato
 }

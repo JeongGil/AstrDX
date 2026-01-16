@@ -8,6 +8,16 @@ enum class EComponentRender : unsigned char
 	Render,
 };
 
+namespace ERenderOrder
+{
+	enum Type
+	{
+		Background = -100,
+
+		Default = 0,
+	};
+}
+
 class CSceneComponent :
 	public CComponent
 {
@@ -56,6 +66,8 @@ public:
 		this->RenderLayer = RenderLayer;
 	}
 
+	bool TrySetRenderLayer(const int NewRenderLayer);
+
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;
 	const FVector& GetRelativeRotation() const;
@@ -64,7 +76,7 @@ public:
 	const FVector& GetWorldRotation() const;
 	const FVector& GetWorldPosition() const;
 
-	[[nodiscard]] FVector GetVelocity() const
+	[[nodiscard]] const FVector& GetVelocity() const
 	{
 		return Velocity;
 	}
@@ -73,7 +85,7 @@ public:
 		return Velocity.Length();
 	}
 
-	[[nodiscard]] FVector GetPivot() const
+	[[nodiscard]] const FVector& GetPivot() const
 	{
 		return Pivot;
 	}

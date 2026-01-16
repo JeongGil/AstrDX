@@ -5,6 +5,6 @@
 class CInventory
 {
 private:
-	std::array<>
+	//std::array<>
 };
 

@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 
+constexpr size_t INVENTORY_MAX_WEAPON = 6;
+
 namespace EWeaponType
 {
 	enum Type : uint32_t
@@ -124,33 +126,11 @@ namespace EStat
 #pragma endregion
 	};
 }
-namespace EOption
+namespace ESpecialEffect
 {
-	enum Type
+	enum Type : uint8_t
 	{
 		None = 0,
-		MaxHP,
-		HpRegen,
-		LifeSteal,
-		DamagePercent,
-		MeleeDamage,
-		RangeDamage,
-		ElementalDamage,
-		AttackSpeed,
-		CritChance,
-		CriticalDamage,
-		Engineering,
-		Range,
-		Armor,
-		Dodge,
-		MoveSpeed,
-		Luck,
-		Harvesting,
-
-		Knockback,
-		EnemyHealth,
-		PickupRange,
-		XpGain,
 
 		Consumable_HpRegen,
 
@@ -218,3 +198,27 @@ namespace EOption
 		// TODO: Start with Dangerous Bunny.
 	};
 }
+
+struct FDamageScale
+{
+	EStat::Type DamageType = EStat::None;
+	int ScalePercent = 0;
+};
+
+struct FSpecialEffect
+{
+	ESpecialEffect::Type Type;
+	std::array<int, 10> Params;
+};
+
+struct FStat
+{
+	EStat::Type Type;
+	int InnerValue;
+	int WeightPercent;
+
+	int GetWeightedValue() const
+	{
+		return InnerValue * WeightPercent * 0.01f;
+	}
+};

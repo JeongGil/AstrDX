@@ -53,6 +53,56 @@ void CRenderManager::AddRenderLayer(const std::weak_ptr<CSceneComponent>& Compon
 	It->second.RenderList.push_back(Component);
 }
 
+bool CRenderManager::TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSceneComponent>& WeakComponent)
+{
+	auto Component = WeakComponent.lock();
+	if (!Component)
+	{
+		return false;
+	}
+
+	if (Old == New)
+	{
+		return true;
+	}
+
+	auto LayerIt = RenderLayers.find(Old);
+	if (LayerIt == RenderLayers.end())
+	{
+		return false;
+	}
+
+	if (!RenderLayers.contains(New))
+	{
+		return false;
+	}
+
+	auto RenderList = LayerIt->second.RenderList;
+	auto CompIt = RenderList.begin();
+
+	bool bFound = false;
+	while (CompIt != RenderList.end())
+	{
+		if (CompIt->lock() == Component)
+		{
+			bFound = true;
+			RenderList.erase(CompIt);
+			break;
+		}
+
+		++CompIt;
+	}
+
+	if (!bFound)
+	{
+		return false;
+	}
+
+	RenderLayers[New].RenderList.emplace_back(WeakComponent);
+
+	return true;
+}
+
 void CRenderManager::ClearRenderLayer(int LayerOrder)
 {
 	for (auto& RenderLayer : RenderLayers | std::views::values)
@@ -236,7 +286,8 @@ bool CRenderManager::Init()
 
 	CreateDepthStencilState("DepthDisable", false);
 
-	CreateLayer("Default", 0, ERenderListSort::Y);
+	CreateLayer("Background", ERenderOrder::Background, ERenderListSort::Y);
+	CreateLayer("Default", ERenderOrder::Default, ERenderListSort::Y);
 
 	SetState("DepthDisable");
 

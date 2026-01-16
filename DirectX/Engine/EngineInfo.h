@@ -225,6 +225,11 @@ struct TableID
 	bool operator==(const TableID& other) const { return value == other.value; }
 	bool operator!=(const TableID& other) const { return value != other.value; }
 	bool operator<(const TableID& other) const { return value < other.value; }
+
+	TableID(const TableID& other) = default;
+	TableID(TableID&& other) noexcept = default;
+	TableID& operator=(const TableID& other) = default;
+	TableID& operator=(TableID&& other) noexcept = default;
 };
 
 namespace std

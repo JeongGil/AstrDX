@@ -4,9 +4,9 @@
 
 class ItemTable: public TableBase<ItemTable, FItemInfo>
 {
+	friend class TableBase;
+
 private:
 	ItemTable() = default;
-
-protected:
 	~ItemTable() override = default;
 };

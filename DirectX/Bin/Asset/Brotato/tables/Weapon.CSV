@@ -1,0 +1,5 @@
+ID,Name,IconPath,SpritePath,Type,Tier,BaseDamage,DamageScale1_Type,DamageScale1_Percent,DamageScale2_Type,DamageScale2_Percent,CooldownMS,CritChancePercent,CritDamagePercent,Range,Knockback,LifeStealPercent,SpecialEffectType,SpecialEffectParam1,SpecialEffectParam2,SpecialEffectParam3,SpecialEffectParam4,SpecialEffectParam5,SpecialEffectParam6,SpecialEffectParam7,SpecialEffectParam8,SpecialEffectParam9,SpecialEffectParam10,BasePrice
+1,Fist,weapons/melee/fist/fist_icon.png,weapons/melee/fist/fist_short.png,128,1,8,6,100,,,780,1,150,150,15,0,,,,,,,,,,,,10
+2,Fist,weapons/melee/fist/fist_icon.png,weapons/melee/fist/fist_short.png,128,2,16,6,100,,,730,1,150,150,15,,,,,,,,,,,,,22
+3,Fist,weapons/melee/fist/fist_icon.png,weapons/melee/fist/fist_short.png,128,3,32,6,100,,,690,1,150,150,15,,,,,,,,,,,,,45
+4,Fist,weapons/melee/fist/fist_icon.png,weapons/melee/fist/fist_short.png,128,4,64,6,100,,,590,1,150,150,15,,,,,,,,,,,,,91

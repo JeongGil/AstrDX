@@ -4,28 +4,23 @@
 
 #include "../Defines.h"
 
-struct FDamageScale
-{
-	EStat::Type DamageType = EStat::None;
-	int ScalePercent = 0;
-};
-
-struct FSpecialEffect
-{
-	std::array<int, 10> Params;
-};
-
 struct FWeaponInfo
 	: FTableInfoBase
 {
 	std::string Name;
-	EWeaponType::Type Type;
 	
+	std::string IconPath;
+	std::string SpritePath;
+	
+	EWeaponType::Type Type;
+
+	int Tier;
+
 	int BaseDamage;
 	FDamageScale DamageScale1;
 	FDamageScale DamageScale2;
 	
-	int CoolTimeMS;
+	int CooldownMS;
 	
 	int CritChancePercent;
 	int CritDamagePercent;
@@ -38,10 +33,6 @@ struct FWeaponInfo
 	
 	int BasePrice;
 
-	std::string IconPath;
-	std::string SpritePath1;
-	std::string SpritePath2;
-
 	bool Load(std::stringstream& Stream) override
 	{
 		try
@@ -50,6 +41,7 @@ struct FWeaponInfo
 
 			int IntVal;			
 			uint8_t Uint8Val;
+			uint32_t Uint32Val;
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, IntVal)) { return false; }
@@ -57,6 +49,19 @@ struct FWeaponInfo
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			Name = Segment;
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			IconPath = Segment;
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			SpritePath = Segment;
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			if (!TryParse<uint32_t>(Segment, Uint32Val)) { return false; }
+			Type = static_cast<EWeaponType::Type>(Uint32Val);
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			if (!TryParse<int>(Segment, Tier)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, BaseDamage)) { return false; }
@@ -76,7 +81,7 @@ struct FWeaponInfo
 			if (!TryParse<int>(Segment, DamageScale2.ScalePercent)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			if (!TryParse<int>(Segment, CoolTimeMS)) { return false; }
+			if (!TryParse<int>(Segment, CooldownMS)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, CritChancePercent)) { return false; }
@@ -93,6 +98,10 @@ struct FWeaponInfo
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, LifeStealPercent)) { return false; }
 
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			if (!TryParse<uint8_t>(Segment, Uint8Val)) { return false; }
+			SpecialEffect.Type = static_cast<ESpecialEffect::Type>(Uint8Val);
+
 			for (auto& Param : SpecialEffect.Params)
 			{
 				if (!std::getline(Stream, Segment, Delim)) { return false; }
@@ -101,15 +110,6 @@ struct FWeaponInfo
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, BasePrice)) { return false; }
-
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			IconPath = Segment;
-
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			SpritePath1 = Segment;
-
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			SpritePath2 = Segment;
 		}
 		catch (...)
 		{
@@ -120,5 +120,5 @@ struct FWeaponInfo
 	}
 
 	FWeaponInfo() = default;
-	~FWeaponInfo() override = default;
+	~FWeaponInfo() = default;
 };
