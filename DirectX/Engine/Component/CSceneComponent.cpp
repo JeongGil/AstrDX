@@ -26,6 +26,11 @@ void CSceneComponent::UpdateTransform()
 
 bool CSceneComponent::TrySetRenderLayer(const int NewRenderLayer)
 {
+	if (NewRenderLayer == RenderLayer)
+	{
+		return true;
+	}
+
 	int OldRenderLayer = RenderLayer;
 
 	bool Result = CRenderManager::GetInst()->TrySetRenderLayer(OldRenderLayer, NewRenderLayer, std::dynamic_pointer_cast<CSceneComponent>(shared_from_this()));

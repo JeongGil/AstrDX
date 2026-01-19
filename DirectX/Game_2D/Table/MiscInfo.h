@@ -21,11 +21,9 @@ struct FMiscInfo : FTableInfoBase
 			//ID = TableID(IntVal);
 			ID = TableID(1);
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			PotatoBodyTexPath = Segment;
+			if (!std::getline(Stream, PotatoBodyTexPath, Delim)) { return false; }
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			PotatoLegTexPath = Segment;
+			if (!std::getline(Stream, PotatoLegTexPath, Delim)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, WeaponMoveSpeed)) { return false; }

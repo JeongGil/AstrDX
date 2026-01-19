@@ -19,8 +19,8 @@ bool CTableManager::Init()
 void CTableManager::LoadTables()
 {
 	//ItemTable::Instance().Load(GetFilePath(TEXT("ItemInfo")));
-	//MiscTable::Instance().Load(GetFilePath(TEXT("Misc")));
-	//CharacterVisualTable::Instance().Load(GetFilePath(TEXT("CharacterVisual")));
+	MiscTable::Instance().Load(GetFilePath(TEXT("Misc")));
+	CharacterVisualTable::Instance().Load(GetFilePath(TEXT("CharacterVisual")));
 	WeaponTable::Instance().Load(GetFilePath(TEXT("Weapon")));
 }
 

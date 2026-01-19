@@ -1,2 +1,3 @@
-PotatoBodyTexPath,PoratoLegTexPath,WeaponMoveSpeed
-entities/units/player/potato.png,entities/units/player/legs.png,200
+ID,Icon,Eye,Mouth,Deco_1,Deco_2,Deco_3,Deco_4,Deco_5
+1,items/characters/engineer/engineer_icon.png,items/characters/engineer/engineer_eyes.png,items/characters/engineer/engineer_mouth.png,,,,,
+2,items/characters/demon/demon_icon.png,items/characters/demon/demon_eyes.png,items/characters/demon/demon_mouth.png,items/characters/demon/demon_ear_back.png,items/characters/demon/demon_ear_front.png,items/characters/demon/demon_tail.png,,

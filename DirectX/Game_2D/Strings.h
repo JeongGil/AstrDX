@@ -64,12 +64,14 @@ namespace Key
 
 	namespace Comp
 	{
+		inline const std::string Mesh = "Mesh";
 		inline const std::string Collider = "Collider";
 		inline const std::string Root = "Root";
 		inline const std::string Potato = "Potato";
 		inline const std::string Leg = "Leg";
 		inline const std::string Deco = "Deco";
 		inline const std::string ObjMove = "ObjMove";
+		inline const std::string PlayerCamera = "PlayerCamera";
 	}
 
 	namespace Obj

@@ -6,7 +6,7 @@ struct FTableInfoBase abstract
 {
 	inline const static char Delim = ',';
 
-	TableID ID = TableID(0);
+	TableID ID = TableID(-1);
 
 	virtual bool Load(std::stringstream& Stream) = 0;
 

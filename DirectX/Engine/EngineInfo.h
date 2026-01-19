@@ -212,7 +212,7 @@ struct FLine2DInfo
 
 struct TableID
 {
-	int value;
+	int value = -1;
 
 	explicit TableID(int v) : value(v) {}
 	explicit TableID(unsigned int v) : value(static_cast<int>(v)) {}

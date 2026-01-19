@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include <cstdint>
 
 constexpr size_t INVENTORY_MAX_WEAPON = 6;

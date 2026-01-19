@@ -33,7 +33,8 @@ cbuffer CBAnimation2D : register(b2)
 	float2 cbRBUV;
 	int cbEnableAnimation2D;
 	int cbAnimation2DTextureType;
-	float2 cbAnimation2DEmpty;
+	int cbTextureSymmetry;
+	float cbAnimation2DEmpty;
 }
 
 SamplerState sbPoint : register(s0);
@@ -44,21 +45,48 @@ float2 ComputeAnimation2DUV(float2 UV)
 	// cbAnimation2DTextureType: 0 is Sprite animation.
 	if (cbEnableAnimation2D == 0 || cbAnimation2DTextureType != 0)
 	{
+		if (cbTextureSymmetry == 1)
+		{
+			if (UV.x == 1.f)
+			{
+				UV.x = 0.f;
+			}
+			else
+			{
+				UV.x = 1.f;
+			}
+		}
+
 		return UV;
 	}
 
 	float2 Result;
 
-	if (UV.x == 0.0f)
+    if (UV.x == 0.f)
 	{
-		Result.x = cbLTUV.x;
-	}
-	else
-	{
-		Result.x = cbRBUV.x;
-	}
+		if (cbTextureSymmetry == 1)
+		{
+			Result.x = cbRBUV.x;
+		}
+		else
+		{
+			Result.x = cbLTUV.x;
+		}
 
-	if (UV.y == 0.0f)
+	}
+    else
+	{
+		if (cbTextureSymmetry == 1)
+		{
+			Result.x = cbLTUV.x;
+		}
+		else
+		{
+			Result.x = cbRBUV.x;
+		}
+	}
+	
+	if (UV.y == 0.f)
 	{
 		Result.y = cbLTUV.y;
 	}

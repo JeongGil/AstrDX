@@ -1,2 +1,2 @@
-PotatoBodyTexPath,PoratoLegTexPath,WeaponMoveSpeed
-entities/units/player/potato.png,entities/units/player/legs.png,200
+ID,PotatoBodyTexPath,PoratoLegTexPath,WeaponMoveSpeed
+1,entities/units/player/potato.png,entities/units/player/legs.png,200

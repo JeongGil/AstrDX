@@ -4,7 +4,8 @@
 
 #include "../Table/CharacterVisualInfo.h"
 
-class CWeapon_Inventory;
+class CCameraComponent;
+class CInventoryItem_Weapon;
 class CWeapon_Battle;
 class CObjectMovementComponent;
 struct FCharacterVisualInfo;
@@ -19,10 +20,10 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
+	
+	void SetCharacterVisual(TableID VisualInfoID);
 
-	void SetCharacterVisual(const FCharacterVisualInfo& VisualInfo);
-
-	void SetWeapon(const std::weak_ptr<CWeapon_Inventory>& Weapon, size_t SlotIdx);
+	void SetWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon, size_t SlotIdx);
 
 protected:
 	CPlayerCharacter* Clone() override;
@@ -33,8 +34,12 @@ private:
 	void MoveLeft();
 	void MoveRight();
 
+	void CreateDeco(const std::string& DecoPath);
+
 protected:
-	FCharacterVisualInfo CharacterVisualInfo;
+	TableID CharacterVisualInfoID = TableID(-1);
+
+	std::weak_ptr<CCameraComponent> Camera;
 
 	std::weak_ptr<CMeshComponent> Potato;
 	std::weak_ptr<CMeshComponent> Leg;

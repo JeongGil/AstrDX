@@ -47,14 +47,11 @@ struct FWeaponInfo
 			if (!TryParse<int>(Segment, IntVal)) { return false; }
 			ID = TableID(IntVal);
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			Name = Segment;
+			if (!std::getline(Stream, Name, Delim)) { return false; }
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			IconPath = Segment;
+			if (!std::getline(Stream, IconPath, Delim)) { return false; }
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			SpritePath = Segment;
+			if (!std::getline(Stream, SpritePath, Delim)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<uint32_t>(Segment, Uint32Val)) { return false; }

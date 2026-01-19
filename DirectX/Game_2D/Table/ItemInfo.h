@@ -18,8 +18,7 @@ struct FItemInfo : FTableInfoBase
 			if (!TryParse<int>(Segment, IntVal)) { return false; }
 			ID = TableID(IntVal);
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			Name = Segment;
+			if (!std::getline(Stream, Name, Delim)) { return false; }
 		}
 		catch (...)
 		{

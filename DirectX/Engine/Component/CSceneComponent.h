@@ -15,6 +15,11 @@ namespace ERenderOrder
 		Background = -100,
 
 		Default = 0,
+
+		CharacterLeg = 99,
+		CharacterBody = 100,
+		CharacterDeco = 101,
+		CharacterItem = 102,
 	};
 }
 

@@ -4,7 +4,7 @@
 
 class WeaponTable : public TableBase<WeaponTable, FWeaponInfo>
 {
-	friend class TableBase;
+	friend TableBase;
 
 private:
 	WeaponTable() = default;

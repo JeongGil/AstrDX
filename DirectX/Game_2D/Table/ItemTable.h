@@ -4,7 +4,7 @@
 
 class ItemTable: public TableBase<ItemTable, FItemInfo>
 {
-	friend class TableBase;
+	friend TableBase;
 
 private:
 	ItemTable() = default;

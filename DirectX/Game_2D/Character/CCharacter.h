@@ -51,7 +51,7 @@ protected:
 private:
 	void SquashAndStretch(float DeltaTime, float Intensity, float Period);
 	float SSElapsed = 0.f;
-	float SSIntensity = 0.2f;
+	float SSIntensity = 0.05f;
 	float SSPeriod = 1.f;
 
 protected:

@@ -55,6 +55,11 @@ void CRenderManager::AddRenderLayer(const std::weak_ptr<CSceneComponent>& Compon
 
 bool CRenderManager::TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSceneComponent>& WeakComponent)
 {
+	if (Old == New)
+	{
+		return true;
+	}
+
 	auto Component = WeakComponent.lock();
 	if (!Component)
 	{
@@ -74,7 +79,7 @@ bool CRenderManager::TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSc
 
 	if (!RenderLayers.contains(New))
 	{
-		return false;
+		RenderLayers.emplace(New, FRenderLayer{ .Name = std::to_string(New) });
 	}
 
 	auto RenderList = LayerIt->second.RenderList;
@@ -286,6 +291,9 @@ bool CRenderManager::Init()
 
 	CreateDepthStencilState("DepthDisable", false);
 
+	CreateLayer("CharacterLeg", ERenderOrder::CharacterLeg, ERenderListSort::Y);
+	CreateLayer("CharacterBody", ERenderOrder::CharacterBody, ERenderListSort::Y);
+	CreateLayer("CharacterDeco", ERenderOrder::CharacterDeco, ERenderListSort::Y);
 	CreateLayer("Background", ERenderOrder::Background, ERenderListSort::Y);
 	CreateLayer("Default", ERenderOrder::Default, ERenderListSort::Y);
 

@@ -4,6 +4,8 @@
 
 class CharacterVisualTable : public TableBase<CharacterVisualTable, FCharacterVisualInfo>
 {
+	friend TableBase;
+
 private:
 	CharacterVisualTable() = default;
 

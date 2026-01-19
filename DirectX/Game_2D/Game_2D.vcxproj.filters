@@ -112,7 +112,7 @@
       <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Inventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -213,7 +213,7 @@
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Inventory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@
 #include "../Asset/Texture/CTextureManager.h"
 #include "../World/CCameraManager.h"
 #include "../World/CWorld.h"
+#include "../Asset/Material/CMaterial.h"
 
 std::shared_ptr<CCBufferAnimation2D> CMeshComponent::EmptyAnimationCBuffer;
 
@@ -95,13 +96,15 @@ void CMeshComponent::SetMaterialOpacity(int SlotIndex, float Opacity)
 	MaterialSlot[SlotIndex]->SetOpacity(Opacity);
 }
 
-void CMeshComponent::AddTexture(int SlotIdx, const std::weak_ptr<CTexture>& Texture, int Register, int ShaderBufferType,
-	int Index)
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, const std::weak_ptr<CTexture>& Texture,
+                                                               int Register, int ShaderBufferType,
+                                                               int Index)
 {
-	MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
+	return MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
 }
 
-void CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, int Register, int ShaderBufferType, int Index)
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, int Register,
+                                                               int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{
@@ -109,13 +112,15 @@ void CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, int Registe
 		{
 			if (auto Tex = Mgr->FindTexture(Key).lock())
 			{
-				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+				return MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
 			}
 		}
 	}
+
+	return std::weak_ptr<FMaterialTextureInfo>();
 }
 
-void CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, const TCHAR* FileName, const std::string& PathName,
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, const TCHAR* FileName, const std::string& PathName,
 	int Register, int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
@@ -124,19 +129,22 @@ void CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, const TCHAR
 		{
 			if (!Mgr->LoadTexture(Key, FileName, PathName))
 			{
-				return;
+				return std::weak_ptr<FMaterialTextureInfo>();
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
 			{
-				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+				return MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
 			}
 		}
 	}
+
+	return std::weak_ptr<FMaterialTextureInfo>();
 }
 
-void CMeshComponent::AddTextureFullPath(int SlotIdx, const std::string& Key, const TCHAR* FullPath, int Register,
-	int ShaderBufferType, int Index)
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureFullPath(int SlotIdx, const std::string& Key,
+                                                                       const TCHAR* FullPath, int Register,
+                                                                       int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{
@@ -144,19 +152,23 @@ void CMeshComponent::AddTextureFullPath(int SlotIdx, const std::string& Key, con
 		{
 			if (!Mgr->LoadTextureFullPath(Key, FullPath))
 			{
-				return;
+				return std::weak_ptr<FMaterialTextureInfo>();
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
 			{
-				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+				return MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
 			}
 		}
 	}
+
+	return std::weak_ptr<FMaterialTextureInfo>();
 }
 
-void CMeshComponent::AddTextures(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FileNames,
-	const std::string& PathName, int Register, int ShaderBufferType, int Index)
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextures(int SlotIdx, const std::string& Key,
+                                                                std::vector<const TCHAR*>& FileNames,
+                                                                const std::string& PathName, int Register,
+                                                                int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{
@@ -164,18 +176,20 @@ void CMeshComponent::AddTextures(int SlotIdx, const std::string& Key, std::vecto
 		{
 			if (!Mgr->LoadTextures(Key, FileNames, PathName))
 			{
-				return;
+				return std::weak_ptr<FMaterialTextureInfo>();
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
 			{
-				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+				return MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
 			}
 		}
 	}
+
+	return std::weak_ptr<FMaterialTextureInfo>();
 }
 
-void CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths,
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths,
 	int Register, int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
@@ -184,15 +198,17 @@ void CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, st
 		{
 			if (!Mgr->LoadTexturesFullPath(Key, FullPaths))
 			{
-				return;
+				return std::weak_ptr<FMaterialTextureInfo>();
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
 			{
-				MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+				return MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
 			}
 		}
 	}
+
+	return std::weak_ptr<FMaterialTextureInfo>();
 }
 
 bool CMeshComponent::SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture)

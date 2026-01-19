@@ -3,6 +3,7 @@
 
 struct FCharacterVisualInfo : FTableInfoBase
 {
+	std::string Icon;
 	std::string Eye;
 	std::string Mouth;
 	std::array<std::string, 5> Decos;
@@ -20,16 +21,18 @@ struct FCharacterVisualInfo : FTableInfoBase
 			if (!TryParse<int>(Segment, IntVal)) { return false; }
 			ID = TableID(IntVal);
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			Eye = Segment;
+			if (!std::getline(Stream, Icon, Delim)) { return false; }
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			Mouth = Segment;
+			if (!std::getline(Stream, Eye, Delim)) { return false; }
+
+			if (!std::getline(Stream, Mouth, Delim)) { return false; }
 
 			for (auto& Deco : Decos)
 			{
-				if (!std::getline(Stream, Segment, Delim)) { return false; }
-				Deco = Segment;
+				if (!std::getline(Stream, Deco, Delim))
+				{
+					Deco = "";
+				}
 			}
 		}
 		catch (...)

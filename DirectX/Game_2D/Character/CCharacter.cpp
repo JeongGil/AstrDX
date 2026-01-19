@@ -1,8 +1,8 @@
 #include "CCharacter.h"
 
-#include "Component/CColliderBox2D.h"
-#include "../Strings.h"
 #include <numbers>
+#include <Component/CColliderBox2D.h>
+#include "../Strings.h"
 
 bool CCharacter::Init()
 {
@@ -13,7 +13,7 @@ bool CCharacter::Init()
 
 	Root = CreateComponent<CSceneComponent>(Key::Comp::Root);
 
-	Collider = CreateComponent<CColliderBox2D>(Key::Comp::Collider);
+	Collider = CreateComponent<CColliderBox2D>(Key::Comp::Collider, Key::Comp::Root);
 	if (auto Collider = this->Collider.lock())
 	{
 		Collider->SetCollisionProfile("Character");

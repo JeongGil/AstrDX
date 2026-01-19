@@ -1,10 +1,17 @@
 #include "CPlayerCharacter.h"
 
+#include <CDevice.h>
+#include <Component/CCameraComponent.h>
 #include <Component/CMeshComponent.h>
 #include <Component/CObjectMovementComponent.h>
 #include <World/CWorld.h>
+#include <Asset/Material/CMaterial.h>
+#include <Component/CSceneComponent.h>
 
+#include "CWeapon_Battle.h"
 #include "../Strings.h"
+#include "../Inventory/CInventoryItem_Weapon.h"
+#include "../Table/CharacterVisualTable.h"
 #include "../Table/MiscTable.h"
 
 #include <atlbase.h>
@@ -17,14 +24,14 @@ bool CPlayerCharacter::Init()
 		return false;
 	}
 
-	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato);
+	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato, Key::Comp::Root);
 	if (auto Body = this->Potato.lock())
 	{
 		Body->SetShader("DefaultTexture2D");
-		Body->SetMesh("RectTex");
+		Body->SetMesh("CenterRectTex");
 		Body->SetWorldScale(150, 150);
 		
-		Body->SetMaterialBaseColor(0, FColor::White);
+		//Body->SetMaterialBaseColor(0, FColor::White);
 		Body->SetBlendState(0, "AlphaBlend");
 
 		FMiscInfo* Misc;
@@ -36,21 +43,32 @@ bool CPlayerCharacter::Init()
 
 		Body->SetInheritScale(true);
 		Body->SetInheritRotation(true);
+
+		Body->TrySetRenderLayer(ERenderOrder::CharacterBody);
 	}
 
 	Leg = CreateComponent<CMeshComponent>(Key::Comp::Leg, Key::Comp::Potato);
 	if (auto Leg = this->Leg.lock())
 	{
 		Leg->SetShader("DefaultTexture2D");
-		Leg->SetMesh("RectTex");
+		Leg->SetMesh("CenterRectTex");
 		Leg->SetWorldScale(100, 50);
 		Leg->SetRelativePosition(FVector(0, -25, 0));
 
-		Leg->SetMaterialBaseColor(0, FColor::White);
+		//Leg->SetMaterialBaseColor(0, FColor::White);
 		Leg->SetBlendState(0, "AlphaBlend");
+
+		FMiscInfo* Misc;
+		if (MiscTable::Instance().TryGet(TableID(1), Misc))
+		{
+			CA2T FileName(Misc->PotatoLegTexPath.c_str());
+			Leg->AddTexture(0, Misc->PotatoLegTexPath, FileName, Key::Path::Brotato);
+		}
 
 		Leg->SetInheritScale(true);
 		Leg->SetInheritRotation(true);
+
+		Leg->TrySetRenderLayer(ERenderOrder::CharacterLeg);
 	}
 
 	MovementComponent = CreateComponent<CObjectMovementComponent>(Key::Comp::ObjMove);
@@ -67,14 +85,24 @@ bool CPlayerCharacter::Init()
 			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveUp);
 
 			Input->AddBindKey(Key::Input::MoveDown, 'S');
-			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveDown);
+			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveDown, EInputType::Hold, this, &CPlayerCharacter::MoveDown);
 
 			Input->AddBindKey(Key::Input::MoveLeft, 'A');
-			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveLeft);
+			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveLeft, EInputType::Hold, this, &CPlayerCharacter::MoveLeft);
 
 			Input->AddBindKey(Key::Input::MoveRight, 'D');
-			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveUp, EInputType::Hold, this, &CPlayerCharacter::MoveRight);
+			Input->SetBindFunction<CPlayerCharacter>(Key::Input::MoveRight, EInputType::Hold, this, &CPlayerCharacter::MoveRight);
 		}
+	}
+
+	Camera = CreateComponent<CCameraComponent>(Key::Comp::PlayerCamera);
+	if (auto Cam = Camera.lock())
+	{
+		const auto& Resolution = CDevice::GetInst()->GetResolution();
+		Cam->SetProjection(CCameraComponent::EProjectionType::Orthogonal,
+			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
+
+		Cam->SetInheritRotation(false);
 	}
 
 	return true;
@@ -83,6 +111,26 @@ bool CPlayerCharacter::Init()
 void CPlayerCharacter::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
+
+	if (auto MoveCmp = MovementComponent.lock())
+	{
+		if (MoveCmp->GetMoveDirection().x > 0.f)
+		{
+			auto Meshes = GetComponents<CMeshComponent>();
+			for (const auto& WMesh : Meshes)
+			{
+				if (auto Mesh = WMesh.lock())
+				{
+					// TODO: CShaderTexture2D 참고하여 셰이더 하나 추가. Symmetric 적용시키기.
+					//Mesh->
+				}
+			}
+		}
+		else if (MoveCmp->GetMoveDirection().x < 0.f)
+		{
+			// TODO: 위 참고.
+		}
+	}
 }
 
 void CPlayerCharacter::PostUpdate(const float DeltaTime)
@@ -90,43 +138,77 @@ void CPlayerCharacter::PostUpdate(const float DeltaTime)
 	CCharacter::PostUpdate(DeltaTime);
 }
 
-void CPlayerCharacter::SetCharacterVisual(const FCharacterVisualInfo& VisualInfo)
+void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
 {
-	CharacterVisualInfo = VisualInfo;
-
-	for (const auto& DecoPath : VisualInfo.Decos)
+	if (!DecoPath.empty())
 	{
-		if (!DecoPath.empty())
+		CA2T Path(DecoPath.c_str());
+		auto WeakDeco = CreateComponent<CMeshComponent>(Key::Comp::Deco, Key::Comp::Potato);
+		if (auto Deco = WeakDeco.lock())
 		{
-			CA2T Path(DecoPath.c_str());
-			auto WeakDeco = CreateComponent<CMeshComponent>(Key::Comp::Deco, Key::Comp::Potato);
-			if (auto Deco = WeakDeco.lock())
+			Deco->SetShader("DefaultTexture2D");
+			Deco->SetMesh("CenterRectTex");
+			Deco->SetRelativePosition(0, 0);
+
+			Deco->SetBlendState(0, "AlphaBlend");
+
+			Deco->SetInheritScale(true);
+			Deco->SetInheritRotation(true);
+
+			CA2T FileName(DecoPath.c_str());
+			auto WMatTexInfo = Deco->AddTexture(0, DecoPath, FileName, Key::Path::Brotato);
+			if (auto MatTexInfo = WMatTexInfo.lock())
 			{
-				Deco->SetShader("DefaultTexture2D");
-				Deco->SetMesh("RectTex");
-				Deco->SetWorldScale(150, 150);
-
-				Deco->SetMaterialBaseColor(0, FColor::White);
-				Deco->SetBlendState(0, "AlphaBlend");
-
-				CA2T FileName(DecoPath.c_str());
-				Deco->AddTexture(0, DecoPath, FileName, Key::Path::Brotato);
+				if (auto Texture = MatTexInfo->Texture.lock())
+				{
+					const FTextureInfo* TexInfo = Texture->GetTexture();
+					Deco->SetWorldScale(TexInfo->Width, TexInfo->Height);
+				}
 			}
+
+			Deco->TrySetRenderLayer(ERenderOrder::CharacterDeco);
 		}
 	}
 }
 
-void CPlayerCharacter::SetWeapon(const std::weak_ptr<CWeapon_Inventory>& Weapon, size_t SlotIdx)
+void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
+{
+	CharacterVisualInfoID = VisualInfoID;
+
+	FCharacterVisualInfo* VisualInfo;
+	if (!CharacterVisualTable::Instance().TryGet(VisualInfoID, VisualInfo))
+	{
+		return;
+	}
+
+	CreateDeco(VisualInfo->Eye);
+	CreateDeco(VisualInfo->Mouth);
+
+	for (const auto& DecoPath : VisualInfo->Decos)
+	{
+		CreateDeco(DecoPath);
+	}
+}
+
+void CPlayerCharacter::SetWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon, size_t SlotIdx)
 {
 	assert(SlotIdx < INVENTORY_MAX_WEAPON);
+	auto WeaponInventory = Weapon.lock();
+	if (!WeaponInventory)
+	{
+		return;
+	}
 
 	if (auto World = this->World.lock())
 	{
 		auto WeakWeapon = World->CreateGameObject<CWeapon_Battle>(Key::Obj::Weapon);
-		if (auto Weapon = WeakWeapon.lock())
+		if (auto WeaponObj = WeakWeapon.lock())
 		{
 			// TODO: Set Weapon status.
-			Weapons.push_back(Weapon);
+			Weapons.push_back(WeaponObj);
+
+			WeaponObj->SetOwner(std::dynamic_pointer_cast<CPlayerCharacter>(shared_from_this()));
+			WeaponObj->SetWeaponInfoID(WeaponInventory->GetWeaponInfoID());
 		}
 	}
 }

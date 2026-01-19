@@ -12,6 +12,7 @@ class CCBufferTransform;
 class CMaterial;
 class CTexture;
 class CRenderState;
+struct FMaterialTextureInfo;
 
 class CMeshComponent :
 	public CSceneComponent
@@ -38,14 +39,27 @@ public:
 	void SetMaterialBaseColor(int SlotIndex, const FVector4& Color);
 	void SetMaterialOpacity(int SlotIndex, float Opacity);
 
-	void AddTexture(int SlotIdx, const std::weak_ptr<CTexture>& Texture, int Register, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTexture(int SlotIdx, const std::weak_ptr<CTexture>& Texture, int Register,
+	                                               int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 
-	void AddTexture(int SlotIdx, const std::string& Key, int Register, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
-	void AddTexture(int SlotIdx, const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
-	void AddTextureFullPath(int SlotIdx, const std::string& Key, const TCHAR* FullPath, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTexture(int SlotIdx, const std::string& Key, int Register,
+	                                               int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTexture(int SlotIdx, const std::string& Key, const TCHAR* FileName,
+	                                               const std::string& PathName = "Texture", int Register = 0,
+	                                               int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTextureFullPath(int SlotIdx, const std::string& Key, const TCHAR* FullPath,
+	                                                       int Register = 0,
+	                                                       int ShaderBufferType = EShaderBufferType::Pixel,
+	                                                       int Index = 0);
 
-	void AddTextures(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture", int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
-	void AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths, int Register = 0, int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTextures(int SlotIdx, const std::string& Key,
+	                                                std::vector<const TCHAR*>& FileNames,
+	                                                const std::string& PathName = "Texture", int Register = 0,
+	                                                int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTexturesFullPath(int SlotIdx, const std::string& Key,
+	                                                        std::vector<const TCHAR*>& FullPaths, int Register = 0,
+	                                                        int ShaderBufferType = EShaderBufferType::Pixel,
+	                                                        int Index = 0);
 
 	bool SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
 	bool SetTextureIndex(int SlotIndex, int TextureIndex);

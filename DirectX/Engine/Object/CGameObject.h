@@ -273,6 +273,41 @@ public:
 		return std::weak_ptr<T>();
 	}
 
+	template <typename T>
+	std::vector<std::weak_ptr<T>> GetComponents()
+	{
+		std::vector<std::weak_ptr<T>> Result;
+
+		for (const auto& Cmp : SceneComponents)
+		{
+			if (Cmp)
+			{
+				if (auto casted = std::dynamic_pointer_cast<T>(Cmp))
+				{
+					Result.push_back(casted);
+				}
+			}
+		}
+
+		if (!Result.empty())
+		{
+			return Result;
+		}
+
+		for (const auto& Cmp : ObjectComponents)
+		{
+			if (Cmp)
+			{
+				if (auto casted = std::dynamic_pointer_cast<T>(Cmp))
+				{
+					Result.push_back(casted);
+				}
+			}
+		}
+
+		return Result;
+	}
+
 protected:
 	/**
 	 * @brief Clones the hierarchy of scene components from another game object and sets them for the current object.
