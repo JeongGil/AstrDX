@@ -14,6 +14,12 @@ protected:
 	template <typename T>
 	bool TryParse(const std::string& Str, T& OutValue)
 	{
+		if (Str.empty())
+		{
+			OutValue = T{};
+			return true;
+		}
+
 		auto [Ptr, Errc] = std::from_chars(Str.data(), Str.data() + Str.size(), OutValue);
 		return Errc == std::errc() && Ptr == Str.data() + Str.size();
 	}

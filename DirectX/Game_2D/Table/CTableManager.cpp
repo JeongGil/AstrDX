@@ -18,10 +18,10 @@ bool CTableManager::Init()
 
 void CTableManager::LoadTables()
 {
-	//ItemTable::Instance().Load(GetFilePath(TEXT("ItemInfo")));
-	MiscTable::Instance().Load(GetFilePath(TEXT("Misc")));
-	CharacterVisualTable::Instance().Load(GetFilePath(TEXT("CharacterVisual")));
-	WeaponTable::Instance().Load(GetFilePath(TEXT("Weapon")));
+	//ItemTable::GetInst().Load(GetFilePath(TEXT("ItemInfo")));
+	MiscTable::GetInst().Load(GetFilePath(TEXT("Misc")));
+	CharacterVisualTable::GetInst().Load(GetFilePath(TEXT("CharacterVisual")));
+	WeaponTable::GetInst().Load(GetFilePath(TEXT("Weapon")));
 }
 
 std::string CTableManager::GetFilePath(const TCHAR* FileName, const std::string& PathKey)

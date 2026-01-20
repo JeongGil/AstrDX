@@ -35,7 +35,7 @@ bool CPlayerCharacter::Init()
 		Body->SetBlendState(0, "AlphaBlend");
 
 		FMiscInfo* Misc;
-		if (MiscTable::Instance().TryGet(TableID(1), Misc))
+		if (MiscTable::GetInst().TryGet(TableID(1), Misc))
 		{
 			CA2T FileName(Misc->PotatoBodyTexPath.c_str());
 			Body->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
@@ -59,7 +59,7 @@ bool CPlayerCharacter::Init()
 		Leg->SetBlendState(0, "AlphaBlend");
 
 		FMiscInfo* Misc;
-		if (MiscTable::Instance().TryGet(TableID(1), Misc))
+		if (MiscTable::GetInst().TryGet(TableID(1), Misc))
 		{
 			CA2T FileName(Misc->PotatoLegTexPath.c_str());
 			Leg->AddTexture(0, Misc->PotatoLegTexPath, FileName, Key::Path::Brotato);
@@ -121,14 +121,14 @@ void CPlayerCharacter::Update(const float DeltaTime)
 			{
 				if (auto Mesh = WMesh.lock())
 				{
-					// TODO: CShaderTexture2D 참고하여 셰이더 하나 추가. Symmetric 적용시키기.
+					// TODO: Add a shader by referring to CShaderTexture2D.Apply Symmetric.
 					//Mesh->
 				}
 			}
 		}
 		else if (MoveCmp->GetMoveDirection().x < 0.f)
 		{
-			// TODO: 위 참고.
+			// TODO: Refer to the above.
 		}
 	}
 }
@@ -171,12 +171,17 @@ void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
 	}
 }
 
+void CPlayerCharacter::SetAnchorPosition(size_t WeaponCount)
+{
+	assert(WeaponCount == WeaponObjs.size());
+}
+
 void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
 {
 	CharacterVisualInfoID = VisualInfoID;
 
 	FCharacterVisualInfo* VisualInfo;
-	if (!CharacterVisualTable::Instance().TryGet(VisualInfoID, VisualInfo))
+	if (!CharacterVisualTable::GetInst().TryGet(VisualInfoID, VisualInfo))
 	{
 		return;
 	}
@@ -190,11 +195,11 @@ void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
 	}
 }
 
-void CPlayerCharacter::SetWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon, size_t SlotIdx)
+void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon)
 {
-	assert(SlotIdx < INVENTORY_MAX_WEAPON);
-	auto WeaponInventory = Weapon.lock();
-	if (!WeaponInventory)
+	assert(WeaponObjs.size() < INVENTORY_MAX_WEAPON);
+	auto InvenWeapon = Weapon.lock();
+	if (!InvenWeapon)
 	{
 		return;
 	}
@@ -204,13 +209,16 @@ void CPlayerCharacter::SetWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Wea
 		auto WeakWeapon = World->CreateGameObject<CWeapon_Battle>(Key::Obj::Weapon);
 		if (auto WeaponObj = WeakWeapon.lock())
 		{
-			// TODO: Set Weapon status.
-			Weapons.push_back(WeaponObj);
+			WeaponObjs.push_back(WeaponObj);
 
 			WeaponObj->SetOwner(std::dynamic_pointer_cast<CPlayerCharacter>(shared_from_this()));
-			WeaponObj->SetWeaponInfoID(WeaponInventory->GetWeaponInfoID());
+			WeaponObj->SetWeapon(InvenWeapon);
+
+			// TODO: Weapon pivot?
 		}
 	}
+
+	SetAnchorPosition(WeaponObjs.size());
 }
 
 CPlayerCharacter* CPlayerCharacter::Clone()

@@ -1,6 +1,8 @@
 #pragma once
 #include <Object/CGameObject.h>
 
+#include "../Inventory/CInventoryItem_Weapon.h"
+
 class CMeshComponent;
 class CPlayerCharacter;
 class CInventoryItem_Weapon;
@@ -40,6 +42,16 @@ public:
 		InitWeaponInfo(ID);
 	}
 
+	void SetWeapon(const std::weak_ptr<CInventoryItem_Weapon>& InvenWeapon)
+	{
+		Origin = InvenWeapon;
+
+		if (auto Origin = this->Origin.lock())
+		{
+			InitWeaponInfo(Origin->GetWeaponInfoID());
+		}
+	}
+
 protected:
 	void InitWeaponInfo(TableID ID);
 
@@ -48,6 +60,7 @@ protected:
 	std::weak_ptr<CMeshComponent> Mesh;
 
 	TableID WeaponInfoID = TableID(0);
+	std::weak_ptr<CInventoryItem_Weapon> Origin;
 
 	float MoveSpeed = 200.f;
 };

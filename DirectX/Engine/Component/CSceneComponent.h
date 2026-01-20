@@ -20,6 +20,7 @@ namespace ERenderOrder
 		CharacterBody = 100,
 		CharacterDeco = 101,
 		CharacterItem = 102,
+		CharacterWeapon = 103,
 	};
 }
 

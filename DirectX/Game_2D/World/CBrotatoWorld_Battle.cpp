@@ -5,6 +5,7 @@
 
 #include "../Strings.h"
 #include "../Character/CPlayerCharacter.h"
+#include "../Inventory/CInventory.h"
 #include "../Table/CTableManager.h"
 
 bool CBrotatoWorld_Battle::Init()
@@ -19,11 +20,19 @@ bool CBrotatoWorld_Battle::Init()
 	CTableManager::GetInst().Init();
 	CTableManager::GetInst().LoadTables();
 
+	CInventory::GetInst().AddWeapon(TableID(1));
+
 	auto WPC = CreateGameObject<CPlayerCharacter>(Key::Obj::PC);
 	if (auto PC = WPC.lock())
 	{
 		PC->SetWorldPosition(0, 0);
 		PC->SetCharacterVisual(TableID(2));
+		
+		for (size_t i = 0; i< CInventory::GetInst().GetWeaponCount(); i++)
+		{
+			auto Weapon = CInventory::GetInst().GetWeapon(i);
+			PC->AddWeapon(Weapon);
+		}
 	}
 
 	auto WBG = CreateGameObject<CGameObject>("BG");

@@ -12,7 +12,14 @@ public:
 		return WeaponInfoID;
 	}
 
+	void SetWeaponInfoID(TableID ID)
+	{
+		WeaponInfoID = ID;
+	}
+
 private:
-	TableID WeaponInfoID;
+	TableID WeaponInfoID = TableID(-1);
+
+	// TODO: Statistics such as other acquired stats, damage dealt in the previous round, etc.
 };
 

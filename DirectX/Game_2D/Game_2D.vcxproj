@@ -164,6 +164,7 @@
     <ClCompile Include="Interface\CStateInterface.cpp" />
     <ClCompile Include="Inventory\CInventory.cpp" />
     <ClCompile Include="Inventory\CInventoryItem.cpp" />
+    <ClCompile Include="Inventory\CInventoryItem_Item.cpp" />
     <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp" />
     <ClCompile Include="Inventory\CShop.cpp" />
     <ClCompile Include="main.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="Interface\CStateInterface.h" />
     <ClInclude Include="Inventory\CInventory.h" />
     <ClInclude Include="Inventory\CInventoryItem.h" />
+    <ClInclude Include="Inventory\CInventoryItem_Item.h" />
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />
     <ClInclude Include="Inventory\CShop.h" />
     <ClInclude Include="Strings.h" />

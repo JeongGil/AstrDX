@@ -11,7 +11,7 @@ class CObjectMovementComponent;
 struct FCharacterVisualInfo;
 
 class CPlayerCharacter :
-    public CCharacter
+	public CCharacter
 {
 	friend class CWorld;
 	friend CObject;
@@ -20,10 +20,10 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
-	
+
 	void SetCharacterVisual(TableID VisualInfoID);
 
-	void SetWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon, size_t SlotIdx);
+	void AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon);
 
 protected:
 	CPlayerCharacter* Clone() override;
@@ -36,6 +36,8 @@ private:
 
 	void CreateDeco(const std::string& DecoPath);
 
+	void SetAnchorPosition(size_t WeaponCount);
+
 protected:
 	TableID CharacterVisualInfoID = TableID(-1);
 
@@ -45,9 +47,21 @@ protected:
 	std::weak_ptr<CMeshComponent> Leg;
 	std::vector<std::weak_ptr<CMeshComponent>> Decos;
 
-	std::vector<std::weak_ptr<CWeapon_Battle>> Weapons;
+	std::vector<std::weak_ptr<CWeapon_Battle>> WeaponObjs;
+	std::array<CSceneComponent, INVENTORY_MAX_WEAPON> WeaponAnchors;
 
 	std::weak_ptr<CObjectMovementComponent> MovementComponent;
+
+private:
+	inline static std::unordered_map<size_t, std::vector<FVector2>> AnchorPositions =
+	{
+		{ 1, { FVector2(0, -25) } },
+		{ 2, { FVector2(30, -25), FVector2(-30, -25) } },
+		{ 3, { FVector2(30, -25), FVector2(-30, -25), FVector2(0, 50) } },
+		{ 4, { FVector2(30, -25), FVector2(-30, -25), FVector2(-30, 25), FVector2(30, 25) } },
+		{ 5, { FVector2(30, -25), FVector2(-30, -25), FVector2(-30, 25), FVector2(30, 25), FVector2(0, 50) } },
+		{ 6, { FVector2(30, -30), FVector2(-30, -30), FVector2(-50, 0), FVector2(-30, 30), FVector2(30, 30), FVector2(50, 0) } }
+	};
 
 protected:
 	CPlayerCharacter() = default;

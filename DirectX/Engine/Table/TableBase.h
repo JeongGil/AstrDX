@@ -14,7 +14,7 @@ class TableBase abstract
 	static_assert(std::is_base_of<FTableInfoBase, T>::value, "T must inherit from FTableInfoBase.");
 
 public:
-	static Derived& Instance()
+	static Derived& GetInst()
 	{
 		static Derived Instance;
 		return Instance;

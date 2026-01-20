@@ -28,7 +28,18 @@ bool CWeapon_Battle::Init()
 	if (auto Mesh = this->Mesh.lock())
 	{
 		Mesh->SetRelativeRotationZ(90);
+
+		Mesh->SetShader("DefaultTexture2D");
+		Mesh->SetMesh("CenterRectTex");
+
+		Mesh->SetBlendState(0, "AlphaBlend");
+
+		Mesh->SetInheritScale(true);
+		Mesh->SetInheritRotation(true);
+
+		Mesh->TrySetRenderLayer(ERenderOrder::CharacterWeapon);
 	}
+
 	return true;
 }
 
@@ -45,7 +56,7 @@ CWeapon_Battle* CWeapon_Battle::Clone()
 void CWeapon_Battle::InitWeaponInfo(TableID ID)
 {
 	FWeaponInfo* Info;
-	if (!WeaponTable::Instance().TryGet(ID, Info))
+	if (!WeaponTable::GetInst().TryGet(ID, Info))
 	{
 		return;
 	}
@@ -60,6 +71,11 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 			{
 				const FTextureInfo* TexInfo = Texture->GetTexture();
 				Mesh->SetWorldScale(TexInfo->Width, TexInfo->Height);
+
+				if (auto Col = Collider.lock())
+				{
+					Col->SetBoxExtend(TexInfo->Width, TexInfo->Height);
+				}
 			}
 		}
 	}
