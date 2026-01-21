@@ -55,7 +55,7 @@ private:
 	float SSPeriod = 1.f;
 
 protected:
-	ETeam Team;
+	ETeam Team{};
 	ETargetState TargetState = ETargetState::Normal;
 
 	std::weak_ptr<CSceneComponent> Root;

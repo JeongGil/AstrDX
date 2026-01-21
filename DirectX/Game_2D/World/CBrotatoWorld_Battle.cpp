@@ -2,8 +2,10 @@
 
 #include <Asset/CPathManager.h>
 #include <Component/CMeshComponent.h>
+#include <Render/CRenderManager.h>
 
 #include "../Strings.h"
+#include "../Character/CNonPlayerCharacter.h"
 #include "../Character/CPlayerCharacter.h"
 #include "../Inventory/CInventory.h"
 #include "../Table/CTableManager.h"
@@ -15,11 +17,19 @@ bool CBrotatoWorld_Battle::Init()
 		return false;
 	}
 
+	CRenderManager::GetInst()->CreateLayer("CharacterLeg", ERenderOrder::CharacterLeg, ERenderListSort::Y);
+	CRenderManager::GetInst()->CreateLayer("CharacterBody", ERenderOrder::CharacterBody, ERenderListSort::Y);
+	CRenderManager::GetInst()->CreateLayer("CharacterDeco", ERenderOrder::CharacterDeco, ERenderListSort::Y);
+	CRenderManager::GetInst()->CreateLayer("CharacterItem", ERenderOrder::CharacterItem, ERenderListSort::Y);
+	CRenderManager::GetInst()->CreateLayer("CharacterWeapon", ERenderOrder::CharacterWeapon, ERenderListSort::Y);
+
 	CPathManager::CreatePath(Key::Path::Brotato, TEXT("Brotato\\"), Key::Path::Asset);
 
 	CTableManager::GetInst().Init();
 	CTableManager::GetInst().LoadTables();
 
+	CInventory::GetInst().AddWeapon(TableID(1));
+	CInventory::GetInst().AddWeapon(TableID(1));
 	CInventory::GetInst().AddWeapon(TableID(1));
 
 	auto WPC = CreateGameObject<CPlayerCharacter>(Key::Obj::PC);
@@ -33,6 +43,25 @@ bool CBrotatoWorld_Battle::Init()
 			auto Weapon = CInventory::GetInst().GetWeapon(i);
 			PC->AddWeapon(Weapon);
 		}
+	}
+
+	static int Counter = 0;
+	auto WNPC = CreateGameObject<CNonPlayerCharacter>("Monster_" + std::to_string(Counter));
+	if (auto NPC = WNPC.lock())
+	{
+		NPC->SetWorldPosition(300, 300);
+	}
+
+	WNPC = CreateGameObject<CNonPlayerCharacter>("Monster_" + std::to_string(Counter));
+	if (auto NPC = WNPC.lock())
+	{
+		NPC->SetWorldPosition(-300, 300);
+	}
+
+	WNPC = CreateGameObject<CNonPlayerCharacter>("Monster_" + std::to_string(Counter));
+	if (auto NPC = WNPC.lock())
+	{
+		NPC->SetWorldPosition(300, -300);
 	}
 
 	auto WBG = CreateGameObject<CGameObject>("BG");

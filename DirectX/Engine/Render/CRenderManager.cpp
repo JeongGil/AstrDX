@@ -291,9 +291,7 @@ bool CRenderManager::Init()
 
 	CreateDepthStencilState("DepthDisable", false);
 
-	CreateLayer("CharacterLeg", ERenderOrder::CharacterLeg, ERenderListSort::Y);
-	CreateLayer("CharacterBody", ERenderOrder::CharacterBody, ERenderListSort::Y);
-	CreateLayer("CharacterDeco", ERenderOrder::CharacterDeco, ERenderListSort::Y);
+	CreateLayer("DebugDraw", ERenderOrder::DebugDraw, ERenderListSort::Y);
 	CreateLayer("Background", ERenderOrder::Background, ERenderListSort::Y);
 	CreateLayer("Default", ERenderOrder::Default, ERenderListSort::Y);
 

@@ -14,5 +14,10 @@ public:
 	{
 		return deltaTime;
 	}
+
+	static std::chrono::steady_clock::time_point Now()
+	{
+		return currTime;
+	}
 };
 

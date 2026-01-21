@@ -86,6 +86,8 @@ bool CCollider::Init()
 		return false;
 	}
 
+	TrySetRenderLayer(ERenderOrder::DebugDraw);
+
 	if (bDrawDebug)
 	{
 		TransformCBuffer.reset(new CCBufferTransform);

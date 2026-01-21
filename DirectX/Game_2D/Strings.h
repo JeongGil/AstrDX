@@ -72,6 +72,7 @@ namespace Key
 		inline const std::string Deco = "Deco";
 		inline const std::string ObjMove = "ObjMove";
 		inline const std::string PlayerCamera = "PlayerCamera";
+		inline const std::string Anchor = "Anchor";
 	}
 
 	namespace Obj

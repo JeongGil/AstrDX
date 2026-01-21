@@ -2,6 +2,7 @@
 #include <Object/CGameObject.h>
 
 #include "../Inventory/CInventoryItem_Weapon.h"
+#include <chrono>
 
 class CMeshComponent;
 class CPlayerCharacter;
@@ -52,16 +53,33 @@ public:
 		}
 	}
 
+	void SetPosAnchor(const std::weak_ptr<CSceneComponent>& Anchor)
+	{
+		PosAnchor = Anchor;
+	}
+
 protected:
 	void InitWeaponInfo(TableID ID);
 
-	std::weak_ptr<CPlayerCharacter> Owner;
-	std::weak_ptr<CColliderBox2D> Collider;
-	std::weak_ptr<CMeshComponent> Mesh;
+private:
+	std::weak_ptr<CSceneComponent> GetClosestEnemy();
 
-	TableID WeaponInfoID = TableID(0);
-	std::weak_ptr<CInventoryItem_Weapon> Origin;
+protected:
+	std::weak_ptr<CPlayerCharacter> Owner{};
+	std::weak_ptr<CColliderBox2D> Collider{};
+	std::weak_ptr<CMeshComponent> Mesh{};
+
+	TableID WeaponInfoID{ -1 };
+	std::weak_ptr<CInventoryItem_Weapon> Origin{};
+
+	std::weak_ptr<CSceneComponent> PosAnchor{};
 
 	float MoveSpeed = 200.f;
+
+private:
+	std::weak_ptr<CSceneComponent> Target{};
+
+	std::chrono::steady_clock::time_point LastFiredTime{};
+	//float Elapsed{};
 };
 

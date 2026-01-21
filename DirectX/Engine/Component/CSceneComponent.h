@@ -21,6 +21,8 @@ namespace ERenderOrder
 		CharacterDeco = 101,
 		CharacterItem = 102,
 		CharacterWeapon = 103,
+
+		DebugDraw = 1000,
 	};
 }
 

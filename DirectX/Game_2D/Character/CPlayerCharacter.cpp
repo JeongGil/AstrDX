@@ -24,14 +24,15 @@ bool CPlayerCharacter::Init()
 		return false;
 	}
 
+	SetTeam(ETeam::Player);
+
 	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato, Key::Comp::Root);
 	if (auto Body = this->Potato.lock())
 	{
 		Body->SetShader("DefaultTexture2D");
 		Body->SetMesh("CenterRectTex");
 		Body->SetWorldScale(150, 150);
-		
-		//Body->SetMaterialBaseColor(0, FColor::White);
+
 		Body->SetBlendState(0, "AlphaBlend");
 
 		FMiscInfo* Misc;
@@ -55,7 +56,6 @@ bool CPlayerCharacter::Init()
 		Leg->SetWorldScale(100, 50);
 		Leg->SetRelativePosition(FVector(0, -25, 0));
 
-		//Leg->SetMaterialBaseColor(0, FColor::White);
 		Leg->SetBlendState(0, "AlphaBlend");
 
 		FMiscInfo* Misc;
@@ -103,6 +103,15 @@ bool CPlayerCharacter::Init()
 			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
 		Cam->SetInheritRotation(false);
+	}
+
+	for (auto& WeaponAnchor : WeaponAnchors)
+	{
+		auto WAnchor = CreateComponent<CSceneComponent>(Key::Comp::Anchor, Key::Comp::Root);
+		if (auto Anchor = WAnchor.lock())
+		{
+			WeaponAnchor = Anchor;
+		}
 	}
 
 	return true;
@@ -173,7 +182,13 @@ void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
 
 void CPlayerCharacter::SetAnchorPosition(size_t WeaponCount)
 {
-	assert(WeaponCount == WeaponObjs.size());
+	assert(WeaponCount == Weapons.size());
+
+	const auto& AnchorPoses = AnchorPositions.at(WeaponCount);
+	for (size_t i = 0; i < WeaponCount; i++)
+	{
+		WeaponAnchors[i]->SetRelativePosition(AnchorPoses[i]);
+	}
 }
 
 void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
@@ -197,7 +212,7 @@ void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
 
 void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon)
 {
-	assert(WeaponObjs.size() < INVENTORY_MAX_WEAPON);
+	assert(Weapons.size() < INVENTORY_MAX_WEAPON);
 	auto InvenWeapon = Weapon.lock();
 	if (!InvenWeapon)
 	{
@@ -209,16 +224,20 @@ void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Wea
 		auto WeakWeapon = World->CreateGameObject<CWeapon_Battle>(Key::Obj::Weapon);
 		if (auto WeaponObj = WeakWeapon.lock())
 		{
-			WeaponObjs.push_back(WeaponObj);
+			Weapons.push_back(WeaponObj);
 
 			WeaponObj->SetOwner(std::dynamic_pointer_cast<CPlayerCharacter>(shared_from_this()));
 			WeaponObj->SetWeapon(InvenWeapon);
 
-			// TODO: Weapon pivot?
+			SetAnchorPosition(Weapons.size());
+			WeaponObj->SetPosAnchor(WeaponAnchors[0]);
+			//WeaponObj->SetPosAnchor(WeaponAnchors[Weapons.size() - 1]);
+
+			WeaponObj->AddRelativeRotationZ(90);
 		}
 	}
 
-	SetAnchorPosition(WeaponObjs.size());
+	SetAnchorPosition(Weapons.size());
 }
 
 CPlayerCharacter* CPlayerCharacter::Clone()

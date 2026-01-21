@@ -47,8 +47,8 @@ protected:
 	std::weak_ptr<CMeshComponent> Leg;
 	std::vector<std::weak_ptr<CMeshComponent>> Decos;
 
-	std::vector<std::weak_ptr<CWeapon_Battle>> WeaponObjs;
-	std::array<CSceneComponent, INVENTORY_MAX_WEAPON> WeaponAnchors;
+	std::vector<std::weak_ptr<CWeapon_Battle>> Weapons;
+	std::array<std::shared_ptr<CSceneComponent>, INVENTORY_MAX_WEAPON> WeaponAnchors;
 
 	std::weak_ptr<CObjectMovementComponent> MovementComponent;
 

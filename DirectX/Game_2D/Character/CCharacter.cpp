@@ -51,7 +51,7 @@ void CCharacter::SquashAndStretch(float DeltaTime, float Intensity, float Period
 
 	SSElapsed += DeltaTime;
 
-	float Theta = SSElapsed * std::numbers::pi * 2 / Period;
+	float Theta = SSElapsed * static_cast<float>(std::numbers::pi) * 2 / Period;
 	float SinValue = std::sin(Theta);
 
 	FVector2 NewScale;

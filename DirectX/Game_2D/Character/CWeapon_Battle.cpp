@@ -5,7 +5,9 @@
 #include <World/CWorld.h>
 #include <Asset/Material/CMaterial.h>
 
+#include "CNonPlayerCharacter.h"
 #include "../Strings.h"
+#include "../../Engine/CTimer.h"
 #include "../Table/WeaponTable.h"
 
 
@@ -22,6 +24,7 @@ bool CWeapon_Battle::Init()
 	if (auto Collider = this->Collider.lock())
 	{
 		Collider->SetRelativeRotationZ(90);
+		Collider->SetDrawDebug(true);
 	}
 
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh, Key::Comp::Root);
@@ -46,6 +49,64 @@ bool CWeapon_Battle::Init()
 void CWeapon_Battle::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
+
+	if (auto Anchor = PosAnchor.lock())
+	{
+		SetWorldPosition(Anchor->GetWorldPosition());
+
+#ifdef _DEBUG
+
+		char Test[256] = {};
+		auto Pos = Mesh.lock()->GetWorldPosition(); //Anchor->GetWorldPosition() - GetWorldPosition();
+		sprintf_s(Test, "Weapon: %p, WeaponPos : %2f, %2f, %2f\n", (void*)Mesh.lock().get(), Pos.x, Pos.y, Pos.z);
+
+		OutputDebugStringA(Test);
+
+#endif
+	}
+
+	//Target = GetClosestEnemy();
+	//if (auto Target = this->Target.lock())
+	//{
+	//	// Look at target.
+	//	float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldRotation(), EAxis::Y);
+	//	SetWorldRotationZ(Degree);
+
+	//	// Attack
+	//	if (auto InvenWeapon = Origin.lock())
+	//	{
+	//		FWeaponInfo* Info;
+	//		if (WeaponTable::GetInst().TryGet(InvenWeapon->GetWeaponInfoID(), Info))
+	//		{
+	//			using Clock = std::chrono::steady_clock;
+
+	//			auto Now = CTimer::Now();
+	//			auto Elapsed = Now - LastFiredTime;
+	//			auto Cooldown = std::chrono::duration_cast<Clock::duration>(std::chrono::duration<float>(Info->CooldownMS * 0.001f));
+
+	//			if (Elapsed >= Cooldown)
+	//			{
+	//				if ((GetWorldPosition() - Target->GetWorldPosition()).SqrLength() <= Info->Range * Info->Range)
+	//				{
+	//					// Fire
+	//					auto Overflow = Elapsed - Cooldown;
+	//					LastFiredTime = Now - Overflow;
+
+
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
+
+	//if (auto InvenWeapon = Origin.lock())
+	//{
+	//	FWeaponInfo* Info;
+	//	if (WeaponTable::GetInst().TryGet(InvenWeapon->GetWeaponInfoID(), Info))
+	//	{
+	//		//float RTT = Info.ran
+	//	}
+	//}
 }
 
 CWeapon_Battle* CWeapon_Battle::Clone()
@@ -79,4 +140,34 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 			}
 		}
 	}
+}
+
+std::weak_ptr<CSceneComponent> CWeapon_Battle::GetClosestEnemy()
+{
+	if (auto World = this->World.lock())
+	{
+		auto NPCs = World->FindObjectsOfType<CNonPlayerCharacter>();
+
+		float SqrDist = FLT_MAX;
+		std::weak_ptr<CNonPlayerCharacter> Closest;
+		for (const auto& WNPC : NPCs)
+		{
+			if (auto NPC = WNPC.lock())
+			{
+				float CurrSqrDist = (GetWorldPosition() - NPC->GetWorldPosition()).SqrLength();
+				if (CurrSqrDist < SqrDist)
+				{
+					SqrDist = CurrSqrDist;
+					Closest = WNPC;
+				}
+			}
+		}
+
+		if (auto Target = Closest.lock())
+		{
+			return Target->GetRootComponent();
+		}
+	}
+
+	return std::weak_ptr<CSceneComponent>();
 }
