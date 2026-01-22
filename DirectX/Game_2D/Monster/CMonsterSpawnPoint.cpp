@@ -42,6 +42,8 @@ void CMonsterSpawnPoint::Update(const float DeltaTime)
 				{
 					Spawned->SetWorldPosition(GetWorldPosition());
 					Spawned->SetWorldRotation(GetWorldRotation());
+					Spawned->SetSimulatePhysics(true);
+					Spawned->SetUseGravity(true);
 
 					this->Spawned = Spawned;
 				}

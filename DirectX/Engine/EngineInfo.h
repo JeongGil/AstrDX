@@ -210,6 +210,13 @@ struct FLine2DInfo
 	FVector End;
 };
 
+struct FCollisionManifold
+{
+	FVector ContactPoint;
+	FVector Normal;
+	float Penetration = 0.f;
+};
+
 struct TableID
 {
 	int value = -1;

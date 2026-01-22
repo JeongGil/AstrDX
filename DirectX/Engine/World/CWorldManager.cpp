@@ -28,6 +28,11 @@ void CWorldManager::Render()
 	World->Render();
 }
 
+void CWorldManager::PostRender()
+{
+	World->PostRender();
+}
+
 CWorldManager::CWorldManager()
 {
 }

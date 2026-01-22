@@ -229,7 +229,10 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="Table\TableBase.h" />
     <ClInclude Include="Table\TableInfoBase.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="World\CCameraManager.h" />
+    <ClInclude Include="World\CCollisionQuadTree.h" />
+    <ClInclude Include="World\CCollisionQuadTreeNode.h" />
     <ClInclude Include="World\CInput.h" />
     <ClInclude Include="World\CWorld.h" />
     <ClInclude Include="World\CWorldAssetManager.h" />
@@ -298,6 +301,8 @@
     <ClCompile Include="Render\CRenderManager.cpp" />
     <ClCompile Include="Render\CRenderState.cpp" />
     <ClCompile Include="World\CCameraManager.cpp" />
+    <ClCompile Include="World\CCollisionQuadTree.cpp" />
+    <ClCompile Include="World\CCollisionQuadTreeNode.cpp" />
     <ClCompile Include="World\CInput.cpp" />
     <ClCompile Include="World\CWorld.cpp" />
     <ClCompile Include="World\CWorldAssetManager.cpp" />

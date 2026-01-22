@@ -105,8 +105,10 @@ void CEngine::Render()
 {
 	CDevice::GetInst()->BeginRender();
 
-	//CWorldManager::GetInst()->Render();
+	CWorldManager::GetInst()->Render();
 	CRenderManager::GetInst()->Render();
+
+	CWorldManager::GetInst()->PostRender();
 
 	CDevice::GetInst()->EndRender();
 }

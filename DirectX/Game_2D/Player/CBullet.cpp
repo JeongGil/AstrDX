@@ -122,7 +122,7 @@ bool CBullet::Init()
 		Body->SetOnCollisionBlock<CBullet>(this, &CBullet::OnCollisionBlock);
 
 		Body->SetCollisionProfile("PlayerAttack");
-		Body->SetBoxExtend(50.f, 50.f);
+		Body->SetBoxExtent(50.f, 50.f);
 		Body->SetDrawDebug(true);
 		Body->SetInheritScale(false);
 	}

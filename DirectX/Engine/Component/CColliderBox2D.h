@@ -13,19 +13,19 @@ public:
 		return Info;
 	}
 
-	void SetBoxExtend(const FVector2& Extend)
+	void SetBoxExtent(const FVector2& Extend)
 	{
 		Info.HalfExtent = Extend * 0.5f;
 	}
-	void SetBoxExtend(float X, float Y)
+	void SetBoxExtent(float X, float Y)
 	{
 		Info.HalfExtent = FVector2(X * 0.5f, Y * 0.5f);
 	}
-	void SetBoxHalfExtend(const FVector2& HalfExtent)
+	void SetBoxHalfExtent(const FVector2& HalfExtent)
 	{
 		Info.HalfExtent = HalfExtent;
 	}
-	void SetBoxHalfExtend(float X, float Y)
+	void SetBoxHalfExtent(float X, float Y)
 	{
 		Info.HalfExtent = FVector2(X, Y);
 	}
@@ -35,6 +35,7 @@ protected:
 
 public:
 	bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) override;
+	bool CollideManifold(FCollisionManifold& HitResult, std::shared_ptr<CCollider> Dest) override;
 
 	void SetDrawDebug(bool bDrawDebug) override;
 	bool Init() override;

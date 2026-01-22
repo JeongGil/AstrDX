@@ -7,6 +7,7 @@
 #include <World/CWorld.h>
 #include <Asset/Material/CMaterial.h>
 #include <Component/CSceneComponent.h>
+#include <Component/CColliderBox2D.h>
 
 #include "CWeapon_Battle.h"
 #include "../Strings.h"
@@ -24,6 +25,11 @@ bool CPlayerCharacter::Init()
 		return false;
 	}
 
+	if (auto Col = Collider.lock())
+	{
+		Col->SetCollisionProfile("Player");
+	}
+
 	SetTeam(ETeam::Player);
 
 	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato, Key::Comp::Root);
@@ -32,6 +38,10 @@ bool CPlayerCharacter::Init()
 		Body->SetShader("DefaultTexture2D");
 		Body->SetMesh("CenterRectTex");
 		Body->SetWorldScale(150, 150);
+		if (auto Col = Collider.lock())
+		{
+			Col->SetBoxExtent(Body->GetWorldScale().x, Body->GetWorldPosition().y);
+		}
 
 		Body->SetBlendState(0, "AlphaBlend");
 

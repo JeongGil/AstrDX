@@ -2,6 +2,7 @@
 
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
+#include <Component/CColliderBox2D.h>
 
 #include "CPlayerCharacter.h"
 #include "../Strings.h"
@@ -15,6 +16,11 @@ bool CNonPlayerCharacter::Init()
 		return false;
 	}
 
+	if (auto Col = Collider.lock())
+	{
+		Col->SetCollisionProfile("Monster");
+	}
+
 	SetTeam(ETeam::Enemy);
 
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh);
@@ -23,6 +29,10 @@ bool CNonPlayerCharacter::Init()
 		Mesh->SetShader("DefaultTexture2D");
 		Mesh->SetMesh("CenterRectTex");
 		Mesh->SetWorldScale(150, 150);
+		if (auto Col = Collider.lock())
+		{
+			Col->SetBoxExtent(Mesh->GetWorldScale().x, Mesh->GetWorldPosition().y);
+		}
 
 		Mesh->SetBlendState(0, "AlphaBlend");
 

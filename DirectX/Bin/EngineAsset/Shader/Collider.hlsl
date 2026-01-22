@@ -3,9 +3,9 @@
 cbuffer CBCollider : register(b10)
 {
 	float4 cbColliderColor;
-}
+};
 
-float4 main() :SV_TARGET
+float4 main() : SV_TARGET
 {
 	return cbColliderColor;
 }

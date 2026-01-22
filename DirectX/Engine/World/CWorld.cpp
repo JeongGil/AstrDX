@@ -26,6 +26,8 @@ bool CWorld::Init()
 		return false;
 	}
 
+	Collision->SetWorld(std::dynamic_pointer_cast<CWorld>(shared_from_this()));
+
 	Objects.reserve(10000);
 	StartObjects.reserve(200);
 
@@ -107,6 +109,17 @@ void CWorld::Render()
 {
 	Begin();
 
+#ifdef _DEBUG
+
+	Collision->Render();
+
+#endif
+
+	Collision->ReturnNodePool();
+}
+
+void CWorld::PostRender()
+{
 	auto Curr = Objects.begin();
 	const auto End = Objects.end();
 	while (Curr != End)

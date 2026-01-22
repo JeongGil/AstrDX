@@ -167,25 +167,25 @@ bool CPlayer::Init()
 		Mesh->SetPivot(0.5f, 0.f);
 	}
 
-	//Body = CreateComponent<CColliderBox2D>("Body");
-	//if (auto Body = this->Body.lock())
-	//{
-	//	Body->SetCollisionProfile("Player");
-	//	Body->SetBoxExtend(100.f, 100.f);
-	//	Body->SetDrawDebug(true);
-	//	Body->SetInheritScale(false);
-	//	Body->SetRelativePosition(0.f, 50.f, 0.f);
-	//}
-
-	Sphere2D = CreateComponent<CColliderSphere2D>("Sphere2D");
-	if (auto Sphere2D = this->Sphere2D.lock())
+	Body = CreateComponent<CColliderBox2D>("Body");
+	if (auto Body = this->Body.lock())
 	{
-		Sphere2D->SetCollisionProfile("Player");
-		Sphere2D->SetRadius(sqrtf(20000.f) * 0.5f);
-		Sphere2D->SetDrawDebug(true);
-		Sphere2D->SetInheritScale(false);
-		Sphere2D->SetRelativePosition(0.f, 50.f, 0.f);
+		Body->SetCollisionProfile("Player");
+		Body->SetBoxExtent(100.f, 100.f);
+		Body->SetDrawDebug(true);
+		Body->SetInheritScale(false);
+		Body->SetRelativePosition(0.f, 50.f, 0.f);
 	}
+
+	//Sphere2D = CreateComponent<CColliderSphere2D>("Sphere2D");
+	//if (auto Sphere2D = this->Sphere2D.lock())
+	//{
+	//	Sphere2D->SetCollisionProfile("Player");
+	//	Sphere2D->SetRadius(sqrtf(20000.f) * 0.5f);
+	//	Sphere2D->SetDrawDebug(true);
+	//	Sphere2D->SetInheritScale(false);
+	//	Sphere2D->SetRelativePosition(0.f, 50.f, 0.f);
+	//}
 
 	//Line2D = CreateComponent<CColliderLine2D>("Line2D");
 	//if (auto Line2D = this->Line2D.lock())

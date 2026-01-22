@@ -55,6 +55,22 @@ bool CColliderLine2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> 
 	return false;
 }
 
+bool CColliderLine2D::CollideManifold(FCollisionManifold& HitResult, std::shared_ptr<CCollider> Dest)
+{
+	switch (Dest->GetColliderType())
+	{
+		case EColliderType::Box2D:
+			// If both rotations are 0, perform AABB collision; otherwise, perform OBB collision.
+			return CCollision::ManifoldLine2DToBox2D(HitResult, this, dynamic_cast<CColliderBox2D*>(Dest.get()));
+		case EColliderType::Sphere2D:
+			return CCollision::ManifoldLine2DToSphere2D(HitResult, this, dynamic_cast<CColliderSphere2D*>(Dest.get()));
+		case EColliderType::Line2D:
+			return CCollision::ManifoldLine2DToLine2D(HitResult, this, dynamic_cast<CColliderLine2D*>(Dest.get()));
+	}
+
+	return false;
+}
+
 bool CColliderLine2D::Init()
 {
 	if (!CCollider::Init())

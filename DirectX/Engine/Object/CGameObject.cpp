@@ -1,5 +1,25 @@
 #include "CGameObject.h"
 
+bool CGameObject::GetSimulatePhysics() const
+{
+	if (auto Root = this->Root.lock())
+	{
+		return Root->GetSimulatePhysics();
+	}
+
+	return false;
+}
+
+bool CGameObject::GetUseGravity() const
+{
+	if (auto Root = this->Root.lock())
+	{
+		return Root->GetUseGravity();
+	}
+
+	return false;
+}
+
 void CGameObject::SetSimulatePhysics(bool bSimulate)
 {
 	if (auto Root = this->Root.lock())

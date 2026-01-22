@@ -9,6 +9,8 @@ bool CGlobalSetting::Init()
 		return false;
 	}
 
+
+
 	CCollisionInfoManager::GetInst()->CreateChannel("PlayerAttack");
 	CCollisionInfoManager::GetInst()->CreateChannel("MonsterAttack");
 

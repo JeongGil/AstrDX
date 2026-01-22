@@ -16,7 +16,6 @@ bool CCharacter::Init()
 	Collider = CreateComponent<CColliderBox2D>(Key::Comp::Collider, Key::Comp::Root);
 	if (auto Collider = this->Collider.lock())
 	{
-		Collider->SetCollisionProfile("Character");
 		Collider->SetDrawDebug(false);
 		Collider->SetInheritScale(false);
 	}

@@ -61,6 +61,9 @@ void CColliderSphere2D::UpdateInfo()
 	RenderScale.x = WorldScale.x = Info.Radius;
 	RenderScale.y = WorldScale.y = Info.Radius;
 	RenderScale.z = 1.f;
+
+	Min = Info.Center - Info.Radius;
+	Max = Info.Center + Info.Radius;
 }
 
 CColliderSphere2D* CColliderSphere2D::Clone() const
@@ -103,14 +106,30 @@ bool CColliderSphere2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider
 {
 	switch (Other->GetColliderType())
 	{
-	case EColliderType::Box2D:
-		return CCollision::CollideBox2DToSphere2D(OutHitPoint, dynamic_cast<CColliderBox2D*>(Other.get()), this);
-	case EColliderType::Sphere2D:
-		return CCollision::CollideSphere2DtoSphere2D(OutHitPoint, dynamic_cast<CColliderSphere2D*>(Other.get()), this);
-	case EColliderType::Line2D:
-		return CCollision::CollideSphere2DToLine2D(OutHitPoint, this, dynamic_cast<CColliderLine2D*>(Other.get()));
-	default:
-		break;
+		case EColliderType::Box2D:
+			return CCollision::CollideBox2DToSphere2D(OutHitPoint, dynamic_cast<CColliderBox2D*>(Other.get()), this);
+		case EColliderType::Sphere2D:
+			return CCollision::CollideSphere2DtoSphere2D(OutHitPoint, dynamic_cast<CColliderSphere2D*>(Other.get()), this);
+		case EColliderType::Line2D:
+			return CCollision::CollideSphere2DToLine2D(OutHitPoint, this, dynamic_cast<CColliderLine2D*>(Other.get()));
+		default:
+			break;
+	}
+
+	return false;
+}
+
+bool CColliderSphere2D::CollideManifold(FCollisionManifold& HitResult, std::shared_ptr<CCollider> Dest)
+{
+	switch (Dest->GetColliderType())
+	{
+		case EColliderType::Box2D:
+			// If both rotations are 0, perform AABB collision; otherwise, perform OBB collision.
+			return CCollision::ManifoldSphere2DToBox2D(HitResult, this, dynamic_cast<CColliderBox2D*>(Dest.get()));
+		case EColliderType::Sphere2D:
+			return CCollision::ManifoldSphere2DToSphere2D(HitResult, this, dynamic_cast<CColliderSphere2D*>(Dest.get()));
+		case EColliderType::Line2D:
+			return CCollision::ManifoldSphere2DToLine2D(HitResult, this, dynamic_cast<CColliderLine2D*>(Dest.get()));
 	}
 
 	return false;

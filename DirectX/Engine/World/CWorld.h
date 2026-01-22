@@ -181,6 +181,7 @@ public:
 	virtual void Update(const float DeltaTime);
 	virtual void PostUpdate(const float DeltaTime);
 	virtual void Render();
+	virtual void PostRender();
 
 private:
 	void Begin();

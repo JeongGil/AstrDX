@@ -13,6 +13,9 @@ class CGameObject :
 	friend CObject;
 
 public:
+	bool GetSimulatePhysics() const;
+	bool GetUseGravity() const;
+
 	void SetSimulatePhysics(bool bSimulate);
 	void SetUseGravity(bool bUse);
 	void AddForce(const FVector& Force);

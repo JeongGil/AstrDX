@@ -114,9 +114,19 @@ public:
 		Pivot = FVector(x, y, 0.f);
 	}
 
+	bool GetSimulatePhysics() const
+	{
+		return bSimulatePhysics;
+	}
+
 	void SetSimulatePhysics(bool bSimulate)
 	{
 		bSimulatePhysics = bSimulate;
+	}
+
+	bool GetUseGravity() const
+	{
+		return bUseGravity;
 	}
 
 	void SetUseGravity(bool bUse)

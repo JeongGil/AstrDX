@@ -3,6 +3,7 @@
 #include <Asset/CAssetManager.h>
 #include <Asset/Animation2D/CAnimation2DManager.h>
 #include <Asset/CPathManager.h>
+#include <Component/CColliderBox2D.h>
 
 #include "../Monster/CMonster.h"
 #include "../Monster/CMonsterSpawnPoint.h"
@@ -24,20 +25,33 @@ bool CMainWorld::Init()
 	if (auto Monster = WeakMonster.lock())
 	{
 		Monster->SetWorldPosition(-400, 300);
-		//Monster->SetWorldRotationZ(180.f);
+		Monster->SetWorldRotationZ(180.f);
 	}
 
 	WeakMonster = CreateGameObject<CMonster>("Monster");
 	if (auto Monster = WeakMonster.lock())
 	{
 		Monster->SetWorldPosition(400, 300);
-		//Monster->SetWorldRotationZ(180.f);
+		Monster->SetWorldRotationZ(180.f);
 	}
+
+	std::weak_ptr<CGameObject>	Wall = CreateGameObject<CGameObject>("Wall");
+
+	auto WallObj = Wall.lock();
+
+	auto WallBox = WallObj->CreateComponent<CColliderBox2D>("Wall").lock();
+
+	WallBox->SetCollisionProfile("Static");
+	WallBox->SetBoxExtent(500.f, 50.f);
+	WallBox->SetDrawDebug(true);
+	WallBox->SetInheritScale(false);
+	WallBox->SetWorldPosition(0.f, -200.f);
+	WallBox->SetStatic(true);
 
 	auto WeakMSP = CreateGameObject<CMonsterSpawnPoint>("SpawnPoint");
 	if (auto MSP = WeakMSP.lock())
 	{
-		MSP->SetWorldPosition(-400.f, -300.f);
+		MSP->SetWorldPosition(100.f, 0.f);
 		MSP->SetWorldRotationZ(20.f);
 		MSP->SetSpawnType<CMonster>();
 		MSP->SetSpawnTime(5.f);
@@ -141,6 +155,7 @@ void CMainWorld::LoadAnimation2D()
 
 	WorldAssetManager->AddFrame("Explosion", 89, 0, 0, 320, 240);
 
+	return;
 #pragma region Brotato
 	CPathManager::CreatePath(Key::Path::Brotato, TEXT("Brotato\\"), Key::Path::Asset);
 

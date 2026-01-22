@@ -135,7 +135,7 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 
 				if (auto Col = Collider.lock())
 				{
-					Col->SetBoxExtend(TexInfo->Width, TexInfo->Height);
+					Col->SetBoxExtent(TexInfo->Width, TexInfo->Height);
 				}
 			}
 		}

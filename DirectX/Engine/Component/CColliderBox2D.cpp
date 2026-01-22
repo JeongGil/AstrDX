@@ -10,16 +10,32 @@
 
 bool CColliderBox2D::Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other)
 {
-	switch (Other->GetColliderType()) 
+	switch (Other->GetColliderType())
 	{
-	case EColliderType::Box2D:
-		return CCollision::CollideBox2DToBox2D(OutHitPoint, this, dynamic_cast<CColliderBox2D*>(Other.get()));
-	case EColliderType::Sphere2D:
-		return CCollision::CollideBox2DToSphere2D(OutHitPoint, this, dynamic_cast<CColliderSphere2D*>(Other.get()));
-	case EColliderType::Line2D:
-		return CCollision::CollideBox2DToLine2D(OutHitPoint, this, dynamic_cast<CColliderLine2D*>(Other.get()));
-	default:
-		break;
+		case EColliderType::Box2D:
+			return CCollision::CollideBox2DToBox2D(OutHitPoint, this, dynamic_cast<CColliderBox2D*>(Other.get()));
+		case EColliderType::Sphere2D:
+			return CCollision::CollideBox2DToSphere2D(OutHitPoint, this, dynamic_cast<CColliderSphere2D*>(Other.get()));
+		case EColliderType::Line2D:
+			return CCollision::CollideBox2DToLine2D(OutHitPoint, this, dynamic_cast<CColliderLine2D*>(Other.get()));
+		default:
+			break;
+	}
+
+	return false;
+}
+
+bool CColliderBox2D::CollideManifold(FCollisionManifold& HitResult, std::shared_ptr<CCollider> Dest)
+{
+	switch (Dest->GetColliderType())
+	{
+		case EColliderType::Box2D:
+			// If both rotations are 0, perform AABB collision; otherwise, perform OBB collision.
+			return CCollision::ManifoldBox2DToBox2D(HitResult, this, dynamic_cast<CColliderBox2D*>(Dest.get()));
+		case EColliderType::Sphere2D:
+			return CCollision::ManifoldBox2DToSphere2D(HitResult, this, dynamic_cast<CColliderSphere2D*>(Dest.get()));
+		case EColliderType::Line2D:
+			return CCollision::ManifoldBox2DToLine2D(HitResult, this, dynamic_cast<CColliderLine2D*>(Dest.get()));
 	}
 
 	return false;
