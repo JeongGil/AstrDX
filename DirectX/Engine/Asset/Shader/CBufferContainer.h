@@ -53,3 +53,14 @@ struct FCBufferColliderData
 {
 	FColor Color;
 };
+
+struct FCBufferUIDefaultData
+{
+	FVector4 BrushTint;
+	FVector4 WidgetColor;
+	FVector2 BrushLTUV;
+	FVector2 BrushRBUV;
+	int BrushAnimEnable;
+	int BrushTextureEnable;
+	FVector2 BrushEmpty;
+};

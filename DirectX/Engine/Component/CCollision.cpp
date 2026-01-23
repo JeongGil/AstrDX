@@ -879,6 +879,23 @@ bool CCollision::CollideBox2DToPoint(FVector& OutHitPoint, const FBox2DInfo& Box
 	return true;
 }
 
+bool CCollision::CollideSphere2DToPoint(FVector& OutHitPoint, const CColliderSphere2D* Sphere, const FVector& Point)
+{
+	if (!Sphere)
+	{
+		return false;
+	}
+
+	return CollideSphere2DToPoint(OutHitPoint, Sphere->GetInfo(), Point);
+}
+
+bool CCollision::CollideSphere2DToPoint(FVector& OutHitPoint, const FSphere2DInfo& Sphere, const FVector& Point)
+{
+	OutHitPoint = Point;
+
+	return Sphere.Center.SqrDistance(Point) <= Sphere.Radius * Sphere.Radius;
+}
+
 ECCWResult::Type CCollision::CCW2D(const FVector& A, const FVector& B, const FVector& C)
 {
 	FVector v = B - A;

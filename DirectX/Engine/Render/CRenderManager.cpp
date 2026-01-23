@@ -6,6 +6,7 @@
 #include "CDepthStencilState.h"
 #include "CRenderState.h"
 #include "../Component/CSceneComponent.h"
+#include "../Object/CGameObject.h"
 
 static bool SortYRenderList(const std::weak_ptr<CSceneComponent>& A, const std::weak_ptr<CSceneComponent>& B)
 {
@@ -291,9 +292,10 @@ bool CRenderManager::Init()
 
 	CreateDepthStencilState("DepthDisable", false);
 
-	CreateLayer("DebugDraw", ERenderOrder::DebugDraw, ERenderListSort::Y);
 	CreateLayer("Background", ERenderOrder::Background, ERenderListSort::Y);
 	CreateLayer("Default", ERenderOrder::Default, ERenderListSort::Y);
+
+	CreateLayer("DebugDraw", ERenderOrder::DebugDraw, ERenderListSort::Y);
 
 	SetState("DepthDisable");
 
@@ -302,6 +304,11 @@ bool CRenderManager::Init()
 
 void CRenderManager::Render()
 {
+#ifdef _DEBUG
+	static int TickCounter = 0;
+	++TickCounter;
+#endif
+
 	for (auto& RenderLayer : RenderLayers | std::views::values)
 	{
 		auto& RenderList = RenderLayer.RenderList;
@@ -342,6 +349,14 @@ void CRenderManager::Render()
 				{
 					Cmp->Render();
 					Cmp->PostRender();
+
+#ifdef _DEBUG
+					char Test[256] = {};
+					sprintf_s(Test, "Loop: %d, LayerName: %s, ObjName: %s\n", TickCounter, RenderLayer.Name.c_str(), Cmp->GetOwner().lock()->GetName().c_str());
+
+					OutputDebugStringA(Test);
+
+#endif
 				}
 			}
 		}

@@ -64,23 +64,23 @@ bool CBrotatoWorld_Battle::Init()
 	//	NPC->SetWorldPosition(300, -300);
 	//}
 
-	//auto WBG = CreateGameObject<CGameObject>("BG");
-	//if (auto BG = WBG.lock())
-	//{
-	//	auto WMesh = BG->CreateComponent<CMeshComponent>("BG");
-	//	if (auto Mesh = WMesh.lock())
-	//	{
-	//		Mesh->SetShader("DefaultTexture2D");
-	//		Mesh->SetMesh("CenterRectTex");
-	//		Mesh->SetWorldScale(1024, 1024);
+	auto WBG = CreateGameObject<CGameObject>("BG");
+	if (auto BG = WBG.lock())
+	{
+		auto WMesh = BG->CreateComponent<CMeshComponent>("BG");
+		if (auto Mesh = WMesh.lock())
+		{
+			Mesh->SetShader("DefaultTexture2D");
+			Mesh->SetMesh("CenterRectTex");
+			Mesh->SetWorldScale(1024, 1024);
 
-	//		Mesh->SetBlendState(0, "AlphaBlend");
+			Mesh->SetBlendState(0, "AlphaBlend");
 
-	//		Mesh->AddTexture(0, "BG", TEXT("TestMap.png"), Key::Path::Brotato);
+			Mesh->AddTexture(0, "BG", TEXT("TestMap.png"), Key::Path::Brotato);
 
-	//		Mesh->TrySetRenderLayer(ERenderOrder::Background);
-	//	}
-	//}
+			Mesh->TrySetRenderLayer(ERenderOrder::Background);
+		}
+	}
 
 	return true;
 }

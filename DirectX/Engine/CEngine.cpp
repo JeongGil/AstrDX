@@ -14,6 +14,7 @@
 #include "Component/CMeshComponent.h"
 #include "Component/CCameraComponent.h"
 #include "Render/CRenderManager.h"
+#include "UI/CWidget.h"
 
 void CEngine::InitCDO()
 {
@@ -58,6 +59,8 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 	CMeshComponent::CreateEmptyAnimationCBuffer();
 
 	Setting->Init();
+
+	CWidget::CreateUIProjection(static_cast<float>(Width), static_cast<float>(Height));
 
 	if (!CWorldManager::GetInst()->Init())
 	{

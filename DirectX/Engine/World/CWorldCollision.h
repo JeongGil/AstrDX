@@ -19,7 +19,10 @@ public:
 	void SetWorld(const std::weak_ptr<CWorld>& World)
 	{
 		this->World = World;
-		QuadTree->SetWorld(World);
+		if (QuadTree)
+		{
+			QuadTree->SetWorld(World);
+		}
 	}
 
 	void SetInterval(float Interval)

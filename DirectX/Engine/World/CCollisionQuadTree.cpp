@@ -58,7 +58,7 @@ bool CCollisionQuadTree::Init()
 
 	ColliderCBuffer.reset(new CCBufferCollider);
 	ColliderCBuffer->Init();
-	ColliderCBuffer->SetColor(FColor::White);
+	ColliderCBuffer->SetColor(FColor::Blue);
 
 #endif
 

@@ -25,6 +25,9 @@ bool CWeapon_Battle::Init()
 	{
 		Collider->SetRelativeRotationZ(90);
 		Collider->SetDrawDebug(true);
+
+		Collider->SetEnable(false);
+		Collider->SetCollisionProfile("PlayerAttack");
 	}
 
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh, Key::Comp::Root);
@@ -54,15 +57,15 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	{
 		SetWorldPosition(Anchor->GetWorldPosition());
 
-#ifdef _DEBUG
-
-		char Test[256] = {};
-		auto Pos = Mesh.lock()->GetWorldPosition(); //Anchor->GetWorldPosition() - GetWorldPosition();
-		sprintf_s(Test, "Weapon: %p, WeaponPos : %2f, %2f, %2f\n", (void*)Mesh.lock().get(), Pos.x, Pos.y, Pos.z);
-
-		OutputDebugStringA(Test);
-
-#endif
+//#ifdef _DEBUG
+//
+//		char Test[256] = {};
+//		auto Pos = Mesh.lock()->GetWorldPosition(); //Anchor->GetWorldPosition() - GetWorldPosition();
+//		sprintf_s(Test, "Weapon: %p, WeaponPos : %2f, %2f, %2f\n", (void*)Mesh.lock().get(), Pos.x, Pos.y, Pos.z);
+//
+//		OutputDebugStringA(Test);
+//
+//#endif
 	}
 
 	//Target = GetClosestEnemy();

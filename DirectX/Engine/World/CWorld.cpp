@@ -21,12 +21,18 @@ bool CWorld::Init()
 	}
 
 	Collision.reset(new CWorldCollision);
+	Collision->SetWorld(std::dynamic_pointer_cast<CWorld>(shared_from_this()));
 	if (!Collision->Init())
 	{
 		return false;
 	}
 
-	Collision->SetWorld(std::dynamic_pointer_cast<CWorld>(shared_from_this()));
+	UIManager.reset(new CWorldUIManager);
+	UIManager->World = std::dynamic_pointer_cast<CWorld>(shared_from_this());
+	if (!UIManager->Init())
+	{
+		return false;
+	}
 
 	Objects.reserve(10000);
 	StartObjects.reserve(200);
@@ -57,6 +63,8 @@ void CWorld::Update(const float DeltaTime)
 	CameraManager->Update(DeltaTime);
 
 	WorldAssetManager->Update(DeltaTime);
+
+	UIManager->Update(DeltaTime);
 }
 
 void CWorld::PostUpdate(const float DeltaTime)

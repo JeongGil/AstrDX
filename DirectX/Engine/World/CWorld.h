@@ -8,6 +8,7 @@
 #include "CWorldCollision.h"
 #include "../EngineInfo.h"
 #include "../Object/CGameObject.h"
+#include "CWorldUIManager.h"
 
 class CWorld : public std::enable_shared_from_this<CWorld>
 {
@@ -168,6 +169,11 @@ public:
 		return Collision;
 	}
 
+	std::weak_ptr<CWorldUIManager> GetUIManager() const
+	{
+		return UIManager;
+	}
+
 protected:
 	std::unordered_multimap<std::string, std::shared_ptr<CGameObject>> Objects;
 	std::vector<std::weak_ptr<CGameObject>> StartObjects;
@@ -175,6 +181,7 @@ protected:
 	std::shared_ptr<CWorldAssetManager> WorldAssetManager;
 	std::shared_ptr<CInput> Input;
 	std::shared_ptr<CWorldCollision> Collision;
+	std::shared_ptr<CWorldUIManager> UIManager;
 
 public:
 	virtual bool Init();

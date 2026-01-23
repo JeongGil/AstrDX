@@ -5,6 +5,7 @@
 #include "CShaderColor2D.h"
 #include "CShaderMaterialColor2D.h"
 #include "CShaderTexture2D.h"
+#include "CShaderUIDefault.h"
 
 bool CShaderManager::Init()
 {
@@ -29,6 +30,11 @@ bool CShaderManager::Init()
 		return false;
 	}
 
+	if (!CreateCBuffer("UIDefault", sizeof(FCBufferUIDefaultData), 10, EShaderBufferType::VP))
+	{
+		return false;
+	}
+
 	// Shader
 	if (!CreateShader<CShaderColor2D>("Color2D", "EngineShader"))
 	{
@@ -46,6 +52,11 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderCollider>("Collider", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderUIDefault>("UIDefault", "EngineShader"))
 	{
 		return false;
 	}

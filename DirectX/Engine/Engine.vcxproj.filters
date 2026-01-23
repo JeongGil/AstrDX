@@ -142,6 +142,21 @@
     <Filter Include="Table">
       <UniqueIdentifier>{89a2b37a-bd07-4a50-9588-80d11b1cf1f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="World\UI">
+      <UniqueIdentifier>{8ee21908-ce29-4969-b8d2-19ccc3959038}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{f05c293c-6eaf-4c2d-b079-350420870439}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Widget">
+      <UniqueIdentifier>{032e9bdb-98ec-4dec-9077-5b2ef47b0c00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\Shader\UI">
+      <UniqueIdentifier>{59653ec6-3204-41d7-818a-712c0ccc1243}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\ConstantBuffer\UI">
+      <UniqueIdentifier>{4e411220-26c1-43c2-8283-55bca1b1ecc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -369,6 +384,21 @@
     <ClInclude Include="World\CCollisionQuadTree.h">
       <Filter>Collision</Filter>
     </ClInclude>
+    <ClInclude Include="World\CWorldUIManager.h">
+      <Filter>World\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CWidget.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CWidgetContainer.h">
+      <Filter>UI\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CCBufferUIDefault.h">
+      <Filter>Asset\Shader\ConstantBuffer\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderUIDefault.h">
+      <Filter>Asset\Shader\Shader\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -567,6 +597,21 @@
     <ClCompile Include="World\CCollisionQuadTreeNode.cpp">
       <Filter>Collision</Filter>
     </ClCompile>
+    <ClCompile Include="World\CWorldUIManager.cpp">
+      <Filter>World\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CWidget.cpp">
+      <Filter>UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CWidgetContainer.cpp">
+      <Filter>UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CCBufferUIDefault.cpp">
+      <Filter>Asset\Shader\ConstantBuffer\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderUIDefault.cpp">
+      <Filter>Asset\Shader\Shader\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Asset\Shader\SpaceTransformation.txt">
@@ -578,6 +623,9 @@
       <Filter>Asset\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\Core\Bin\EngineAsset\Shader\Collider.hlsl">
+      <Filter>Asset\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Core\Bin\EngineAsset\Shader\UIShader.hlsl">
       <Filter>Asset\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
