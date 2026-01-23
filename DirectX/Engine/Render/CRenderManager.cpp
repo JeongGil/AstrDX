@@ -76,7 +76,7 @@ bool CRenderManager::TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSc
 	auto& OldRenderList = OldLayerIt->second.RenderList;
 	bool bFound = false;
 
-	OldRenderList.erase(std::remove_if(OldRenderList.begin(), OldRenderList.end(),
+	OldRenderList.erase(std::ranges::remove_if(OldRenderList,
 		[&Component, &bFound](const std::weak_ptr<CSceneComponent>& Weak)
 		{
 			auto Locked = Weak.lock();
@@ -92,7 +92,7 @@ bool CRenderManager::TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSc
 			}
 
 			return false;
-		}), OldRenderList.end());
+		}).begin(), OldRenderList.end());
 
 	if (!bFound)
 	{
