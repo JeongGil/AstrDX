@@ -26,7 +26,6 @@ void CSceneComponent::UpdateTransform()
 
 bool CSceneComponent::TrySetRenderLayer(const int NewRenderLayer)
 {
-	return true;
 	if (NewRenderLayer == RenderLayer)
 	{
 		return true;
