@@ -22,3 +22,8 @@ void CWidgetContainer::Update(const float DeltaTime)
 {
 	CWidget::Update(DeltaTime);
 }
+
+void CWidgetContainer::Render()
+{
+	CWidget::Render();
+}

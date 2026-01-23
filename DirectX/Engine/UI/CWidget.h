@@ -42,7 +42,7 @@ protected:
 	std::shared_ptr<CCBufferTransform> TransformCBuffer;
 	std::shared_ptr<CCBufferUIDefault> UIDefaultCBuffer;
 
-	std::string Name;
+	std::string Key;
 	FVector Pos;
 	FVector Size;
 	FVector Pivot;
@@ -63,12 +63,12 @@ public:
 public:
 	[[nodiscard]] std::string GetName() const
 	{
-		return Name;
+		return Key;
 	}
 
-	void SetName(const std::string& Name)
+	void SetKey(const std::string& Key)
 	{
-		this->Name = Name;
+		this->Key = Key;
 	}
 
 	void SetParent(const std::weak_ptr<CWidget>& Parent)
