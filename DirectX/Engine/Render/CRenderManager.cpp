@@ -67,44 +67,40 @@ bool CRenderManager::TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSc
 		return false;
 	}
 
-	if (Old == New)
-	{
-		return true;
-	}
-
-	auto LayerIt = RenderLayers.find(Old);
-	if (LayerIt == RenderLayers.end())
+	auto OldLayerIt = RenderLayers.find(Old);
+	if (OldLayerIt == RenderLayers.end())
 	{
 		return false;
 	}
 
-	if (!RenderLayers.contains(New))
-	{
-		RenderLayers.emplace(New, FRenderLayer{ .Name = std::to_string(New) });
-	}
-
-	auto RenderList = LayerIt->second.RenderList;
-	auto CompIt = RenderList.begin();
-
+	auto& OldRenderList = OldLayerIt->second.RenderList;
 	bool bFound = false;
-	while (CompIt != RenderList.end())
-	{
-		if (CompIt->lock() == Component)
-		{
-			bFound = true;
-			RenderList.erase(CompIt);
-			break;
-		}
 
-		++CompIt;
-	}
+	OldRenderList.erase(std::remove_if(OldRenderList.begin(), OldRenderList.end(),
+		[&Component, &bFound](const std::weak_ptr<CSceneComponent>& Weak)
+		{
+			auto Locked = Weak.lock();
+			if (!Locked)
+			{
+				return true;
+			}
+
+			if (Locked == Component)
+			{
+				bFound = true;
+				return true;
+			}
+
+			return false;
+		}), OldRenderList.end());
 
 	if (!bFound)
 	{
 		return false;
 	}
 
-	RenderLayers[New].RenderList.emplace_back(WeakComponent);
+	auto [NewLayerIt, bInserted] = RenderLayers.try_emplace(New, FRenderLayer{ .Name = std::to_string(New) });
+	NewLayerIt->second.RenderList.emplace_back(WeakComponent);
 
 	return true;
 }
@@ -305,8 +301,8 @@ bool CRenderManager::Init()
 void CRenderManager::Render()
 {
 #ifdef _DEBUG
-	static int TickCounter = 0;
-	++TickCounter;
+	static int LoopCounter = 0;
+	++LoopCounter;
 #endif
 
 	for (auto& RenderLayer : RenderLayers | std::views::values)
@@ -352,7 +348,7 @@ void CRenderManager::Render()
 
 #ifdef _DEBUG
 					char Test[256] = {};
-					sprintf_s(Test, "Loop: %d, LayerName: %s, ObjName: %s\n", TickCounter, RenderLayer.Name.c_str(), Cmp->GetOwner().lock()->GetName().c_str());
+					sprintf_s(Test, "[Loop: %d] Layer: %s, Cmp: %s, Obj: %s\n", LoopCounter, RenderLayer.Name.c_str(), Cmp->GetName().c_str(), Cmp->GetOwner().lock()->GetName().c_str());
 
 					OutputDebugStringA(Test);
 

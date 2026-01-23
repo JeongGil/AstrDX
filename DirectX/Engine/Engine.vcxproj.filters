@@ -399,6 +399,12 @@
     <ClInclude Include="Asset\Shader\CShaderUIDefault.h">
       <Filter>Asset\Shader\Shader\UI</Filter>
     </ClInclude>
+    <ClInclude Include="UI\UIInfo.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CButton.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -611,6 +617,9 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderUIDefault.cpp">
       <Filter>Asset\Shader\Shader\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CButton.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

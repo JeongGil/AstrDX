@@ -1,6 +1,9 @@
 #pragma once
 #include "../CObject.h"
 
+#include "UIInfo.h"
+
+class CWidgetContainer;
 class CCBufferUIDefault;
 class CCBufferTransform;
 class CMesh;
@@ -12,6 +15,7 @@ class CWidget :
     public CObject
 {
 	friend CWorldUIManager;
+	friend CWidgetContainer;
 
 protected:
 	CWidget();
@@ -46,6 +50,8 @@ protected:
 
 	int ZOrder = 0;
 
+	FColor WidgetColor = FColor::White;
+
 public:
 	void SetShader(const std::weak_ptr<CShader>& Shader);
 	void SetShader(const std::string& Key);
@@ -63,6 +69,11 @@ public:
 	void SetName(const std::string& Name)
 	{
 		this->Name = Name;
+	}
+
+	void SetParent(const std::weak_ptr<CWidget>& Parent)
+	{
+		this->Parent = Parent;
 	}
 
 	[[nodiscard]] FVector GetPos() const
@@ -131,6 +142,21 @@ public:
 	void SetZOrder(const int ZOrder)
 	{
 		this->ZOrder = ZOrder;
+	}
+
+	[[nodiscard]] FColor GetWidgetColor() const
+	{
+		return WidgetColor;
+	}
+
+	void SetWidgetColor(const FColor& WidgetColor)
+	{
+		this->WidgetColor = WidgetColor;
+	}
+
+	void SetWidgetColor(float r, float g, float b, float a)
+	{
+		this->WidgetColor = FColor(r, g, b, a);
 	}
 };
 
