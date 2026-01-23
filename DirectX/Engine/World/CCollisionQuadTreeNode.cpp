@@ -192,7 +192,7 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 						DestObj->SetWorldPosition(DestPos);
 					}
 
-					HitPoint = Manifold.ContactPoint;
+					//HitPoint = Manifold.ContactPoint;
 
 					SrcCollider->CallOnCollisionBlock(HitPoint, *DestIt);
 

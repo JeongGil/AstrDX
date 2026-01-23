@@ -58,7 +58,7 @@ bool CCollisionQuadTree::Init()
 
 	ColliderCBuffer.reset(new CCBufferCollider);
 	ColliderCBuffer->Init();
-	ColliderCBuffer->SetColor(FColor::Blue);
+	ColliderCBuffer->SetColor(FColor::White);
 
 #endif
 
@@ -122,10 +122,17 @@ void CCollisionQuadTree::ReturnNodePool()
 
 void CCollisionQuadTree::Render()
 {
+#ifdef _DEBUG
+	
+	ColliderCBuffer->UpdateBuffer();
+	
 	if (Root)
 	{
 		Root->Render(Mesh, Shader);
 	}
+
+#endif
+
 }
 
 void CCollisionQuadTree::UpdateInfo()
