@@ -161,6 +161,7 @@ public:
 	virtual void PostUpdate(const float DeltaTime);
 	virtual void UpdateTransform();
 	virtual void Render();
+	virtual void PostRender();
 	virtual void Destroy();
 
 protected:
