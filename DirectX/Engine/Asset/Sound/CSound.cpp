@@ -4,6 +4,7 @@
 
 CSound::CSound()
 {
+	AssetType = EAssetType::Sound;
 }
 
 CSound::~CSound()

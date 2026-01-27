@@ -95,6 +95,8 @@ void CEngine::Loop()
 {
 	Update(CTimer::Update());
 
+	CAssetManager::GetInst()->Update();
+
 	Render();
 }
 

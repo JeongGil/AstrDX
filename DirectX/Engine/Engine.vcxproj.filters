@@ -163,6 +163,9 @@
     <Filter Include="Asset\Sound\Lib">
       <UniqueIdentifier>{619b9f87-cfe5-48c7-b181-d0f65dd16199}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Font">
+      <UniqueIdentifier>{d53b2433-cf57-4069-93af-42f529d6125a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -450,6 +453,15 @@
     <ClInclude Include="Asset\Sound\CSoundManager.h">
       <Filter>Asset\Sound</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Font\CFont.h">
+      <Filter>Asset\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Font\CFontCollection.h">
+      <Filter>Asset\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Font\CFontManager.h">
+      <Filter>Asset\Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -671,6 +683,15 @@
     </ClCompile>
     <ClCompile Include="Asset\Sound\CSoundManager.cpp">
       <Filter>Asset\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Font\CFontManager.cpp">
+      <Filter>Asset\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Font\CFont.cpp">
+      <Filter>Asset\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Font\CFontCollection.cpp">
+      <Filter>Asset\Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

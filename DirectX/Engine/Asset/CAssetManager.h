@@ -2,6 +2,7 @@
 
 #include "../EngineInfo.h"
 
+class CFontManager;
 class CSoundManager;
 class CMeshManager;
 class CShaderManager;
@@ -21,7 +22,7 @@ public:
 	 * @return true if all components are successfully initialized, false otherwise.
 	 */
 	bool Init();
-
+	void Update();
 	void ReleaseAsset(const std::string& Key, EAssetType AssetType);
 
 	[[nodiscard]] std::weak_ptr<CMeshManager> GetMeshManager() const
@@ -49,12 +50,18 @@ public:
 		return SoundManager;
 	}
 
+	[[nodiscard]] std::weak_ptr<CFontManager> GetFontManager() const
+	{
+		return FontManager;
+	}
+
 private:
 	std::shared_ptr<CMeshManager> MeshManager;
 	std::shared_ptr<CShaderManager> ShaderManager;
 	std::shared_ptr<CTextureManager> TextureManager;
 	std::shared_ptr<CAnimation2DManager> Animation2DManager;
 	std::shared_ptr<CSoundManager> SoundManager;
+	std::shared_ptr<CFontManager> FontManager;
 
 public:
 	static CAssetManager* GetInst()

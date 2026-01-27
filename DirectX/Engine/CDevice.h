@@ -84,6 +84,11 @@ public:
 	 */
 	void EndRender();
 
+	[[nodiscard]] ID2D1RenderTarget* Get2DTarget() const
+	{
+		return m2DTarget;
+	}
+
 	[[nodiscard]] ID3D11Device* GetDevice() const
 	{
 		return Device;
@@ -129,6 +134,9 @@ private:
 	bool bWindowMode = false;
 
 	HWND window = nullptr;
+
+	ID2D1RenderTarget* m2DTarget = nullptr;
+	ID2D1Factory* m2DFactory = nullptr;
 
 public:
 	static CDevice* GetInst()

@@ -1,0 +1,38 @@
+#pragma once
+#include "CFont.h"
+#include "CFontCollection.h"
+
+class CAssetManager;
+
+class CFontManager
+{
+	friend CAssetManager;
+
+private:
+	CFontManager();
+
+public:
+	~CFontManager();
+
+private:
+	IDWriteFactory5* WriteFactory = nullptr;
+
+	std::unordered_map<std::string, std::shared_ptr<CFont>> Fonts;
+	std::unordered_map<std::string, std::shared_ptr<CFontCollection>> FontCollections;
+	std::unordered_map<unsigned int, ID2D1SolidColorBrush*>	FontColors;
+
+public:
+	bool Init();
+	bool LoadFont(const std::string& Key, const TCHAR* FontName,
+		int Weight, float FontSize, const TCHAR* LocalName,
+		int Stretch = DWRITE_FONT_STRETCH_NORMAL);
+	bool LoadFontCollection(const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Font");
+
+	std::weak_ptr<CFont> FindFont(const std::string& Key);
+	std::weak_ptr<CFontCollection> FindFontCollection(const std::string& Key);
+
+public:
+	void ReleaseAsset(const std::string& Key);
+	void ReleaseCollectionAsset(const std::string& Key);
+};
+

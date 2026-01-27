@@ -1,6 +1,8 @@
 #pragma once
 #include "CWidget.h"
 
+class CSound;
+
 namespace EButtonState
 {
 	enum Type
@@ -44,6 +46,7 @@ protected:
 	FUIBrush Brushes[EButtonState::End];
 	EButtonState::Type State = EButtonState::Normal;
 
+	std::weak_ptr<CSound> Sound[EButtonEventState::End];
 	std::function<void()> EventCallback[EButtonEventState::End];
 
 public:
@@ -79,6 +82,8 @@ public:
 	void SetCurrentFrame(EButtonState::Type State, int Frame);
 	void SetAnimationPlayTime(EButtonState::Type State, float PlayTime);
 	void SetAnimationPlayRate(EButtonState::Type State, float PlayRate);
+	void SetSound(EButtonEventState::Type State, const std::string& Key);
+	void SetSound(EButtonEventState::Type State, const std::string& Key, const char* FileName, const std::string& PathName = "Sound");
 
 public:
 	bool Init() override;

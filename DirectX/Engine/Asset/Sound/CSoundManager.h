@@ -23,7 +23,7 @@ private:
 
 public:
 	bool Init();
-	void Update(const float DeltaTime);
+	void Update();
 	bool CreateChannelGroup(const std::string& Key);
 	bool LoadSound(const std::string& Key, const std::string& GroupKey, bool bLoop,
 		const char* FileName, const std::string& PathName = "Sound");

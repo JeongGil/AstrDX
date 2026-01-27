@@ -53,8 +53,9 @@ bool CSoundManager::Init()
 	return true;
 }
 
-void CSoundManager::Update(const float DeltaTime)
+void CSoundManager::Update()
 {
+	System->update();
 }
 
 bool CSoundManager::CreateChannelGroup(const std::string& Key)

@@ -2,6 +2,7 @@
 
 #include "CPathManager.h"
 #include "Animation2D/CAnimation2DManager.h"
+#include "Font/CFontManager.h"
 #include "Mesh/CMeshManager.h"
 #include "Shader/CShaderManager.h"
 #include "Sound/CSoundManager.h"
@@ -44,7 +45,18 @@ bool CAssetManager::Init()
 		return false;
 	}
 
+	FontManager.reset(new CFontManager);
+	if (!FontManager->Init())
+	{
+		return false;
+	}
+
 	return true;
+}
+
+void CAssetManager::Update()
+{
+	SoundManager->Update();
 }
 
 void CAssetManager::ReleaseAsset(const std::string& Key, EAssetType AssetType)
@@ -72,6 +84,10 @@ void CAssetManager::ReleaseAsset(const std::string& Key, EAssetType AssetType)
 			SoundManager->ReleaseAsset(Key);
 			break;
 		case EAssetType::Font:
+			FontManager->ReleaseAsset(Key);
+			break;
+		case EAssetType::FontCollection:
+			FontManager->ReleaseCollectionAsset(Key);
 			break;
 		case EAssetType::None:
 		default:

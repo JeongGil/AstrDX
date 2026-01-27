@@ -6,8 +6,8 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	Resolution.Width = width;
 	Resolution.Height = height;
 	bWindowMode = windowMode;
-	
-	UINT flag{ 0u };
+
+	UINT flag = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
 	flag |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -126,7 +126,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 
 		return false;
 	}
-	
+
 	backBuffer->Release();
 
 	D3D11_TEXTURE2D_DESC depthDesc
@@ -153,7 +153,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 		return false;
 	}
 
-	if (FAILED( Device->CreateDepthStencilView(depthBuffer, nullptr, &DepthView)))
+	if (FAILED(Device->CreateDepthStencilView(depthBuffer, nullptr, &DepthView)))
 	{
 		depthBuffer->Release();
 
@@ -173,6 +173,33 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	};
 
 	Context->RSSetViewports(1, &vp);
+
+	// 2D initialization for font rendering
+	if (FAILED(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &m2DFactory)))
+	{
+		return false;
+	}
+
+	// Connect the previously created 3D BackBuffer and 2D BackBuffer
+	// to enable 2D rendering on the 3D BackBuffer.
+	IDXGISurface* BackSurface = nullptr;
+
+	SwapChain->GetBuffer(0, IID_PPV_ARGS(&BackSurface));
+
+	// Create a 2D render target. The surface output by this render target
+	// is designated as the surface for the 3D back buffer, ensuring that
+	// 2D rendering is output to the specified 3D back buffer surface.
+	D2D1_RENDER_TARGET_PROPERTIES Props = D2D1::RenderTargetProperties(
+		D2D1_RENDER_TARGET_TYPE_HARDWARE,
+		D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED));
+
+	if (FAILED(m2DFactory->CreateDxgiSurfaceRenderTarget(BackSurface, Props, &m2DTarget)))
+	{
+		SAFE_RELEASE(BackSurface);
+		return false;
+	}
+
+	SAFE_RELEASE(BackSurface);
 
 	return true;
 }

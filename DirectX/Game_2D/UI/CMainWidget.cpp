@@ -31,6 +31,9 @@ bool CMainWidget::Init()
 		Button->SetTint(EButtonState::Click, FVector4(0.6f, 0.6f, 0.6f, 1.f));
 
 		Button->SetTexture(EButtonState::Disable, "StartButton", TEXT("Start.png"));
+
+		Button->SetSound(EButtonEventState::Hovered, "ButtonHovered", "TeemoSmile.mp3");
+		Button->SetSound(EButtonEventState::Click, "ButtonClick", "TeemoStartClicck.mp3");
 	}
 
 	return true;

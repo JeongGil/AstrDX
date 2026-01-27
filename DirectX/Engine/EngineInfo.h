@@ -15,12 +15,16 @@
 #include <atlbase.h>
 #include <atlconv.h>
 #include <algorithm>
+#include <ranges>
 
 // check memory leak
 #include <crtdbg.h>
 
 #include <d3d11.h>
 #include <d3dcompiler.h>
+
+#include <dwrite_3.h>
+#include <d2d1.h>
 
 #include "resource.h"
 
@@ -29,6 +33,8 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")
+#pragma comment(lib, "dwrite.lib")
+#pragma comment(lib, "d2d1.lib")
 
 #define SAFE_DELETE(p) { if(p) { delete (p); (p)=nullptr; } }
 #define SAFE_DELETE_ARRAY(P) { if (p) {delete[] (p); (p) = nullptr; } }
@@ -134,6 +140,7 @@ enum class EAssetType
 	Animation2D,
 	Sound,
 	Font,
+	FontCollection,
 };
 
 enum class EColliderType

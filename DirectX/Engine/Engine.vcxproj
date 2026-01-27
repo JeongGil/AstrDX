@@ -175,6 +175,9 @@
     <ClInclude Include="Asset\CAsset.h" />
     <ClInclude Include="Asset\CAssetManager.h" />
     <ClInclude Include="Asset\CPathManager.h" />
+    <ClInclude Include="Asset\Font\CFont.h" />
+    <ClInclude Include="Asset\Font\CFontCollection.h" />
+    <ClInclude Include="Asset\Font\CFontManager.h" />
     <ClInclude Include="Asset\Material\CMaterial.h" />
     <ClInclude Include="Asset\Material\CMaterialManager.h" />
     <ClInclude Include="Asset\Mesh\CMesh.h" />
@@ -271,6 +274,9 @@
     <ClCompile Include="Asset\CAsset.cpp" />
     <ClCompile Include="Asset\CAssetManager.cpp" />
     <ClCompile Include="Asset\CPathManager.cpp" />
+    <ClCompile Include="Asset\Font\CFont.cpp" />
+    <ClCompile Include="Asset\Font\CFontCollection.cpp" />
+    <ClCompile Include="Asset\Font\CFontManager.cpp" />
     <ClCompile Include="Asset\Material\CMaterial.cpp" />
     <ClCompile Include="Asset\Material\CMaterialManager.cpp" />
     <ClCompile Include="Asset\Mesh\CMesh.cpp" />

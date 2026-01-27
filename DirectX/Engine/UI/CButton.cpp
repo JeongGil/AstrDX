@@ -5,10 +5,12 @@
 #include "../Asset/Shader/CCBufferTransform.h"
 #include "../Asset/Shader/CCBufferUIDefault.h"
 #include "../Asset/Shader/CShader.h"
+#include "../Asset/Sound/CSound.h"
 #include "../Asset/Texture/CTexture.h"
 #include "../Asset/Texture/CTextureManager.h"
 #include "../World/CInput.h"
 #include "../World/CWorld.h"
+#include "../World/CWorldAssetManager.h"
 
 CButton::CButton()
 {
@@ -120,6 +122,27 @@ void CButton::SetAnimationPlayRate(EButtonState::Type State, float PlayRate)
 	Brushes[State].PlayRate = PlayRate;
 }
 
+void CButton::SetSound(EButtonEventState::Type State, const std::string& Key)
+{
+	auto World = this->World.lock();
+	auto AssetMgr = World->GetWorldAssetManager().lock();
+	Sound[State] = AssetMgr->FindSound(Key);
+}
+
+void CButton::SetSound(EButtonEventState::Type State, const std::string& Key, const char* FileName,
+	const std::string& PathName)
+{
+	auto World = this->World.lock();
+	auto AssetMgr = World->GetWorldAssetManager().lock();
+
+	if (!AssetMgr->LoadSound(Key, "UI", false, FileName, PathName))
+	{
+		return;
+	}
+
+	Sound[State] = AssetMgr->FindSound(Key);
+}
+
 bool CButton::Init()
 {
 	if (!CWidget::Init())
@@ -143,6 +166,11 @@ void CButton::Update(const float DeltaTime)
 				if (Input->GetMouseState(EMouseType::LButton, EInputType::Press))
 				{
 					State = EButtonState::Click;
+
+					if (auto Sound = this->Sound[EButtonEventState::Click].lock())
+					{
+						Sound->Play();
+					}
 				}
 				else if (State == EButtonState::Click
 					&& Input->GetMouseState(EMouseType::LButton, EInputType::Release))
@@ -261,6 +289,11 @@ void CButton::MouseHovered()
 		if (EventCallback[EButtonEventState::Hovered])
 		{
 			EventCallback[EButtonEventState::Hovered]();
+		}
+
+		if (auto Sound = this->Sound[EButtonEventState::Hovered].lock())
+		{
+			Sound->Play();
 		}
 
 		State = EButtonState::Hovered;
