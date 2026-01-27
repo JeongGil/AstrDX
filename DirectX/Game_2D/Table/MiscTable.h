@@ -9,4 +9,12 @@ class MiscTable : public TableBase<MiscTable, FMiscInfo>
 private:
 	MiscTable() = default;
 	~MiscTable() override = default;
+
+public:
+	const FMiscInfo* Get() const
+	{
+		assert(!Items.empty());
+
+		return Items.begin()->second;
+	}
 };

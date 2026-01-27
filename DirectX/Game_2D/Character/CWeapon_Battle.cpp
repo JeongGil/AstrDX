@@ -8,6 +8,7 @@
 #include "CNonPlayerCharacter.h"
 #include "../Strings.h"
 #include "../../Engine/CTimer.h"
+#include "../Table/MiscTable.h"
 #include "../Table/WeaponTable.h"
 
 
@@ -46,6 +47,11 @@ bool CWeapon_Battle::Init()
 		Mesh->TrySetRenderLayer(ERenderOrder::CharacterWeapon);
 	}
 
+	if (const auto* Misc = MiscTable::GetInst().Get())
+	{
+		MoveSpeed = Misc->WeaponMoveSpeed;
+	}
+
 	return true;
 }
 
@@ -56,16 +62,6 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	if (auto Anchor = PosAnchor.lock())
 	{
 		SetWorldPosition(Anchor->GetWorldPosition());
-
-//#ifdef _DEBUG
-//
-//		char Test[256] = {};
-//		auto Pos = Mesh.lock()->GetWorldPosition(); //Anchor->GetWorldPosition() - GetWorldPosition();
-//		sprintf_s(Test, "Weapon: %p, WeaponPos : %2f, %2f, %2f\n", (void*)Mesh.lock().get(), Pos.x, Pos.y, Pos.z);
-//
-//		OutputDebugStringA(Test);
-//
-//#endif
 	}
 
 	//Target = GetClosestEnemy();

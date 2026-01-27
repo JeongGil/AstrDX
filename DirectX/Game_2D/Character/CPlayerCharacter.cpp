@@ -240,8 +240,7 @@ void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Wea
 			WeaponObj->SetWeapon(InvenWeapon);
 
 			SetAnchorPosition(Weapons.size());
-			WeaponObj->SetPosAnchor(WeaponAnchors[0]);
-			//WeaponObj->SetPosAnchor(WeaponAnchors[Weapons.size() - 1]);
+			WeaponObj->SetPosAnchor(WeaponAnchors[Weapons.size() - 1]);
 
 			WeaponObj->AddRelativeRotationZ(90);
 		}
