@@ -75,9 +75,14 @@ void CWorldCollision::Update(const float DeltaTime)
 	if (!UIManager->CollideMouse(DeltaTime, MousePos))
 	{
 		FVector2 MouseWorldPos = World->GetInput().lock()->GetMouseWorldPos();
+		QuadTree->CollideMouse(HoveredObject, DeltaTime, MouseWorldPos);
+	}
+	else if (auto HoveredObject = this->HoveredObject.lock())
+	{
+		FVector2 MouseWorldPos = World->GetInput().lock()->GetMouseWorldPos();
 		FVector ConvertPos(MouseWorldPos.x, MouseWorldPos.y, 0.f);
 
-		HoveredObject.lock()->CallOnCollisionMouseEnd(ConvertPos);
+		HoveredObject->CallOnCollisionMouseEnd(ConvertPos);
 
 		HoveredObject = {};
 	}
