@@ -9,15 +9,6 @@ class CAnimation2D :
 	friend class CAnimation2DManager;
 
 public:
-	[[nodiscard]] const std::string& GetKey() const
-	{
-		return Key;
-	}
-	void SetKey(const std::string& Key)
-	{
-		this->Key = Key;
-	}
-
 	[[nodiscard]] EAnimation2DTextureType GetTextureType() const
 	{
 		return TextureType;
@@ -57,7 +48,6 @@ public:
 	void AddFrame(int Count, float x, float y, float w, float h);
 
 protected:
-	std::string Key;
 	std::weak_ptr<CTexture> Texture;
 	EAnimation2DTextureType TextureType = EAnimation2DTextureType::SpriteSheet;
 
@@ -65,10 +55,10 @@ protected:
 
 protected:
 	CAnimation2D();
-	CAnimation2D(const CAnimation2D& other);
-	CAnimation2D(CAnimation2D&& other) noexcept;
-	CAnimation2D& operator=(const CAnimation2D& other);
-	CAnimation2D& operator=(CAnimation2D&& other) noexcept;
+	CAnimation2D(const CAnimation2D& other) = default;
+	CAnimation2D(CAnimation2D&& other) noexcept = default;
+	CAnimation2D& operator=(const CAnimation2D& other) = default;
+	CAnimation2D& operator=(CAnimation2D&& other) noexcept = default;
 
 public:
 	~CAnimation2D() override = default;

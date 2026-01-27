@@ -15,20 +15,21 @@ bool CWorld::Init()
 	}
 
 	Input.reset(new CInput);
+	Input->World = shared_from_this();
 	if (!Input->Init())
 	{
 		return false;
 	}
 
 	Collision.reset(new CWorldCollision);
-	Collision->SetWorld(std::dynamic_pointer_cast<CWorld>(shared_from_this()));
+	Collision->SetWorld(shared_from_this());
 	if (!Collision->Init())
 	{
 		return false;
 	}
 
 	UIManager.reset(new CWorldUIManager);
-	UIManager->World = std::dynamic_pointer_cast<CWorld>(shared_from_this());
+	UIManager->World = shared_from_this();
 	if (!UIManager->Init())
 	{
 		return false;
@@ -141,6 +142,11 @@ void CWorld::PostRender()
 		Curr->second->Render();
 		++Curr;
 	}
+}
+
+void CWorld::RenderUI()
+{
+	UIManager->Render();
 }
 
 void CWorld::Begin()

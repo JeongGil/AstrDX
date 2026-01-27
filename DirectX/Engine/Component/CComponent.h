@@ -41,14 +41,14 @@ public:
 		this->Owner = Owner;
 	}
 
-	const std::string& GetName() const
+	const std::string& GetKey() const
 	{
-		return Name;
+		return Key;
 	}
 
-	void SetName(const std::string& Name)
+	void SetKey(const std::string& Name)
 	{
-		this->Name = Name;
+		this->Key = Name;
 	}
 
 	[[nodiscard]] EType GetType() const
@@ -68,7 +68,7 @@ public:
 protected:
 	std::weak_ptr<CWorld> World;
 	std::weak_ptr<CGameObject> Owner;
-	std::string Name;
+	std::string Key;
 	bool bAlive = true;
 	bool bEnable = true;
 	EType Type = EType::None;
@@ -91,7 +91,7 @@ protected:
 		: CObject(other),
 		//World(other.World),
 		//Owner(other.Owner),
-		Name(other.Name),
+		Key(other.Key),
 		bAlive(other.bAlive),
 		bEnable(other.bEnable),
 		Type(other.Type)
@@ -102,7 +102,7 @@ protected:
 		: CObject(std::move(other)),
 		//World(std::move(other.World)),
 		//Owner(std::move(other.Owner)),
-		Name(std::move(other.Name)),
+		Key(std::move(other.Key)),
 		bEnable(other.bEnable),
 		bAlive(other.bAlive),
 		Type(other.Type)
@@ -116,7 +116,7 @@ protected:
 		CObject::operator =(other);
 		//World = other.World;
 		//Owner = other.Owner;
-		Name = other.Name;
+		Key = other.Key;
 		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		Type = other.Type;
@@ -130,7 +130,7 @@ protected:
 		CObject::operator =(std::move(other));
 		//World = std::move(other.World);
 		//Owner = std::move(other.Owner);
-		Name = std::move(other.Name);
+		Key = std::move(other.Key);
 		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		Type = other.Type;

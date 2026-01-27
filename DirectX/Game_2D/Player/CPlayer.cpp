@@ -290,7 +290,7 @@ bool CPlayer::Init()
 	return true;
 }
 
-void CPlayer::Update(float DeltaTime)
+void CPlayer::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 

@@ -14,6 +14,7 @@
 #include <array>
 #include <atlbase.h>
 #include <atlconv.h>
+#include <algorithm>
 
 // check memory leak
 #include <crtdbg.h>
@@ -131,6 +132,8 @@ enum class EAssetType
 	Material,
 	Texture,
 	Animation2D,
+	Sound,
+	Font,
 };
 
 enum class EColliderType

@@ -11,6 +11,8 @@ public:
 	void SetDrawDebug(bool bDrawDebug) override;
 	bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) override;
 	bool CollideManifold(FCollisionManifold& HitResult, std::shared_ptr<CCollider> Dest) override;
+	bool CollideMouse(const FVector2& MousePos) override;
+
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;

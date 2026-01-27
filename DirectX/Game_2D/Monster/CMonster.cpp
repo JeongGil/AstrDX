@@ -96,28 +96,31 @@ CMonster* CMonster::Clone()
 
 void CMonster::AttackNotify()
 {
-	//if (auto World = this->World.lock())
-	//{
-	//	auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
-	//	if (auto Bullet = WeakBullet.lock())
-	//	{
-	//		FVector Position = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
+	if (auto World = this->World.lock())
+	{
+		auto Bullet = World->CreateGameObject<CBullet>("Bullet");
+		if (auto BulletObj = Bullet.lock())
+		{
+			FVector	BulletPos = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
+			BulletObj->SetCollision("MonsterAttack");
+			BulletObj->SetWorldPosition(BulletPos);
+			BulletObj->SetWorldRotation(GetWorldRotation());
+			BulletObj->SetCollisionTargetName("Player");
+			BulletObj->CalcCollisionRadius();
 
-	//		Bullet->SetCollision("MonsterAttack");
-	//		Bullet->SetWorldPosition(Position);
-	//		Bullet->SetWorldRotation(GetWorldRotation());
-	//		Bullet->SetCollisionTargetName("Player");
-	//		Bullet->CalcCollisionRadius();
+			auto Target = this->FireTarget.lock();
 
-	//		if (auto Target = FireTarget.lock())
-	//		{
-	//			FVector Dir = Target->GetWorldPosition() - Position;
-	//			Dir.Normalize();
+			FVector	TargetPos = Target->GetWorldPosition();
 
-	//			Bullet->SetMoveDirection(Dir);
-	//		}
-	//	}
-	//}
+			if (Target)
+			{
+				FVector	Dir = TargetPos - BulletPos;
+				Dir.Normalize();
+
+				BulletObj->SetMoveDirection(Dir);
+			}
+		}
+	}
 }
 
 void CMonster::AttackFinish()

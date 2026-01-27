@@ -1,6 +1,22 @@
 #include "CButton.h"
 
+#include "../Asset/CAssetManager.h"
+#include "../Asset/Mesh/CMesh.h"
+#include "../Asset/Shader/CCBufferTransform.h"
+#include "../Asset/Shader/CCBufferUIDefault.h"
+#include "../Asset/Shader/CShader.h"
+#include "../Asset/Texture/CTexture.h"
+#include "../Asset/Texture/CTextureManager.h"
+#include "../World/CInput.h"
 #include "../World/CWorld.h"
+
+CButton::CButton()
+{
+}
+
+CButton::~CButton()
+{
+}
 
 bool CButton::SetTexture(EButtonState::Type State, const std::weak_ptr<CTexture>& Texture)
 {
@@ -118,13 +134,143 @@ void CButton::Update(const float DeltaTime)
 {
 	CWidget::Update(DeltaTime);
 
-	if (State == EButtonState::Disable)
+	if (State != EButtonState::Disable)
 	{
-		return;
+		if (bMouseOn)
+		{
+			if (auto Input = World.lock()->GetInput().lock())
+			{
+				if (Input->GetMouseState(EMouseType::LButton, EInputType::Press))
+				{
+					State = EButtonState::Click;
+				}
+				else if (State == EButtonState::Click
+					&& Input->GetMouseState(EMouseType::LButton, EInputType::Release))
+				{
+					if (EventCallback[EButtonEventState::Click])
+					{
+						EventCallback[EButtonEventState::Click]();
+					}
+
+					State = EButtonState::Hovered;
+				}
+
+				else if (Input->GetMouseState(EMouseType::LButton, EInputType::Hold))
+				{
+					State = EButtonState::Click;
+				}
+			}
+		}
 	}
 }
 
 void CButton::Render()
 {
 	CWidget::Render();
+
+	auto Shader = this->Shader.lock();
+	auto Mesh = this->Mesh.lock();
+
+	FMatrix	ScaleMat, RotationMat, TranslateMat, WorldMat;
+
+	ScaleMat.Scaling(Size);
+	RotationMat.RotationZ(Angle);
+	TranslateMat.Translation(RenderPos);
+
+	WorldMat = ScaleMat * RotationMat * TranslateMat;
+
+	auto World = this->World.lock();
+
+	TransformCBuffer->SetWorldMatrix(WorldMat);
+	TransformCBuffer->SetViewMatrix(FMatrix::Identity);
+	TransformCBuffer->SetProjectionMatrix(UIProjectionMatrix);
+
+	FVector3	PivotSize = Pivot * Mesh->GetMeshSize();
+
+	TransformCBuffer->SetPivotSize(PivotSize);
+
+	TransformCBuffer->UpdateBuffer();
+
+	auto& Brush = Brushes[State];
+	UIDefaultCBuffer->SetBrushTint(Brush.Tint);
+
+	if (!Brush.Texture.expired())
+	{
+		UIDefaultCBuffer->SetTextureEnable(true);
+
+		auto Texture = Brush.Texture.lock();
+
+		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+	}
+
+	else
+	{
+		UIDefaultCBuffer->SetTextureEnable(false);
+	}
+
+	if (Brush.AnimationEnable)
+	{
+		UIDefaultCBuffer->SetAnimEnable(true);
+
+		int	Frame = Brush.Frame;
+
+		FTextureFrame FrameInfo = Brush.AnimationFrames[Frame];
+
+		UIDefaultCBuffer->SetBrushLTUV(FrameInfo.Start);
+		UIDefaultCBuffer->SetBrushRBUV(FrameInfo.Start + FrameInfo.Size);
+	}
+	else
+	{
+		UIDefaultCBuffer->SetAnimEnable(false);
+	}
+
+	UIDefaultCBuffer->UpdateBuffer();
+
+	Shader->SetShader();
+
+	Mesh->Render();
+
+	if (Child)
+	{
+		Child->Render();
+	}
+}
+
+bool CButton::CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos)
+{
+	if (!CWidget::CollideMouse(Result, MousePos))
+	{
+		return false;
+	}
+
+	if (Child)
+	{
+		if (!Child->CollideMouse(Result, MousePos))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void CButton::MouseHovered()
+{
+	if (State == EButtonState::Normal)
+	{
+		if (EventCallback[EButtonEventState::Hovered])
+		{
+			EventCallback[EButtonEventState::Hovered]();
+		}
+
+		State = EButtonState::Hovered;
+	}
+}
+
+void CButton::MouseUnHovered()
+{
+	if (State != EButtonState::Disable)
+	{
+		State = EButtonState::Normal;
+	}
 }

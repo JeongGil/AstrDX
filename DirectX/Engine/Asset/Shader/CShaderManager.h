@@ -58,7 +58,7 @@ public:
 			return false;
 		}
 
-		NewShader->SetName(Key);
+		NewShader->SetKey(Key);
 
 		Shaders.emplace(Key, NewShader);
 

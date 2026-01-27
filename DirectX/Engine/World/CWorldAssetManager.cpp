@@ -6,8 +6,8 @@
 #include "../Asset/Texture/CTextureManager.h"
 
 bool CWorldAssetManager::CreateMesh(const std::string& Key, void* Vertices, int VertexSize, int VertexCount,
-                                    D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
-                                    DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
+	D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
+	DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
 {
 	auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock();
 	if (!MeshMgr)
@@ -192,7 +192,7 @@ std::weak_ptr<CAnimation2D> CWorldAssetManager::FindAnimation(const std::string&
 bool CWorldAssetManager::SetAnimation2DTextureType(const std::string& AnimKey, EAnimation2DTextureType TextureType)
 {
 	auto InnerKey = "Animation2D_" + AnimKey;
-	
+
 	auto It = Assets.find(InnerKey);
 	if (It == Assets.end())
 	{
@@ -360,7 +360,7 @@ bool CWorldAssetManager::SetTexturesFullPath(const std::string& AnimKey, const s
 bool CWorldAssetManager::AddFrame(const std::string& AnimKey, FVector2 Start, FVector2 Size)
 {
 	auto InnerKey = "Animation2D_" + AnimKey;
-	
+
 	auto It = Assets.find(InnerKey);
 	if (It == Assets.end())
 	{
@@ -441,6 +441,104 @@ bool CWorldAssetManager::AddFrame(const std::string& AnimKey, int Count, float x
 	return true;
 }
 
+bool CWorldAssetManager::LoadSound(const std::string& Key, const std::string& GroupKey, bool bLoop,
+	const char* FileName, const std::string& PathName)
+{
+	if (auto SoundMgr = CAssetManager::GetInst()->GetSoundManager().lock())
+	{
+		std::string InnerKey = "Sound_" + Key;
+		if (!SoundMgr->LoadSound(InnerKey, GroupKey, bLoop, FileName, PathName))
+		{
+			return false;
+		}
+
+		auto It = Assets.find(Key);
+		if (It == Assets.end())
+		{
+			Assets.emplace(Key, SoundMgr->FindSound(Key));
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+std::weak_ptr<CSound> CWorldAssetManager::FindSound(const std::string& Key)
+{
+	std::string InnerKey = "Sound_" + Key;
+
+	if (auto It = Assets.find(InnerKey); It == Assets.end())
+	{
+		if (auto SoundMgr = CAssetManager::GetInst()->GetSoundManager().lock())
+		{
+			if (auto Sound = SoundMgr->FindSound(InnerKey).lock())
+			{
+				auto [NewIt, Success] = Assets.emplace(InnerKey, Sound);
+				return std::dynamic_pointer_cast<CSound>(NewIt->second);
+			}
+		}
+
+		return {};
+	}
+	else
+	{
+		return std::dynamic_pointer_cast<CSound>(It->second);
+	}
+}
+
+void CWorldAssetManager::PlaySoundW(const std::string& Key)
+{
+	std::string	InnerKey = "Sound_" + Key;
+
+	auto It = Assets.find(InnerKey);
+	if (It != Assets.end())
+	{
+		auto Sound = std::dynamic_pointer_cast<CSound>(It->second);
+
+		Sound->Play();
+	}
+}
+
+void CWorldAssetManager::StopSound(const std::string& Key)
+{
+	std::string	InnerKey = "Sound_" + Key;
+
+	auto It = Assets.find(InnerKey);
+	if (It != Assets.end())
+	{
+		auto Sound = std::dynamic_pointer_cast<CSound>(It->second);
+
+		Sound->Stop();
+	}
+}
+
+void CWorldAssetManager::PauseSound(const std::string& Key)
+{
+	std::string	InnerKey = "Sound_" + Key;
+
+	auto It = Assets.find(InnerKey);
+	if (It != Assets.end())
+	{
+		auto Sound = std::dynamic_pointer_cast<CSound>(It->second);
+
+		Sound->Pause();
+	}
+}
+
+void CWorldAssetManager::ResumeSound(const std::string& Key)
+{
+	std::string	InnerKey = "Sound_" + Key;
+
+	auto It = Assets.find(InnerKey);
+	if (It != Assets.end())
+	{
+		auto Sound = std::dynamic_pointer_cast<CSound>(It->second);
+
+		Sound->Resume();
+	}
+}
+
 bool CWorldAssetManager::Init()
 {
 	FVertexColor CenterRectColor[4] =
@@ -472,6 +570,6 @@ CWorldAssetManager::~CWorldAssetManager()
 {
 	for (auto& Asset : Assets)
 	{
-		
+
 	}
 }

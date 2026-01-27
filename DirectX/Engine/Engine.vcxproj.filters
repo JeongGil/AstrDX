@@ -157,6 +157,12 @@
     <Filter Include="Asset\Shader\ConstantBuffer\UI">
       <UniqueIdentifier>{4e411220-26c1-43c2-8283-55bca1b1ecc6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Asset\Sound">
+      <UniqueIdentifier>{83489858-b671-4194-b195-0a1159b7059e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Sound\Lib">
+      <UniqueIdentifier>{619b9f87-cfe5-48c7-b181-d0f65dd16199}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -168,6 +174,15 @@
     </None>
     <None Include="Asset\Texture\DirectXTex.inl">
       <Filter>Asset\Texture</Filter>
+    </None>
+    <None Include="Asset\Sound\fmod.cs">
+      <Filter>Asset\Sound\Lib</Filter>
+    </None>
+    <None Include="Asset\Sound\fmod_dsp.cs">
+      <Filter>Asset\Sound\Lib</Filter>
+    </None>
+    <None Include="Asset\Sound\fmod_errors.cs">
+      <Filter>Asset\Sound\Lib</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -403,7 +418,37 @@
       <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="UI\CButton.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>UI\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod.h">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod.hpp">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod_codec.h">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod_common.h">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod_dsp.h">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod_dsp_effects.h">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod_errors.h">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\fmod_output.h">
+      <Filter>Asset\Sound\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\CSound.h">
+      <Filter>Asset\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Sound\CSoundManager.h">
+      <Filter>Asset\Sound</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -619,7 +664,13 @@
       <Filter>Asset\Shader\Shader\UI</Filter>
     </ClCompile>
     <ClCompile Include="UI\CButton.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Sound\CSound.cpp">
+      <Filter>Asset\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Sound\CSoundManager.cpp">
+      <Filter>Asset\Sound</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

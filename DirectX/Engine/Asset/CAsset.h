@@ -13,55 +13,25 @@ public:
 		return AssetType;
 	}
 
-	[[nodiscard]] const std::string& GetName() const
+	[[nodiscard]] const std::string& GetKey() const
 	{
-		return Name;
+		return Key;
 	}
-	void SetName(const std::string& Name)
+	void SetKey(const std::string& Key)
 	{
-		this->Name = Name;
+		this->Key = Key;
 	}
 
 protected:
-	std::string Name;
+	std::string Key;
 	EAssetType AssetType = EAssetType::None;
 
 protected:
 	CAsset() = default;
-
-	CAsset(const CAsset& other)
-		: CObject(other),
-		  Name(other.Name),
-		  AssetType(other.AssetType)
-	{
-	}
-
-	CAsset(CAsset&& other) noexcept
-		: CObject(std::move(other)),
-		  Name(std::move(other.Name)),
-		  AssetType(other.AssetType)
-	{
-	}
-
-	CAsset& operator=(const CAsset& other)
-	{
-		if (this == &other)
-			return *this;
-		CObject::operator =(other);
-		Name = other.Name;
-		AssetType = other.AssetType;
-		return *this;
-	}
-
-	CAsset& operator=(CAsset&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CObject::operator =(std::move(other));
-		Name = std::move(other.Name);
-		AssetType = other.AssetType;
-		return *this;
-	}
+	CAsset(const CAsset& other) = default;
+	CAsset(CAsset&& other) noexcept = default;
+	CAsset& operator=(const CAsset& other) = default;
+	CAsset& operator=(CAsset&& other) noexcept = default;
 
 public:
 	virtual ~CAsset() = 0;

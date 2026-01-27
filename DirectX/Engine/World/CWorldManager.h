@@ -58,6 +58,7 @@ public:
 	void Update(const float DeltaTime);
 	void PostUpdate(const float DeltaTime);
 	void Render();
+	void RenderUI();
 	void PostRender();
 
 public:

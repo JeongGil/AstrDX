@@ -109,6 +109,9 @@ public:
 	static bool CollideSphere2DToPoint(FVector& OutHitPoint, const CColliderSphere2D* Sphere, const FVector& Point);
 	static bool CollideSphere2DToPoint(FVector& OutHitPoint, const FSphere2DInfo& Sphere, const FVector& Point);
 
+	static bool CollideLine2DToPoint(FVector& OutHitPoint, const CColliderLine2D* Line, const FVector& Point);
+	static bool CollideLine2DToPoint(FVector& OutHitPoint, const FLine2DInfo& Line, const FVector& Point);
+
 private:
 	static bool AxisProjection(const FVector& CenterLine,
 	                           const FVector& Axis, float SrcHalfExtent,

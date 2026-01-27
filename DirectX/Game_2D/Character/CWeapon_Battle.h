@@ -15,7 +15,7 @@ class CWeapon_Battle :
 {
 public:
 	bool Init() override;
-	void Update(const float DeltaTime) override;
+	void Update(float DeltaTime) override;
 
 protected:
 	CWeapon_Battle* Clone() override;

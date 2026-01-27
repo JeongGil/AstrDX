@@ -2,6 +2,7 @@
 
 #include "../EngineInfo.h"
 
+class CSoundManager;
 class CMeshManager;
 class CShaderManager;
 class CTextureManager;
@@ -43,11 +44,17 @@ public:
 		return Animation2DManager;
 	}
 
+	[[nodiscard]] std::weak_ptr<CSoundManager> GetSoundManager() const
+	{
+		return SoundManager;
+	}
+
 private:
 	std::shared_ptr<CMeshManager> MeshManager;
 	std::shared_ptr<CShaderManager> ShaderManager;
 	std::shared_ptr<CTextureManager> TextureManager;
 	std::shared_ptr<CAnimation2DManager> Animation2DManager;
+	std::shared_ptr<CSoundManager> SoundManager;
 
 public:
 	static CAssetManager* GetInst()

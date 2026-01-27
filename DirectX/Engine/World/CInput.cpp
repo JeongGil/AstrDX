@@ -2,6 +2,8 @@
 
 #include <ranges>
 
+#include "CCameraManager.h"
+#include "CWorld.h"
 #include "../CDevice.h"
 #include "../CEngine.h"
 
@@ -785,6 +787,8 @@ void CInput::Update(const float DeltaTime)
 		UpdateMouse();
 	}
 
+	UpdateMousePos(DeltaTime);
+
 	UpdateInput(DeltaTime);
 
 	UpdateBindKey(DeltaTime);
@@ -882,4 +886,42 @@ void CInput::UpdateMouse()
 			}
 		}
 	}
+}
+
+void CInput::UpdateMousePos(const float DeltaTime)
+{
+	POINT	MousePT;
+
+	GetCursorPos(&MousePT);
+
+	ScreenToClient(hWnd, &MousePT);
+
+	FVector2 Ratio = CDevice::GetInst()->GetResolutionRatio();
+	FResolution	ViewportRS = CDevice::GetInst()->GetResolution();
+
+	FVector2 MousePos;
+	MousePos.x = MousePT.x * Ratio.x;
+	MousePos.y = MousePT.y * Ratio.y;
+
+	FVector2 MouseWorldPos = MousePos;
+	MouseWorldPos.y = ViewportRS.Height - MousePos.y;
+
+	if (bMouseCheckStart)
+	{
+		MouseMove = MousePos - this->MousePos;
+	}
+	else
+	{
+		bMouseCheckStart = true;
+	}
+
+	this->MousePos = MousePos;
+
+	auto World = this->World.lock();
+	auto CameraMgr = World->GetCameraManager().lock();
+
+	FVector CameraPos = CameraMgr->GetMainCameraWorldPosition();
+
+	this->MouseWorldPos.x = CameraPos.x + MouseWorldPos.x - ViewportRS.Width * 0.5f;
+	this->MouseWorldPos.y = CameraPos.y + MouseWorldPos.y - ViewportRS.Height * 0.5f;
 }

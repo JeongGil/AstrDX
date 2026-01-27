@@ -71,6 +71,14 @@ bool CColliderLine2D::CollideManifold(FCollisionManifold& HitResult, std::shared
 	return false;
 }
 
+bool CColliderLine2D::CollideMouse(const FVector2& MousePos)
+{
+	[[maybe_unused]] FVector Hit;
+	FVector Point(MousePos.x, MousePos.y, 0.f);
+
+	return CCollision::CollideLine2DToPoint(Hit, Info, Point);
+}
+
 bool CColliderLine2D::Init()
 {
 	if (!CCollider::Init())

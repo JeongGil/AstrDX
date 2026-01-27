@@ -3,6 +3,9 @@
 #include "../Component/CCollider.h"
 #include "../Object/CGameObject.h"
 #include "../Component/CCollision.h"
+#include "CWorldUIManager.h"
+#include "CWorld.h"
+#include "CInput.h"
 
 bool CWorldCollision::Init()
 {
@@ -62,6 +65,21 @@ void CWorldCollision::Update(const float DeltaTime)
 		QuadTree->AddCollider(*SrcIt);
 
 		++SrcIt;
+	}
+
+	auto World = this->World.lock();
+	auto UIManager = World->GetUIManager().lock();
+
+	FVector2 MousePos = World->GetInput().lock()->GetMousePos();
+
+	if (!UIManager->CollideMouse(DeltaTime, MousePos))
+	{
+		FVector2 MouseWorldPos = World->GetInput().lock()->GetMouseWorldPos();
+		FVector ConvertPos(MouseWorldPos.x, MouseWorldPos.y, 0.f);
+
+		HoveredObject.lock()->CallOnCollisionMouseEnd(ConvertPos);
+
+		HoveredObject = {};
 	}
 
 	QuadTree->Collide(DeltaTime);

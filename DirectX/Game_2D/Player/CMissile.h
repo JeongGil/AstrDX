@@ -15,7 +15,7 @@ public:
 
 public:
 	bool Init() override;
-	void Update(const float DeltaTime) override;
+	void Update(float DeltaTime) override;
 
 protected:
 	CMissile* Clone() override;

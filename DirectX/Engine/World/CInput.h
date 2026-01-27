@@ -57,9 +57,11 @@ struct FBindKey
 	bool KeyHold = false;
 };
 
+class CWorld;
+
 class CInput
 {
-	friend class CWorld;
+	friend CWorld;
 
 public:
 	void AddBindKey(const std::string& Key, unsigned char KeyCode);
@@ -68,7 +70,7 @@ public:
 	void SetKeyShift(const std::string& Key, bool Shift);
 
 	template <typename T>
-	void SetBindFunction(const std::string& Key, EInputType::Type Type, T* Object, void (T::*Func)())
+	void SetBindFunction(const std::string& Key, EInputType::Type Type, T* Object, void (T::* Func)())
 	{
 		auto BindKey = FindBindKey(Key);
 		if (!BindKey)
@@ -90,12 +92,15 @@ private:
 	bool InitDevice();
 	void UpdateKeyboard();
 	void UpdateMouse();
+	void UpdateMousePos(const float DeltaTime);
 	void UpdateInput(const float DeltaTime);
 	void UpdateDInput(const float DeltaTime);
 	void UpdateWindowInput(const float DeltaTime);
 	void UpdateBindKey(const float DeltaTime);
 
 private:
+	std::weak_ptr<CWorld> World;
+
 	EInputSystemType InputType = EInputSystemType::DInput;
 
 	IDirectInput8* Input = nullptr;
@@ -114,8 +119,49 @@ private:
 
 	bool MouseButton[EInputType::End][EInputType::End] = {};
 
+	FVector2 MousePos;
+	FVector2 MouseWorldPos;
+	FVector2 MouseMove;
+	bool bMouseCheckStart = false;
+
 	HINSTANCE hInst;
 	HWND hWnd;
+
+public:
+	[[nodiscard]] FVector2 GetMousePos() const
+	{
+		return MousePos;
+	}
+
+	[[nodiscard]] FVector2 GetMouseWorldPos() const
+	{
+		return MouseWorldPos;
+	}
+
+	[[nodiscard]] FVector2 GetMouseMove() const
+	{
+		return MouseMove;
+	}
+
+	[[nodiscard]] bool GetMouseState(EMouseType::Type MouseType, EInputType::Type InputType) const
+	{
+		return MouseButton[MouseType][InputType];
+	}
+
+	[[nodiscard]] bool GetCtrl(EInputType::Type Type) const
+	{
+		return CtrlState[Type];
+	}
+
+	[[nodiscard]] bool GetAlt(EInputType::Type Type) const
+	{
+		return AltState[Type];
+	}
+
+	[[nodiscard]] bool GetShift(EInputType::Type Type) const
+	{
+		return ShiftState[Type];
+	}
 
 private:
 	CInput() = default;

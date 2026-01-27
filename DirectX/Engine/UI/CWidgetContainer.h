@@ -28,9 +28,10 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void Render() override;
+	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
 
 	template <typename T>
-	std::weak_ptr<T> CreateWidget(const std::string& Key)
+	std::weak_ptr<T> CreateWidget(const std::string& Key, int ZOrder = 0)
 	{
 		std::shared_ptr<T> Widget;
 
@@ -40,6 +41,7 @@ public:
 		Widget->UIManager = UIManager;
 		Widget->SetKey(Key);
 		Widget->SetParent(std::dynamic_pointer_cast<CWidget>(shared_from_this()));
+		Widget->SetZOrder(ZOrder);
 
 		if (!Widget->Init())
 		{
@@ -48,7 +50,7 @@ public:
 
 		Children.push_back(std::dynamic_pointer_cast<CWidget>(Widget));
 
-		return std::dynamic_pointer_cast<CWidget>(Widget);
+		return std::dynamic_pointer_cast<T>(Widget);
 	}
 };
 

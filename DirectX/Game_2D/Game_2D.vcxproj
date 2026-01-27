@@ -108,6 +108,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>call "$(ProjectDir)Copy.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -123,6 +126,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>call "$(ProjectDir)Copy.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -136,6 +142,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>call "$(ProjectDir)Copy.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -151,6 +160,9 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PreBuildEvent>
+      <Command>call "$(ProjectDir)Copy.bat"</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CGlobalSetting.cpp" />
@@ -175,6 +187,7 @@
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
     <ClCompile Include="Table\CTableManager.cpp" />
+    <ClCompile Include="UI\CMainWidget.cpp" />
     <ClCompile Include="World\CBrotatoWorld_Battle.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
   </ItemGroup>
@@ -210,9 +223,13 @@
     <ClInclude Include="Table\MiscTable.h" />
     <ClInclude Include="Table\WeaponInfo.h" />
     <ClInclude Include="Table\WeaponTable.h" />
+    <ClInclude Include="UI\CMainWidget.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="World\CBrotatoWorld_Battle.h" />
     <ClInclude Include="World\CMainWorld.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Copy.bat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

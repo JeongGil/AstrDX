@@ -4,6 +4,8 @@
 #include "../Asset/Animation2D/CAnimation2D.h"
 #include "../Asset/Mesh/CMesh.h"
 #include "../Asset/Shader/CConstantBuffer.h"
+#include "../Asset/Sound/CSound.h"
+#include "../Asset/Sound/CSoundManager.h"
 #include "../Asset/Texture/CTexture.h"
 
 class CWorldAssetManager
@@ -62,6 +64,19 @@ public:
 	bool AddFrame(const std::string& AnimKey, int Count, float x, float y, float w, float h);
 
 #pragma endregion
+
+#pragma region Sound
+
+	bool LoadSound(const std::string& Key, const std::string& GroupKey, bool bLoop,
+		const char* FileName, const std::string& PathName = "Sound");
+	std::weak_ptr<CSound> FindSound(const std::string& Key);
+
+	void PlaySound(const std::string& Key);
+	void StopSound(const std::string& Key);
+	void PauseSound(const std::string& Key);
+	void ResumeSound(const std::string& Key);
+
+#pragma endregion Sound
 
 	bool Init();
 	void Update(const float DeltaTime);

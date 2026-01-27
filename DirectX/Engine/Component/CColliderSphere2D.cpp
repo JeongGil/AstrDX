@@ -135,6 +135,14 @@ bool CColliderSphere2D::CollideManifold(FCollisionManifold& HitResult, std::shar
 	return false;
 }
 
+bool CColliderSphere2D::CollideMouse(const FVector2& MousePos)
+{
+	[[maybe_unused]] FVector Hit;
+	FVector Point(MousePos.x, MousePos.y, 0.f);
+
+	return CCollision::CollideSphere2DToPoint(Hit, Info, Point);
+}
+
 CColliderSphere2D::CColliderSphere2D()
 {
 	ColliderType = EColliderType::Sphere2D;

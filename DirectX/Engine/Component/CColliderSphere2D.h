@@ -21,6 +21,7 @@ public:
 	void SetDrawDebug(bool bDrawDebug) override;
 	bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) override;
 	bool CollideManifold(FCollisionManifold& HitResult, std::shared_ptr<CCollider> Dest) override;
+	bool CollideMouse(const FVector2& MousePos) override;
 
 	[[nodiscard]] FSphere2DInfo GetInfo() const
 	{

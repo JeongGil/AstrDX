@@ -76,10 +76,9 @@ bool CCollision::Manifold_BoxPoint2D(FCollisionManifold& Out,
 	if (dx < 0.f || dy < 0.f)
 		return false;
 
-	// 가장 얇은 축으로 밀어내는 방향 선택
 	if (dx < dy)
 	{
-		float   Sign = (lx > 0.f) ? 1.f : -1.f;
+		float Sign = (lx > 0.f) ? 1.f : -1.f;
 		Out.Normal = Box.Axis[EAxis::X] * Sign;
 		Out.Penetration = dx;
 	}
@@ -148,14 +147,12 @@ bool CCollision::ManifoldBox2DToBox2D(FCollisionManifold& Out,
 		Dest.Axis[EAxis::Y], Src, Dest))
 		return false;
 
-	// Normal은 Src -> Dest 방향이어야 한다.
 	if (CenterLine.Dot(MinAxis) < 0.f)
 		MinAxis = MinAxis * -1.f;
 
 	Out.Normal = MinAxis;
 	Out.Penetration = MinOverlap;
 
-	// 접촉점을 구한다.
 	FVector3    SrcPoint = SupportPointBox2D(Src, MinAxis);
 	FVector3    DestPoint = SupportPointBox2D(Dest, MinAxis * -1.f);
 	Out.ContactPoint = (SrcPoint + DestPoint) * 0.5f;
@@ -182,8 +179,6 @@ bool CCollision::ManifoldSphere2DToSphere2D(FCollisionManifold& Out, const FSphe
 	if (Dist > RadiusSum)
 		return false;
 
-	// 1e-6f는 1 * 10^-6 = 0.000001
-	// 이 경우 두 원이 겹치있다고 판단하는 것이다.
 	if (Dist < 1e-6f)
 	{
 		Out.Normal = FVector3(1.f, 0.f, 0.f);
@@ -192,7 +187,6 @@ bool CCollision::ManifoldSphere2DToSphere2D(FCollisionManifold& Out, const FSphe
 		return true;
 	}
 
-	// Src -> Dest 방향으로 정규화 한다.
 	Out.Normal = CenterLine / Dist;
 	Out.Penetration = RadiusSum - Dist;
 
@@ -213,7 +207,6 @@ bool CCollision::ManifoldSphere2DToSphere2D(FCollisionManifold& Out, CColliderSp
 
 bool CCollision::ManifoldBox2DToSphere2D(FCollisionManifold& Out, const FBox2DInfo& Box, const FSphere2DInfo& Sphere)
 {
-	// Box -> Sphere 향하는 벡터
 	FVector3    CenterLine = Sphere.Center - Box.Center;
 
 	float   lx = CenterLine.Dot(Box.Axis[EAxis::X]);
@@ -379,7 +372,6 @@ bool CCollision::ManifoldBox2DToLine2D(FCollisionManifold& Out, const FBox2DInfo
 	if (!CollideBox2DToLine2D(Hit, Box, Line))
 		return false;
 
-	// 라인 끝점이 박스 내부로 들어온 경우
 	FCollisionManifold  Result;
 
 	if (CollideBox2DToPoint(Hit, Box, Line.Start))
@@ -406,7 +398,6 @@ bool CCollision::ManifoldBox2DToLine2D(FCollisionManifold& Out, const FBox2DInfo
 		return true;
 	}
 
-	// 라인이 박스를 관통하는 경우
 	FVector3    Dir = Line.End - Line.Start;
 	float   LineLength = Dir.Length();
 
@@ -417,14 +408,12 @@ bool CCollision::ManifoldBox2DToLine2D(FCollisionManifold& Out, const FBox2DInfo
 	FVector3    Normal = Perp2D(Dir);
 	Normal.Normalize();
 
-	// 박스 중심의 직선에 대한 부호거리
 	float   SignDist = (Box.Center - Line.Start).Dot(Normal);
 
 	float   NormalDist = ProjectBoxRadiusOnAxis(Box, Normal);
 	float   Pen = NormalDist - fabsf(SignDist);
 
-	if (Pen < 0.f)
-		Pen = 0.f;
+	Pen = max(Pen, 0.f);
 
 	Out.Normal = (SignDist > 0.f) ? Normal * -1.f : Normal;
 	Out.Normal.Normalize();
@@ -894,6 +883,36 @@ bool CCollision::CollideSphere2DToPoint(FVector& OutHitPoint, const FSphere2DInf
 	OutHitPoint = Point;
 
 	return Sphere.Center.SqrDistance(Point) <= Sphere.Radius * Sphere.Radius;
+}
+
+bool CCollision::CollideLine2DToPoint(FVector& OutHitPoint, const CColliderLine2D* Line, const FVector& Point)
+{
+	if (!Line)
+	{
+		return false;
+	}
+
+	return CollideLine2DToPoint(OutHitPoint, Line->GetInfo(), Point);
+}
+
+bool CCollision::CollideLine2DToPoint(FVector& OutHitPoint, const FLine2DInfo& Line, const FVector& Point)
+{
+	FVector ToEnd = (Line.End - Line.Start).GetNormalized();
+	FVector ToPoint = (Point - Line.Start).GetNormalized();
+
+	if (ToEnd.Dot(ToPoint) == 1.f)
+	{
+		float SqrToEnd = Line.Start.SqrDistance(Line.End);
+		float SqrToPoint = Line.Start.SqrDistance(Point);
+
+		if (SqrToPoint <= SqrToEnd)
+		{
+			OutHitPoint = Point;
+			return true;
+		}
+	}
+
+	return false;
 }
 
 ECCWResult::Type CCollision::CCW2D(const FVector& A, const FVector& B, const FVector& C)

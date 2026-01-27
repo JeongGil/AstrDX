@@ -47,7 +47,7 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexture(const std::weak_ptr<CT
 	auto Shared = Texture.lock();
 	std::shared_ptr<FMaterialTextureInfo> TexInfo(new FMaterialTextureInfo
 		{
-			.Name = Shared->GetName(),
+			.Name = Shared->GetKey(),
 			.Texture = Texture,
 			.Register = Register,
 			.ShaderBufferType = ShaderBufferType,
@@ -166,7 +166,7 @@ bool CMaterial::SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Text
 		{
 			TextureInfos.emplace_back(new FMaterialTextureInfo
 			   {
-				   .Name = Tex->GetName(),
+				   .Name = Tex->GetKey(),
 				   .Register = 0,
 				   .ShaderBufferType = EShaderBufferType::Pixel,
 				   .Index = 0,

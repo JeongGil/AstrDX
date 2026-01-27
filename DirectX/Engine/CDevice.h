@@ -104,6 +104,18 @@ public:
 		return bWindowMode;
 	}
 
+	[[nodiscard]] FVector2 GetResolutionRatio() const
+	{
+		RECT WindowRC;
+		GetClientRect(window, &WindowRC);
+
+		FVector2 Ratio;
+		Ratio.x = Resolution.Width / static_cast<float>(WindowRC.right - WindowRC.left);
+		Ratio.y = Resolution.Height / static_cast<float>(WindowRC.bottom - WindowRC.top);
+
+		return Ratio;
+	}
+
 private:
 	// It is mainly used when creating resources.
 	ID3D11Device* Device = nullptr;

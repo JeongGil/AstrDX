@@ -162,6 +162,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="..\Core\Bin\EngineAsset\Shader\Share.hlsli" />
+    <None Include="Asset\Sound\fmod.cs" />
+    <None Include="Asset\Sound\fmod_dsp.cs" />
+    <None Include="Asset\Sound\fmod_errors.cs" />
     <None Include="Asset\Texture\DirectXTex.inl" />
     <None Include="ClassDiagram.cd" />
     <None Include="Copy.bat" />
@@ -193,6 +196,16 @@
     <ClInclude Include="Asset\Shader\CShaderMaterialColor2D.h" />
     <ClInclude Include="Asset\Shader\CShaderTexture2D.h" />
     <ClInclude Include="Asset\Shader\CShaderUIDefault.h" />
+    <ClInclude Include="Asset\Sound\CSound.h" />
+    <ClInclude Include="Asset\Sound\CSoundManager.h" />
+    <ClInclude Include="Asset\Sound\fmod.h" />
+    <ClInclude Include="Asset\Sound\fmod.hpp" />
+    <ClInclude Include="Asset\Sound\fmod_codec.h" />
+    <ClInclude Include="Asset\Sound\fmod_common.h" />
+    <ClInclude Include="Asset\Sound\fmod_dsp.h" />
+    <ClInclude Include="Asset\Sound\fmod_dsp_effects.h" />
+    <ClInclude Include="Asset\Sound\fmod_errors.h" />
+    <ClInclude Include="Asset\Sound\fmod_output.h" />
     <ClInclude Include="Asset\Texture\CTexture.h" />
     <ClInclude Include="Asset\Texture\CTextureManager.h" />
     <ClInclude Include="Asset\Texture\DirectXTex.h" />
@@ -278,6 +291,8 @@
     <ClCompile Include="Asset\Shader\CShaderMaterialColor2D.cpp" />
     <ClCompile Include="Asset\Shader\CShaderTexture2D.cpp" />
     <ClCompile Include="Asset\Shader\CShaderUIDefault.cpp" />
+    <ClCompile Include="Asset\Sound\CSound.cpp" />
+    <ClCompile Include="Asset\Sound\CSoundManager.cpp" />
     <ClCompile Include="Asset\Texture\CTexture.cpp" />
     <ClCompile Include="Asset\Texture\CTextureManager.cpp" />
     <ClCompile Include="CCollisionInfoManager.cpp" />

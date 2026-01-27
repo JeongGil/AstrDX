@@ -43,6 +43,12 @@
     <Filter Include="Inventory">
       <UniqueIdentifier>{e0512f9b-0e11-4458-a418-1a31e7ed58c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{e589bef1-ccbd-4385-964e-14a7ff53f30f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Main">
+      <UniqueIdentifier>{f0edea82-5563-4b24-91ba-d1e69f9b24b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="Inventory\CInventoryItem_Item.cpp">
       <Filter>Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CMainWidget.cpp">
+      <Filter>UI\Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -221,5 +230,13 @@
     <ClInclude Include="Inventory\CInventoryItem_Item.h">
       <Filter>Inventory</Filter>
     </ClInclude>
+    <ClInclude Include="UI\CMainWidget.h">
+      <Filter>UI\Main</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Copy.bat">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>

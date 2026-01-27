@@ -9,6 +9,7 @@
 #include "../Monster/CMonsterSpawnPoint.h"
 #include "../Player/CPlayer.h"
 #include "../Strings.h"
+#include "../UI/CMainWidget.h"
 
 bool CMainWorld::Init()
 {
@@ -18,6 +19,10 @@ bool CMainWorld::Init()
 	}
 
 	LoadAnimation2D();
+
+	LoadSound();
+
+	CreateUI();
 
 	auto WeakPlayer = CreateGameObject<CPlayer>("Player");
 
@@ -218,4 +223,16 @@ void CMainWorld::LoadAnimation2D()
 	WorldAssetManager->LoadTexture(Key::Tex::EntityBirth, TEXT("entities/birth/entity_birth.png"), Key::Path::Brotato);
 	WorldAssetManager->LoadTexture(Key::Tex::StructureBirth, TEXT("entities/birth/structure_birth.png"), Key::Path::Brotato);
 #pragma endregion Brotato
+}
+
+void CMainWorld::LoadSound()
+{
+	WorldAssetManager->LoadSound("MainBGM", "BGM", true, "MainBgm.mp3");
+	WorldAssetManager->LoadSound("Fire", "Effect", false, "Fire1.wav");
+	WorldAssetManager->PlaySound("MainBGM");
+}
+
+void CMainWorld::CreateUI()
+{
+	std::weak_ptr<CMainWidget> MainWidget = UIManager->CreateWidget<CMainWidget>("MainWidget");
 }

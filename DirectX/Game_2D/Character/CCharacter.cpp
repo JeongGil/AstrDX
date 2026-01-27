@@ -40,7 +40,7 @@ CCharacter* CCharacter::Clone()
 	return new CCharacter(*this);
 }
 
-void CCharacter::SquashAndStretch(float DeltaTime, float Intensity, float Period)
+void CCharacter::SquashAndStretch(const float DeltaTime, float Intensity, float Period)
 {
 	auto Root = this->Root.lock();
 	if (!Root)

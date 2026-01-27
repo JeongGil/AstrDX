@@ -7,6 +7,7 @@
 #include "CRenderState.h"
 #include "../Component/CSceneComponent.h"
 #include "../Object/CGameObject.h"
+#include "../World/CWorldManager.h"
 
 static bool SortYRenderList(const std::weak_ptr<CSceneComponent>& A, const std::weak_ptr<CSceneComponent>& B)
 {
@@ -300,11 +301,6 @@ bool CRenderManager::Init()
 
 void CRenderManager::Render()
 {
-#ifdef _DEBUG
-	static int LoopCounter = 0;
-	++LoopCounter;
-#endif
-
 	for (auto& RenderLayer : RenderLayers | std::views::values)
 	{
 		auto& RenderList = RenderLayer.RenderList;
@@ -345,18 +341,17 @@ void CRenderManager::Render()
 				{
 					Cmp->Render();
 					Cmp->PostRender();
-
-#ifdef _DEBUG
-					char Test[256] = {};
-					sprintf_s(Test, "[Loop: %d] Layer: %s, Cmp: %s, Obj: %s\n", LoopCounter, RenderLayer.Name.c_str(), Cmp->GetName().c_str(), Cmp->GetOwner().lock()->GetName().c_str());
-
-					OutputDebugStringA(Test);
-
-#endif
 				}
 			}
 		}
 	}
+
+	// UI
+	SetState("AlphaBlend");
+
+	CWorldManager::GetInst()->RenderUI();
+
+	ResetState("AlphaBlend");
 }
 
 CRenderManager::~CRenderManager()

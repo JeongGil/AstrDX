@@ -18,7 +18,7 @@ class CPlayerCharacter :
 
 public:
 	bool Init() override;
-	void Update(const float DeltaTime) override;
+	void Update(float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
 
 	void SetCharacterVisual(TableID VisualInfoID);

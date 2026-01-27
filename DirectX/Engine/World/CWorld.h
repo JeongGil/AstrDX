@@ -31,7 +31,7 @@ public:
 		std::shared_ptr<T> NewObject(new T);
 
 		NewObject->SetWorld(weak_from_this());
-		NewObject->SetName(Key);
+		NewObject->SetKey(Key);
 
 		if (!NewObject->Init())
 		{
@@ -75,7 +75,7 @@ public:
 		NewObject.reset(Origin->Clone());
 
 		NewObject->SetWorld(weak_from_this());
-		NewObject->SetName(key);
+		NewObject->SetKey(key);
 
 		if (!NewObject->Init())
 		{
@@ -189,6 +189,7 @@ public:
 	virtual void PostUpdate(const float DeltaTime);
 	virtual void Render();
 	virtual void PostRender();
+	virtual void RenderUI();
 
 private:
 	void Begin();

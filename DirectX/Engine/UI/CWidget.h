@@ -18,6 +18,10 @@ class CWidget :
 	friend CWidgetContainer;
 
 protected:
+	static bool SortRender(const std::shared_ptr<CWidget>& A, const std::shared_ptr<CWidget>& B);
+	static bool SortCollision(const std::shared_ptr<CWidget>& A, const std::shared_ptr<CWidget>& B);
+
+protected:
 	CWidget();
 
 public:
@@ -34,6 +38,9 @@ public:
 	}
 
 protected:
+	bool bEnable = true;
+	bool bAlive = true;
+
 	std::weak_ptr<CWorld> World;
 	std::weak_ptr<CWorldUIManager> UIManager;
 	std::weak_ptr<CWidget> Parent;
@@ -44,11 +51,14 @@ protected:
 
 	std::string Key;
 	FVector Pos;
+	FVector RenderPos;
 	FVector Size;
 	FVector Pivot;
 	float Angle = 0.f;
 
 	int ZOrder = 0;
+
+	bool bMouseOn = false;
 
 	FColor WidgetColor = FColor::White;
 
@@ -59,9 +69,13 @@ public:
 	virtual bool Init();
 	virtual void Update(const float DeltaTime);
 	virtual void Render();
+	virtual void Destroy();
+	virtual bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos);
+	virtual void MouseHovered();
+	virtual void MouseUnHovered();
 
 public:
-	[[nodiscard]] std::string GetName() const
+	[[nodiscard]] std::string GetKey() const
 	{
 		return Key;
 	}
@@ -131,7 +145,12 @@ public:
 
 	void SetAngle(const float Angle)
 	{
-		this->Angle = Angle;
+		this->Angle = std::fmod(Angle, 360.f);
+
+		if (this->Angle <0.f)
+		{
+			this->Angle = +360.f;
+		}
 	}
 
 	[[nodiscard]] int GetZOrder() const
@@ -157,6 +176,21 @@ public:
 	void SetWidgetColor(float r, float g, float b, float a)
 	{
 		this->WidgetColor = FColor(r, g, b, a);
+	}
+
+	[[nodiscard]] bool GetEnable() const
+	{
+		return bEnable;
+	}
+
+	void SetEnable(const bool bEnable)
+	{
+		this->bEnable = bEnable;
+	}
+
+	[[nodiscard]] bool GetAlive() const
+	{
+		return bAlive;
 	}
 };
 

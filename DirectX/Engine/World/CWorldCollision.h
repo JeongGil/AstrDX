@@ -45,6 +45,8 @@ private:
 	float Interval = 0.f;
 	float Elapsed = 0.f;
 
+	std::weak_ptr<CCollider> HoveredObject;
+
 private:
 	CWorldCollision() = default;
 

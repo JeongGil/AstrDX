@@ -49,7 +49,7 @@ bool CCameraComponent::Init()
 		auto WeakCamMgr = World->GetCameraManager();
 		if (auto CamMgr = WeakCamMgr.lock())
 		{
-			CamMgr->AddCamera(Name, std::dynamic_pointer_cast<CCameraComponent>(shared_from_this()));
+			CamMgr->AddCamera(Key, std::dynamic_pointer_cast<CCameraComponent>(shared_from_this()));
 
 			return true;
 		}

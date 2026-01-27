@@ -19,7 +19,7 @@ private:
 public:
 	~CAnimation2DSequence() = default;
 
-	void Update(float DeltaTime);
+	void Update(const float DeltaTime);
 
 	CAnimation2DSequence* Clone() const;
 

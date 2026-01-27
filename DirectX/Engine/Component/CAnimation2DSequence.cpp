@@ -60,7 +60,7 @@ CAnimation2DSequence& CAnimation2DSequence::operator=(CAnimation2DSequence&& oth
 	return *this;
 }
 
-void CAnimation2DSequence::Update(float DeltaTime)
+void CAnimation2DSequence::Update(const float DeltaTime)
 {
 	auto Animation = this->Animation.lock();
 	if (!Animation)

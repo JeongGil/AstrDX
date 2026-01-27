@@ -37,6 +37,49 @@ void CCollisionQuadTree::EraseCollisionNode(const std::weak_ptr<CCollisionQuadTr
 	}
 }
 
+void CCollisionQuadTree::AddMouseCollisionNode(const std::weak_ptr<CCollisionQuadTreeNode>& Node)
+{
+	MouseCollisionNodes.push_back(Node);
+}
+
+void CCollisionQuadTree::EraseMouseCollisionNode(const std::weak_ptr<CCollisionQuadTreeNode>& Node)
+{
+	auto EraseNode = Node.lock();
+
+	if (!EraseNode)
+	{
+		return;
+	}
+
+	auto it = std::ranges::find_if(MouseCollisionNodes, [&EraseNode](const auto& Item)
+		{
+			return Item.lock() == EraseNode;
+		});
+
+	if (it != MouseCollisionNodes.end())
+	{
+		MouseCollisionNodes.erase(it);
+	}
+}
+
+void CCollisionQuadTree::CollideMouse(std::weak_ptr<CCollider>& Result, const float DeltaTime, const FVector2& MousePos)
+{
+	for (const auto& Item : MouseCollisionNodes)
+	{
+		auto Node = Item.lock();
+		if (Node->IsInCollider(MousePos))
+		{
+			if (Node->CollideMouse(Result, DeltaTime, MousePos))
+			{
+				MouseCollisionNodes.clear();
+				return;
+			}
+		}
+	}
+
+	MouseCollisionNodes.clear();
+}
+
 bool CCollisionQuadTree::Init()
 {
 #ifdef _DEBUG
@@ -82,7 +125,7 @@ void CCollisionQuadTree::AddCollider(const std::weak_ptr<CCollider>& Collider)
 		const FResolution& RS = CDevice::GetInst()->GetResolution();
 
 		Root->Size.x = RS.Width * 1.5f;
-		Root->Size.y = RS.Height* 1.5f;
+		Root->Size.y = RS.Height * 1.5f;
 	}
 
 	Root->AddCollider(Collider, NodePool);
@@ -123,9 +166,9 @@ void CCollisionQuadTree::ReturnNodePool()
 void CCollisionQuadTree::Render()
 {
 #ifdef _DEBUG
-	
+
 	ColliderCBuffer->UpdateBuffer();
-	
+
 	if (Root)
 	{
 		Root->Render(Mesh, Shader);

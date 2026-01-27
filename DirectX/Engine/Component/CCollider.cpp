@@ -79,6 +79,22 @@ void CCollider::OnCollisionBlockEnd()
 {
 }
 
+void CCollider::CallOnCollisionMouseBegin(const FVector& MousePos)
+{
+	if (OnCollisionMouseBegin)
+	{
+		OnCollisionMouseBegin(MousePos);
+	}
+}
+
+void CCollider::CallOnCollisionMouseEnd(const FVector& MousePos)
+{
+	if (OnCollisionMouseEnd)
+	{
+		OnCollisionMouseEnd(MousePos);
+	}
+}
+
 bool CCollider::Init()
 {
 	if (!CSceneComponent::Init())

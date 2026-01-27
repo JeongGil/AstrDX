@@ -41,6 +41,14 @@ bool CColliderBox2D::CollideManifold(FCollisionManifold& HitResult, std::shared_
 	return false;
 }
 
+bool CColliderBox2D::CollideMouse(const FVector2& MousePos)
+{
+	[[maybe_unused]] FVector Hit;
+	FVector Point(MousePos.x, MousePos.y, 0.f);
+
+	return CCollision::CollideBox2DToPoint(Hit, Info, Point);
+}
+
 void CColliderBox2D::SetDrawDebug(bool bDrawDebug)
 {
 	CCollider::SetDrawDebug(bDrawDebug);

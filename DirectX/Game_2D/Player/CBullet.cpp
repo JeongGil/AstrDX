@@ -1,10 +1,11 @@
 #include "CBullet.h"
 
+#include <Component/CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 #include <Component/CProjectileMovementComponent.h>
+#include <World/CWorldAssetManager.h>
 #include "CBulletEffect.h"
 #include "../Component/CStateComponent.h"
-#include "Component/CColliderBox2D.h"
 
 void CBullet::SetMoveDirection(const FVector& MoveDirection)
 {
@@ -85,6 +86,11 @@ void CBullet::OnCollisionBlock(const FVector& HitPoint, CCollider* Other)
 		if (auto Effect = WeakEffect.lock())
 		{
 			Effect->SetWorldPosition(HitPoint);
+		}
+
+		if (auto AssetMgr = World->GetWorldAssetManager().lock())
+		{
+			AssetMgr->PlaySound("Fire");
 		}
 	}
 }

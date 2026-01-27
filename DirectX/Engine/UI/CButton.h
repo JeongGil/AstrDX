@@ -44,8 +44,10 @@ protected:
 	FUIBrush Brushes[EButtonState::End];
 	EButtonState::Type State = EButtonState::Normal;
 
+	std::function<void()> EventCallback[EButtonEventState::End];
+
 public:
-	void SetEnable(bool bEnable)
+	void ButtonEnable(bool bEnable)
 	{
 		State = bEnable ? EButtonState::Normal : EButtonState::Disable;
 	}
@@ -82,4 +84,13 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void Render() override;
+	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
+	void MouseHovered() override;
+	void MouseUnHovered() override;
+
+	template <typename T>
+	void SetEventCallback(EButtonEventState::Type Type, T* Obj, void(T::* Func)())
+	{
+		EventCallback[Type] = std::bind(Func, Obj);
+	}
 };

@@ -127,7 +127,7 @@ bool CShaderManager::CreateCBuffer(const std::string& Key, int Size, int Registe
 		return false;
 	}
 
-	Shared->SetName(Key);
+	Shared->SetKey(Key);
 
 	CBuffers.emplace(Key, Shared);
 

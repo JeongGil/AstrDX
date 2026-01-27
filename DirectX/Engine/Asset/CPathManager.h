@@ -35,6 +35,8 @@ public:
 
 	static const TCHAR* FindPath(const std::string& Key);
 
+	static const char* FindPathMultibyte(const std::string Key);
+
 private:
 	inline static std::unordered_map<std::string, TCHAR*> Paths;
 };

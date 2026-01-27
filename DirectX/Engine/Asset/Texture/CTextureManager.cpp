@@ -57,7 +57,7 @@ bool CTextureManager::LoadTexture(const std::string& Key, const TCHAR* FileName,
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);
 
-	NewTex->Name = Key;
+	NewTex->Key = Key;
 
 	if (!NewTex->LoadTexture(FileName, PathName))
 	{
@@ -78,7 +78,7 @@ bool CTextureManager::LoadTextureFullPath(const std::string& Key, const TCHAR* F
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);
 
-	NewTex->Name = Key;
+	NewTex->Key = Key;
 
 	if (!NewTex->LoadTextureFullPath(FullPath))
 	{
@@ -100,7 +100,7 @@ bool CTextureManager::LoadTextures(const std::string& Key, const std::vector<con
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);
 
-	NewTex->Name = Key;
+	NewTex->Key = Key;
 
 	if (!NewTex->LoadTextures(FileNames, PathName))
 	{
@@ -122,7 +122,7 @@ bool CTextureManager::LoadTexturesFullPath(const std::string& Key, const std::ve
 
 	std::shared_ptr<CTexture> NewTex(new CTexture);
 
-	NewTex->Name = Key;
+	NewTex->Key = Key;
 
 	if (!NewTex->LoadTexturesFullPath(FullPaths))
 	{

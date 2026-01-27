@@ -19,7 +19,7 @@ private:
 
 public:
 	bool Init() override;
-	void Update(const float DeltaTime) override;
+	void Update(float DeltaTime) override;
 
 protected:
 	CBulletEffect* Clone() override;

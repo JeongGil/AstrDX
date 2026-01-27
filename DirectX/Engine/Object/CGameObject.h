@@ -33,14 +33,14 @@ public:
 		return Root;
 	}
 
-	[[nodiscard]] std::string GetName() const
+	[[nodiscard]] std::string GetKey() const
 	{
-		return Name;
+		return Key;
 	}
 
-	void SetName(const std::string& Name)
+	void SetKey(const std::string& Name)
 	{
-		this->Name = Name;
+		this->Key = Name;
 	}
 
 	bool GetAlive() const
@@ -150,14 +150,14 @@ protected:
 	std::vector<std::shared_ptr<CSceneComponent>> SceneComponents;
 	std::vector<std::shared_ptr<CObjectComponent>> ObjectComponents;
 	std::weak_ptr<CSceneComponent> Root;
-	std::string Name;
+	std::string Key;
 	bool bEnable = true;
 	bool bAlive = true;
 
 public:
 	virtual void Begin();
 	virtual bool Init();
-	virtual void Update(const float DeltaTime);
+	virtual void Update(float DeltaTime);
 	virtual void PostUpdate(const float DeltaTime);
 	virtual void UpdateTransform();
 	virtual void Render();
@@ -175,7 +175,7 @@ public:
 	 * attached to a parent component specified by its name.
 	 *
 	 * @tparam T The type of the component to be created. Must be derived from `CSceneComponent`.
-	 * @param Name The name of the new component.
+	 * @param Key The name of the new component.
 	 * @param ParentName The name of the parent component to which the new component will be attached.
 	 *                   Defaults to "Root" if no parent is specified.
 	 * @return A weak pointer to the newly created component of type `T`. Returns an empty weak pointer
@@ -186,13 +186,13 @@ public:
 	 *       Ensure that the type `T` has a default constructor and implements the `Init` method.
 	 */
 	template <typename T>
-	std::weak_ptr<T> CreateComponent(const std::string& Name, const std::string& ParentName = "Root")
+	std::weak_ptr<T> CreateComponent(const std::string& Key, const std::string& ParentName = "Root")
 	{
 		std::shared_ptr<CComponent> Component(new T);
 
 		Component->SetWorld(World);
 		Component->SetOwner(std::dynamic_pointer_cast<CGameObject>(shared_from_this()));
-		Component->SetName(Name);
+		Component->SetKey(Key);
 
 		if (!Component->Init())
 		{
@@ -221,7 +221,7 @@ public:
 						std::shared_ptr<CSceneComponent> Parent;
 						for (const auto& SceneComponent : SceneComponents)
 						{
-							if (SceneComponent->Name == ParentName)
+							if (SceneComponent->Key == ParentName)
 							{
 								Parent = SceneComponent;
 
@@ -259,7 +259,7 @@ public:
 	{
 		for (const auto& Cmp : SceneComponents)
 		{
-			if (Cmp->GetName() == Name)
+			if (Cmp->GetKey() == Name)
 			{
 				return std::dynamic_pointer_cast<T>(Cmp);
 			}
@@ -267,7 +267,7 @@ public:
 
 		for (const auto& Cmp : ObjectComponents)
 		{
-			if (Cmp->GetName() == Name)
+			if (Cmp->GetKey() == Name)
 			{
 				return std::dynamic_pointer_cast<T>(Cmp);
 			}
@@ -372,7 +372,7 @@ protected:
 		World(other.World),
 		//SceneComponents(other.SceneComponents),
 		//Root(other.Root),
-		Name(other.Name),
+		Key(other.Key),
 		bEnable(other.bEnable),
 		bAlive(other.bAlive)
 	{
@@ -384,7 +384,7 @@ protected:
 		World(std::move(other.World)),
 		SceneComponents(std::move(other.SceneComponents)),
 		Root(std::move(other.Root)),
-		Name(std::move(other.Name)),
+		Key(std::move(other.Key)),
 		bEnable(other.bEnable),
 		bAlive(other.bAlive)
 	{
@@ -402,7 +402,7 @@ protected:
 		//SceneComponents = other.SceneComponents;
 		//Root = other.Root;
 		CloneAndSetHierarchyComponents(other);
-		Name = other.Name;
+		Key = other.Key;
 		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		return *this;
@@ -416,7 +416,7 @@ protected:
 		World = std::move(other.World);
 		SceneComponents = std::move(other.SceneComponents);
 		Root = std::move(other.Root);
-		Name = std::move(other.Name);
+		Key = std::move(other.Key);
 		bEnable = other.bEnable;
 		bAlive = other.bAlive;
 		other.bAlive = false;

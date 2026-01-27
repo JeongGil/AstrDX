@@ -56,9 +56,12 @@ public:
 	void CallOnCollisionEnd(CCollider* Other);
 	void CallOnCollisionBlock(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
 	void OnCollisionBlockEnd();
+	void CallOnCollisionMouseBegin(const FVector& MousePos);
+	void CallOnCollisionMouseEnd(const FVector& MousePos);
 
 	virtual bool Collide(FVector3& OutHitPoint, std::shared_ptr<CCollider> Other) = 0;
 	virtual bool CollideManifold(FCollisionManifold& HitResult, std::shared_ptr<CCollider> Dest) = 0;
+	virtual bool CollideMouse(const FVector2& MousePos) = 0;
 
 	template <typename T>
 	void SetOnCollisionBegin(T* Obj, void (T::* Func)(const FVector&, CCollider*))
@@ -76,6 +79,18 @@ public:
 	void SetOnCollisionBlock(T* Obj, void (T::* Func)(const FVector&, CCollider*))
 	{
 		OnCollisionBlock = std::bind(Func, Obj, std::placeholders::_1, std::placeholders::_2);
+	}
+
+	template <typename T>
+	void SetOnCollisionMouseBegin(T* Obj, void (T::* Func)(const FVector&))
+	{
+		OnCollisionMouseBegin = std::bind(Func, Obj, std::placeholders::_1);
+	}
+
+	template <typename T>
+	void SetOnCollisionMouseEnd(T* Obj, void (T::* Func)(const FVector&))
+	{
+		OnCollisionMouseEnd = std::bind(Func, Obj, std::placeholders::_1);
 	}
 
 protected:
@@ -103,6 +118,9 @@ protected:
 	std::function<void(const FVector&, CCollider*)> OnCollisionBegin;
 	std::function<void(CCollider*)> OnCollisionEnd;
 	std::function<void(const FVector&, CCollider*)> OnCollisionBlock;
+
+	std::function<void(const FVector&)> OnCollisionMouseBegin;
+	std::function<void(const FVector&)> OnCollisionMouseEnd;
 
 public:
 	bool Init() override;
@@ -133,7 +151,9 @@ protected:
 		ColliderCBuffer(std::move(other.ColliderCBuffer)),
 		OnCollisionBegin(std::move(other.OnCollisionBegin)),
 		OnCollisionEnd(std::move(other.OnCollisionEnd)),
-		OnCollisionBlock(std::move(other.OnCollisionBlock))
+		OnCollisionBlock(std::move(other.OnCollisionBlock)),
+		OnCollisionMouseBegin(std::move(other.OnCollisionMouseBegin)),
+		OnCollisionMouseEnd(std::move(other.OnCollisionMouseEnd))
 	{
 		other.Profile = nullptr;
 	}
@@ -160,6 +180,8 @@ protected:
 		OnCollisionBegin = std::move(other.OnCollisionBegin);
 		OnCollisionEnd = std::move(other.OnCollisionEnd);
 		OnCollisionBlock = std::move(other.OnCollisionBlock);
+		OnCollisionMouseBegin = std::move(other.OnCollisionMouseBegin);
+		OnCollisionMouseEnd = std::move(other.OnCollisionMouseEnd);
 		return *this;
 	}
 

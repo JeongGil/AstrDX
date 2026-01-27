@@ -25,7 +25,7 @@ class CCharacter :
 
 public:
 	bool Init() override;
-	void Update(const float DeltaTime) override;
+	void Update(float DeltaTime) override;
 	void Destroy() override;
 
 protected:
@@ -49,7 +49,7 @@ protected:
 	}
 
 private:
-	void SquashAndStretch(float DeltaTime, float Intensity, float Period);
+	void SquashAndStretch(const float DeltaTime, float Intensity, float Period);
 	float SSElapsed = 0.f;
 	float SSIntensity = 0.05f;
 	float SSPeriod = 1.f;
