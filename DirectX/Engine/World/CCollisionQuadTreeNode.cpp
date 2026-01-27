@@ -240,25 +240,22 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 bool CCollisionQuadTreeNode::CollideMouse(std::weak_ptr<CCollider>& Result, const float DeltaTime,
 	const FVector2& MousePos)
 {
-	// 1. 유효하지 않거나 죽은 콜라이더 정리 (std::list 전용 remove_if)
 	Colliders.remove_if([](const std::weak_ptr<CCollider>& ColliderPtr)
 		{
 			auto Collider = ColliderPtr.lock();
 			return !Collider || !Collider->GetAlive();
 		});
 
-	// 2. 정렬 (std::list 멤버 sort 사용)
 	if (Colliders.size() >= 2)
 	{
 		Colliders.sort(CCollisionQuadTreeNode::SortMouseCollision);
 	}
 
-	// 3. 충돌 검사 순회
 	for (const auto& ColliderPtr : Colliders)
 	{
 		auto SrcCollider = ColliderPtr.lock();
 
-		// 정리 단계 덕분에 lock() 성공과 GetAlive()는 여기서 보장됨
+		// Thanks to the cleanup phase, lock() success and GetAlive() are guaranteed here
 		if (!SrcCollider->GetEnable())
 		{
 			continue;
@@ -290,13 +287,13 @@ bool CCollisionQuadTreeNode::CollideMouse(std::weak_ptr<CCollider>& Result, cons
 
 bool CCollisionQuadTreeNode::IsInCollider(const FVector2& MousePos)
 {
-	// 노드의 최소/최대 경계를 상수로 미리 계산 (함수 밖에서 관리하면 더 좋음)
+	// Pre-calculate the minimum/maximum boundaries of the node as constants (better to manage outside the function)
 	const float MinX = Center.x - Size.x * 0.5f;
 	const float MaxX = MinX + Size.x;
 	const float MinY = Center.y - Size.y * 0.5f;
 	const float MaxY = MinY + Size.y;
 
-	// 경계 밖으로 나가는 경우를 즉시 리턴 (Short-circuit)
+	// Immediately return if it goes out of bounds (Short-circuit)
 	if (MousePos.x < MinX || MousePos.x > MaxX
 		|| MousePos.y < MinY || MousePos.y > MaxY)
 	{

@@ -480,7 +480,7 @@ bool CCollision::ManifoldLine2DToLine2D(FCollisionManifold& Out, const FLine2DIn
 		FVector3    SrcMid = (Src.Start + Src.End) * 0.5f;
 		FVector3    DestMid = (Dest.Start + Dest.End) * 0.5f;
 
-		// Src -> Dest 방향 맞추기
+		// Align Src -> Dest direction
 		if ((DestMid - SrcMid).Dot(Normal) > 0.f)
 			Normal *= -1.f;
 
@@ -519,9 +519,9 @@ bool CCollision::GroundClamp(FVector3& Velocity, float InvMass,
 	return true;
 }
 
-// Mass 값은 고정된 물체는 0 아니면 1을 넣어주면 된다.
-// 질량이 모두 같다고 정의하고 하는 방식이다. 그게 아니라면
-// SrcInvMass나 DestInvMass에 1.f / Mass 를 넣어주면 된다.
+// For fixed objects, set the Mass value to either 0 or 1.
+// This approach assumes all masses are equal. If that's not the case,
+// assign 1.f / Mass to SrcInvMass or DestInvMass.
 bool CCollision::ResolveSlideStop2D(FVector3& SrcPos,
 	FVector3& SrcVelocity, float SrcInvMass,
 	FVector3& DestPos, FVector3& DestVelocity, float DestInvMass,
@@ -533,14 +533,13 @@ bool CCollision::ResolveSlideStop2D(FVector3& SrcPos,
 	FVector3    Normal = Manifold.Normal;
 	Normal.Normalize();
 
-	// 방향 고정
+	// Fix direction
 	if ((DestPos - SrcPos).Dot(Normal) < 0.f)
 		Normal *= -1.f;
-
-	const float Slop = 0.02f;  // 떨림 방지
-	const float Percent = 0.4f; // 보정 강도
+	const float Slop = 0.02f;  // Prevent jittering
+	const float Percent = 0.4f; // Correction strength
 	const float MaxCor = 0.5f;
-	// 속도임계. 0 근처 떨림 방지.
+	// Velocity threshold. Prevents jittering near zero.
 	const float VelEps = 0.001f;
 
 	float   InvMass = SrcInvMass + DestInvMass;
@@ -548,22 +547,22 @@ bool CCollision::ResolveSlideStop2D(FVector3& SrcPos,
 	if (InvMass <= 0.f)
 		return false;
 
-	// 위치 보정(겹침 제거)
+	// Position correction (overlap removal)
 	float   Pen = 0.f;
 
 	if (Manifold.Penetration - Slop > 0.f)
 		Pen = Manifold.Penetration - Slop;
 
 	float   CorMag = (Pen * Percent) / InvMass;
-	if (CorMag > MaxCor)
-		CorMag = MaxCor;
+
+	CorMag = min(CorMag, MaxCor);
 
 	FVector3    Correction = Normal * CorMag;
 
 	SrcPos -= Correction * SrcInvMass;
 	DestPos += Correction * DestInvMass;
 
-	// 속도 보정(미끄러짐 가능)
+	// Velocity correction (allows sliding)
 	FVector3    Velocity = SrcVelocity - DestVelocity;
 	float   vn = Velocity.Dot(Normal);
 
@@ -575,14 +574,14 @@ bool CCollision::ResolveSlideStop2D(FVector3& SrcPos,
 		DestVelocity += dv * DestInvMass;
 	}
 
-	// 바닥 떨림 방지
+	// Prevent floor jittering
 	FVector3    PushDir = Normal * -1.f;
 	PushDir.Normalize();
 
 	FVector3    Up = FVector3(0.f, 1.f, 0.f);
 
-	// 바닥 판정을 위해 밀어내는 방향을 위쪽 방향벡터와 계산하여
-	// 일장 크기 이상일 경우 바닥으로 판정되게 한다.
+	// To determine if it's the floor, calculate the push direction with the upward vector.
+	// If it exceeds a certain magnitude, it is considered the floor.
 	/*bool    Grounded = (PushDir.Dot(Up) > 0.8f);
 
 	if (Grounded)

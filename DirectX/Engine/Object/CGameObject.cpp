@@ -837,12 +837,11 @@ void CGameObject::Render()
 
 void CGameObject::PostRender()
 {
-	// 1. SceneComponent 정리 및 실행
 	std::erase_if(SceneComponents, [](const std::shared_ptr<CSceneComponent>& Comp)
 		{
-			// 상태가 죽었거나, 유효하지 않은 경우 삭제
-			if (!Comp || !Comp->GetAlive()) {
-				// TODO: OnDestroy는 컴포넌트에서 미구현이므로 주석 처리
+			if (!Comp || !Comp->GetAlive())
+			{
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Comp) Comp->OnDestroy();
 				return true;
 			}
@@ -858,12 +857,11 @@ void CGameObject::PostRender()
 		}
 	}
 
-	// 2. ObjectComponent 정리 및 실행
 	std::erase_if(ObjectComponents, [](const std::shared_ptr<CObjectComponent>& Comp)
 		{
 			if (!Comp || !Comp->GetAlive())
 			{
-				// TODO: OnDestroy는 컴포넌트에서 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Comp) Comp->OnDestroy();
 				return true;
 			}

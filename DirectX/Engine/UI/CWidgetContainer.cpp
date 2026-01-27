@@ -26,7 +26,7 @@ void CWidgetContainer::Update(const float DeltaTime)
 		{
 			if (!Widget || !Widget->GetAlive())
 			{
-				// TODO: OnDestroy는 컴포넌트(위젯)에서 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Widget) Widget->OnDestroy();
 				return true;
 			}
@@ -50,7 +50,7 @@ void CWidgetContainer::Render()
 		{
 			if (!Widget || !Widget->GetAlive())
 			{
-				// TODO: OnDestroy는 컴포넌트(위젯)에서 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Widget) Widget->OnDestroy();
 				return true;
 			}
@@ -77,7 +77,7 @@ bool CWidgetContainer::CollideMouse(std::weak_ptr<CWidget>& Result, const FVecto
 		{
 			if (!Widget || !Widget->GetAlive())
 			{
-				// TODO: OnDestroy는 컴포넌트(위젯)에서 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Widget) Widget->OnDestroy();
 				return true;
 			}

@@ -19,7 +19,7 @@ void CWorldUIManager::Update(const float DeltaTime)
 		{
 			if (!Widget || !Widget->GetAlive())
 			{
-				// TODO: OnDestroy는 컴포넌트(위젯)에서 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Widget) Widget->OnDestroy();
 				return true;
 			}
@@ -41,7 +41,7 @@ bool CWorldUIManager::CollideMouse(const float DeltaTime, const FVector2& MouseP
 		{
 			if (!Widget || !Widget->GetAlive())
 			{
-				// TODO: OnDestroy는 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Widget) Widget->OnDestroy();
 				return true;
 			}
@@ -58,7 +58,7 @@ bool CWorldUIManager::CollideMouse(const float DeltaTime, const FVector2& MouseP
 		HoveredWidget.reset();
 	}
 
-	// 충돌 검사
+	// Collision detection
 	for (const auto& Widget : Widgets)
 	{
 		if (!Widget->GetEnable())
@@ -86,7 +86,7 @@ bool CWorldUIManager::CollideMouse(const float DeltaTime, const FVector2& MouseP
 		}
 	}
 
-	// 아무것도 충돌하지 않았을 때 기존 Hover 해제
+	// When nothing is colliding, reset the existing hover state
 	if (auto Prev = HoveredWidget.lock())
 	{
 		Prev->MouseUnHovered();
@@ -102,7 +102,7 @@ void CWorldUIManager::Render()
 		{
 			if (!Widget || !Widget->GetAlive())
 			{
-				// TODO: OnDestroy는 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// if (Widget) Widget->OnDestroy();
 				return true;
 			}

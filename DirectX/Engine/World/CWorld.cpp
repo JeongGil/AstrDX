@@ -129,19 +129,17 @@ void CWorld::Render()
 
 void CWorld::PostRender()
 {
-	// 1. 죽은 객체들만 골라내어 삭제 (C++20 erase_if)
 	std::erase_if(Objects, [](auto& Pair)
 		{
 			if (!Pair.second->GetAlive())
 			{
-				// TODO: OnDestroy는 컴포넌트(또는 오브젝트)에서 미구현이므로 주석 처리
+				// TODO: OnDestroy is not implemented in the component (widget), so it is commented out
 				// Pair.second->OnDestroy();
 				return true;
 			}
 			return false;
 		});
 
-	// 2. 살아남은 객체들의 PostRender 실행
 	for (auto& Object : Objects | std::views::values)
 	{
 		Object->PostRender();
