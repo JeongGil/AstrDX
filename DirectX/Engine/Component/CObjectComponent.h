@@ -11,6 +11,7 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
+	virtual void PostRender();
 	void Destroy() override;
 
 protected:
@@ -22,11 +23,8 @@ protected:
 	}
 
 	CObjectComponent(const CObjectComponent& other) = default;
-
 	CObjectComponent(CObjectComponent&& other) noexcept = default;
-
 	CObjectComponent& operator=(const CObjectComponent& other) = default;
-
 	CObjectComponent& operator=(CObjectComponent&& other) noexcept = default;
 
 public:

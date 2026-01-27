@@ -129,18 +129,22 @@ void CWorld::Render()
 
 void CWorld::PostRender()
 {
-	auto Curr = Objects.begin();
-	const auto End = Objects.end();
-	while (Curr != End)
-	{
-		if (!Curr->second->GetAlive())
+	// 1. 죽은 객체들만 골라내어 삭제 (C++20 erase_if)
+	std::erase_if(Objects, [](auto& Pair)
 		{
-			Curr = Objects.erase(Curr);
-			continue;
-		}
+			if (!Pair.second->GetAlive())
+			{
+				// TODO: OnDestroy는 컴포넌트(또는 오브젝트)에서 미구현이므로 주석 처리
+				// Pair.second->OnDestroy();
+				return true;
+			}
+			return false;
+		});
 
-		Curr->second->Render();
-		++Curr;
+	// 2. 살아남은 객체들의 PostRender 실행
+	for (auto& Object : Objects | std::views::values)
+	{
+		Object->PostRender();
 	}
 }
 
