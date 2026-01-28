@@ -214,3 +214,65 @@ void CWidget::MouseHovered()
 void CWidget::MouseUnHovered()
 {
 }
+
+void CWidget::RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const FVector& Size)
+{
+	auto Shader = this->Shader.lock();
+	auto Mesh = this->Mesh.lock();
+
+	FMatrix	ScaleMat, RotationMat, TranslateMat, WorldMat;
+
+	ScaleMat.Scaling(Size);
+	RotationMat.RotationZ(Angle);
+	TranslateMat.Translation(RenderPos);
+
+	WorldMat = ScaleMat * RotationMat * TranslateMat;
+
+	auto World = this->World.lock();
+
+	TransformCBuffer->SetWorldMatrix(WorldMat);
+	TransformCBuffer->SetViewMatrix(FMatrix::Identity);
+	TransformCBuffer->SetProjectionMatrix(UIProjectionMatrix);
+
+	FVector PivotSize = Pivot * Mesh->GetMeshSize();
+	TransformCBuffer->SetPivotSize(PivotSize);
+
+	TransformCBuffer->UpdateBuffer();
+
+	UIDefaultCBuffer->SetBrushTint(Brush.Tint);
+
+	if (!Brush.Texture.expired())
+	{
+		UIDefaultCBuffer->SetTextureEnable(true);
+
+		auto Texture = Brush.Texture.lock();
+
+		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+	}
+	else
+	{
+		UIDefaultCBuffer->SetTextureEnable(false);
+	}
+
+	if (Brush.AnimationEnable)
+	{
+		UIDefaultCBuffer->SetAnimEnable(true);
+
+		int	Frame = Brush.Frame;
+
+		FTextureFrame FrameInfo = Brush.AnimationFrames[Frame];
+
+		UIDefaultCBuffer->SetBrushLTUV(FrameInfo.Start);
+		UIDefaultCBuffer->SetBrushRBUV(FrameInfo.Start + FrameInfo.Size);
+	}
+	else
+	{
+		UIDefaultCBuffer->SetAnimEnable(false);
+	}
+
+	UIDefaultCBuffer->UpdateBuffer();
+
+	Shader->SetShader();
+
+	Mesh->Render();
+}

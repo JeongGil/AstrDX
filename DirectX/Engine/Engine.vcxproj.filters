@@ -465,6 +465,12 @@
     <ClInclude Include="UI\CTextBlock.h">
       <Filter>UI\Widget</Filter>
     </ClInclude>
+    <ClInclude Include="UI\CImage.h">
+      <Filter>UI\Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CProgressBar.h">
+      <Filter>UI\Widget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -697,6 +703,12 @@
       <Filter>Asset\Font</Filter>
     </ClCompile>
     <ClCompile Include="UI\CTextBlock.cpp">
+      <Filter>UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CImage.cpp">
+      <Filter>UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CProgressBar.cpp">
       <Filter>UI\Widget</Filter>
     </ClCompile>
   </ItemGroup>

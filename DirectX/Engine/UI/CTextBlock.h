@@ -25,6 +25,7 @@ class CTextBlock :
 {
 	friend CWorldUIManager;
 	friend CWidgetContainer;
+	friend CWidget;
 
 protected:
 	CTextBlock();

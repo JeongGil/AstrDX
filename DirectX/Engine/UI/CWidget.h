@@ -74,7 +74,38 @@ public:
 	virtual void MouseHovered();
 	virtual void MouseUnHovered();
 
+	template <typename T>
+	static std::shared_ptr<T> CreateStaticWidget(const std::string& Key, std::weak_ptr<CWorld> World, int ZOrder = 0)
+	{
+		std::shared_ptr<T> Widget;
+		Widget.reset(new T);
+
+		Widget->World = World;
+		Widget->SetKey(Key);
+		Widget->SetZOrder(ZOrder);
+
+		if (!Widget->Init())
+		{
+			return {};
+		}
+
+		return std::dynamic_pointer_cast<T>(Widget);
+	}
+
+protected:
+	void RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const FVector& Size);
+
 public:
+	void SetWorld(const std::weak_ptr<CWorld>& World)
+	{
+		this->World = World;
+	}
+
+	void SetUIManager(const std::weak_ptr<CWorldUIManager>& UIManager)
+	{
+		this->UIManager = UIManager;
+	}
+
 	[[nodiscard]] std::string GetKey() const
 	{
 		return Key;

@@ -248,6 +248,8 @@
     <ClInclude Include="Table\TableBase.h" />
     <ClInclude Include="Table\TableInfoBase.h" />
     <ClInclude Include="UI\CButton.h" />
+    <ClInclude Include="UI\CImage.h" />
+    <ClInclude Include="UI\CProgressBar.h" />
     <ClInclude Include="UI\CTextBlock.h" />
     <ClInclude Include="UI\CWidget.h" />
     <ClInclude Include="UI\CWidgetContainer.h" />
@@ -332,6 +334,8 @@
     <ClCompile Include="Render\CRenderManager.cpp" />
     <ClCompile Include="Render\CRenderState.cpp" />
     <ClCompile Include="UI\CButton.cpp" />
+    <ClCompile Include="UI\CImage.cpp" />
+    <ClCompile Include="UI\CProgressBar.cpp" />
     <ClCompile Include="UI\CTextBlock.cpp" />
     <ClCompile Include="UI\CWidget.cpp" />
     <ClCompile Include="UI\CWidgetContainer.cpp" />

@@ -34,6 +34,7 @@ class CButton :
 {
 	friend CWorldUIManager;
 	friend CWidgetContainer;
+	friend CWidget;
 
 protected:
 	CButton();
@@ -43,7 +44,7 @@ public:
 
 protected:
 	std::shared_ptr<CWidget> Child;
-	FUIBrush Brushes[EButtonState::End];
+	FUIBrush Brush[EButtonState::End];
 	EButtonState::Type State = EButtonState::Normal;
 
 	std::weak_ptr<CSound> Sound[EButtonEventState::End];
@@ -63,6 +64,9 @@ public:
 			SChild->SetSize(Size);
 
 			this->Child = SChild;
+
+			this->Child->SetUIManager(UIManager);
+			this->Child->SetWorld(World);
 		}
 		else
 		{

@@ -297,7 +297,6 @@ void CTextBlock::Render()
 
 	Target->BeginDraw();
 
-	// 그림자를 출력할 경우
 	if (bShadow)
 	{
 		D2D1_POINT_2F	ShadowPoint;
@@ -350,15 +349,12 @@ void CTextBlock::Render()
 bool CTextBlock::CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos)
 {
 	return false;
-	//return CWidget::CollideMouse(Result, MousePos);
 }
 
 void CTextBlock::MouseHovered()
 {
-	//CWidget::MouseHovered();
 }
 
 void CTextBlock::MouseUnHovered()
 {
-	//CWidget::MouseUnHovered();
 }
