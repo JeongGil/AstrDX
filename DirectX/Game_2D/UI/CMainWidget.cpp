@@ -1,6 +1,7 @@
 #include "CMainWidget.h"
 
 #include <UI/CButton.h>
+#include <UI/CTextBlock.h>
 
 CMainWidget::CMainWidget()
 {
@@ -17,24 +18,41 @@ bool CMainWidget::Init()
 		return false;
 	}
 
-	if (auto Button = CreateWidget<CButton>("TestButton").lock())
-	{
-		Button->SetPos(100.f, 50.f);
-		Button->SetSize(100.f, 50.f);
-		Button->SetTexture(EButtonState::Normal, "StartButton", TEXT("Start.png"));
-		Button->SetTint(EButtonState::Normal, FVector4(0.8f, 0.8f, 0.8f, 1.f));
+	auto Button = CreateWidget<CButton>("TestButton").lock();
 
-		Button->SetTexture(EButtonState::Hovered, "StartButton", TEXT("Start.png"));
-		Button->SetTint(EButtonState::Hovered, FVector4(1.f, 1.f, 1.f, 1.f));
+	Button->SetPos(100.f, 50.f);
+	Button->SetSize(100.f, 50.f);
+	Button->SetTexture(EButtonState::Normal, "StartButton", TEXT("Start.png"));
+	Button->SetTint(EButtonState::Normal, FVector4(0.8f, 0.8f, 0.8f, 1.f));
 
-		Button->SetTexture(EButtonState::Click, "StartButton", TEXT("Start.png"));
-		Button->SetTint(EButtonState::Click, FVector4(0.6f, 0.6f, 0.6f, 1.f));
+	Button->SetTexture(EButtonState::Hovered, "StartButton", TEXT("Start.png"));
+	Button->SetTint(EButtonState::Hovered, FVector4(1.f, 1.f, 1.f, 1.f));
 
-		Button->SetTexture(EButtonState::Disable, "StartButton", TEXT("Start.png"));
+	Button->SetTexture(EButtonState::Click, "StartButton", TEXT("Start.png"));
+	Button->SetTint(EButtonState::Click, FVector4(0.6f, 0.6f, 0.6f, 1.f));
 
-		Button->SetSound(EButtonEventState::Hovered, "ButtonHovered", "TeemoSmile.mp3");
-		Button->SetSound(EButtonEventState::Click, "ButtonClick", "TeemoStartClicck.mp3");
-	}
+	Button->SetTexture(EButtonState::Disable, "StartButton", TEXT("Start.png"));
+
+	Button->SetSound(EButtonEventState::Hovered, "ButtonHovered", "TeemoSmile.mp3");
+	Button->SetSound(EButtonEventState::Click, "ButtonClick", "TeemoStartClicck.mp3");
+
+	auto ButtonText = CreateWidget<CTextBlock>("ButtonText").lock();
+
+	ButtonText->SetText(TEXT("Start Button"));
+	ButtonText->SetTextColor(255, 255, 0, 255);
+
+	Button->SetChild(ButtonText);
+
+	auto Text = CreateWidget<CTextBlock>("Text").lock();
+
+	Text->SetText(TEXT("Print Text"));
+	Text->SetTextColor(255, 0, 0, 255);
+	Text->SetPos(100.f, 300.f);
+	Text->SetSize(200.f, 100.f);
+	Text->SetFontSize(30.f);
+	Text->EnableShadow(true);
+	Text->SetShadowOffset(3.f, 3.f);
+	Text->SetShadowTextColor(128, 128, 128, 255);
 
 	return true;
 }

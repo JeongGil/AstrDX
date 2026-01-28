@@ -238,20 +238,12 @@ CDevice::CDevice()
 
 CDevice::~CDevice()
 {
-	if (TargetView)
-	{
-		TargetView->Release();
-	}
+	SAFE_RELEASE(m2DTarget);
+	SAFE_RELEASE(m2DFactory);
 
-	if (DepthView)
-	{
-		DepthView->Release();
-	}
-
-	if (SwapChain)
-	{
-		SwapChain->Release();
-	}
+	SAFE_RELEASE(TargetView);
+	SAFE_RELEASE(DepthView);
+	SAFE_RELEASE(SwapChain);
 
 	if (Context)
 	{
@@ -259,8 +251,5 @@ CDevice::~CDevice()
 		Context->Release();
 	}
 
-	if (Device)
-	{
-		Device->Release();
-	}
+	SAFE_RELEASE(Device);
 }

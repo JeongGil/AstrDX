@@ -452,10 +452,10 @@ bool CWorldAssetManager::LoadSound(const std::string& Key, const std::string& Gr
 			return false;
 		}
 
-		auto It = Assets.find(Key);
+		auto It = Assets.find(InnerKey);
 		if (It == Assets.end())
 		{
-			Assets.emplace(Key, SoundMgr->FindSound(Key));
+			Assets.emplace(InnerKey, SoundMgr->FindSound(InnerKey));
 		}
 
 		return true;

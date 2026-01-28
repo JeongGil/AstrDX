@@ -111,12 +111,12 @@ public:
 		return Size;
 	}
 
-	void SetSize(const FVector& Size)
+	virtual void SetSize(const FVector& Size)
 	{
 		this->Size = Size;
 	}
 
-	void SetSize(float x, float y)
+	virtual void SetSize(float x, float y)
 	{
 		Size.x = x;
 		Size.y = y;

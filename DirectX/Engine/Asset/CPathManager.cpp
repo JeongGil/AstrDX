@@ -29,6 +29,7 @@ bool CPathManager::Init()
 	CreatePath("EngineAsset", TEXT("EngineAsset\\"));
 	CreatePath("EngineShader", TEXT("Shader\\"), "EngineAsset");
 	CreatePath("EngineTexture", TEXT("Shader\\"), "EngineAsset");
+	CreatePath("EngineFont", TEXT("Font\\"), "EngineAsset");
 
 	return true;
 }

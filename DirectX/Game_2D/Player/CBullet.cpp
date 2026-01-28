@@ -88,10 +88,10 @@ void CBullet::OnCollisionBlock(const FVector& HitPoint, CCollider* Other)
 			Effect->SetWorldPosition(HitPoint);
 		}
 
-		if (auto AssetMgr = World->GetWorldAssetManager().lock())
-		{
-			AssetMgr->PlaySound("Fire");
-		}
+		//if (auto AssetMgr = World->GetWorldAssetManager().lock())
+		//{
+		//	AssetMgr->PlaySound("Fire");
+		//}
 	}
 }
 

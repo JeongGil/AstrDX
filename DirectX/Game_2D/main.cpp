@@ -44,8 +44,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CEngine::CreateCDO<CMonsterSpawnPoint>();
 	CEngine::CreateCDO<CStateComponent>();
 
-	//CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);
-	CWorldManager::GetInst()->CreateWorld<CBrotatoWorld_Battle>(false);
+	CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);
+	//CWorldManager::GetInst()->CreateWorld<CBrotatoWorld_Battle>(false);
 
 	int ret = CEngine::GetInst()->Run();
 
