@@ -12,7 +12,7 @@ class CWorld;
 class CWorldUIManager;
 
 class CWidget :
-    public CObject
+	public CObject
 {
 	friend CWorldUIManager;
 	friend CWidgetContainer;
@@ -57,8 +57,10 @@ protected:
 	float Angle = 0.f;
 
 	int ZOrder = 0;
+	int PrevZOrder = 0;
 
 	bool bMouseOn = false;
+	bool bMouseDrag = false;
 
 	FColor WidgetColor = FColor::White;
 
@@ -73,6 +75,9 @@ public:
 	virtual bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos);
 	virtual void MouseHovered();
 	virtual void MouseUnHovered();
+	virtual bool MouseDragStart(const FVector2& MousePos);
+	virtual bool MouseDrag(const FVector2& MousePos, const FVector2& MouseMove);
+	virtual bool MouseDragEnd(const FVector2& MousePos);
 
 	template <typename T>
 	static std::shared_ptr<T> CreateStaticWidget(const std::string& Key, std::weak_ptr<CWorld> World, int ZOrder = 0)
@@ -96,6 +101,16 @@ protected:
 	void RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const FVector& Size);
 
 public:
+	[[nodiscard]] bool GetMouseDrag() const
+	{
+		return bMouseDrag;
+	}
+
+	void SetMouseDragEnable(bool bEnable)
+	{
+		bMouseDrag = bEnable;
+	}
+
 	void SetWorld(const std::weak_ptr<CWorld>& World)
 	{
 		this->World = World;
@@ -124,6 +139,12 @@ public:
 	[[nodiscard]] FVector GetPos() const
 	{
 		return Pos;
+	}
+
+	void AddPos(const FVector2& Move)
+	{
+		Pos.x += Move.x;
+		Pos.y += Move.y;
 	}
 
 	void SetPos(const FVector& Pos)
@@ -178,7 +199,7 @@ public:
 	{
 		this->Angle = std::fmod(Angle, 360.f);
 
-		if (this->Angle <0.f)
+		if (this->Angle < 0.f)
 		{
 			this->Angle = +360.f;
 		}
@@ -189,9 +210,15 @@ public:
 		return ZOrder;
 	}
 
-	void SetZOrder(const int ZOrder)
+	virtual void SetZOrder(const int ZOrder)
 	{
+		PrevZOrder = this->ZOrder;
 		this->ZOrder = ZOrder;
+	}
+
+	virtual void ReplaceZOrder()
+	{
+		this->ZOrder = PrevZOrder;
 	}
 
 	[[nodiscard]] FColor GetWidgetColor() const

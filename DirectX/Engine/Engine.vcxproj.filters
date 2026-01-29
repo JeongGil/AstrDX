@@ -471,6 +471,9 @@
     <ClInclude Include="UI\CProgressBar.h">
       <Filter>UI\Widget</Filter>
     </ClInclude>
+    <ClInclude Include="UI\CTitleBar.h">
+      <Filter>UI\Widget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -709,6 +712,9 @@
       <Filter>UI\Widget</Filter>
     </ClCompile>
     <ClCompile Include="UI\CProgressBar.cpp">
+      <Filter>UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CTitleBar.cpp">
       <Filter>UI\Widget</Filter>
     </ClCompile>
   </ItemGroup>

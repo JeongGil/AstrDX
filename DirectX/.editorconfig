@@ -10,6 +10,10 @@ end_of_line = crlf
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+# 리소스 헤더 파일은 반드시 BOM 포함 UTF-8로 지정 (C4819 방지)
+[resource.h]
+charset = utf-8-bom
+
 # C++ 파일 설정
 [*.{h,hpp,hh,c,cpp,cc}]
 indent_style = tab

@@ -251,6 +251,7 @@
     <ClInclude Include="UI\CImage.h" />
     <ClInclude Include="UI\CProgressBar.h" />
     <ClInclude Include="UI\CTextBlock.h" />
+    <ClInclude Include="UI\CTitleBar.h" />
     <ClInclude Include="UI\CWidget.h" />
     <ClInclude Include="UI\CWidgetContainer.h" />
     <ClInclude Include="UI\UIInfo.h" />
@@ -337,6 +338,7 @@
     <ClCompile Include="UI\CImage.cpp" />
     <ClCompile Include="UI\CProgressBar.cpp" />
     <ClCompile Include="UI\CTextBlock.cpp" />
+    <ClCompile Include="UI\CTitleBar.cpp" />
     <ClCompile Include="UI\CWidget.cpp" />
     <ClCompile Include="UI\CWidgetContainer.cpp" />
     <ClCompile Include="World\CCameraManager.cpp" />

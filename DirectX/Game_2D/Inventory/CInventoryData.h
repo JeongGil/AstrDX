@@ -8,7 +8,7 @@ struct FShopGoods;
 class CInventoryItem_Item;
 class CInventoryItem_Weapon;
 
-class CInventory
+class CInventoryData
 {
 public:
 	bool Init();
@@ -35,14 +35,14 @@ private:
 	std::vector<std::shared_ptr<CInventoryItem_Item>> Items;
 
 public:
-	static CInventory& GetInst()
+	static CInventoryData& GetInst()
 	{
-		static CInventory Inst;
+		static CInventoryData Inst;
 		return Inst;
 	}
 
 private:
-	CInventory() = default;
-	~CInventory() = default;
+	CInventoryData() = default;
+	~CInventoryData() = default;
 };
 

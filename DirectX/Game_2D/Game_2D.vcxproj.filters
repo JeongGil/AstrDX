@@ -102,7 +102,7 @@
     <ClCompile Include="Inventory\CShop.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="Inventory\CInventory.cpp">
+    <ClCompile Include="Inventory\CInventoryData.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
     <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
@@ -124,6 +124,9 @@
       <Filter>Inventory</Filter>
     </ClCompile>
     <ClCompile Include="UI\CMainWidget.cpp">
+      <Filter>UI\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CInventory.cpp">
       <Filter>UI\Main</Filter>
     </ClCompile>
   </ItemGroup>
@@ -206,7 +209,7 @@
     <ClInclude Include="Inventory\CShop.h">
       <Filter>Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="Inventory\CInventory.h">
+    <ClInclude Include="Inventory\CInventoryData.h">
       <Filter>Inventory</Filter>
     </ClInclude>
     <ClInclude Include="World\CBrotatoWorld_Battle.h">
@@ -231,6 +234,9 @@
       <Filter>Inventory</Filter>
     </ClInclude>
     <ClInclude Include="UI\CMainWidget.h">
+      <Filter>UI\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CInventory.h">
       <Filter>UI\Main</Filter>
     </ClInclude>
   </ItemGroup>

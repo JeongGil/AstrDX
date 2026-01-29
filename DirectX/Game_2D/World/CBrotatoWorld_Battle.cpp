@@ -7,7 +7,7 @@
 #include "../Strings.h"
 #include "../Character/CNonPlayerCharacter.h"
 #include "../Character/CPlayerCharacter.h"
-#include "../Inventory/CInventory.h"
+#include "../Inventory/CInventoryData.h"
 #include "../Table/CTableManager.h"
 
 bool CBrotatoWorld_Battle::Init()
@@ -28,9 +28,9 @@ bool CBrotatoWorld_Battle::Init()
 	CTableManager::GetInst().Init();
 	CTableManager::GetInst().LoadTables();
 
-	CInventory::GetInst().AddWeapon(TableID(1));
-	CInventory::GetInst().AddWeapon(TableID(1));
-	CInventory::GetInst().AddWeapon(TableID(1));
+	CInventoryData::GetInst().AddWeapon(TableID(1));
+	CInventoryData::GetInst().AddWeapon(TableID(1));
+	CInventoryData::GetInst().AddWeapon(TableID(1));
 
 	auto WPC = CreateGameObject<CPlayerCharacter>(Key::Obj::PC);
 	if (auto PC = WPC.lock())
@@ -38,9 +38,9 @@ bool CBrotatoWorld_Battle::Init()
 		PC->SetWorldPosition(0, 0);
 		PC->SetCharacterVisual(TableID(2));
 		
-		for (size_t i = 0; i< CInventory::GetInst().GetWeaponCount(); i++)
+		for (size_t i = 0; i< CInventoryData::GetInst().GetWeaponCount(); i++)
 		{
-			auto Weapon = CInventory::GetInst().GetWeapon(i);
+			auto Weapon = CInventoryData::GetInst().GetWeapon(i);
 			PC->AddWeapon(Weapon);
 		}
 	}

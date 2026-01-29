@@ -182,11 +182,10 @@ void CButton::Update(const float DeltaTime)
 
 					State = EButtonState::Hovered;
 				}
-
-				else if (Input->GetMouseState(EMouseType::LButton, EInputType::Hold))
-				{
-					State = EButtonState::Click;
-				}
+				//else if (Input->GetMouseState(EMouseType::LButton, EInputType::Hold))
+				//{
+				//	State = EButtonState::Click;
+				//}
 			}
 		}
 	}
@@ -246,4 +245,6 @@ void CButton::MouseUnHovered()
 	{
 		State = EButtonState::Normal;
 	}
+
+	bMouseOn = false;
 }

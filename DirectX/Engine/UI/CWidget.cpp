@@ -215,6 +215,21 @@ void CWidget::MouseUnHovered()
 {
 }
 
+bool CWidget::MouseDragStart(const FVector2& MousePos)
+{
+	return false;
+}
+
+bool CWidget::MouseDrag(const FVector2& MousePos, const FVector2& MouseMove)
+{
+	return false;
+}
+
+bool CWidget::MouseDragEnd(const FVector2& MousePos)
+{
+	return false;
+}
+
 void CWidget::RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const FVector& Size)
 {
 	auto Shader = this->Shader.lock();

@@ -19,6 +19,7 @@ private:
 	std::weak_ptr<CWorld> World;
 	std::vector<std::shared_ptr<CWidgetContainer>> Widgets;
 	std::weak_ptr<CWidget> HoveredWidget;
+	std::weak_ptr<CWidget> DragWidget;
 
 public:
 	bool Init();

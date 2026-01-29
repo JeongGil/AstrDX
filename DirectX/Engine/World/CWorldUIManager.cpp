@@ -1,5 +1,7 @@
 #include "CWorldUIManager.h"
 
+#include "CWorld.h"
+
 CWorldUIManager::CWorldUIManager()
 {
 }
@@ -58,42 +60,95 @@ bool CWorldUIManager::CollideMouse(const float DeltaTime, const FVector2& MouseP
 		HoveredWidget.reset();
 	}
 
-	// Collision detection
-	for (const auto& Widget : Widgets)
+	auto World = this->World.lock();
+	auto Input = World->GetInput().lock();
+
+	auto DragWidget = this->DragWidget.lock();
+
+	if (!DragWidget)
 	{
-		if (!Widget->GetEnable())
+		// Collision detection
+		for (const auto& Widget : Widgets)
 		{
-			continue;
-		}
-
-		std::weak_ptr<CWidget> HoveredResult;
-		if (Widget->CollideMouse(HoveredResult, MousePos))
-		{
-			auto Current = HoveredResult.lock();
-			auto Prev = HoveredWidget.lock();
-
-			if (Prev != Current)
+			if (!Widget->GetEnable())
 			{
-				if (Prev)
-				{
-					Prev->MouseUnHovered();
-				}
-
-				HoveredWidget = HoveredResult;
+				continue;
 			}
 
-			return true;
+			std::weak_ptr<CWidget> HoveredResult;
+			if (Widget->CollideMouse(HoveredResult, MousePos))
+			{
+				auto Current = HoveredResult.lock();
+				auto Prev = HoveredWidget.lock();
+
+				if (Prev != Current)
+				{
+					if (Prev)
+					{
+						Prev->MouseUnHovered();
+
+						//if (Prev->GetMouseDrag())
+						//{
+						//	Prev->SetMouseDragEnable(false);
+						//	Prev->MouseDragEnd(MousePos);
+						//}
+					}
+
+					HoveredWidget = HoveredResult;
+				}
+
+				auto Hovered = HoveredWidget.lock();
+				if (Input->GetMouseState(EMouseType::LButton, EInputType::Press))
+				{
+					if (Hovered->MouseDragStart(MousePos))
+					{
+						Hovered->SetMouseDragEnable(true);
+						Hovered->SetZOrder(INT_MAX);
+						this->DragWidget = HoveredWidget;
+					}
+				}
+				//else if (Input->GetMouseState(EMouseType::LButton, EInputType::Hold)
+				//	&& Hovered->GetMouseDrag())
+				//{
+				//	Hovered->MouseDrag(MousePos, Input->GetMouseMove());
+				//}
+				//else if (Input->GetMouseState(EMouseType::LButton, EInputType::Release)
+				//	&& Hovered->GetMouseDrag())
+				//{
+				//	Hovered->SetMouseDragEnable(false);
+				//	Hovered->MouseDragEnd(MousePos);
+				//	Hovered->ReplaceZOrder();
+				//}
+
+				return true;
+			}
 		}
+
+		// When nothing is colliding, reset the existing hover state
+		if (auto Widget = HoveredWidget.lock())
+		{
+			Widget->MouseUnHovered();
+			HoveredWidget.reset();
+		}
+
+		return false;
 	}
 
-	// When nothing is colliding, reset the existing hover state
-	if (auto Prev = HoveredWidget.lock())
+	if (Input->GetMouseState(EMouseType::LButton, EInputType::Hold)
+		&& DragWidget->GetMouseDrag())
 	{
-		Prev->MouseUnHovered();
-		HoveredWidget.reset();
+		DragWidget->MouseDrag(MousePos, Input->GetMouseMove());
+	}
+	else if (Input->GetMouseState(EMouseType::LButton, EInputType::Release)
+		&& DragWidget->GetMouseDrag())
+	{
+		DragWidget->SetMouseDragEnable(false);
+		DragWidget->MouseDragEnd(MousePos);
+		DragWidget->ReplaceZOrder();
+		this->DragWidget = {};
 	}
 
-	return false;
+	return true;
 }
 
 void CWorldUIManager::Render()
