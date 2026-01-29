@@ -220,6 +220,9 @@ struct FStat
 
 	int GetWeightedValue() const
 	{
+#pragma warning(push)
+#pragma warning(disable: 4244)
 		return InnerValue * WeightPercent * 0.01f;
+#pragma warning(pop)
 	}
 };

@@ -181,7 +181,10 @@ void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
 				if (auto Texture = MatTexInfo->Texture.lock())
 				{
 					const FTextureInfo* TexInfo = Texture->GetTexture();
+#pragma warning(push)
+#pragma warning(disable: 4244)
 					Deco->SetWorldScale(TexInfo->Width, TexInfo->Height);
+#pragma warning(pop)
 				}
 			}
 

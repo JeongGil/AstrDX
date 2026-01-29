@@ -38,7 +38,7 @@ bool CMainWidget::Init()
 
 	auto ButtonText = CreateWidget<CTextBlock>("ButtonText").lock();
 
-	ButtonText->SetText(TEXT("Start Button"));
+	ButtonText->SetText(TEXT("시작 버튼"));
 	ButtonText->SetTextColor(255, 255, 0, 255);
 
 	Button->SetChild(ButtonText);

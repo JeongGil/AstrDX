@@ -49,7 +49,7 @@ bool CWeapon_Battle::Init()
 
 	if (const auto* Misc = MiscTable::GetInst().Get())
 	{
-		MoveSpeed = Misc->WeaponMoveSpeed;
+		MoveSpeed = static_cast<float>(Misc->WeaponMoveSpeed);
 	}
 
 	return true;
@@ -129,6 +129,8 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 		{
 			if (auto Texture = MatTexInfo->Texture.lock())
 			{
+#pragma warning(push)
+#pragma warning(disable: 4244)
 				const FTextureInfo* TexInfo = Texture->GetTexture();
 				Mesh->SetWorldScale(TexInfo->Width, TexInfo->Height);
 
@@ -136,6 +138,7 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 				{
 					Col->SetBoxExtent(TexInfo->Width, TexInfo->Height);
 				}
+#pragma warning(pop)
 			}
 		}
 	}
