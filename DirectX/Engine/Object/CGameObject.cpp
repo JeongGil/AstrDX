@@ -680,7 +680,7 @@ void CGameObject::Update(const float DeltaTime)
 {
 	std::erase_if(SceneComponents, [DeltaTime](const auto& Comp)
 		{
-			if (!Comp || !Comp->GetAlive)
+			if (!Comp || !Comp->GetAlive())
 			{
 				return true;
 			}
@@ -695,7 +695,7 @@ void CGameObject::Update(const float DeltaTime)
 
 	std::erase_if(ObjectComponents, [DeltaTime](const auto& Comp)
 		{
-			if (!Comp || !Comp->GetAlive)
+			if (!Comp || !Comp->GetAlive())
 			{
 				return true;
 			}
