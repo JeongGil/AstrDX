@@ -2,17 +2,23 @@
 
 #include <Component/CColliderBox2D.h>
 #include <World/CWorld.h>
+#include <CDevice.h>
+#include <Component/CAnimation2DComponent.h>
+#include <Component/CCameraComponent.h>
+#include <Component/CColliderLine2D.h>
+#include <Component/CColliderSphere2D.h>
+#include <Component/CMeshComponent.h>
+#include <Component/CObjectMovementComponent.h>
+#include <CTimer.h>
+#include <Component/CWidgetComponent.h>
+#include <World/CWorldUIManager.h>
 
 #include "CBullet.h"
-#include "CDevice.h"
-#include "CTimer.h"
 #include "../Component/CStateComponent.h"
-#include "Component/CAnimation2DComponent.h"
-#include "Component/CCameraComponent.h"
-#include "Component/CColliderLine2D.h"
-#include "Component/CColliderSphere2D.h"
-#include "Component/CMeshComponent.h"
-#include "Component/CObjectMovementComponent.h"
+#include "../UI/CMainWidget.h"
+#include "../UI/CPlayerStateWidget.h"
+#include "../UI/CWorldHUD.h"
+
 
 void CPlayer::TestNotify()
 {
@@ -155,6 +161,8 @@ bool CPlayer::Init()
 		return false;
 	}
 
+	auto World = this->World.lock();
+
 	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
@@ -228,6 +236,22 @@ bool CPlayer::Init()
 		Cam->SetInheritRotation(false);
 	}
 
+	HUDWidget = CreateComponent<CWidgetComponent>("Widget");
+	if (auto Widget = HUDWidget.lock())
+	{
+		Widget->SetInheritScale(false);
+		Widget->SetInheritRotation(false);
+		Widget->SetRelativePosition(0.f, 140.f, 0.f);
+		Widget->SetRelativeScale(80.f, 40.f);
+
+		auto InWidget = Widget->SetWidget<CWorldHUD>("PlayerHUD").lock();
+
+		InWidget->SetSize(80.f, 40.f);
+		InWidget->SetPlayerName(TEXT("Player"));
+
+		OnHPChanged.push_back(std::bind(&CWorldHUD::SetPlayerHP, InWidget.get(), std::placeholders::_1, std::placeholders::_2));
+	}
+
 	StateComponent = CreateComponent<CStateComponent>("State");
 
 	Animation2DComponent = CreateComponent<CAnimation2DComponent>("Animation2D");
@@ -248,43 +272,55 @@ bool CPlayer::Init()
 		Anim->SetLoop("PlayerWalk", true);
 	}
 
-	if (auto World = this->World.lock())
+	if (auto Input = World->GetInput().lock())
 	{
-		if (auto Input = World->GetInput().lock())
-		{
-			Input->AddBindKey("MoveUp", 'W');
-			Input->SetBindFunction<CPlayer>("MoveUp", EInputType::Hold, this, &CPlayer::MoveUp);
-			//Input->SetKeyCtrl("MoveUp", true);
+		Input->AddBindKey("MoveUp", 'W');
+		Input->SetBindFunction<CPlayer>("MoveUp", EInputType::Hold, this, &CPlayer::MoveUp);
+		//Input->SetKeyCtrl("MoveUp", true);
 
-			Input->AddBindKey("MoveDown", 'S');
-			Input->SetBindFunction<CPlayer>("MoveDown", EInputType::Hold, this, &CPlayer::MoveDown);
+		Input->AddBindKey("MoveDown", 'S');
+		Input->SetBindFunction<CPlayer>("MoveDown", EInputType::Hold, this, &CPlayer::MoveDown);
 
-			Input->AddBindKey("MoveLeft", 'A');
-			Input->SetBindFunction<CPlayer>("MoveLeft", EInputType::Hold, this, &CPlayer::MoveLeft);
+		Input->AddBindKey("MoveLeft", 'A');
+		Input->SetBindFunction<CPlayer>("MoveLeft", EInputType::Hold, this, &CPlayer::MoveLeft);
 
-			Input->AddBindKey("MoveRight", 'D');
-			Input->SetBindFunction<CPlayer>("MoveRight", EInputType::Hold, this, &CPlayer::MoveRight);
+		Input->AddBindKey("MoveRight", 'D');
+		Input->SetBindFunction<CPlayer>("MoveRight", EInputType::Hold, this, &CPlayer::MoveRight);
 
-			Input->AddBindKey("Skill1", VK_LBUTTON);
-			Input->SetKeyAlt("Skill1", true);
-			Input->SetKeyCtrl("Skill1", true);
+		Input->AddBindKey("Skill1", VK_LBUTTON);
+		Input->SetKeyAlt("Skill1", true);
+		Input->SetKeyCtrl("Skill1", true);
 
-			Input->SetBindFunction<CPlayer>("Skill1", EInputType::Press, this, &CPlayer::Skill1Press);
-			Input->SetBindFunction<CPlayer>("Skill1", EInputType::Hold, this, &CPlayer::Skill1Hold);
-			Input->SetBindFunction<CPlayer>("Skill1", EInputType::Release, this, &CPlayer::Skill1Release);
+		Input->SetBindFunction<CPlayer>("Skill1", EInputType::Press, this, &CPlayer::Skill1Press);
+		Input->SetBindFunction<CPlayer>("Skill1", EInputType::Hold, this, &CPlayer::Skill1Hold);
+		Input->SetBindFunction<CPlayer>("Skill1", EInputType::Release, this, &CPlayer::Skill1Release);
 
-			Input->AddBindKey("Attack", VK_SPACE);
-			Input->SetBindFunction<CPlayer>("Attack", EInputType::Press, this, &CPlayer::AttackKey);
+		Input->AddBindKey("Attack", VK_SPACE);
+		Input->SetBindFunction<CPlayer>("Attack", EInputType::Press, this, &CPlayer::AttackKey);
 
-			Input->AddBindKey("Jump", VK_RETURN);
-			Input->SetBindFunction<CPlayer>("Jump", EInputType::Press, this, &CPlayer::JumpKey);
-		}
+		Input->AddBindKey("Jump", VK_RETURN);
+		Input->SetBindFunction<CPlayer>("Jump", EInputType::Press, this, &CPlayer::JumpKey);
 	}
 
 	MovementComponent = CreateComponent<CObjectMovementComponent>("Movement");
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->SetUpdateComponent(MeshComponent);
+	}
+
+	auto UIManager = World->GetUIManager().lock();
+	if (auto MainWidget = UIManager->FindWidget<CMainWidget>("MainWidget").lock())
+	{
+		if (auto PlayerState = MainWidget->FindWidget<CPlayerStateWidget>("PlayerState").lock())
+		{
+			PlayerState->SetPlayerName(TEXT("Player"));
+
+			OnHPChanged.push_back(std::bind(&CPlayerStateWidget::SetPlayerHP, PlayerState.get(),
+				std::placeholders::_1, std::placeholders::_2));
+
+			OnMPChanged.push_back(std::bind(&CPlayerStateWidget::SetPlayerMP, PlayerState.get(),
+				std::placeholders::_1, std::placeholders::_2));
+		}
 	}
 
 	return true;
@@ -410,4 +446,16 @@ void CPlayer::Update(const float DeltaTime)
 void CPlayer::Destroy()
 {
 	CGameObject::Destroy();
+}
+
+float CPlayer::TakeDamage(float Damage)
+{
+	HP = std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP));
+
+	for (const auto& Callback : OnHPChanged)
+	{
+		Callback(static_cast<float>(HP), static_cast<float>(MaxHP));
+	}
+
+	return Damage;
 }

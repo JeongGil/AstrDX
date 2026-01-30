@@ -30,6 +30,16 @@ void CWidgetContainer::SetParentAll()
 	}
 }
 
+void CWidgetContainer::SetOpacityAll(float Opacity)
+{
+	CWidget::SetOpacityAll(Opacity);
+
+	for (auto& Child : Children)
+	{
+		Child->SetOpacityAll(Opacity);
+	}
+}
+
 bool CWidgetContainer::Init()
 {
 	if (!CWidget::Init())

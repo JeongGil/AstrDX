@@ -4,6 +4,7 @@
 #include <UI/CTextBlock.h>
 
 #include "CInventory.h"
+#include "CPlayerStateWidget.h"
 
 CMainWidget::CMainWidget()
 {
@@ -45,16 +46,23 @@ bool CMainWidget::Init()
 
 	//Button->SetChild(ButtonText);
 
-	auto Text = CreateWidget<CTextBlock>("Text").lock();
+	//auto Text = CreateWidget<CTextBlock>("Text").lock();
 
-	Text->SetText(TEXT("Print Text"));
-	Text->SetTextColor(255, 0, 0, 255);
-	Text->SetPos(100.f, 300.f);
-	Text->SetSize(200.f, 100.f);
-	Text->SetFontSize(30.f);
-	Text->EnableShadow(true);
-	Text->SetShadowOffset(3.f, 3.f);
-	Text->SetShadowTextColor(128, 128, 128, 255);
+	//Text->SetText(TEXT("Print Text"));
+	//Text->SetTextColor(255, 0, 0, 255);
+	//Text->SetPos(100.f, 300.f);
+	//Text->SetSize(200.f, 100.f);
+	//Text->SetFontSize(30.f);
+	//Text->EnableShadow(true);
+	//Text->SetShadowOffset(3.f, 3.f);
+	//Text->SetShadowTextColor(128, 128, 128, 255);
+
+	PlayerStateWidget = CreateWidget<CPlayerStateWidget>("PlayerState").lock();
+	if (PlayerStateWidget)
+	{
+		PlayerStateWidget->SetPos(50.f, 50.f);
+		PlayerStateWidget->SetSize(200.f, 80.f);
+	}
 
 	if (auto Inventory = CreateWidget<CInventory>("Inventory").lock())
 	{

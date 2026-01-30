@@ -163,6 +163,7 @@ public:
 	virtual void Render();
 	virtual void PostRender();
 	virtual void Destroy();
+	virtual float TakeDamage(float Damage);
 
 protected:
 	virtual CGameObject* Clone();

@@ -79,82 +79,52 @@ void CCollisionQuadTreeNode::AddCollider(const std::weak_ptr<CCollider>& Collide
 
 void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 {
-	auto SrcIt = Colliders.begin();
-	while (SrcIt != Colliders.end())
+	std::erase_if(Colliders, [](const auto& Ptr)
+		{
+			auto Col = Ptr.lock();
+			return !Col || !Col->GetAlive();
+		});
+
+	for (auto SrcIt = Colliders.begin(); SrcIt != Colliders.end(); ++SrcIt)
 	{
-		if (SrcIt->expired())
-		{
-			SrcIt = Colliders.erase(SrcIt);
-			continue;
-		}
-
 		auto SrcCollider = SrcIt->lock();
-
-		if (!SrcCollider->GetEnable())
+		if (!SrcCollider || !SrcCollider->GetAlive() || !SrcCollider->GetEnable())
 		{
-			SrcIt = Colliders.erase(SrcIt);
-			continue;
-		}
-
-		if (!SrcCollider->GetEnable())
-		{
-			++SrcIt;
 			continue;
 		}
 
 		auto SrcProfile = SrcCollider->GetCollisionProfile();
-
 		if (!SrcProfile->bEnable)
 		{
-			++SrcIt;
 			continue;
 		}
-
-		auto DestIt = SrcIt;
-		++DestIt;
-
-		while (DestIt != Colliders.end())
+		
+		for (auto DestIt = std::next(SrcIt); DestIt != Colliders.end(); ++DestIt)
 		{
-			if (DestIt->expired())
-			{
-				DestIt = Colliders.erase(DestIt);
-				continue;
-			}
-
 			auto DestCollider = DestIt->lock();
-
-			if (!DestCollider->GetEnable())
+			if (!DestCollider || !DestCollider->GetAlive() || !DestCollider->GetEnable())
 			{
-				DestIt = Colliders.erase(DestIt);
-				continue;
-			}
-
-			if (!DestCollider->GetEnable())
-			{
-				++DestIt;
 				continue;
 			}
 
 			auto DestProfile = DestCollider->GetCollisionProfile();
-
 			if (!DestProfile->bEnable)
 			{
-				++DestIt;
 				continue;
 			}
 
 			auto SrcToDest = SrcProfile->Interaction[DestProfile->Channel->Channel];
 			auto DestToSrc = DestProfile->Interaction[SrcProfile->Channel->Channel];
 
-			if (SrcToDest == ECollisionInteraction::Ignore || DestToSrc == ECollisionInteraction::Ignore)
+			if (SrcToDest == ECollisionInteraction::Ignore
+				|| DestToSrc == ECollisionInteraction::Ignore)
 			{
-				++DestIt;
 				continue;
 			}
 
+			// Cannot solve block vs overlap.
 			if (SrcToDest != DestToSrc)
 			{
-				++DestIt;
 				continue;
 			}
 
@@ -180,10 +150,14 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 						float DestInvMass = 0.f;
 
 						if (!SrcCollider->GetStatic())
+						{
 							SrcInvMass = 1.f;
+						}
 
 						if (!DestCollider->GetStatic())
+						{
 							DestInvMass = 1.f;
+						}
 
 						if (CCollision::ResolveSlideStop2D(SrcPos,
 							SrcVelocity, SrcInvMass,
@@ -224,17 +198,25 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 					SrcCollider->CallOnCollisionEnd(DestCollider.get());
 					DestCollider->CallOnCollisionEnd(SrcCollider.get());
 				}
-
 				else
 				{
 				}
 			}
 
-			++DestIt;
+			// Skip to next src if src disabled by collision.
+			if (!SrcCollider || !SrcCollider->GetAlive() || !SrcCollider->GetEnable()
+				|| !SrcProfile->bEnable)
+			{
+				break;
+			}
 		}
-
-		++SrcIt;
 	}
+
+	std::erase_if(Colliders, [](const auto& Ptr)
+		{
+			auto Col = Ptr.lock();
+			return !Col || !Col->GetAlive();
+		});
 }
 
 bool CCollisionQuadTreeNode::CollideMouse(std::weak_ptr<CCollider>& Result, const float DeltaTime,

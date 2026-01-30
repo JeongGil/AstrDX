@@ -1,6 +1,7 @@
 #pragma once
 #include "Object/CGameObject.h"
 
+class CWidgetComponent;
 class CColliderLine2D;
 class CColliderBox2D;
 class CColliderSphere2D;
@@ -17,6 +18,11 @@ private:
 	float ElapsedFromShot = 0.f;
 	std::weak_ptr<CGameObject> FireTarget;
 
+	int HP = 10;
+	int MaxHP = 10;
+
+	std::vector<std::function<void(float, float)>> OnHPChanged;
+
 	float DetectRange = 400.f;
 
 	std::weak_ptr<CMeshComponent> MeshComponent;
@@ -24,9 +30,12 @@ private:
 	std::weak_ptr<CColliderSphere2D> Body;
 	std::weak_ptr<CColliderLine2D> Line2D;
 
+	std::weak_ptr<CWidgetComponent> HUDWidget;
+
 public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
+	float TakeDamage(float Damage) override;
 
 protected:
 	CMonster* Clone() override;

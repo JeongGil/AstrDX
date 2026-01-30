@@ -27,6 +27,7 @@ public:
 	}
 
 	void SetParentAll() override;
+	void SetOpacityAll(float Opacity) override;
 
 	bool Init() override;
 	void Update(const float DeltaTime) override;

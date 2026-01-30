@@ -885,5 +885,20 @@ CGameObject* CGameObject::Clone()
 
 void CGameObject::Destroy()
 {
+	for (auto& Cmp : SceneComponents)
+	{
+		Cmp->Destroy();
+	}
+
+	for (auto& Cmp : ObjectComponents)
+	{
+		Cmp->Destroy();
+	}
+
 	bAlive = false;
+}
+
+float CGameObject::TakeDamage(float Damage)
+{
+	return 0.f;
 }

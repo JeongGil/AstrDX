@@ -29,6 +29,16 @@ void CTitleBar::SetParentAll()
 	CWidget::SetParentAll();
 }
 
+void CTitleBar::SetOpacityAll(float Opacity)
+{
+	CWidget::SetOpacityAll(Opacity);
+
+	if (Child)
+	{
+		Child->SetOpacityAll(Opacity);
+	}
+}
+
 CTitleBar::~CTitleBar()
 {
 }

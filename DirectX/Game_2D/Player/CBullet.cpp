@@ -4,6 +4,7 @@
 #include <Component/CMeshComponent.h>
 #include <Component/CProjectileMovementComponent.h>
 #include <World/CWorldAssetManager.h>
+
 #include "CBulletEffect.h"
 #include "../Component/CStateComponent.h"
 
@@ -86,6 +87,11 @@ void CBullet::OnCollisionBlock(const FVector& HitPoint, CCollider* Other)
 		if (auto Effect = WeakEffect.lock())
 		{
 			Effect->SetWorldPosition(HitPoint);
+		}
+
+		if (auto OtherObj = Other->GetOwner().lock())
+		{
+			OtherObj->TakeDamage(1.f);
 		}
 
 		//if (auto AssetMgr = World->GetWorldAssetManager().lock())

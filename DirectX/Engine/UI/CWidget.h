@@ -240,6 +240,16 @@ public:
 		this->WidgetColor = FColor(r, g, b, a);
 	}
 
+	virtual void SetOpacity(float Opacity)
+	{
+		WidgetColor.w = std::clamp(Opacity, 0.f, 1.f);
+	}
+
+	virtual void SetOpacityAll(float Opacity)
+	{
+		WidgetColor.w = std::clamp(Opacity, 0.f, 1.f);
+	}
+
 	[[nodiscard]] bool GetEnable() const
 	{
 		return bEnable;

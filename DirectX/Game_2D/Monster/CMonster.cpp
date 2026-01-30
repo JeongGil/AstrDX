@@ -5,8 +5,11 @@
 #include <Component/CColliderLine2D.h>
 #include <Component/CColliderSphere2D.h>
 #include <Component/CMeshComponent.h>
+#include <Component/CWidgetComponent.h>
 #include <World/CWorld.h>
+
 #include "../Player/CBullet.h"
+#include "../UI/CWorldHUD.h"
 
 bool CMonster::Init()
 {
@@ -61,6 +64,22 @@ bool CMonster::Init()
 		FireTarget = World->FindObject<CGameObject>("Player");
 	}
 
+	HUDWidget = CreateComponent<CWidgetComponent>("Widget");
+	if (auto Widget = HUDWidget.lock())
+	{
+		Widget->SetInheritScale(false);
+		Widget->SetInheritRotation(false);
+		Widget->SetRelativePosition(0.f, 140.f, 0.f);
+		Widget->SetRelativeScale(80.f, 40.f);
+
+		auto InWidget = Widget->SetWidget<CWorldHUD>("MonsterHUD").lock();
+
+		InWidget->SetSize(80.f, 40.f);
+		InWidget->SetPlayerName(TEXT("Monster"));
+
+		OnHPChanged.push_back(std::bind(&CWorldHUD::SetPlayerHP, InWidget.get(), std::placeholders::_1, std::placeholders::_2));
+	}
+
 	return true;
 }
 
@@ -87,6 +106,18 @@ void CMonster::Update(const float DeltaTime)
 			}
 		}
 	}
+}
+
+float CMonster::TakeDamage(float Damage)
+{
+	HP = std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP));
+
+	for (const auto& Callback : OnHPChanged)
+	{
+		Callback(static_cast<float>(HP), static_cast<float>(MaxHP));
+	}
+
+	return Damage;
 }
 
 CMonster* CMonster::Clone()

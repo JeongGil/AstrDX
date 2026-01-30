@@ -1,6 +1,7 @@
 #pragma once
 #include <UI/CWidgetContainer.h>
 
+class CPlayerStateWidget;
 class CWorldUIManager;
 
 class CMainWidget :
@@ -13,6 +14,15 @@ protected:
 
 public:
 	~CMainWidget() override;
+
+private:
+	std::shared_ptr<CPlayerStateWidget> PlayerStateWidget;
+
+public:
+	[[nodiscard]] std::shared_ptr<CPlayerStateWidget> GetPlayerStateWidget() const
+	{
+		return PlayerStateWidget;
+	}
 
 public:
 	bool Init() override;

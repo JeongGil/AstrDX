@@ -90,6 +90,7 @@ public:
 	void SetSound(EButtonEventState::Type State, const std::string& Key);
 	void SetSound(EButtonEventState::Type State, const std::string& Key, const char* FileName, const std::string& PathName = "Sound");
 	void SetParentAll() override;
+	void SetOpacityAll(float Opacity) override;
 
 	bool Init() override;
 	void Update(const float DeltaTime) override;

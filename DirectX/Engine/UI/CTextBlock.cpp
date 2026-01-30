@@ -187,7 +187,7 @@ void CTextBlock::SetOpacity(float Opacity)
 
 void CTextBlock::AddOpacity(float Opacity)
 {
-	this->Opacity = std::clamp(this->Opacity + Opacity, 0.f, 1.f);
+	SetOpacity(this->Opacity + Opacity);
 }
 
 void CTextBlock::SetTextColor(const FColor& Color)

@@ -112,6 +112,7 @@ bool CWorldUIManager::CollideMouse(const float DeltaTime, const FVector2& MouseP
 							DragOperatorWidget.reset(OperatorWidget->Clone());
 							DragOperatorWidget->SetParentAll();
 							DragOperatorWidget->SetPivot(0.f, 0.f);
+							DragOperatorWidget->SetOpacityAll(0.5f);
 						}
 					}
 				}

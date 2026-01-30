@@ -169,6 +169,16 @@ void CButton::SetParentAll()
 	}
 }
 
+void CButton::SetOpacityAll(float Opacity)
+{
+	CWidget::SetOpacityAll(Opacity);
+
+	if (Child)
+	{
+		Child->SetOpacityAll(Opacity);
+	}
+}
+
 bool CButton::Init()
 {
 	if (!CWidget::Init())

@@ -99,7 +99,7 @@ public:
 	void SetAlignV(ETextAlignV Align);
 
 	void EnableTransparency(bool bTransparent);
-	void SetOpacity(float Opacity);
+	void SetOpacity(float Opacity) override;
 	void AddOpacity(float Opacity);
 	void SetTextColor(const FColor& Color);
 	void SetTextColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a);

@@ -75,5 +75,6 @@ public:
 	void MouseUnHovered() override;
 	CProgressBar* Clone() const override;
 	void SetParentAll() override;
+	void SetOpacityAll(float Opacity) override;
 };
 

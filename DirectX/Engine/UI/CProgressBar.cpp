@@ -39,6 +39,16 @@ void CProgressBar::SetParentAll()
 	}
 }
 
+void CProgressBar::SetOpacityAll(float Opacity)
+{
+	CWidget::SetOpacityAll(Opacity);
+
+	if (Child)
+	{
+		Child->SetOpacityAll(Opacity);
+	}
+}
+
 CProgressBar::~CProgressBar()
 {
 }

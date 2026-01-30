@@ -55,5 +55,21 @@ public:
 
 		return std::dynamic_pointer_cast<T>(Widget);
 	}
+
+	template <typename T>
+	std::weak_ptr<T> FindWidget(const std::string& Key)
+	{
+		auto it = std::ranges::find_if(Widgets, [&Key](const auto& Widget)
+			{
+				return Widget->GetKey() == Key;
+			});
+
+		if (it != Widgets.end())
+		{
+			return std::dynamic_pointer_cast<T>(*it);
+		}
+
+		return {};
+	}
 };
 

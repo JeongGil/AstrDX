@@ -1,6 +1,7 @@
 #pragma once
-#include "Object/CGameObject.h"
+#include <Object/CGameObject.h>
 
+class CWidgetComponent;
 class CColliderLine2D;
 class CColliderSphere2D;
 class CColliderBox2D;
@@ -33,6 +34,13 @@ private:
 	void Skill1Release();
 
 private:
+
+	int HP = 10;
+	int MaxHP = 10;
+
+	std::vector<std::function<void(float, float)>> OnHPChanged;
+	std::vector<std::function<void(float, float)>> OnMPChanged;
+
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CSceneComponent> Rotation;
 	std::weak_ptr<CMeshComponent> SubMeshComponent;
@@ -45,6 +53,8 @@ private:
 	std::weak_ptr<CColliderSphere2D> Sphere2D;
 	std::weak_ptr<CColliderLine2D> Line2D;
 
+	std::weak_ptr<CWidgetComponent> HUDWidget;
+
 	bool bAutoIdle = false;
 
 	std::weak_ptr<CBullet> Skill1Bullet;
@@ -53,6 +63,8 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void Destroy() override;
+
+	float TakeDamage(float Damage) override;
 
 protected:
 	CPlayer() = default;

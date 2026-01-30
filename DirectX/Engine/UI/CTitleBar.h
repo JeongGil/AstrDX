@@ -54,5 +54,6 @@ public:
 	bool MouseDragEnd(const FVector2& MousePos) override;
 	CTitleBar* Clone() const override;
 	void SetParentAll() override;
+	void SetOpacityAll(float Opacity) override;
 };
 
