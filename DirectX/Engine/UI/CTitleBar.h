@@ -15,6 +15,7 @@ class CTitleBar :
 
 protected:
 	CTitleBar();
+	CTitleBar(const CTitleBar& other);
 
 public:
 	~CTitleBar() override;
@@ -48,8 +49,10 @@ public:
 	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
 	void MouseHovered() override;
 	void MouseUnHovered() override;
-	bool MouseDragStart(const FVector2& MousePos) override;
+	bool MouseDragStart(const FVector2& MousePos, std::shared_ptr<CWidget>& DragOperator) override;
 	bool MouseDrag(const FVector2& MousePos, const FVector2& MouseMove) override;
 	bool MouseDragEnd(const FVector2& MousePos) override;
+	CTitleBar* Clone() const override;
+	void SetParentAll() override;
 };
 

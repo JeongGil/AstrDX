@@ -16,6 +16,22 @@ CButton::CButton()
 {
 }
 
+CButton::CButton(const CButton& other) :
+	CWidget(other)
+{
+	if (other.Child)
+	{
+		Child.reset(other.Child->Clone());
+	}
+
+	std::ranges::copy(other.Brush, Brush);
+
+	State = other.State;
+
+	std::ranges::copy(other.Sound, Sound);
+	std::ranges::copy(other.EventCallback, EventCallback);
+}
+
 CButton::~CButton()
 {
 }
@@ -143,6 +159,16 @@ void CButton::SetSound(EButtonEventState::Type State, const std::string& Key, co
 	Sound[State] = AssetMgr->FindSound(Key);
 }
 
+void CButton::SetParentAll()
+{
+	if (Child)
+	{
+		Child->SetParent(std::dynamic_pointer_cast<CWidget>(shared_from_this()));
+
+		Child->SetParentAll();
+	}
+}
+
 bool CButton::Init()
 {
 	if (!CWidget::Init())
@@ -247,4 +273,9 @@ void CButton::MouseUnHovered()
 	}
 
 	bMouseOn = false;
+}
+
+CButton* CButton::Clone() const
+{
+	return new CButton(*this);
 }

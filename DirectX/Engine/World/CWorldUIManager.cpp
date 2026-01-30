@@ -100,11 +100,19 @@ bool CWorldUIManager::CollideMouse(const float DeltaTime, const FVector2& MouseP
 				auto Hovered = HoveredWidget.lock();
 				if (Input->GetMouseState(EMouseType::LButton, EInputType::Press))
 				{
-					if (Hovered->MouseDragStart(MousePos))
+					std::shared_ptr<CWidget> OperatorWidget;
+					if (Hovered->MouseDragStart(MousePos, OperatorWidget))
 					{
 						Hovered->SetMouseDragEnable(true);
 						Hovered->SetZOrder(INT_MAX);
 						this->DragWidget = HoveredWidget;
+
+						if (OperatorWidget)
+						{
+							DragOperatorWidget.reset(OperatorWidget->Clone());
+							DragOperatorWidget->SetParentAll();
+							DragOperatorWidget->SetPivot(0.f, 0.f);
+						}
 					}
 				}
 				//else if (Input->GetMouseState(EMouseType::LButton, EInputType::Hold)
@@ -145,7 +153,8 @@ bool CWorldUIManager::CollideMouse(const float DeltaTime, const FVector2& MouseP
 		DragWidget->SetMouseDragEnable(false);
 		DragWidget->MouseDragEnd(MousePos);
 		DragWidget->ReplaceZOrder();
-		this->DragWidget = {};
+		this->DragWidget.reset();
+		DragOperatorWidget.reset();
 	}
 
 	return true;
@@ -175,6 +184,19 @@ void CWorldUIManager::Render()
 		{
 			Widget->Render();
 		}
+	}
+
+	if (DragOperatorWidget)
+	{
+		auto World = this->World.lock();
+		auto Input = World->GetInput().lock();
+
+		FVector Size = DragOperatorWidget->GetSize();
+		FVector Center = Size * FVector(0.5f, 0.5f, 0.f);
+
+		DragOperatorWidget->SetPos(FVector(Input->GetMousePos()) - Center);
+
+		DragOperatorWidget->Render();
 	}
 }
 

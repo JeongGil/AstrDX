@@ -4,8 +4,30 @@ CWidgetContainer::CWidgetContainer()
 {
 }
 
+CWidgetContainer::CWidgetContainer(const CWidgetContainer& other) :
+	CWidget(other)
+{
+	Children.reserve(other.Children.size());
+
+	auto CloneView = other.Children | std::views::transform([](const auto& Child)
+		{
+			return std::shared_ptr<CWidget>(Child->Clone());
+		});
+
+	std::ranges::copy(CloneView, std::back_inserter(Children));
+}
+
 CWidgetContainer::~CWidgetContainer()
 {
+}
+
+void CWidgetContainer::SetParentAll()
+{
+	for (const auto& Child : Children)
+	{
+		Child->SetParent(std::dynamic_pointer_cast<CWidgetContainer>(shared_from_this()));
+		Child->SetParentAll();
+	}
 }
 
 bool CWidgetContainer::Init()
@@ -102,5 +124,38 @@ bool CWidgetContainer::CollideMouse(std::weak_ptr<CWidget>& Result, const FVecto
 		}
 	}
 
+	if (CWidget::CollideMouse(Result, MousePos))
+	{
+		return true;
+	}
+
 	return false;
+}
+
+void CWidgetContainer::MouseHovered()
+{
+}
+
+void CWidgetContainer::MouseUnHovered()
+{
+}
+
+bool CWidgetContainer::MouseDragStart(const FVector2& MousePos, std::shared_ptr<CWidget>& DragOperator)
+{
+	return false;
+}
+
+bool CWidgetContainer::MouseDrag(const FVector2& MousePos, const FVector2& MouseMove)
+{
+	return false;
+}
+
+bool CWidgetContainer::MouseDragEnd(const FVector2& MousePos)
+{
+	return false;
+}
+
+CWidgetContainer* CWidgetContainer::Clone() const
+{
+	return new CWidgetContainer(*this);
 }

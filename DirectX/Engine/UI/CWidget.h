@@ -23,6 +23,7 @@ protected:
 
 protected:
 	CWidget();
+	CWidget(const CWidget& other);
 
 public:
 	virtual ~CWidget() = 0;
@@ -75,9 +76,10 @@ public:
 	virtual bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos);
 	virtual void MouseHovered();
 	virtual void MouseUnHovered();
-	virtual bool MouseDragStart(const FVector2& MousePos);
+	virtual bool MouseDragStart(const FVector2& MousePos, std::shared_ptr<CWidget>& DragOperator);
 	virtual bool MouseDrag(const FVector2& MousePos, const FVector2& MouseMove);
 	virtual bool MouseDragEnd(const FVector2& MousePos);
+	virtual CWidget* Clone() const = 0;
 
 	template <typename T>
 	static std::shared_ptr<T> CreateStaticWidget(const std::string& Key, std::weak_ptr<CWorld> World, int ZOrder = 0)
@@ -135,6 +137,8 @@ public:
 	{
 		this->Parent = Parent;
 	}
+
+	virtual void SetParentAll();
 
 	[[nodiscard]] FVector GetPos() const
 	{

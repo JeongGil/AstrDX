@@ -4,6 +4,8 @@
 #include <UI/CImage.h>
 #include <UI/CTitleBar.h>
 
+#include "CSlot.h"
+
 CInventory::CInventory()
 {
 }
@@ -59,6 +61,34 @@ bool CInventory::Init()
 		Back->SetSize(400.f, 560.f);
 		Back->SetTexture("InventoryBack", TEXT("SlotBack.png"));
 	}
+
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 7; j++)
+		{
+			std::string Name = "Slot" + i;
+
+			if (auto Slot = CreateWidget<CSlot>("Name", 1).lock())
+			{
+				Slot->SetPos(10.f + j * 55.f, 60.f + i * 55.f);
+				Slot->SetSize(50.f, 50.f);
+
+				Slots.push_back(Slot);
+			}
+		}
+	}
+
+	auto Slot = Slots[0].lock();
+	Slot->SetIconImage("Shield", TEXT("Icon_Shield.PNG"));
+	Slot->EnableIcon(true);
+
+	Slot = Slots[1].lock();
+	Slot->SetIconImage("Sword", TEXT("Icon_Sword.PNG"));
+	Slot->EnableIcon(true);
+
+	Slot = Slots[7].lock();
+	Slot->SetIconImage("Sword", TEXT("Icon_Sword.PNG"));
+	Slot->EnableIcon(true);
 
 	return true;
 }

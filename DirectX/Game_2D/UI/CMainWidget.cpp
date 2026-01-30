@@ -60,6 +60,7 @@ bool CMainWidget::Init()
 	{
 		Inventory->SetPos(700.f, 50.f);
 		Inventory->SetSize(400.f, 600.f);
+		Inventory->SetZOrder(1);
 	}
 
 	return true;

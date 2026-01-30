@@ -96,31 +96,38 @@ public:
 	template <typename T>
 	std::weak_ptr<T> FindObject(const std::string& Key)
 	{
-		const auto It = Objects.find(Key);
-		if (It == Objects.end())
-		{
-			return std::weak_ptr<T>();
-		}
-		else
+		if (auto It = Objects.find(Key); It != Objects.end())
 		{
 			return std::dynamic_pointer_cast<T>(It->second);
 		}
+
+		return {};
 	}
 
 	template <typename T>
 	bool FindObjects(const std::string& Key, std::list<std::weak_ptr<T>>& OutObjects)
 	{
-		auto Range = Objects.equal_range(Key);
+		// multimap에서 Key에 해당하는 모든 범위를 찾음
+		auto [First, Last] = Objects.equal_range(Key);
 
-		if (Range.first == Range.second)
+		if (First == Last)
 		{
 			return false;
 		}
 
-		for (const auto& Pair : std::ranges::subrange(Range.first, Range.second))
-		{
-			OutObjects.push_back(std::dynamic_pointer_cast<T>(Pair.second));
-		}
+		// subrange와 views를 조합해 필요한 것만 쏙쏙 골라 담기
+		auto CastedView = std::ranges::subrange(First, Last)
+			| std::views::values
+			| std::views::transform([](const auto& Obj)
+				{
+					return std::dynamic_pointer_cast<T>(Obj);
+				})
+			| std::views::filter([](const auto& Casted)
+				{
+					return Casted != nullptr;
+				});
+
+		std::ranges::copy(CastedView, std::back_inserter(OutObjects));
 
 		return true;
 	}
@@ -128,30 +135,39 @@ public:
 	template <typename T>
 	std::vector<std::weak_ptr<T>> FindObjectsOfType()
 	{
-		std::vector<std::weak_ptr<T>> Results;
-		for (const auto& Object : Objects | std::views::values)
-		{
-			if (auto Casted = std::dynamic_pointer_cast<T>(Object))
-			{
-				Results.push_back(Casted);
-			}
-		}
+		// 1. 가독성을 위해 뷰 파이프라인 생성
+		auto CastedViews = Objects | std::views::values			// Map의 Value들만 추출
+			| std::views::transform([](const auto& Obj)
+				{
+					return std::dynamic_pointer_cast<T>(Obj);	// 일단 캐스팅 시도
+				})
+			| std::views::filter([](const auto& Casted)
+				{
+					return Casted != nullptr;					// 캐스팅 성공한 녀석들만 필터링
+				});
 
-		return Results;
+		// 2. 뷰를 vector로 변환 (C++23이라면 std::ranges::to<std::vector> 사용 가능)
+		// 현재 C++20 기준으로는 생성자를 통해 Results에 담아줍니다.
+		return { CastedViews.begin(), CastedViews.end() };
 	}
 
 	template <typename T>
 	std::weak_ptr<T> FindObjectOfType()
 	{
-		for (const auto& Object : Objects | std::views::values)
-		{
-			if (auto Casted = std::dynamic_pointer_cast<T>(Object))
+		// 1. Map의 Value들 중에서 타입 캐스팅이 성공하는 첫 번째 요소를 탐색
+		auto It = std::ranges::find_if(Objects | std::views::values, [](const auto& Object)
 			{
-				return Casted;
-			}
+				// dynamic_pointer_cast 결과가 nullptr이 아니면 true 반환
+				return std::dynamic_pointer_cast<T>(Object) != nullptr;
+			});
+
+		// 2. 찾았다면 캐스팅하여 반환, 없으면 빈 weak_ptr 반환
+		if (It != std::ranges::end(Objects | std::views::values))
+		{
+			return std::dynamic_pointer_cast<T>(*It);
 		}
 
-		return std::weak_ptr<T>();
+		return {};
 	}
 
 	std::weak_ptr<CWorldAssetManager> GetWorldAssetManager() const

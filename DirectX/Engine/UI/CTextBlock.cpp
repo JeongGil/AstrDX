@@ -8,6 +8,36 @@ CTextBlock::CTextBlock()
 {
 }
 
+CTextBlock::CTextBlock(const CTextBlock& other) :
+	CWidget(other)
+{
+	Target = other.Target;
+	Text = other.Text;
+	Font = other.Font;
+	TextColor = other.TextColor;
+	bTransparent = other.bTransparent;
+	Opacity = other.Opacity;
+
+	bShadow = other.bShadow;
+	TextShadowColor = other.TextShadowColor;
+	bShadowTransparent = other.bShadowTransparent;
+	ShadowOpacity = other.ShadowOpacity;
+	ShadowOffset = other.ShadowOffset;
+
+	FontSize = other.FontSize;
+	AlignH = other.AlignH;
+	AlignV = other.AlignV;
+
+	Layout = nullptr;
+
+	CreateTextLayout();
+}
+
+CTextBlock* CTextBlock::Clone() const
+{
+	return new CTextBlock(*this);
+}
+
 CTextBlock::~CTextBlock()
 {
 	SAFE_RELEASE(Layout);
@@ -107,15 +137,15 @@ void CTextBlock::SetAlignH(ETextAlignH Align)
 	{
 		switch (AlignH)
 		{
-			case ETextAlignH::Left:
-				Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-				break;
-			case ETextAlignH::Center:
-				Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-				break;
-			case ETextAlignH::Right:
-				Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
-				break;
+		case ETextAlignH::Left:
+			Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+			break;
+		case ETextAlignH::Center:
+			Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+			break;
+		case ETextAlignH::Right:
+			Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
+			break;
 		}
 	}
 }
@@ -132,15 +162,15 @@ void CTextBlock::SetAlignV(ETextAlignV Align)
 	{
 		switch (AlignV)
 		{
-			case ETextAlignV::Top:
-				Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-				break;
-			case ETextAlignV::Middle:
-				Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-				break;
-			case ETextAlignV::Bottom:
-				Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-				break;
+		case ETextAlignV::Top:
+			Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+			break;
+		case ETextAlignV::Middle:
+			Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+			break;
+		case ETextAlignV::Bottom:
+			Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+			break;
 		}
 	}
 }
@@ -242,28 +272,28 @@ void CTextBlock::CreateTextLayout()
 
 	switch (AlignH)
 	{
-		case ETextAlignH::Left:
-			Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
-			break;
-		case ETextAlignH::Center:
-			Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
-			break;
-		case ETextAlignH::Right:
-			Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
-			break;
+	case ETextAlignH::Left:
+		Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_LEADING);
+		break;
+	case ETextAlignH::Center:
+		Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+		break;
+	case ETextAlignH::Right:
+		Layout->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_TRAILING);
+		break;
 	}
 
 	switch (AlignV)
 	{
-		case ETextAlignV::Top:
-			Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
-			break;
-		case ETextAlignV::Middle:
-			Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
-			break;
-		case ETextAlignV::Bottom:
-			Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
-			break;
+	case ETextAlignV::Top:
+		Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_NEAR);
+		break;
+	case ETextAlignV::Middle:
+		Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+		break;
+	case ETextAlignV::Bottom:
+		Layout->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_FAR);
+		break;
 	}
 }
 

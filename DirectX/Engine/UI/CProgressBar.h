@@ -32,6 +32,7 @@ class CProgressBar :
 
 protected:
 	CProgressBar();
+	CProgressBar(const CProgressBar& other);
 
 public:
 	~CProgressBar() override;
@@ -72,5 +73,7 @@ public:
 	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
 	void MouseHovered() override;
 	void MouseUnHovered() override;
+	CProgressBar* Clone() const override;
+	void SetParentAll() override;
 };
 

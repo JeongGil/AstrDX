@@ -21,6 +21,32 @@ CWidget::CWidget()
 {
 }
 
+CWidget::CWidget(const CWidget& other)
+{
+	bEnable = other.bEnable;
+	bAlive = other.bAlive;
+	World = other.World;
+	UIManager = other.UIManager;
+	Shader = other.Shader;
+	Mesh = other.Mesh;
+
+	TransformCBuffer.reset(new CCBufferTransform);
+	TransformCBuffer->Init();
+
+	UIDefaultCBuffer.reset(new CCBufferUIDefault);
+	UIDefaultCBuffer->Init();
+
+	Key = other.Key;
+	Pos = other.Pos;
+	RenderPos = other.RenderPos;
+	Size = other.Size;
+	Pivot = other.Pivot;
+	Angle = other.Angle;
+	ZOrder = other.ZOrder;
+	PrevZOrder = other.PrevZOrder;
+	WidgetColor = other.WidgetColor;
+}
+
 CWidget::~CWidget()
 {
 }
@@ -215,7 +241,7 @@ void CWidget::MouseUnHovered()
 {
 }
 
-bool CWidget::MouseDragStart(const FVector2& MousePos)
+bool CWidget::MouseDragStart(const FVector2& MousePos, std::shared_ptr<CWidget>& DragOperator)
 {
 	return false;
 }
@@ -290,4 +316,8 @@ void CWidget::RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const
 	Shader->SetShader();
 
 	Mesh->Render();
+}
+
+void CWidget::SetParentAll()
+{
 }

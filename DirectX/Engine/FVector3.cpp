@@ -1,5 +1,6 @@
 #include "FVector3.h"
 #include "FMatrix.h"
+#include "FVector2.h"
 
 FVector3 FVector3::Zero;
 FVector3 FVector3::One = { 1.f, 1.f, 1.f };
@@ -34,6 +35,18 @@ FVector3::FVector3(FVector3&& v) noexcept :
 	x(v.x),
 	y(v.y),
 	z(v.z)
+{
+}
+
+FVector3::FVector3(const FVector2& v) :
+	x(v.x),
+	y(v.y)
+{
+}
+
+FVector3::FVector3(FVector2&& v) noexcept :
+	x(v.x),
+	y(v.y)
 {
 }
 

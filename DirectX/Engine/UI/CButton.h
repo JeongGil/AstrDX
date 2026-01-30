@@ -38,6 +38,7 @@ class CButton :
 
 protected:
 	CButton();
+	CButton(const CButton& other);
 
 public:
 	~CButton() override;
@@ -88,14 +89,15 @@ public:
 	void SetAnimationPlayRate(EButtonState::Type State, float PlayRate);
 	void SetSound(EButtonEventState::Type State, const std::string& Key);
 	void SetSound(EButtonEventState::Type State, const std::string& Key, const char* FileName, const std::string& PathName = "Sound");
+	void SetParentAll() override;
 
-public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void Render() override;
 	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
 	void MouseHovered() override;
 	void MouseUnHovered() override;
+	CButton* Clone() const override;
 
 	template <typename T>
 	void SetEventCallback(EButtonEventState::Type Type, T* Obj, void(T::* Func)())

@@ -49,6 +49,9 @@
     <Filter Include="UI\Main">
       <UniqueIdentifier>{f0edea82-5563-4b24-91ba-d1e69f9b24b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Main\Inventory">
+      <UniqueIdentifier>{f58da9a3-eda7-43e4-ab04-5aed5cdbc014}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -127,7 +130,13 @@
       <Filter>UI\Main</Filter>
     </ClCompile>
     <ClCompile Include="UI\CInventory.cpp">
-      <Filter>UI\Main</Filter>
+      <Filter>UI\Main\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CSlot.cpp">
+      <Filter>UI\Main\Inventory</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CSlotIcon.cpp">
+      <Filter>UI\Main\Inventory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -237,7 +246,19 @@
       <Filter>UI\Main</Filter>
     </ClInclude>
     <ClInclude Include="UI\CInventory.h">
-      <Filter>UI\Main</Filter>
+      <Filter>UI\Main\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CSlot.h">
+      <Filter>UI\Main\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CSlotIcon.h">
+      <Filter>UI\Main\Inventory</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\StringTable.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\FStringInfo.h">
+      <Filter>Table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

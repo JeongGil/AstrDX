@@ -5,12 +5,13 @@ class CWorldUIManager;
 class CWorld;
 
 class CWidgetContainer :
-    public CWidget
+	public CWidget
 {
 	friend CWorldUIManager;
 
 protected:
 	CWidgetContainer();
+	CWidgetContainer(const CWidgetContainer& other);
 
 public:
 	~CWidgetContainer() override;
@@ -24,11 +25,19 @@ public:
 		Widget->SetParent(std::dynamic_pointer_cast<CWidget>(shared_from_this()));
 		Children.push_back(Widget);
 	}
-public:
+
+	void SetParentAll() override;
+
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 	void Render() override;
 	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
+	void MouseHovered() override;
+	void MouseUnHovered() override;
+	bool MouseDragStart(const FVector2& MousePos, std::shared_ptr<CWidget>& DragOperator) override;
+	bool MouseDrag(const FVector2& MousePos, const FVector2& MouseMove) override;
+	bool MouseDragEnd(const FVector2& MousePos) override;
+	CWidgetContainer* Clone() const override;
 
 	template <typename T>
 	std::weak_ptr<T> CreateWidget(const std::string& Key, int ZOrder = 0)
@@ -51,6 +60,22 @@ public:
 		Children.push_back(std::dynamic_pointer_cast<CWidget>(Widget));
 
 		return std::dynamic_pointer_cast<T>(Widget);
+	}
+
+	template <typename T>
+	std::weak_ptr<T> FindWidget(const std::string& Key)
+	{
+		auto It = std::ranges::find_if(Children, [&Key](const auto& Child)
+			{
+				return Key == Child->GetKey();
+			});
+
+		if (It != Children.end())
+		{
+			return std::dynamic_pointer_cast<T>(*It);
+		}
+
+		return {};
 	}
 };
 

@@ -6,6 +6,17 @@ CImage::CImage()
 {
 }
 
+CImage::CImage(const CImage& other) :
+	CWidget(other)
+{
+	Brush = other.Brush;
+}
+
+CImage* CImage::Clone() const
+{
+	return new CImage(*this);
+}
+
 CImage::~CImage()
 {
 }

@@ -1,13 +1,13 @@
 #include "CWeapon_Battle.h"
 
+#include <CTimer.h>
+#include <Asset/Material/CMaterial.h>
 #include <Component/CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
-#include <Asset/Material/CMaterial.h>
 
 #include "CNonPlayerCharacter.h"
 #include "../Strings.h"
-#include "../../Engine/CTimer.h"
 #include "../Table/MiscTable.h"
 #include "../Table/WeaponTable.h"
 

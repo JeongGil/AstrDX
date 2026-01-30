@@ -23,97 +23,13 @@ public:
 	bool Load(const TCHAR* FilePath)
 	{
 		std::ifstream File(FilePath);
-		if (!File.is_open())
-		{
-			return false;
-		}
-
-		Clear();
-
-		std::string Line;
-
-		// Skip header line.
-		std::getline(File, Line);
-
-		while (std::getline(File, Line))
-		{
-			if (Line.empty())
-			{
-				continue;
-			}
-
-			std::stringstream SS(Line);
-			auto Info = new T;
-
-			if (Info->Load(SS))
-			{
-#ifdef _DEBUG
-				if (!Items.try_emplace(Info->Key, Info).second)
-				{
-					char Test[256] = {};
-					sprintf_s(Test, "Key : %d duplicated.\n", static_cast<int>(Info->Key));
-
-					OutputDebugStringA(Test);
-				}
-#else
-				Items.emplace(Info->Key, Info)
-#endif
-			}
-			else
-			{
-				delete Info;
-			}
-		}
-
-		return true;
+		return ProcessFileContent(File);
 	}
 
 	bool Load(const std::string& FilePath)
 	{
 		std::ifstream File(FilePath);
-		if (!File.is_open())
-		{
-			return false;
-		}
-
-		Clear();
-
-		std::string Line;
-
-		// Skip header line.
-		std::getline(File, Line);
-
-		while (std::getline(File, Line))
-		{
-			if (Line.empty())
-			{
-				continue;
-			}
-
-			std::stringstream SS(Line);
-			auto Info = new T;
-
-			if (Info->Load(SS))
-			{
-#ifdef _DEBUG
-				if (!Items.try_emplace(Info->ID, Info).second)
-				{
-					char Test[256] = {};
-					sprintf_s(Test, "Key : %d duplicated.\n", static_cast<int>(Info->ID));
-
-					OutputDebugStringA(Test);
-				}
-#else
-				Items.emplace(Info->ID, Info)
-#endif
-			}
-			else
-			{
-				delete Info;
-			}
-		}
-
-		return true;
+		return ProcessFileContent(File);
 	}
 
 	void Clear()
@@ -173,6 +89,58 @@ public:
 	MapIterator Find(TableID ID)
 	{
 		return Items.find(ID);
+	}
+
+private:
+	bool ProcessFileContent(std::ifstream& File)
+	{
+		if (!File.is_open())
+		{
+			return false;
+		}
+
+		Clear();
+
+		std::string Line;
+
+		// Skip header line.
+		std::getline(File, Line);
+
+		while (std::getline(File, Line))
+		{
+			if (Line.empty())
+			{
+				continue;
+			}
+
+			std::stringstream SS(Line);
+			auto Info = new T;
+
+			if (Info->Load(SS))
+			{
+#ifdef _DEBUG
+				if (!Items.try_emplace(Info->Key, Info).second)
+				{
+					char Test[256] = {};
+					sprintf_s(Test, "Key : %d duplicated.\n", static_cast<int>(Info->Key));
+
+					OutputDebugStringA(Test);
+				}
+#else
+				Items.emplace(Info->Key, Info)
+#endif
+			}
+			else
+			{
+				delete Info;
+
+#ifdef  _DEBUG
+				assert(false);
+#endif				
+			}
+		}
+
+		return true;
 	}
 
 protected:

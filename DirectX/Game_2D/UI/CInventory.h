@@ -1,6 +1,7 @@
 #pragma once
 #include <UI\CWidgetContainer.h>
 
+class CSlot;
 class CWorldUIManager;
 
 class CInventory :
@@ -14,6 +15,9 @@ protected:
 
 public:
 	~CInventory() override;
+
+private:
+	std::vector<std::weak_ptr<CSlot>> Slots;
 
 private:
 	void CloseButtonClick();

@@ -2,6 +2,8 @@
 
 #include "EngineMath.h"
 
+struct FVector2;
+
 struct FVector3
 {
 	float	x = 0.f;
@@ -14,6 +16,8 @@ struct FVector3
 	FVector3(float _x, float _y, float _z);
 	FVector3(const FVector3& v);
 	FVector3(FVector3&& v) noexcept;
+	explicit FVector3(const FVector2& v);
+	explicit FVector3(FVector2&& v) noexcept;
 	FVector3(const DirectX::XMVECTOR& v);
 
 #pragma endregion Construction

@@ -7,6 +7,38 @@ CProgressBar::CProgressBar()
 {
 }
 
+CProgressBar::CProgressBar(const CProgressBar& other) :
+	CWidget(other)
+{
+	std::ranges::copy(other.Brush, Brush);
+
+	BarAnchor = other.BarAnchor;
+	Ratio = other.Ratio;
+	MinValue = other.MinValue;
+	MaxValue = other.MaxValue;
+	bTextEnable = other.bTextEnable;
+
+	if (other.Child)
+	{
+		Child.reset(other.Child->Clone());
+	}
+}
+
+CProgressBar* CProgressBar::Clone() const
+{
+	return new CProgressBar(*this);
+}
+
+void CProgressBar::SetParentAll()
+{
+	if (Child)
+	{
+		Child->SetParent(std::dynamic_pointer_cast<CWidget>(shared_from_this()));
+
+		Child->SetParentAll();
+	}
+}
+
 CProgressBar::~CProgressBar()
 {
 }
@@ -203,13 +235,13 @@ void CProgressBar::Render()
 
 	switch (BarAnchor)
 	{
-		case EProgressBarAnchor::Left:
-			Size.x *= Ratio;
-			break;
-		case EProgressBarAnchor::Bottom:
-			Size.y *= Ratio;
-			Pos.y += Size.y * (1.f - Ratio);
-			break;
+	case EProgressBarAnchor::Left:
+		Size.x *= Ratio;
+		break;
+	case EProgressBarAnchor::Bottom:
+		Size.y *= Ratio;
+		Pos.y += Size.y * (1.f - Ratio);
+		break;
 	}
 
 	// Fill

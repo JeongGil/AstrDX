@@ -20,6 +20,7 @@ private:
 	std::vector<std::shared_ptr<CWidgetContainer>> Widgets;
 	std::weak_ptr<CWidget> HoveredWidget;
 	std::weak_ptr<CWidget> DragWidget;
+	std::shared_ptr<CWidget> DragOperatorWidget;
 
 public:
 	bool Init();

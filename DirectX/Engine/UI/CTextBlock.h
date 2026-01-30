@@ -29,6 +29,7 @@ class CTextBlock :
 
 protected:
 	CTextBlock();
+	CTextBlock(const CTextBlock& other);
 
 public:
 	~CTextBlock() override;
@@ -122,5 +123,6 @@ public:
 	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
 	void MouseHovered() override;
 	void MouseUnHovered() override;
+	CTextBlock* Clone() const override;
 };
 

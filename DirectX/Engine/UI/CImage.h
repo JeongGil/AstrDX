@@ -14,6 +14,7 @@ class CImage :
 
 protected:
 	CImage();
+	CImage(const CImage& other);
 
 public:
 	~CImage() override;
@@ -38,5 +39,6 @@ public:
 	void Update(const float DeltaTime) override;
 	void Render() override;
 	bool CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& MousePos) override;
+	CImage* Clone() const override;
 };
 

@@ -8,6 +8,27 @@ CTitleBar::CTitleBar()
 {
 }
 
+CTitleBar::CTitleBar(const CTitleBar& other) :
+	CWidget(other)
+{
+	Brush = other.Brush;
+
+	if (other.Child)
+	{
+		Child.reset(other.Child->Clone());
+	}
+}
+
+CTitleBar* CTitleBar::Clone() const
+{
+	return new CTitleBar(*this);
+}
+
+void CTitleBar::SetParentAll()
+{
+	CWidget::SetParentAll();
+}
+
 CTitleBar::~CTitleBar()
 {
 }
@@ -181,9 +202,9 @@ void CTitleBar::MouseUnHovered()
 	CWidget::MouseUnHovered();
 }
 
-bool CTitleBar::MouseDragStart(const FVector2& MousePos)
+bool CTitleBar::MouseDragStart(const FVector2& MousePos, std::shared_ptr<CWidget>& DragOperator)
 {
-	CWidget::MouseDragStart(MousePos);
+	CWidget::MouseDragStart(MousePos, DragOperator);
 
 	return true;
 }
@@ -198,7 +219,7 @@ bool CTitleBar::MouseDrag(const FVector2& MousePos, const FVector2& MouseMove)
 	}
 	else
 	{
-		
+
 	}
 
 	return true;
