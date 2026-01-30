@@ -1,21 +1,21 @@
 #pragma once
 
-#include <Windows.h>
-#include <vector>
-#include <list>
-#include <unordered_map>
-#include <map>
-#include <memory>
-#include <string>
-#include <functional>
-#include <typeindex>
-#include <random>
-#include <charconv>
+#include <algorithm>
 #include <array>
 #include <atlbase.h>
 #include <atlconv.h>
-#include <algorithm>
+#include <charconv>
+#include <functional>
+#include <list>
+#include <map>
+#include <memory>
+#include <random>
 #include <ranges>
+#include <string>
+#include <typeindex>
+#include <unordered_map>
+#include <vector>
+#include <Windows.h>
 
 // check memory leak
 #include <crtdbg.h>
@@ -23,8 +23,8 @@
 #include <d3d11.h>
 #include <d3dcompiler.h>
 
-#include <dwrite_3.h>
 #include <d2d1.h>
+#include <dwrite_3.h>
 
 #include "resource.h"
 

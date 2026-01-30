@@ -678,63 +678,41 @@ bool CGameObject::Init()
 
 void CGameObject::Update(const float DeltaTime)
 {
-	// Scene components
-	auto SceneIt = SceneComponents.begin();
-	auto SceneEnd = SceneComponents.end();
-	while (SceneIt != SceneEnd)
-	{
-		auto Cmp = *SceneIt;
-		if (Cmp.use_count() == 0)
+	std::erase_if(SceneComponents, [DeltaTime](const auto& Cmp)
 		{
-			SceneIt = SceneComponents.erase(SceneIt);
-			SceneEnd = SceneComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetAlive())
-		{
-			SceneIt = SceneComponents.erase(SceneIt);
-			SceneEnd = SceneComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetEnable())
-		{
-			SceneIt = SceneComponents.erase(SceneIt);
-			SceneEnd = SceneComponents.end();
-			continue;
-		}
+			if (auto Comp = Cmp.lock())
+			{
+				if (Comp->GetAlive())
+				{
+					if (Comp->GetEnable())
+					{
+						Comp->Update(DeltaTime);
+					}
 
-		Cmp->Update(DeltaTime);
-		++SceneIt;
-	}
+					return false;
+				}
+			}
 
-	// Object components
-	auto ObjectIt = ObjectComponents.begin();
-	auto ObjectEnd = ObjectComponents.end();
-	while (ObjectIt != ObjectEnd)
-	{
-		auto Cmp = *ObjectIt;
-		if (Cmp.use_count() == 0)
-		{
-			ObjectIt = ObjectComponents.erase(ObjectIt);
-			ObjectEnd = ObjectComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetAlive())
-		{
-			ObjectIt = ObjectComponents.erase(ObjectIt);
-			ObjectEnd = ObjectComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetEnable())
-		{
-			ObjectIt = ObjectComponents.erase(ObjectIt);
-			ObjectEnd = ObjectComponents.end();
-			continue;
-		}
+			return true;
+		});
 
-		Cmp->Update(DeltaTime);
-		++ObjectIt;
-	}
+	std::erase_if(ObjectComponents, [DeltaTime](const auto& Cmp)
+		{
+			if (auto Comp = Cmp.lock())
+			{
+				if (Comp->GetAlive())
+				{
+					if (Comp->GetEnable())
+					{
+						Comp->Update(DeltaTime);
+					}
+
+					return false;
+				}
+			}
+
+			return true;
+		});
 }
 
 void CGameObject::PostUpdate(const float DeltaTime)
