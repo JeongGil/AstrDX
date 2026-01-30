@@ -678,40 +678,34 @@ bool CGameObject::Init()
 
 void CGameObject::Update(const float DeltaTime)
 {
-	std::erase_if(SceneComponents, [DeltaTime](const auto& Cmp)
+	std::erase_if(SceneComponents, [DeltaTime](const auto& Comp)
 		{
-			if (auto Comp = Cmp.lock())
+			if (!Comp || !Comp->GetAlive)
 			{
-				if (Comp->GetAlive())
-				{
-					if (Comp->GetEnable())
-					{
-						Comp->Update(DeltaTime);
-					}
-
-					return false;
-				}
+				return true;
 			}
 
-			return true;
+			if (Comp->GetEnable())
+			{
+				Comp->Update(DeltaTime);
+			}
+
+			return false;
 		});
 
-	std::erase_if(ObjectComponents, [DeltaTime](const auto& Cmp)
+	std::erase_if(ObjectComponents, [DeltaTime](const auto& Comp)
 		{
-			if (auto Comp = Cmp.lock())
+			if (!Comp || !Comp->GetAlive)
 			{
-				if (Comp->GetAlive())
-				{
-					if (Comp->GetEnable())
-					{
-						Comp->Update(DeltaTime);
-					}
-
-					return false;
-				}
+				return true;
 			}
 
-			return true;
+			if (Comp->GetEnable())
+			{
+				Comp->Update(DeltaTime);
+			}
+
+			return false;
 		});
 }
 
