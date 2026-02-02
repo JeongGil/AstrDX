@@ -147,7 +147,7 @@ void CNumberWidget::Render()
 
 	while (!NumberStack.empty())
 	{
-		DecimalNumbers.push_back(NumberStack.top());
+		Numbers.push_back(NumberStack.top());
 		NumberStack.pop();
 	}
 
