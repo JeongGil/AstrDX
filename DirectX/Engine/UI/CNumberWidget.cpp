@@ -138,8 +138,9 @@ void CNumberWidget::Render()
 
 	while (Number > 0)
 	{
-		NumberStack.push(Number % 10);
-		Number /= 10;
+		auto Result = std::div(Number, 10);
+		NumberStack.push(Result.rem);
+		Number = Result.quot;
 	}
 
 	Numbers.clear();
@@ -158,8 +159,9 @@ void CNumberWidget::Render()
 
 	while (DecimalNumber > 0)
 	{
-		NumberStack.push(DecimalNumber % 10);
-		DecimalNumber /= 10;
+		auto Result = std::div(DecimalNumber, 10);
+		NumberStack.push(Result.rem);
+		DecimalNumber = Result.quot;
 	}
 
 	while (!NumberStack.empty())
