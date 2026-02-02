@@ -483,6 +483,9 @@
     <ClInclude Include="UI\CNumberWidget.h">
       <Filter>UI\Widget</Filter>
     </ClInclude>
+    <ClInclude Include="UI\CMouseWidget.h">
+      <Filter>UI\Widget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -730,6 +733,9 @@
       <Filter>Compnent\SceneComponent\Widget</Filter>
     </ClCompile>
     <ClCompile Include="UI\CNumberWidget.cpp">
+      <Filter>UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CMouseWidget.cpp">
       <Filter>UI\Widget</Filter>
     </ClCompile>
   </ItemGroup>

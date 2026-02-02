@@ -93,9 +93,11 @@ int CEngine::Run()
 
 void CEngine::Loop()
 {
-	Update(CTimer::Update());
+	const float DeltaTime = CTimer::Update();
+	Update(DeltaTime);
 
 	CAssetManager::GetInst()->Update();
+	CRenderManager::GetInst()->Update(DeltaTime);
 
 	Render();
 }

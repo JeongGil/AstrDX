@@ -231,6 +231,9 @@ bool CProgressBar::Init()
 void CProgressBar::Update(const float DeltaTime)
 {
 	CWidget::Update(DeltaTime);
+
+	Brush[EProgressBarImageType::Back].PlayAnimation(DeltaTime);
+	Brush[EProgressBarImageType::Fill].PlayAnimation(DeltaTime);
 }
 
 void CProgressBar::Render()

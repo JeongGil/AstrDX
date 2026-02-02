@@ -228,6 +228,25 @@ struct FCollisionManifold
 	float Penetration = 0.f;
 };
 
+namespace EMouseState
+{
+	enum Type
+	{
+		Normal,
+		State1,
+		State2,
+		State3,
+		State4,
+		State5,
+		State6,
+		State7,
+		State8,
+		State9,
+		State10,
+		End
+	};
+}
+
 struct TableID
 {
 	int value = -1;

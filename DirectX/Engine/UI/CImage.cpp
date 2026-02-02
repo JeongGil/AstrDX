@@ -112,6 +112,8 @@ bool CImage::Init()
 void CImage::Update(const float DeltaTime)
 {
 	CWidget::Update(DeltaTime);
+
+	Brush.PlayAnimation(DeltaTime);
 }
 
 void CImage::Render()

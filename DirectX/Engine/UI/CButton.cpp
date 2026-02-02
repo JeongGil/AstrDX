@@ -225,6 +225,8 @@ void CButton::Update(const float DeltaTime)
 			}
 		}
 	}
+
+	Brush[State].PlayAnimation(DeltaTime);
 }
 
 void CButton::Render()

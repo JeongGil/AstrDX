@@ -24,8 +24,8 @@ protected:
 
 public:
 	bool SetTexture(const std::weak_ptr<CTexture>& Texture);
-	bool SetTexture(const std::string& Key);
-	bool SetTexture(const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture");
+	virtual bool SetTexture(const std::string& Key);
+	virtual bool SetTexture(const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture");
 	void SetTint(const FColor& Tint);
 	void SetTint(float r, float g, float b, float a);
 	void SetBrushAnimation(bool Animation);

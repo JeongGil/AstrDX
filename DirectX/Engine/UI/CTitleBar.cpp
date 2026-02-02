@@ -178,6 +178,8 @@ bool CTitleBar::Init()
 void CTitleBar::Update(const float DeltaTime)
 {
 	CWidget::Update(DeltaTime);
+
+	Brush.PlayAnimation(DeltaTime);
 }
 
 void CTitleBar::Render()

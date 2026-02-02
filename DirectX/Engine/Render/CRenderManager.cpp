@@ -299,6 +299,14 @@ bool CRenderManager::Init()
 	return true;
 }
 
+void CRenderManager::Update(const float DeltaTime)
+{
+	if (MouseWidget[MouseState])
+	{
+		MouseWidget[MouseState]->Update(DeltaTime);
+	}
+}
+
 void CRenderManager::Render()
 {
 	for (auto& RenderLayer : RenderLayers | std::views::values)
@@ -351,10 +359,22 @@ void CRenderManager::Render()
 
 	CWorldManager::GetInst()->RenderUI();
 
+	if (MouseWidget[MouseState])
+	{
+		MouseWidget[MouseState]->Render();
+	}
+
 	ResetState("AlphaBlend");
 }
 
 CRenderManager::~CRenderManager()
 {
 	ResetState("DepthDisable");
+}
+
+void CRenderManager::SetMouseWidget(EMouseState::Type State, CMouseWidget* Widget)
+{
+	MouseWidget[State].reset(Widget);
+
+	ShowCursor(FALSE);
 }

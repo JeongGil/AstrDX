@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../EngineInfo.h"
+#include "../UI/CMouseWidget.h"
 
 class CRenderState;
 class CSceneComponent;
@@ -65,7 +66,26 @@ public:
 	std::weak_ptr<CRenderState> FindRenderState(const std::string& Key);
 
 	bool Init();
+	void Update(const float DeltaTime);
 	void Render();
+
+	template <typename T>
+	std::weak_ptr<T> SetMouseWidget(EMouseState::Type State, const std::string& Key)
+	{
+		auto& Widget = MouseWidget[State];
+		Widget.reset(new T);
+
+		Widget->SetKey(Key);
+
+		if (!Widget->Init())
+		{
+			return {};
+		}
+
+		ShowCursor(FALSE);
+
+		return std::dynamic_pointer_cast<T>(Widget);
+	}
 
 private:
 	CRenderManager() = default;
@@ -91,7 +111,18 @@ private:
 	std::unordered_map<std::string, std::shared_ptr<CRenderState>> RenderStates;
 	std::map<int, FRenderLayer> RenderLayers;
 
+	EMouseState::Type MouseState = EMouseState::Normal;
+	std::shared_ptr<CMouseWidget> MouseWidget[EMouseState::End];
+
 	inline static CRenderManager* Inst;
+
+public:
+	[[nodiscard]] EMouseState::Type GetMouseState() const
+	{
+		return MouseState;
+	}
+
+	void SetMouseWidget(EMouseState::Type State, CMouseWidget* Widget);
 };
 
 struct FRenderLayer

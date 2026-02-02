@@ -282,13 +282,22 @@ void CWidget::RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const
 
 	UIDefaultCBuffer->SetBrushTint(Brush.Tint);
 
-	if (!Brush.Texture.expired())
+	FVector2 TexSize;
+	if (auto Texture = Brush.Texture.lock())
 	{
 		UIDefaultCBuffer->SetTextureEnable(true);
 
-		auto Texture = Brush.Texture.lock();
+		TexSize.x = static_cast<float>(Texture->GetTexture()->Width);
+		TexSize.y = static_cast<float>(Texture->GetTexture()->Height);
 
-		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+		if (Brush.FrameAnimationEnable)
+		{
+			Texture->SetShader(0, EShaderBufferType::Pixel, Brush.Frame);
+		}
+		else
+		{
+			Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+		}
 	}
 	else
 	{
@@ -303,8 +312,13 @@ void CWidget::RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const
 
 		FTextureFrame FrameInfo = Brush.AnimationFrames[Frame];
 
-		UIDefaultCBuffer->SetBrushLTUV(FrameInfo.Start);
-		UIDefaultCBuffer->SetBrushRBUV(FrameInfo.Start + FrameInfo.Size);
+		UIDefaultCBuffer->SetBrushLTUV(FrameInfo.Start / TexSize);
+
+		FVector2 FrameRB;
+		FrameRB.x = FrameInfo.Start.x + FrameInfo.Size.x;
+		FrameRB.y = FrameInfo.Start.y + FrameInfo.Size.y;
+
+		UIDefaultCBuffer->SetBrushRBUV(FrameRB / TexSize);
 	}
 	else
 	{
@@ -354,7 +368,14 @@ void CWidget::RenderBrush(const FUIBrush& Brush, const FVector3& RenderPos, cons
 		TexSize.x = static_cast<float>(Texture->GetTexture()->Width);
 		TexSize.y = static_cast<float>(Texture->GetTexture()->Height);
 
-		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+		if (Brush.FrameAnimationEnable)
+		{
+			Texture->SetShader(0, EShaderBufferType::Pixel, Brush.Frame);
+		}
+		else
+		{
+			Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+		}
 	}
 	else
 	{
