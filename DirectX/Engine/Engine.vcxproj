@@ -233,6 +233,8 @@
     <ClInclude Include="Component\CProjectileMovementComponent.h" />
     <ClInclude Include="Component\CSceneComponent.h" />
     <ClInclude Include="Component\CWidgetComponent.h" />
+    <ClInclude Include="CThreadBase.h" />
+    <ClInclude Include="CThreadQueue.h" />
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="EngineInfo.h" />
     <ClInclude Include="EngineMath.h" />
@@ -246,6 +248,7 @@
     <ClInclude Include="Render\CRenderManager.h" />
     <ClInclude Include="Render\CRenderState.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Sync.h" />
     <ClInclude Include="Table\TableBase.h" />
     <ClInclude Include="Table\TableInfoBase.h" />
     <ClInclude Include="UI\CButton.h" />
@@ -329,6 +332,8 @@
     <ClCompile Include="Component\CProjectileMovementComponent.cpp" />
     <ClCompile Include="Component\CSceneComponent.cpp" />
     <ClCompile Include="Component\CWidgetComponent.cpp" />
+    <ClCompile Include="CThreadBase.cpp" />
+    <ClCompile Include="CThreadQueue.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="FMatrix.cpp" />
     <ClCompile Include="FVector3.cpp" />

@@ -9,6 +9,7 @@
 #include <list>
 #include <map>
 #include <memory>
+#include <process.h>
 #include <random>
 #include <ranges>
 #include <stack>

@@ -169,6 +169,9 @@
     <Filter Include="Compnent\SceneComponent\Widget">
       <UniqueIdentifier>{3cbc2150-57b7-4afb-b1fb-31f6dcf9d73e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Thread">
+      <UniqueIdentifier>{de4d9981-bcf1-411f-8663-4a1380f00bf0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -486,6 +489,15 @@
     <ClInclude Include="UI\CMouseWidget.h">
       <Filter>UI\Widget</Filter>
     </ClInclude>
+    <ClInclude Include="Sync.h">
+      <Filter>Core\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="CThreadBase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="CThreadQueue.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -737,6 +749,12 @@
     </ClCompile>
     <ClCompile Include="UI\CMouseWidget.cpp">
       <Filter>UI\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="CThreadBase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="CThreadQueue.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
