@@ -26,6 +26,8 @@ bool CMesh::CreateMesh(void* VertexData, int VertexSize, int VertexCount, D3D11_
 		Max.x = max(Max.x, Position.x);
 		Max.y = max(Max.y, Position.y);
 		Max.z = max(Max.z, Position.z);
+
+		Vertices += VertexSize;
 	}
 
 	MeshSize = Max - Min;
