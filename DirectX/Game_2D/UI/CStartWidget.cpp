@@ -1,0 +1,107 @@
+#include "CStartWidget.h"
+
+#include <CDevice.h>
+#include <CEngine.h>
+#include <UI/CButton.h>
+#include <UI/CImage.h>
+#include <World/CWorldManager.h>
+
+#include "../World/CMainWorld.h"
+
+CStartWidget::CStartWidget()
+{
+}
+
+CStartWidget::~CStartWidget()
+{
+}
+
+bool CStartWidget::Init()
+{
+	if (!CWidgetContainer::Init())
+	{
+		return false;
+	}
+
+	FResolution	RS = CDevice::GetInst()->GetResolution();
+
+	if (auto Back = CreateWidget<CImage>("Back").lock())
+	{
+		Back->SetSize((float)RS.Width, (float)RS.Height);
+		Back->SetTexture("StartBack", TEXT("Back.png"));
+	}
+
+	if (auto StartButton = CreateWidget<CButton>("StartButton", 1).lock())
+	{
+		FVector ButtonPos;
+		ButtonPos.x = RS.Width / 2.f;
+		ButtonPos.y = RS.Height / 2.f - 100.f;
+
+		StartButton->SetPivot(0.5f, 0.5f);
+		StartButton->SetPos(ButtonPos);
+		StartButton->SetSize(200.f, 100.f);
+		StartButton->SetTexture(EButtonState::Normal, "StartButton", TEXT("Start.png"));
+		StartButton->SetTint(EButtonState::Normal, FColor(0.8f, 0.8f, 0.8f, 1.f));
+
+		StartButton->SetTexture(EButtonState::Hovered, "StartButton", TEXT("Start.png"));
+		StartButton->SetTint(EButtonState::Hovered, FColor(1.f, 1.f, 1.f, 1.f));
+
+		StartButton->SetTexture(EButtonState::Click, "StartButton", TEXT("Start.png"));
+		StartButton->SetTint(EButtonState::Click, FColor(0.6f, 0.6f, 0.6f, 1.f));
+
+		StartButton->SetTexture(EButtonState::Disable, "StartButton", TEXT("Start.png"));
+
+		//StartButton->SetSound(EButtonEventState::Hovered, "ButtonHovered", "TeemoSmile.mp3");
+		//StartButton->SetSound(EButtonEventState::Click, "ButtonClick", "TeemoStartClicck.mp3");
+
+		StartButton->SetEventCallback<CStartWidget>(EButtonEventState::Click, this, &CStartWidget::OnClickStart);
+	}
+
+	if (auto ExitButton = CreateWidget<CButton>("ExitButton", 1).lock())
+	{
+		FVector ButtonPos;
+		ButtonPos.x = RS.Width / 2.f;
+		ButtonPos.y = RS.Height / 2.f + 100.f;
+
+		ExitButton->SetPivot(0.5f, 0.5f);
+		ExitButton->SetPos(ButtonPos);
+		ExitButton->SetSize(200.f, 100.f);
+		ExitButton->SetTexture(EButtonState::Normal, "ExitButton", TEXT("End.png"));
+		ExitButton->SetTint(EButtonState::Normal, FColor(0.8f, 0.8f, 0.8f, 1.f));
+
+		ExitButton->SetTexture(EButtonState::Hovered, "ExitButton", TEXT("End.png"));
+		ExitButton->SetTint(EButtonState::Hovered, FColor(1.f, 1.f, 1.f, 1.f));
+
+		ExitButton->SetTexture(EButtonState::Click, "ExitButton", TEXT("End.png"));
+		ExitButton->SetTint(EButtonState::Click, FColor(0.6f, 0.6f, 0.6f, 1.f));
+
+		ExitButton->SetTexture(EButtonState::Disable, "ExitButton", TEXT("End.png"));
+
+		//ExitButton->SetSound(EButtonEventState::Hovered, "ButtonHovered", "TeemoSmile.mp3");
+		//ExitButton->SetSound(EButtonEventState::Click, "ButtonClick", "TeemoStartClicck.mp3");
+
+		ExitButton->SetEventCallback<CStartWidget>(EButtonEventState::Click, this, &CStartWidget::OnClickExit);
+	}
+
+	return true;
+}
+
+void CStartWidget::Update(const float DeltaTime)
+{
+	CWidgetContainer::Update(DeltaTime);
+}
+
+void CStartWidget::Render()
+{
+	CWidgetContainer::Render();
+}
+
+void CStartWidget::OnClickStart()
+{
+	CWorldManager::GetInst()->CreateWorld<CMainWorld>(true);
+}
+
+void CStartWidget::OnClickExit()
+{
+	CEngine::GetInst()->Destroy();
+}

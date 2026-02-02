@@ -1,15 +1,16 @@
 #include <CEngine.h>
 
+#include "CGlobalSetting.h"
+#include "Component/CStateComponent.h"
 #include "Monster/CMonster.h"
 #include "Monster/CMonsterSpawnPoint.h"
 #include "Player/CBullet.h"
 #include "Player/CMissile.h"
 #include "Player/CPlayer.h"
-#include "World/CMainWorld.h"
-#include "World/CWorldManager.h"
-#include "Component/CStateComponent.h"
-#include "CGlobalSetting.h"
 #include "World/CBrotatoWorld_Battle.h"
+#include "World/CMainWorld.h"
+#include "World/CStartWorld.h"
+#include "World/CWorldManager.h"
 
 #ifdef _DEBUG
 // link debug lib
@@ -44,7 +45,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CEngine::CreateCDO<CMonsterSpawnPoint>();
 	CEngine::CreateCDO<CStateComponent>();
 
-	CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);
+	CWorldManager::GetInst()->CreateWorld<CStartWorld>(false);
+	//CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);
 	//CWorldManager::GetInst()->CreateWorld<CBrotatoWorld_Battle>(false);
 
 	int ret = CEngine::GetInst()->Run();

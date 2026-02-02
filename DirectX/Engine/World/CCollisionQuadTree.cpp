@@ -167,10 +167,10 @@ void CCollisionQuadTree::Render()
 {
 #ifdef _DEBUG
 
-	ColliderCBuffer->UpdateBuffer();
-
 	if (Root)
 	{
+		ColliderCBuffer->UpdateBuffer();
+
 		Root->Render(Mesh, Shader);
 	}
 

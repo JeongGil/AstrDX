@@ -58,6 +58,9 @@
     <Filter Include="UI\Main\WorldHUD">
       <UniqueIdentifier>{973c0a5f-f23c-4584-a1ca-5699758b660f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Start">
+      <UniqueIdentifier>{efcdbb34-1393-4ae0-9074-16bbe87907ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -147,8 +150,14 @@
     <ClCompile Include="UI\CWorldHUD.cpp">
       <Filter>UI\Main\WorldHUD</Filter>
     </ClCompile>
+    <ClCompile Include="World\CStartWorld.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
     <ClCompile Include="UI\CPlayerStateWidget.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>UI\Main\PlayerState</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CStartWidget.cpp">
+      <Filter>UI\Start</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -275,8 +284,14 @@
     <ClInclude Include="UI\CWorldHUD.h">
       <Filter>UI\Main\WorldHUD</Filter>
     </ClInclude>
+    <ClInclude Include="World\CStartWorld.h">
+      <Filter>World</Filter>
+    </ClInclude>
     <ClInclude Include="UI\CPlayerStateWidget.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>UI\Main\PlayerState</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CStartWidget.h">
+      <Filter>UI\Start</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

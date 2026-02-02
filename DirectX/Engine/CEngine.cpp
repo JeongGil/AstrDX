@@ -91,6 +91,11 @@ int CEngine::Run()
 	return static_cast<int>(msg.wParam);
 }
 
+void CEngine::Destroy()
+{
+	DestroyWindow(hWnd);
+}
+
 void CEngine::Loop()
 {
 	const float DeltaTime = CTimer::Update();
@@ -102,10 +107,19 @@ void CEngine::Loop()
 	Render();
 }
 
-void CEngine::Update(const float deltaTime)
+bool CEngine::Update(const float deltaTime)
 {
-	CWorldManager::GetInst()->Update(deltaTime);
-	CWorldManager::GetInst()->PostUpdate(deltaTime);
+	if (CWorldManager::GetInst()->Update(deltaTime))
+	{
+		return true;
+	}
+
+	if (CWorldManager::GetInst()->PostUpdate(deltaTime))
+	{
+		return true;
+	}
+
+	return false;
 }
 
 void CEngine::Render()

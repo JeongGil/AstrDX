@@ -13,14 +13,18 @@ bool CWorldManager::Init()
 	return true;
 }
 
-void CWorldManager::Update(const float DeltaTime)
+bool CWorldManager::Update(const float DeltaTime)
 {
 	World->Update(DeltaTime);
+
+	return ChangeWorld();
 }
 
-void CWorldManager::PostUpdate(const float DeltaTime)
+bool CWorldManager::PostUpdate(const float DeltaTime)
 {
 	World->PostUpdate(DeltaTime);
+
+	return ChangeWorld();
 }
 
 void CWorldManager::Render()
@@ -36,6 +40,18 @@ void CWorldManager::RenderUI()
 void CWorldManager::PostRender()
 {
 	World->PostRender();
+}
+
+bool CWorldManager::ChangeWorld()
+{
+	if (NextWorld)
+	{
+		World = std::move(NextWorld);
+
+		return true;
+	}
+
+	return false;
 }
 
 CWorldManager::CWorldManager()

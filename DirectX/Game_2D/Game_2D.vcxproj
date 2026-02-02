@@ -196,9 +196,11 @@
     <ClCompile Include="UI\CPlayerStateWidget.cpp" />
     <ClCompile Include="UI\CSlot.cpp" />
     <ClCompile Include="UI\CSlotIcon.cpp" />
+    <ClCompile Include="UI\CStartWidget.cpp" />
     <ClCompile Include="UI\CWorldHUD.cpp" />
     <ClCompile Include="World\CBrotatoWorld_Battle.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
+    <ClCompile Include="World\CStartWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGlobalSetting.h" />
@@ -239,10 +241,12 @@
     <ClInclude Include="UI\CPlayerStateWidget.h" />
     <ClInclude Include="UI\CSlot.h" />
     <ClInclude Include="UI\CSlotIcon.h" />
+    <ClInclude Include="UI\CStartWidget.h" />
     <ClInclude Include="UI\CWorldHUD.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="World\CBrotatoWorld_Battle.h" />
     <ClInclude Include="World\CMainWorld.h" />
+    <ClInclude Include="World\CStartWorld.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat" />

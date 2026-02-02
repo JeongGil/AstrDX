@@ -68,6 +68,8 @@ public:
 	 */
 	int Run();
 
+	void Destroy();
+
 private:
 	/**
 	 * @brief Executes the main game loop logic.
@@ -82,7 +84,7 @@ private:
 	 */
 	void Loop();
 
-	void Update(float deltaTime);
+	bool Update(float deltaTime);
 
 	/**
 	 * @brief Renders the current frame of the application.

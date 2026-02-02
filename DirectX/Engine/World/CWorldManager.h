@@ -55,11 +55,14 @@ public:
 	 * @return true if the world manager and its world are successfully initialized; false otherwise.
 	 */
 	bool Init();
-	void Update(const float DeltaTime);
-	void PostUpdate(const float DeltaTime);
+	bool Update(const float DeltaTime);
+	bool PostUpdate(const float DeltaTime);
 	void Render();
 	void RenderUI();
 	void PostRender();
+
+private:
+	bool ChangeWorld();
 
 public:
 	static CWorldManager* GetInst()
