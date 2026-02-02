@@ -318,6 +318,65 @@ void CWidget::RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const
 	Mesh->Render();
 }
 
+void CWidget::RenderBrush(const FUIBrush& Brush, const FVector3& RenderPos, const FVector3& Size,
+	const FVector2& FrameStart, const FVector3& FrameSize)
+{
+	auto Shader = this->Shader.lock();
+	auto Mesh = this->Mesh.lock();
+
+	FMatrix	ScaleMat, TranslateMat, WorldMat;
+
+	ScaleMat.Scaling(Size);
+	TranslateMat.Translation(RenderPos);
+
+	WorldMat = ScaleMat * TranslateMat;
+
+	auto	World = this->World.lock();
+
+	TransformCBuffer->SetWorldMatrix(WorldMat);
+	TransformCBuffer->SetViewMatrix(FMatrix::Identity);
+	TransformCBuffer->SetProjectionMatrix(UIProjectionMatrix);
+
+	//FVector3	PivotSize = mPivot * Mesh->GetMeshSize();
+
+	//mTransformCBuffer->SetPivotSize(PivotSize);
+
+	TransformCBuffer->UpdateBuffer();
+
+	UIDefaultCBuffer->SetBrushTint(Brush.Tint);
+
+	FVector2 TexSize;
+
+	if (auto Texture = Brush.Texture.lock())
+	{
+		UIDefaultCBuffer->SetTextureEnable(true);
+
+		TexSize.x = static_cast<float>(Texture->GetTexture()->Width);
+		TexSize.y = static_cast<float>(Texture->GetTexture()->Height);
+
+		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+	}
+	else
+	{
+		UIDefaultCBuffer->SetTextureEnable(false);
+	}
+
+	UIDefaultCBuffer->SetAnimEnable(true);
+	UIDefaultCBuffer->SetBrushLTUV(FrameStart / TexSize);
+
+	FVector2 FrameRB;
+	FrameRB.x = FrameStart.x + FrameSize.x;
+	FrameRB.y = FrameStart.y + FrameSize.y;
+
+	UIDefaultCBuffer->SetBrushRBUV(FrameRB / TexSize);
+
+	UIDefaultCBuffer->UpdateBuffer();
+
+	Shader->SetShader();
+
+	Mesh->Render();
+}
+
 void CWidget::SetParentAll()
 {
 }

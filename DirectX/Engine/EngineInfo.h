@@ -11,6 +11,7 @@
 #include <memory>
 #include <random>
 #include <ranges>
+#include <stack>
 #include <string>
 #include <typeindex>
 #include <unordered_map>

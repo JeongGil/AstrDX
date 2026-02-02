@@ -480,6 +480,9 @@
     <ClInclude Include="Component\CWidgetComponent.h">
       <Filter>Compnent\SceneComponent\Widget</Filter>
     </ClInclude>
+    <ClInclude Include="UI\CNumberWidget.h">
+      <Filter>UI\Widget</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Engine.rc">
@@ -725,6 +728,9 @@
     </ClCompile>
     <ClCompile Include="Component\CWidgetComponent.cpp">
       <Filter>Compnent\SceneComponent\Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CNumberWidget.cpp">
+      <Filter>UI\Widget</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

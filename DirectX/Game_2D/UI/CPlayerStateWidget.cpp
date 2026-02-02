@@ -49,16 +49,17 @@ bool CPlayerStateWidget::Init()
 	Back->SetSize(200.f, 80.f);
 
 	NameText = CreateWidget<CTextBlock>("Text", 2);
-	auto Text = NameText.lock();
-
-	Text->SetText(TEXT("텍스트 출력"));
-	Text->SetTextColor(255, 255, 255, 255);
-	Text->SetSize(200.f, 26.f);
-	Text->SetFontSize(15.f);
-	Text->SetAlignH(ETextAlignH::Center);
-	Text->EnableShadow(true);
-	Text->SetShadowOffset(2.f, 2.f);
-	Text->SetShadowTextColor(128, 128, 128, 255);
+	if (auto Text = NameText.lock())
+	{
+		Text->SetText(TEXT("텍스트 출력"));
+		Text->SetTextColor(255, 255, 255, 255);
+		Text->SetSize(200.f, 26.f);
+		Text->SetFontSize(15.f);
+		Text->SetAlignH(ETextAlignH::Center);
+		Text->EnableShadow(true);
+		Text->SetShadowOffset(2.f, 2.f);
+		Text->SetShadowTextColor(128, 128, 128, 255);
+	}
 
 	HPBar = CreateWidget<CProgressBar>("HPBar");
 	auto HPBar = this->HPBar.lock();

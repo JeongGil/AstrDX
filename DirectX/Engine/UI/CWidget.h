@@ -101,6 +101,7 @@ public:
 
 protected:
 	void RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const FVector& Size);
+	void RenderBrush(const FUIBrush& Brush, const FVector3& RenderPos, const FVector3& Size, const FVector2& FrameStart, const FVector3& FrameSize);
 
 public:
 	[[nodiscard]] bool GetMouseDrag() const

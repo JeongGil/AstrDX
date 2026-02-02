@@ -2,6 +2,7 @@
 
 #include <UI/CButton.h>
 #include <UI/CTextBlock.h>
+#include <UI/CNumberWidget.h>
 
 #include "CInventory.h"
 #include "CPlayerStateWidget.h"
@@ -69,6 +70,15 @@ bool CMainWidget::Init()
 		Inventory->SetPos(700.f, 50.f);
 		Inventory->SetSize(400.f, 600.f);
 		Inventory->SetZOrder(1);
+	}
+
+	if (auto Number = CreateWidget<CNumberWidget>("Number").lock())
+	{
+		Number->SetPos(600.f, 50.f);
+		Number->SetSize(15.f, 25.f);
+		Number->SetNumber(325163246);
+		Number->SetNumberSize(46.f, 68.f);
+		Number->SetTexture("Number", TEXT("Number.png"));
 	}
 
 	return true;

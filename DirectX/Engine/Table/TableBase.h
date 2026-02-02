@@ -119,15 +119,15 @@ private:
 			if (Info->Load(SS))
 			{
 #ifdef _DEBUG
-				if (!Items.try_emplace(Info->Key, Info).second)
+				if (!Items.try_emplace(Info->ID, Info).second)
 				{
 					char Test[256] = {};
-					sprintf_s(Test, "Key : %d duplicated.\n", static_cast<int>(Info->Key));
+					sprintf_s(Test, "ID : %d duplicated.\n", static_cast<int>(Info->ID));
 
 					OutputDebugStringA(Test);
 				}
 #else
-				Items.emplace(Info->Key, Info)
+				Items.emplace(Info->ID, Info)
 #endif
 			}
 			else
