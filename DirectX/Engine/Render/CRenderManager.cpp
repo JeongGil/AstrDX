@@ -376,7 +376,6 @@ void CRenderManager::Render()
 
 	UINT Offset{ 0 };
 
-	// TODO: fix
 	Context->IASetVertexBuffers(0, 0, nullptr, nullptr, &Offset);
 	Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 
