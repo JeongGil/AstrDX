@@ -1,5 +1,5 @@
 #pragma once
-#include "CEngineSetting.h"
+#include <CEngineSetting.h>
 
 class CGlobalSetting :
     public CEngineSetting

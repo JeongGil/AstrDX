@@ -10,6 +10,7 @@
 #include "World/CWorldManager.h"
 #include "Asset/Shader/CCBufferTransform.h"
 #include "CObject.h"
+#include "CThreadManager.h"
 #include "Object/CGameObject.h"
 #include "Component/CMeshComponent.h"
 #include "Component/CCameraComponent.h"
@@ -52,6 +53,11 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 	}
 
 	if (!CAssetManager::GetInst()->Init())
+	{
+		return false;
+	}
+
+	if (!CThreadManager::GetInst().Init())
 	{
 		return false;
 	}
@@ -220,6 +226,8 @@ CEngine::~CEngine()
 	CMeshComponent::ClearEmptyAnimationCBuffer();
 
 	CWorldManager::DestroyInst();
+
+	CThreadManager::Clear();
 
 	CObject::ClearCDO();
 

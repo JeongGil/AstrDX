@@ -21,7 +21,7 @@ private:
 	CThreadQueue();
 
 public:
-	~CThreadQueue() override;
+	~CThreadQueue();
 
 private:
 	FThreadQueueData Data[MAX_DATA];

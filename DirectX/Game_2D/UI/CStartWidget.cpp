@@ -6,7 +6,7 @@
 #include <UI/CImage.h>
 #include <World/CWorldManager.h>
 
-#include "../World/CMainWorld.h"
+#include "../World/CLoadingWorld.h"
 
 CStartWidget::CStartWidget()
 {
@@ -98,7 +98,10 @@ void CStartWidget::Render()
 
 void CStartWidget::OnClickStart()
 {
-	CWorldManager::GetInst()->CreateWorld<CMainWorld>(true);
+	if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
+	{
+		World->Load(EWorldType::Main);
+	}
 }
 
 void CStartWidget::OnClickExit()

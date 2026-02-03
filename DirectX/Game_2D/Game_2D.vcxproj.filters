@@ -61,6 +61,12 @@
     <Filter Include="UI\Start">
       <UniqueIdentifier>{efcdbb34-1393-4ae0-9074-16bbe87907ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Thread">
+      <UniqueIdentifier>{2d29d1b6-5fbf-4b78-9fba-bc1f97af8011}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Loading">
+      <UniqueIdentifier>{afefe725-7064-4e7c-8c7d-c748481cfc4c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -158,6 +164,15 @@
     </ClCompile>
     <ClCompile Include="UI\CStartWidget.cpp">
       <Filter>UI\Start</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CLoadingWorld.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread\CLoadingThread.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CLoadingWidget.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -292,6 +307,18 @@
     </ClInclude>
     <ClInclude Include="UI\CStartWidget.h">
       <Filter>UI\Start</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CLoadingWorld.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="ClientInfo.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread\CLoadingThread.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CLoadingWidget.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

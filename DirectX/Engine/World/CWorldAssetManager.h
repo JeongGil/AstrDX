@@ -71,10 +71,10 @@ public:
 		const char* FileName, const std::string& PathName = "Sound");
 	std::weak_ptr<CSound> FindSound(const std::string& Key);
 
-	void PlaySound(const std::string& Key);
-	void StopSound(const std::string& Key);
-	void PauseSound(const std::string& Key);
-	void ResumeSound(const std::string& Key);
+	void SoundPlay(const std::string& Key);
+	void SoundStop(const std::string& Key);
+	void SoundPause(const std::string& Key);
+	void SoundResume(const std::string& Key);
 
 #pragma endregion Sound
 

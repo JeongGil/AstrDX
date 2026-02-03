@@ -229,7 +229,7 @@ void CMainWorld::LoadSound()
 {
 	WorldAssetManager->LoadSound("MainBGM", "BGM", true, "MainBgm.mp3");
 	WorldAssetManager->LoadSound("Fire", "Effect", false, "Fire1.wav");
-	WorldAssetManager->PlaySound("MainBGM");
+	WorldAssetManager->SoundPlay("MainBGM");
 }
 
 void CMainWorld::CreateUI()

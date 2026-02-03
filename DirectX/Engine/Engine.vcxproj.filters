@@ -195,9 +195,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="EngineInfo.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -493,16 +490,14 @@
       <Filter>Core\Thread</Filter>
     </ClInclude>
     <ClInclude Include="CThreadBase.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Core\Thread</Filter>
+    </ClInclude>
+    <ClInclude Include="CThreadManager.h">
+      <Filter>Core\Thread</Filter>
     </ClInclude>
     <ClInclude Include="CThreadQueue.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Core\Thread</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc">
-      <Filter>리소스 파일</Filter>
-    </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -750,11 +745,14 @@
     <ClCompile Include="UI\CMouseWidget.cpp">
       <Filter>UI\Widget</Filter>
     </ClCompile>
-    <ClCompile Include="CThreadBase.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="CThreadQueue.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Core\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="CThreadBase.cpp">
+      <Filter>Core\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="CThreadManager.cpp">
+      <Filter>Core\Thread</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

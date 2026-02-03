@@ -487,7 +487,7 @@ std::weak_ptr<CSound> CWorldAssetManager::FindSound(const std::string& Key)
 	}
 }
 
-void CWorldAssetManager::PlaySoundW(const std::string& Key)
+void CWorldAssetManager::SoundPlay(const std::string& Key)
 {
 	std::string	InnerKey = "Sound_" + Key;
 
@@ -500,7 +500,7 @@ void CWorldAssetManager::PlaySoundW(const std::string& Key)
 	}
 }
 
-void CWorldAssetManager::StopSound(const std::string& Key)
+void CWorldAssetManager::SoundStop(const std::string& Key)
 {
 	std::string	InnerKey = "Sound_" + Key;
 
@@ -513,7 +513,7 @@ void CWorldAssetManager::StopSound(const std::string& Key)
 	}
 }
 
-void CWorldAssetManager::PauseSound(const std::string& Key)
+void CWorldAssetManager::SoundPause(const std::string& Key)
 {
 	std::string	InnerKey = "Sound_" + Key;
 
@@ -526,7 +526,7 @@ void CWorldAssetManager::PauseSound(const std::string& Key)
 	}
 }
 
-void CWorldAssetManager::ResumeSound(const std::string& Key)
+void CWorldAssetManager::SoundResume(const std::string& Key)
 {
 	std::string	InnerKey = "Sound_" + Key;
 

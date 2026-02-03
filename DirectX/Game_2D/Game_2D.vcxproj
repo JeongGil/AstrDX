@@ -191,7 +191,9 @@
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
     <ClCompile Include="Table\CTableManager.cpp" />
+    <ClCompile Include="Thread\CLoadingThread.cpp" />
     <ClCompile Include="UI\CInventory.cpp" />
+    <ClCompile Include="UI\CLoadingWidget.cpp" />
     <ClCompile Include="UI\CMainWidget.cpp" />
     <ClCompile Include="UI\CPlayerStateWidget.cpp" />
     <ClCompile Include="UI\CSlot.cpp" />
@@ -199,6 +201,7 @@
     <ClCompile Include="UI\CStartWidget.cpp" />
     <ClCompile Include="UI\CWorldHUD.cpp" />
     <ClCompile Include="World\CBrotatoWorld_Battle.cpp" />
+    <ClCompile Include="World\CLoadingWorld.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
     <ClCompile Include="World\CStartWorld.cpp" />
   </ItemGroup>
@@ -210,6 +213,7 @@
     <ClInclude Include="Character\CPlayerCharacter.h" />
     <ClInclude Include="Character\CWeapon_Battle.h" />
     <ClInclude Include="CHitPointComponent.h" />
+    <ClInclude Include="ClientInfo.h" />
     <ClInclude Include="Component\CStateComponent.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Interface\CStateInterface.h" />
@@ -236,7 +240,9 @@
     <ClInclude Include="Table\StringTable.h" />
     <ClInclude Include="Table\WeaponInfo.h" />
     <ClInclude Include="Table\WeaponTable.h" />
+    <ClInclude Include="Thread\CLoadingThread.h" />
     <ClInclude Include="UI\CInventory.h" />
+    <ClInclude Include="UI\CLoadingWidget.h" />
     <ClInclude Include="UI\CMainWidget.h" />
     <ClInclude Include="UI\CPlayerStateWidget.h" />
     <ClInclude Include="UI\CSlot.h" />
@@ -245,6 +251,7 @@
     <ClInclude Include="UI\CWorldHUD.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="World\CBrotatoWorld_Battle.h" />
+    <ClInclude Include="World\CLoadingWorld.h" />
     <ClInclude Include="World\CMainWorld.h" />
     <ClInclude Include="World\CStartWorld.h" />
   </ItemGroup>

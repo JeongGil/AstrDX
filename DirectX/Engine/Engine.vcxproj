@@ -234,6 +234,7 @@
     <ClInclude Include="Component\CSceneComponent.h" />
     <ClInclude Include="Component\CWidgetComponent.h" />
     <ClInclude Include="CThreadBase.h" />
+    <ClInclude Include="CThreadManager.h" />
     <ClInclude Include="CThreadQueue.h" />
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="EngineInfo.h" />
@@ -247,7 +248,6 @@
     <ClInclude Include="Render\CDepthStencilState.h" />
     <ClInclude Include="Render\CRenderManager.h" />
     <ClInclude Include="Render\CRenderState.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="Sync.h" />
     <ClInclude Include="Table\TableBase.h" />
     <ClInclude Include="Table\TableInfoBase.h" />
@@ -271,9 +271,6 @@
     <ClInclude Include="World\CWorldCollision.h" />
     <ClInclude Include="World\CWorldManager.h" />
     <ClInclude Include="World\CWorldUIManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico" />
@@ -333,6 +330,7 @@
     <ClCompile Include="Component\CSceneComponent.cpp" />
     <ClCompile Include="Component\CWidgetComponent.cpp" />
     <ClCompile Include="CThreadBase.cpp" />
+    <ClCompile Include="CThreadManager.cpp" />
     <ClCompile Include="CThreadQueue.cpp" />
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="FMatrix.cpp" />

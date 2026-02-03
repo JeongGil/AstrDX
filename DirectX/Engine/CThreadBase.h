@@ -2,6 +2,7 @@
 
 #include "CThreadQueue.h"
 #include "EngineInfo.h"
+#include "Sync.h"
 
 class CThreadManager;
 
@@ -20,9 +21,12 @@ protected:
 	HANDLE Thread = nullptr;
 	std::shared_ptr<CThreadQueue> Queue;
 	bool bLoop = false;
+	bool bComplete = false;
+
+	CRITICAL_SECTION Crt;
 
 public:
-	void Init(bool Pause = false);
+	bool Init(bool Pause = false);
 	virtual void Exit();
 	virtual void Run() = 0;
 
@@ -36,5 +40,18 @@ public:
 
 private:
 	static unsigned int __stdcall ThreadFunc(void* Arg);
+
+public:
+	void SetKey(const std::string& Key)
+	{
+		this->Key = Key;
+	}
+
+	[[nodiscard]] bool IsComplete()
+	{
+		CSync _(&Crt);
+
+		return bComplete;
+	}
 };
 

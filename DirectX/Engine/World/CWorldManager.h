@@ -34,6 +34,24 @@ public:
 		return std::dynamic_pointer_cast<T>(TargetWorld);
 	}
 
+	template <typename T>
+	std::weak_ptr<T> CreateAsyncWorld()
+	{
+		AsyncWorld = std::make_shared<T>();
+
+		if (!AsyncWorld->Init())
+		{
+			return {};
+		}
+
+		return std::dynamic_pointer_cast<T>(AsyncWorld);
+	}
+
+	void CompleteAsyncWorld()
+	{
+		NextWorld = std::move(AsyncWorld);
+	}
+
 public:
 	std::weak_ptr<CWorld> GetWorld() const
 	{
@@ -43,6 +61,7 @@ public:
 private:
 	std::shared_ptr<CWorld> World;
 	std::shared_ptr<CWorld> NextWorld;
+	std::shared_ptr<CWorld> AsyncWorld;
 
 public:
 	/**
