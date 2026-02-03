@@ -377,7 +377,7 @@ void CRenderManager::Render()
 	UINT Offset{ 0 };
 
 	// TODO: fix
-	Context->IASetVertexBuffers(0, 1, nullptr, nullptr, &Offset);
+	Context->IASetVertexBuffers(0, 0, nullptr, nullptr, &Offset);
 	Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 
 	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
