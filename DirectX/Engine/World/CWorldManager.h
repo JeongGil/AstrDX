@@ -23,15 +23,31 @@ public:
 	template <typename T>
 	std::weak_ptr<T> CreateWorld(bool bNext = true)
 	{
-		std::shared_ptr<CWorld>& TargetWorld = bNext ? NextWorld : World;
-
-		TargetWorld = std::make_shared<T>();
-		if (!TargetWorld || !TargetWorld->Init())
+		if (bNext)
 		{
-			return std::weak_ptr<T>();
+			NextWorld = std::make_shared<T>();
+
+			if (World)
+			{
+				World->ClearWorld();
+			}
+
+			if (!NextWorld->Init())
+			{
+				return {};
+			}
+
+			return std::dynamic_pointer_cast<T>(NextWorld);
 		}
 
-		return std::dynamic_pointer_cast<T>(TargetWorld);
+		World = std::make_shared<T>();
+
+		if (!World->Init())
+		{
+			return {};
+		}
+
+		return std::dynamic_pointer_cast<T>(World);
 	}
 
 	template <typename T>
@@ -49,6 +65,11 @@ public:
 
 	void CompleteAsyncWorld()
 	{
+		if (World)
+		{
+			World->ClearWorld();
+		}
+
 		NextWorld = std::move(AsyncWorld);
 	}
 
@@ -64,6 +85,9 @@ private:
 	std::shared_ptr<CWorld> AsyncWorld;
 
 public:
+	void InputActive();
+	void InputDeactive();
+
 	/**
 	 * @brief Initializes the world manager and its associated world.
 	 *

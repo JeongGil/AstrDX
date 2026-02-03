@@ -3,6 +3,7 @@
 #include "../EngineInfo.h"
 #include "../UI/CMouseWidget.h"
 
+class CRenderTarget;
 class CRenderState;
 class CSceneComponent;
 
@@ -113,6 +114,9 @@ private:
 
 	EMouseState::Type MouseState = EMouseState::Normal;
 	std::shared_ptr<CMouseWidget> MouseWidget[EMouseState::End];
+
+	std::shared_ptr<CRenderTarget> MainTarget;
+	std::weak_ptr<CShader> NullBufferShader;
 
 	inline static CRenderManager* Inst;
 

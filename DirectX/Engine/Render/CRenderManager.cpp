@@ -5,6 +5,11 @@
 #include "CBlendState.h"
 #include "CDepthStencilState.h"
 #include "CRenderState.h"
+#include "../CDevice.h"
+#include "../Asset/CAssetManager.h"
+#include "../Asset/Shader/CShader.h"
+#include "../Asset/Shader/CShaderManager.h"
+#include "../Asset/Texture/CRenderTarget.h"
 #include "../Component/CSceneComponent.h"
 #include "../Object/CGameObject.h"
 #include "../World/CWorldManager.h"
@@ -296,6 +301,11 @@ bool CRenderManager::Init()
 
 	SetState("DepthDisable");
 
+	FResolution	RS = CDevice::GetInst()->GetResolution();
+	MainTarget = CRenderTarget::Create("MainTarget", RS.Width, RS.Height, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+
+	NullBufferShader = CAssetManager::GetInst()->GetShaderManager().lock()->FindShader("NullBuffer");
+
 	return true;
 }
 
@@ -309,6 +319,8 @@ void CRenderManager::Update(const float DeltaTime)
 
 void CRenderManager::Render()
 {
+	MainTarget->SetTarget();
+
 	for (auto& RenderLayer : RenderLayers | std::views::values)
 	{
 		auto& RenderList = RenderLayer.RenderList;
@@ -353,6 +365,24 @@ void CRenderManager::Render()
 			}
 		}
 	}
+
+	MainTarget->ResetTarget();
+
+	NullBufferShader.lock()->SetShader();
+
+	MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+
+	auto Context = CDevice::GetInst()->GetContext();
+
+	UINT Offset{ 0 };
+
+	// TODO: fix
+	Context->IASetVertexBuffers(0, 1, nullptr, nullptr, &Offset);
+	Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+
+	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	Context->Draw(4, 0);
 
 	// UI
 	SetState("AlphaBlend");

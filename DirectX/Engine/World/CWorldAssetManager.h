@@ -81,6 +81,8 @@ public:
 	bool Init();
 	void Update(const float DeltaTime);
 
+	void ClearAsset();
+
 private:
 	std::unordered_map<std::string, std::shared_ptr<CAsset>> Assets;
 

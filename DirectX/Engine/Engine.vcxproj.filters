@@ -172,6 +172,12 @@
     <Filter Include="Core\Thread">
       <UniqueIdentifier>{de4d9981-bcf1-411f-8663-4a1380f00bf0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\RenderTarget">
+      <UniqueIdentifier>{1e3797d3-4fcf-4a3a-a4d3-da02e34ae9d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Asset\Shader\Shader\NullBuffer">
+      <UniqueIdentifier>{e33561d8-7611-413a-ad13-c62ebf1e8cd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -498,6 +504,12 @@
     <ClInclude Include="CThreadQueue.h">
       <Filter>Core\Thread</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Texture\CRenderTarget.h">
+      <Filter>Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderNullBuffer.h">
+      <Filter>Asset\Shader\Shader\NullBuffer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -753,6 +765,12 @@
     </ClCompile>
     <ClCompile Include="CThreadManager.cpp">
       <Filter>Core\Thread</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Texture\CRenderTarget.cpp">
+      <Filter>Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderNullBuffer.cpp">
+      <Filter>Asset\Shader\Shader\NullBuffer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

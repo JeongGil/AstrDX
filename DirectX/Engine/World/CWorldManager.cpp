@@ -2,6 +2,16 @@
 
 #include "CWorld.h"
 
+void CWorldManager::InputActive()
+{
+	World->InputActive();
+}
+
+void CWorldManager::InputDeactive()
+{
+	World->InputDeactive();
+}
+
 bool CWorldManager::Init()
 {
 	World = std::make_shared<CWorld>();

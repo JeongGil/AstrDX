@@ -139,6 +139,7 @@ private:
 	std::shared_ptr<CEngineSetting> Setting;
 
 	inline static bool bLoop = true;
+	inline static bool bDeactivateOnce;
 
 	std::mt19937_64 MT;
 

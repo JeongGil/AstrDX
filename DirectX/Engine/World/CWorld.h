@@ -192,12 +192,17 @@ protected:
 	std::shared_ptr<CWorldUIManager> UIManager;
 
 public:
+	void InputActive();
+	void InputDeactive();
+
 	virtual bool Init();
 	virtual void Update(const float DeltaTime);
 	virtual void PostUpdate(const float DeltaTime);
 	virtual void Render();
 	virtual void PostRender();
 	virtual void RenderUI();
+
+	void ClearWorld();
 
 private:
 	void Begin();

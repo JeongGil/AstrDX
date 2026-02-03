@@ -81,6 +81,9 @@ public:
 		BindKey->Func[Type] = std::bind(Func, Object);
 	}
 
+	void DeviceAcquire();
+	void DeviceUnacquire();
+
 	bool Init();
 	void Update(const float DeltaTime);
 

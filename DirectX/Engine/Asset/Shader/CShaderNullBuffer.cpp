@@ -1,0 +1,24 @@
+#include "CShaderNullBuffer.h"
+
+CShaderNullBuffer::CShaderNullBuffer()
+{
+}
+
+CShaderNullBuffer::~CShaderNullBuffer()
+{
+}
+
+bool CShaderNullBuffer::Init(const std::string& PathName)
+{
+	if (!LoadVertexShader("NullTexVS", TEXT("GlobalShader2D.hlsl"), PathName))
+	{
+		return false;
+	}
+
+	if (!LoadPixelShader("TexPS", TEXT("GlobalShader2D.hlsl"), PathName))
+	{
+		return false;
+	}
+
+	return true;
+}

@@ -96,3 +96,38 @@ float4 FrameVS(float3 Pos : POSITION0) : SV_POSITION
 	float4 OutputPos = mul(float4(Pos, 1.f), cbWVP);    
 	return OutputPos;
 }
+
+static float4 NullPos[4] =
+{
+	float4(-1.f, 1.f, 0.f, 1.f),
+    float4(1.f, 1.f, 0.f, 1.f),
+    float4(-1.f, -1.f, 0.f, 1.f),
+    float4(1.f, -1.f, 0.f, 1.f)
+};
+
+static float2 NullUV[4] =
+{
+	float2(0.f, 0.f),
+    float2(1.f, 0.f),
+    float2(0.f, 1.f),
+    float2(1.f, 1.f)
+};
+
+VS_OUTPUT_TEX NullTexVS(uint VertexID : SV_VertexID)
+{
+	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
+    
+	output.Pos = NullPos[VertexID];
+	output.UV = NullUV[VertexID];
+    
+	return output;
+}
+
+PS_OUTPUT_COLOR TexPS(VS_OUTPUT_TEX input)
+{
+	PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR) 0;
+    
+	output.Color = tbBaseTexture.Sample(sbPoint, input.UV);
+    
+	return output;
+}

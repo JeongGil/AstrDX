@@ -566,6 +566,20 @@ void CWorldAssetManager::Update(const float DeltaTime)
 {
 }
 
+void CWorldAssetManager::ClearAsset()
+{
+	for (const auto& Asset : Assets | std::views::values)
+	{
+		if (Asset->GetAssetType() == EAssetType::Sound)
+		{
+			if (auto Sound = std::dynamic_pointer_cast<CSound>(Asset))
+			{
+				Sound->Stop();
+			}
+		}
+	}
+}
+
 CWorldAssetManager::~CWorldAssetManager()
 {
 	for (auto& Asset : Assets)

@@ -1,5 +1,20 @@
 #include "CWorld.h"
 
+void CWorld::InputActive()
+{
+	Input->DeviceAcquire();
+}
+
+void CWorld::InputDeactive()
+{
+	Input->DeviceUnacquire();
+}
+
+void CWorld::ClearWorld()
+{
+	WorldAssetManager->ClearAsset();
+}
+
 bool CWorld::Init()
 {
 	CameraManager.reset(new CCameraManager);

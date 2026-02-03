@@ -42,17 +42,17 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 		return false;
 	}
 
-	if (!CRenderManager::GetInst()->Init())
-	{
-		return false;
-	}
-
 	if (!CCollisionInfoManager::GetInst()->Init())
 	{
 		return false;
 	}
 
 	if (!CAssetManager::GetInst()->Init())
+	{
+		return false;
+	}
+
+	if (!CRenderManager::GetInst()->Init())
 	{
 		return false;
 	}
@@ -189,6 +189,20 @@ LRESULT CEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
+		case WM_ACTIVATEAPP:
+			if (wParam)
+			{
+				if (bDeactivateOnce)
+				{
+					CWorldManager::GetInst()->InputActive();
+				}
+			}
+			else
+			{
+				bDeactivateOnce = true;
+				CWorldManager::GetInst()->InputDeactive();
+			}
+			break;
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;

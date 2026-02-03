@@ -65,6 +65,32 @@ void CInput::SetKeyShift(const std::string& Key, bool Shift)
 	BK->Shift = Shift;
 }
 
+void CInput::DeviceAcquire()
+{
+	if (Keyboard)
+	{
+		Keyboard->Acquire();
+	}
+
+	if (Mouse)
+	{
+		Mouse->Acquire();
+	}
+}
+
+void CInput::DeviceUnacquire()
+{
+	if (Keyboard)
+	{
+		Keyboard->Unacquire();
+	}
+
+	if (Mouse)
+	{
+		Mouse->Unacquire();
+	}
+}
+
 FKeyState* CInput::FindKeyState(unsigned char KeyCode)
 {
 	auto It = KeyStates.find(KeyCode);
@@ -813,11 +839,7 @@ bool CInput::InitDevice()
 		Keyboard->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	}
 
-	if (FAILED(Keyboard->Acquire()))
-	{
-		return false;
-	}
-
+	Keyboard->Acquire();
 
 	// Mouse.
 	if (FAILED(Input->CreateDevice(GUID_SysMouse, &Mouse, nullptr)))
@@ -836,10 +858,7 @@ bool CInput::InitDevice()
 		Mouse->SetCooperativeLevel(hWnd, DISCL_EXCLUSIVE | DISCL_FOREGROUND);
 	}
 
-	if (FAILED(Mouse->Acquire()))
-	{
-		return false;
-	}
+	Mouse->Acquire();
 
 	return true;
 }

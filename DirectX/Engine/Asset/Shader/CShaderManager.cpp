@@ -4,6 +4,7 @@
 #include "CShaderCollider.h"
 #include "CShaderColor2D.h"
 #include "CShaderMaterialColor2D.h"
+#include "CShaderNullBuffer.h"
 #include "CShaderTexture2D.h"
 #include "CShaderUIDefault.h"
 
@@ -57,6 +58,11 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderUIDefault>("UIDefault", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderNullBuffer>("NullBuffer", "EngineShader"))
 	{
 		return false;
 	}
