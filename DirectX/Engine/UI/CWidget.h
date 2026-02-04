@@ -84,8 +84,7 @@ public:
 	template <typename T>
 	static std::shared_ptr<T> CreateStaticWidget(const std::string& Key, std::weak_ptr<CWorld> World, int ZOrder = 0)
 	{
-		std::shared_ptr<T> Widget;
-		Widget.reset(new T);
+		std::shared_ptr<T> Widget{ new T };
 
 		Widget->World = World;
 		Widget->SetKey(Key);

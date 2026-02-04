@@ -2,8 +2,12 @@
 
 #include <CCollisionInfoManager.h>
 #include <EngineInfo.h>
+#include <Asset/CAssetManager.h>
+#include <Asset/Shader/CShaderManager.h>
 #include <Render/CRenderManager.h>
 #include <UI/CMouseWidget.h>
+
+#include "Shader/CShaderPostProcessHit.h"
 
 bool CGlobalSetting::Init()
 {
@@ -52,6 +56,11 @@ bool CGlobalSetting::Init()
 		}
 
 		TextureFileName.clear();
+	}
+
+	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
+	{
+		ShaderMgr->CreateShader<CShaderPostProcessHit>("Hit");
 	}
 
 	return true;

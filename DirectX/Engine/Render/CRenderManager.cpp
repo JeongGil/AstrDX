@@ -270,6 +270,52 @@ void CRenderManager::ResetState(const std::string& Key)
 	It->second->ResetState();
 }
 
+std::weak_ptr<CRenderTarget> CRenderManager::FindRenderTarget(const std::string& Key)
+{
+	auto It = RenderTargets.find(Key);
+	if (It == RenderTargets.end())
+	{
+		return {};
+	}
+
+	return It->second;
+}
+
+void CRenderManager::EnablePostProcess(const std::string& Key)
+{
+	for (const auto& PostProcess : PostProcesses)
+	{
+		if (PostProcess->GetKey() == Key)
+		{
+			PostProcess->SetEnable(true);
+		}
+	}
+}
+
+bool CRenderManager::CheckPostProcess(const std::string& Key)
+{
+	return std::ranges::any_of(PostProcesses, [&](const auto& PostProcess)
+		{
+			return PostProcess->GetKey() == Key;
+		});
+}
+
+void CRenderManager::RenderFullScreenQuad()
+{
+	NullBufferShader.lock()->SetShader();
+
+	auto Context = CDevice::GetInst()->GetContext();
+
+	UINT Offset{ 0 };
+
+	Context->IASetVertexBuffers(0, 0, nullptr, nullptr, &Offset);
+	Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+
+	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	Context->Draw(4, 0);
+}
+
 std::weak_ptr<CRenderState> CRenderManager::FindRenderState(const std::string& Key)
 {
 	auto It = RenderStates.find(Key);
@@ -302,7 +348,11 @@ bool CRenderManager::Init()
 	SetState("DepthDisable");
 
 	FResolution	RS = CDevice::GetInst()->GetResolution();
-	MainTarget = CRenderTarget::Create("MainTarget", RS.Width, RS.Height, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+	auto Target = CRenderTarget::Create("MainTarget", RS.Width, RS.Height, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+	RenderTargets.emplace("MainTarget", Target);
+
+	Target = CRenderTarget::Create("FinalTarget", RS.Width, RS.Height, DXGI_FORMAT_R8G8B8A8_UNORM, true);
+	RenderTargets.emplace("FinalTarget", Target);
 
 	NullBufferShader = CAssetManager::GetInst()->GetShaderManager().lock()->FindShader("NullBuffer");
 
@@ -315,29 +365,34 @@ void CRenderManager::Update(const float DeltaTime)
 	{
 		MouseWidget[MouseState]->Update(DeltaTime);
 	}
+
+	std::erase_if(PostProcesses, [](const auto& PostProcess)
+		{
+			return !PostProcess->IsActive();
+		});
+
+	for (const auto& PostProcess : PostProcesses)
+	{
+		if (PostProcess->IsEnable())
+		{
+			PostProcess->Update(DeltaTime);
+		}
+	}
 }
 
 void CRenderManager::Render()
 {
+	auto MainTarget = FindRenderTarget("MainTarget").lock();
 	MainTarget->SetTarget();
 
 	for (auto& RenderLayer : RenderLayers | std::views::values)
 	{
 		auto& RenderList = RenderLayer.RenderList;
-		const auto EndIt = RenderList.end();
-
-		auto It = RenderList.begin();
-		while (It != EndIt)
-		{
-			if (It->expired())
+		
+		std::erase_if(RenderList, [](const auto& Comp)
 			{
-				It = RenderList.erase(It);
-
-				continue;
-			}
-
-			++It;
-		}
+				return Comp.expired();
+			});		
 
 		switch (RenderLayer.SortType)
 		{
@@ -368,21 +423,38 @@ void CRenderManager::Render()
 
 	MainTarget->ResetTarget();
 
-	NullBufferShader.lock()->SetShader();
+	auto FinalTarget = FindRenderTarget("FinalTarget").lock();
 
-	MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+	if (PostProcesses.empty())
+	{
+		FinalTarget->SetTarget();
 
-	auto Context = CDevice::GetInst()->GetContext();
+		MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
 
-	UINT Offset{ 0 };
+		RenderFullScreenQuad();
 
-	Context->IASetVertexBuffers(0, 0, nullptr, nullptr, &Offset);
-	Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		FinalTarget->ResetTarget();
+	}
+	else
+	{
+		std::erase_if(PostProcesses, [](const auto& PostProcess)
+			{
+				return !PostProcess->IsActive();
+			});
 
-	Context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+		for (const auto& PostProcess : PostProcesses)
+		{
+			if (PostProcess->IsEnable())
+			{
+				PostProcess->RenderPostProcess();
+			}
+		}
+	}
 
-	Context->Draw(4, 0);
+	FinalTarget->SetShader(0, EShaderBufferType::Pixel, 0);
 
+	RenderFullScreenQuad();
+	
 	// UI
 	SetState("AlphaBlend");
 

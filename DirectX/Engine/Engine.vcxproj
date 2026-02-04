@@ -248,6 +248,7 @@
     <ClInclude Include="Object\CGameObject.h" />
     <ClInclude Include="Render\CBlendState.h" />
     <ClInclude Include="Render\CDepthStencilState.h" />
+    <ClInclude Include="Render\CPostProcess.h" />
     <ClInclude Include="Render\CRenderManager.h" />
     <ClInclude Include="Render\CRenderState.h" />
     <ClInclude Include="Sync.h" />
@@ -343,6 +344,7 @@
     <ClCompile Include="Object\CGameObject.cpp" />
     <ClCompile Include="Render\CBlendState.cpp" />
     <ClCompile Include="Render\CDepthStencilState.cpp" />
+    <ClCompile Include="Render\CPostProcess.cpp" />
     <ClCompile Include="Render\CRenderManager.cpp" />
     <ClCompile Include="Render\CRenderState.cpp" />
     <ClCompile Include="UI\CButton.cpp" />

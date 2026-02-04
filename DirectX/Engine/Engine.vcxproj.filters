@@ -172,11 +172,11 @@
     <Filter Include="Core\Thread">
       <UniqueIdentifier>{de4d9981-bcf1-411f-8663-4a1380f00bf0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Render\RenderTarget">
-      <UniqueIdentifier>{1e3797d3-4fcf-4a3a-a4d3-da02e34ae9d3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Asset\Shader\Shader\NullBuffer">
       <UniqueIdentifier>{e33561d8-7611-413a-ad13-c62ebf1e8cd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render\PostProcess">
+      <UniqueIdentifier>{1e3797d3-4fcf-4a3a-a4d3-da02e34ae9d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -510,6 +510,9 @@
     <ClInclude Include="Asset\Shader\CShaderNullBuffer.h">
       <Filter>Asset\Shader\Shader\NullBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="Render\CPostProcess.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -771,6 +774,9 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderNullBuffer.cpp">
       <Filter>Asset\Shader\Shader\NullBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\CPostProcess.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

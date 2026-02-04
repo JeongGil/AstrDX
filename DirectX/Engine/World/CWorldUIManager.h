@@ -38,8 +38,7 @@ public:
 	template <typename T>
 	std::weak_ptr<T> CreateWidget(const std::string& Key, int ZOrder = 0)
 	{
-		std::shared_ptr<T> Widget;
-		Widget.reset(new T);
+		std::shared_ptr<T> Widget{ new T };
 
 		Widget->World = World;
 		Widget->UIManager = std::dynamic_pointer_cast<CWorldUIManager>(shared_from_this());

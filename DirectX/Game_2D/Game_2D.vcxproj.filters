@@ -67,6 +67,15 @@
     <Filter Include="UI\Loading">
       <UniqueIdentifier>{afefe725-7064-4e7c-8c7d-c748481cfc4c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PostProcess">
+      <UniqueIdentifier>{6b2e440d-81eb-4695-a01e-4ae11b6b4ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{ac82bcf4-2a53-4543-abfd-db022e7f1c16}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\HLSL">
+      <UniqueIdentifier>{11f2df30-4a78-4db3-88a6-156202b1e6cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -169,10 +178,16 @@
       <Filter>World</Filter>
     </ClCompile>
     <ClCompile Include="Thread\CLoadingThread.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Thread</Filter>
     </ClCompile>
     <ClCompile Include="UI\CLoadingWidget.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>UI\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcess\CPostProcessHit.cpp">
+      <Filter>PostProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\CShaderPostProcessHit.cpp">
+      <Filter>Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -315,15 +330,26 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Thread\CLoadingThread.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Thread</Filter>
     </ClInclude>
     <ClInclude Include="UI\CLoadingWidget.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>UI\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcess\CPostProcessHit.h">
+      <Filter>PostProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\CShaderPostProcessHit.h">
+      <Filter>Shader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
       <Filter>소스 파일</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Asset\Shader\PostProcess.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

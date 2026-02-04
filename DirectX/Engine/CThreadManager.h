@@ -36,8 +36,7 @@ public:
 			return std::dynamic_pointer_cast<T>(It->second);
 		}
 
-		std::shared_ptr<CThreadBase> Thread;
-		Thread.reset(new T);
+		std::shared_ptr<CThreadBase> Thread{ new T };
 
 		Thread->SetKey(Key);
 

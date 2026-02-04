@@ -1,14 +1,16 @@
 #include "CMainWorld.h"
 
 #include <Asset/CAssetManager.h>
-#include <Asset/Animation2D/CAnimation2DManager.h>
 #include <Asset/CPathManager.h>
+#include <Asset/Animation2D/CAnimation2DManager.h>
 #include <Component/CColliderBox2D.h>
+#include <Render/CRenderManager.h>
 
+#include "../Strings.h"
 #include "../Monster/CMonster.h"
 #include "../Monster/CMonsterSpawnPoint.h"
 #include "../Player/CPlayer.h"
-#include "../Strings.h"
+#include "../PostProcess/CPostProcessHit.h"
 #include "../UI/CMainWidget.h"
 
 bool CMainWorld::Init()
@@ -60,6 +62,14 @@ bool CMainWorld::Init()
 		MSP->SetWorldRotationZ(20.f);
 		MSP->SetSpawnType<CMonster>();
 		MSP->SetSpawnTime(5.f);
+	}
+
+	if (!CRenderManager::GetInst()->CheckPostProcess("Hit"))
+	{
+		if (auto Hit = CRenderManager::GetInst()->CreatePostProcess<CPostProcessHit>("Hit", 3).lock())
+		{
+			Hit->SetEnable(false);
+		}
 	}
 
 	return true;

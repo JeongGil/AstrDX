@@ -93,8 +93,7 @@ bool CSoundManager::LoadSound(const std::string& Key, const std::string& GroupKe
 		Group = MasterGroup;
 	}
 
-	std::shared_ptr<CSound>	Sound;
-	Sound.reset(new CSound);
+	std::shared_ptr<CSound>	Sound{new CSound};
 
 	if (!Sound->LoadSound(System, Group, bLoop, FileName, PathName))
 	{

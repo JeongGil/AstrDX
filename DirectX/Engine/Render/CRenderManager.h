@@ -2,6 +2,7 @@
 
 #include "../EngineInfo.h"
 #include "../UI/CMouseWidget.h"
+#include "CPostProcess.h"
 
 class CRenderTarget;
 class CRenderState;
@@ -64,12 +65,20 @@ public:
 	void SetState(const std::string& Key);
 	void ResetState(const std::string& Key);
 
+	std::weak_ptr<CRenderTarget> FindRenderTarget(const std::string& Key);
 	std::weak_ptr<CRenderState> FindRenderState(const std::string& Key);
+
+	void EnablePostProcess(const std::string& Key);
+	bool CheckPostProcess(const std::string& Key);
 
 	bool Init();
 	void Update(const float DeltaTime);
 	void Render();
 
+private:
+	void RenderFullScreenQuad();
+
+public:
 	template <typename T>
 	std::weak_ptr<T> SetMouseWidget(EMouseState::Type State, const std::string& Key)
 	{
@@ -86,6 +95,26 @@ public:
 		ShowCursor(FALSE);
 
 		return std::dynamic_pointer_cast<T>(Widget);
+	}
+
+	template <typename T>
+	std::weak_ptr<T> CreatePostProcess(const std::string& Key, int Order = 0)
+	{
+		std::shared_ptr<CPostProcess> Obj{ new T };
+
+		Obj->SetKey(Key);
+		Obj->SetOrder(Order);
+
+		if (!Obj->Init())
+		{
+			return {};
+		}
+
+		PostProcesses.push_back(Obj);
+
+		std::ranges::sort(PostProcesses, CRenderManager::SortPostProcess);
+
+		return std::dynamic_pointer_cast<T>(Obj);
 	}
 
 private:
@@ -111,11 +140,12 @@ public:
 private:
 	std::unordered_map<std::string, std::shared_ptr<CRenderState>> RenderStates;
 	std::map<int, FRenderLayer> RenderLayers;
+	std::vector<std::shared_ptr<CPostProcess>> PostProcesses;
 
 	EMouseState::Type MouseState = EMouseState::Normal;
 	std::shared_ptr<CMouseWidget> MouseWidget[EMouseState::End];
 
-	std::shared_ptr<CRenderTarget> MainTarget;
+	std::unordered_map<std::string, std::shared_ptr<CRenderTarget>> RenderTargets;
 	std::weak_ptr<CShader> NullBufferShader;
 
 	inline static CRenderManager* Inst;
@@ -127,6 +157,12 @@ public:
 	}
 
 	void SetMouseWidget(EMouseState::Type State, CMouseWidget* Widget);
+
+private:
+	static bool SortPostProcess(const std::shared_ptr<CPostProcess>& A, const std::shared_ptr<CPostProcess>& B)
+	{
+		return A->GetOrder() > B->GetOrder();
+	}
 };
 
 struct FRenderLayer

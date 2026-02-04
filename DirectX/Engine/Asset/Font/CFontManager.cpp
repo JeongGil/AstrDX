@@ -49,8 +49,7 @@ bool CFontManager::LoadFont(const std::string& Key, const TCHAR* FontName, int W
 		return true;
 	}
 
-	std::shared_ptr<CFont> Font;
-	Font.reset(new CFont);
+	std::shared_ptr<CFont> Font{new CFont};
 
 	Font->Key = Key;
 
@@ -69,8 +68,7 @@ bool CFontManager::LoadFontCollection(const std::string& Key, const TCHAR* FileN
 	if (!FindFontCollection(Key).expired())
 		return true;
 
-	std::shared_ptr<CFontCollection> Collection;
-	Collection.reset(new CFontCollection);
+	std::shared_ptr<CFontCollection> Collection{new CFontCollection};
 
 	Collection->Key = Key;
 

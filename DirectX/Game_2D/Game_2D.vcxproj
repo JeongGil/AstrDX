@@ -190,6 +190,8 @@
     <ClCompile Include="Player\CBulletEffect.cpp" />
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
+    <ClCompile Include="PostProcess\CPostProcessHit.cpp" />
+    <ClCompile Include="Shader\CShaderPostProcessHit.cpp" />
     <ClCompile Include="Table\CTableManager.cpp" />
     <ClCompile Include="Thread\CLoadingThread.cpp" />
     <ClCompile Include="UI\CInventory.cpp" />
@@ -222,6 +224,8 @@
     <ClInclude Include="Inventory\CInventoryItem_Item.h" />
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />
     <ClInclude Include="Inventory\CShop.h" />
+    <ClInclude Include="PostProcess\CPostProcessHit.h" />
+    <ClInclude Include="Shader\CShaderPostProcessHit.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Monster\CMonster.h" />
     <ClInclude Include="Monster\CMonsterSpawnPoint.h" />
@@ -257,6 +261,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\Asset\Shader\PostProcess.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">HitVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">HitVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">HitVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">HitVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -43,7 +43,7 @@ public:
 	 *         false if a shader with the same key already exists or initialization fails.
 	 */
 	template <typename T>
-	bool CreateShader(const std::string& Key, const std::string& PathName)
+	bool CreateShader(const std::string& Key, const std::string& PathName = "Shader")
 	{
 		if (Shaders.contains(Key))
 		{

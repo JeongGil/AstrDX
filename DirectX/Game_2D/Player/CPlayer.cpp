@@ -1,16 +1,17 @@
 #include "CPlayer.h"
 
-#include <Component/CColliderBox2D.h>
-#include <World/CWorld.h>
 #include <CDevice.h>
+#include <CTimer.h>
 #include <Component/CAnimation2DComponent.h>
 #include <Component/CCameraComponent.h>
+#include <Component/CColliderBox2D.h>
 #include <Component/CColliderLine2D.h>
 #include <Component/CColliderSphere2D.h>
 #include <Component/CMeshComponent.h>
 #include <Component/CObjectMovementComponent.h>
-#include <CTimer.h>
 #include <Component/CWidgetComponent.h>
+#include <Render/CRenderManager.h>
+#include <World/CWorld.h>
 #include <World/CWorldUIManager.h>
 
 #include "CBullet.h"
@@ -451,6 +452,8 @@ void CPlayer::Destroy()
 float CPlayer::TakeDamage(float Damage)
 {
 	HP = std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP));
+
+	CRenderManager::GetInst()->EnablePostProcess("Hit");
 
 	for (const auto& Callback : OnHPChanged)
 	{
