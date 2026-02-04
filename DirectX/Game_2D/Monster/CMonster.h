@@ -23,7 +23,7 @@ private:
 
 	std::vector<std::function<void(float, float)>> OnHPChanged;
 
-	float DetectRange = 400.f;
+	float DetectRange = 600.f;
 
 	std::weak_ptr<CMeshComponent> MeshComponent;
 	std::weak_ptr<CAnimation2DComponent> Animation2DComponent;

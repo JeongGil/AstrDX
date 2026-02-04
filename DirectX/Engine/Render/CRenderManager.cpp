@@ -382,77 +382,92 @@ void CRenderManager::Update(const float DeltaTime)
 
 void CRenderManager::Render()
 {
+	// 1. Scene Object Rendering (MainTarget)
 	auto MainTarget = FindRenderTarget("MainTarget").lock();
 	MainTarget->SetTarget();
-
-	for (auto& RenderLayer : RenderLayers | std::views::values)
 	{
-		auto& RenderList = RenderLayer.RenderList;
-		
-		std::erase_if(RenderList, [](const auto& Comp)
-			{
-				return Comp.expired();
-			});		
-
-		switch (RenderLayer.SortType)
+		for (auto& RenderLayer : RenderLayers | std::views::values)
 		{
-			case ERenderListSort::None:
-				break;
-			case ERenderListSort::Y:
-				if (!RenderList.empty())
-				{
-					RenderList.sort(SortYRenderList);
-				}
-				break;
-			case ERenderListSort::Alpha:
-				break;
-		}
+			auto& RenderList = RenderLayer.RenderList;
 
-		for (const auto& WeakCmp : RenderList)
-		{
-			if (auto Cmp = WeakCmp.lock())
-			{
-				if (Cmp->GetEnable())
+			std::erase_if(RenderList, [](const auto& Comp)
 				{
-					Cmp->Render();
-					Cmp->PostRender();
+					return Comp.expired();
+				});
+
+			switch (RenderLayer.SortType)
+			{
+				case ERenderListSort::None:
+					break;
+				case ERenderListSort::Y:
+					if (!RenderList.empty())
+					{
+						RenderList.sort(SortYRenderList);
+					}
+					break;
+				case ERenderListSort::Alpha:
+					break;
+			}
+
+			for (const auto& WeakCmp : RenderList)
+			{
+				if (auto Cmp = WeakCmp.lock())
+				{
+					if (Cmp->GetEnable())
+					{
+						Cmp->Render();
+						Cmp->PostRender();
+					}
 				}
 			}
 		}
 	}
-
 	MainTarget->ResetTarget();
 
+	// 2. Post-Processing Chain
 	auto FinalTarget = FindRenderTarget("FinalTarget").lock();
+	std::shared_ptr<CRenderTarget> LastProcessedTarget = nullptr;
 
-	if (PostProcesses.empty())
+	std::erase_if(PostProcesses, [](const auto& PP)
+		{
+			return !PP->IsActive();
+		});
+
+	if (!PostProcesses.empty())
 	{
-		FinalTarget->SetTarget();
+		std::weak_ptr<CRenderTarget> CurrentInput = MainTarget;
 
-		MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+		for (const auto& PP : PostProcesses)
+		{
+			if (PP->IsEnable())
+			{
+				PP->SetBlendTarget(CurrentInput);
+				PP->RenderPostProcess();
 
-		RenderFullScreenQuad();
+				CurrentInput = PP->GetTarget();
+				LastProcessedTarget = CurrentInput.lock();
+			}
+		}
+	}
 
-		FinalTarget->ResetTarget();
+	// 3. Final Composite
+	if (LastProcessedTarget)
+	{
+		// If the post-process has been executed, the final output becomes FinalTarget
+		FinalTarget = LastProcessedTarget;
 	}
 	else
 	{
-		std::erase_if(PostProcesses, [](const auto& PostProcess)
-			{
-				return !PostProcess->IsActive();
-			});
-
-		for (const auto& PostProcess : PostProcesses)
-		{
-			if (PostProcess->IsEnable())
-			{
-				PostProcess->RenderPostProcess();
-			}
-		}
+		// If there is no post-process or it has not been executed, copy MainTarget to FinalTarget
+		FinalTarget->SetTarget();
+		MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+		RenderFullScreenQuad();
+		FinalTarget->ResetTarget();
 	}
 
+	// 4. Output to BackBuffer & UI
+	// Output FinalTarget to the screen (BackBuffer)
 	FinalTarget->SetShader(0, EShaderBufferType::Pixel, 0);
-
 	RenderFullScreenQuad();
 	
 	// UI

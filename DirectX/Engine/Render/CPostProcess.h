@@ -1,10 +1,19 @@
 #pragma once
 
 #include "../EngineInfo.h"
+#include "../Asset/Shader/CBufferContainer.h"
 
+class CRenderState;
 class CShader;
 class CRenderTarget;
 class CRenderManager;
+
+struct FTargetInfo
+{
+	std::weak_ptr<CRenderTarget> BlendTarget;
+	int Register{ 0 };
+	int ShaderBufferType{ EShaderBufferType::Pixel };
+};
 
 class CPostProcess
 {
@@ -21,8 +30,10 @@ protected:
 	bool bEnable{ true };
 	bool bActive{ true };
 	int Order{ 0 };
-	std::weak_ptr<CRenderTarget> Target;
+	std::shared_ptr<CRenderTarget> Target;
+	FTargetInfo BlendTarget;
 	std::weak_ptr<CShader> Shader;
+	std::shared_ptr<CRenderState> BlendState;
 
 public:
 	virtual bool Init();
@@ -36,6 +47,11 @@ private:
 	void RenderPostProcess();
 
 public:
+	[[nodiscard]] std::weak_ptr<CRenderTarget> GetTarget() const
+	{
+		return Target;
+	}
+
 	[[nodiscard]] bool IsActive() const
 	{
 		return bActive;
@@ -76,8 +92,19 @@ public:
 		this->Order = Order;
 	}
 
-	void SetRenderTarget(const std::weak_ptr<CRenderTarget>& Target);
-	void SetRenderTarget(const std::string& Key);
 	void SetShader(const std::string& Key);
+	void CreateRenderTarget(DXGI_FORMAT Format, bool bEnableDepth = false);
+	void SetBlendTarget(const std::weak_ptr<CRenderTarget>& Target)
+	{
+		BlendTarget.BlendTarget = Target;
+	}
+
+	void SetBlendTargetInfo(int Register, int ShaderBufferType = EShaderBufferType::Pixel)
+	{
+		BlendTarget.Register = Register;
+		BlendTarget.ShaderBufferType = ShaderBufferType;
+	}
+
+	void SetBlendState(const std::string& Key);
 };
 

@@ -127,8 +127,8 @@ private:
 	FVector2 MouseMove;
 	bool bMouseCheckStart = false;
 
-	HINSTANCE hInst;
-	HWND hWnd;
+	HINSTANCE hInst{};
+	HWND hWnd{};
 
 public:
 	[[nodiscard]] FVector2 GetMousePos() const

@@ -5,6 +5,8 @@
 #include <Asset/Texture/CTextureManager.h>
 #include <Render/CRenderManager.h>
 
+#include "../Shader/CCBufferHit.h"
+
 CPostProcessHit::CPostProcessHit()
 {
 }
@@ -15,7 +17,25 @@ CPostProcessHit::~CPostProcessHit()
 
 bool CPostProcessHit::Init()
 {
+	if (!CPostProcess::Init())
+	{
+		return false;
+	}
+
+	HitCBuffer.reset(new CCBufferHit);
+	HitCBuffer->Init();
+
+	CreateRenderTarget(DXGI_FORMAT_R8G8B8A8_UNORM, true);
+
+	SetBlendTargetInfo(0);
+
+	HitColor.x = 1.f;
+	HitColor.w = 1.f;
+
+	HitCBuffer->SetColor(HitColor);
+
 	SetShader("Hit");
+	SetBlendState("AlphaBlend");
 
 	MainTarget = CRenderManager::GetInst()->FindRenderTarget("MainTarget");
 
@@ -32,7 +52,7 @@ bool CPostProcessHit::Init()
 void CPostProcessHit::Update(const float DeltaTime)
 {
 	Elapsed += DeltaTime;
-	if (Elapsed >= EnableTime)
+	if (Elapsed >= Duration)
 	{
 		Elapsed = 0.f;
 		SetEnable(false);
@@ -41,7 +61,7 @@ void CPostProcessHit::Update(const float DeltaTime)
 
 void CPostProcessHit::Render()
 {
-	if (auto Target = this->Target.lock())
+	if (auto Target = this->MainTarget.lock())
 	{
 		Target->SetShader(0, EShaderBufferType::Pixel, 0);
 	}
@@ -50,4 +70,17 @@ void CPostProcessHit::Render()
 	{
 		HitTex->SetShader(1, EShaderBufferType::Pixel, 0);
 	}
+
+	HitCBuffer->UpdateBuffer();
+}
+
+void CPostProcessHit::SetHitColor(const FColor& Color)
+{
+	HitColor = Color;
+	HitCBuffer->SetColor(Color);
+}
+
+void CPostProcessHit::SetHitColor(float r, float g, float b, float a)
+{
+	SetHitColor(FColor(r, g, b, a));
 }

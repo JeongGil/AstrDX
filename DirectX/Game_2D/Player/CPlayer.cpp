@@ -339,109 +339,6 @@ void CPlayer::Update(const float DeltaTime)
 		bAutoIdle = false;
 		Anim->ChangeAnimation("PlayerIdle");
 	}
-
-	//if (auto RotCmp = Rotation.lock())
-	//{
-	//	RotCmp->AddRelativeRotationZ(100.f * DeltaTime);
-	//}
-
-	//if (auto SubMesh = SubMeshComponent.lock())
-	//{
-	//	static float Elapsed = 0.f;
-	//	Elapsed += DeltaTime;
-	//	if (Elapsed >= 1.f)
-	//	{
-	//		Elapsed -= 1.f;
-	//		auto& MT = CEngine::GetInst()->GetMT();
-	//		std::uniform_real_distribution<float> Dist(0.f, 1.f);
-	//		SubMesh->SetMaterialBaseColor(0, Dist(MT), Dist(MT), Dist(MT), 0.f);
-	//	}
-	//	//SubMesh->AddRelativePosition(FVector(0.2f, 0, 0) * DeltaTime);
-	//}
-
-	//if (auto Mesh = MeshComponent.lock())
-	//{
-	//	auto Anim = Animation2DComponent.lock();
-
-	//	bool bMove = false;
-
-	//	if (GetAsyncKeyState('W') & 0x8000)
-	//	{
-	//		Mesh->AddRelativePosition(Mesh->GetAxis(EAxis::Y) * 100 * DeltaTime);
-	//		Anim->ChangeAnimation("PlayerWalk");
-	//		bMove = true;
-	//	}
-
-	//	if (GetAsyncKeyState('S') & 0x8000)
-	//	{
-	//		Mesh->AddRelativePosition(Mesh->GetAxis(EAxis::Y) * -100 * DeltaTime);
-	//		Anim->ChangeAnimation("PlayerWalk");
-	//		bMove = true;
-	//	}
-
-	//	if (GetAsyncKeyState('A') & 0x8000)
-	//	{
-	//		Mesh->AddRelativeRotationZ(180 * DeltaTime);
-	//	}
-
-	//	if (GetAsyncKeyState('D') & 0x8000)
-	//	{
-	//		Mesh->AddRelativeRotationZ(-180 * DeltaTime);
-	//	}
-
-	//	if (GetAsyncKeyState(VK_SPACE) & 0x8000)
-	//	{
-	//		Anim->ChangeAnimation("PlayerAttack");
-	//		bOnAttack = true;
-	//	}
-
-	//	if (!bMove && !bOnAttack)
-	//	{
-	//		Anim->ChangeAnimation("PlayerIdle");
-	//	}
-
-	//	if (GetAsyncKeyState('1') & 0x8000)
-	//	{
-	//		if (auto World = this->World.lock())
-	//		{
-	//			//const std::string BulletName = "Missile_";
-	//			//static int Counter = 0;
-	//			auto WeakMissile = World->CreateGameObject<CMissile>("Missile");
-	//			if (auto Missile = WeakMissile.lock())
-	//			{
-	//				Missile->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 100);
-	//				Missile->SetWorldRotation(GetWorldRotation());
-	//				Missile->SetCamera();
-	//			}
-	//		}
-	//	}
-
-	//	if (GetAsyncKeyState('3') & 0x8000)
-	//	{
-	//		for (int i = 0; i < 12; i++)
-	//		{
-	//			if (auto World = this->World.lock())
-	//			{
-	//				auto WeakBullet = World->CreateGameObject<CBullet>("Bullet");
-	//				if (auto Bullet = WeakBullet.lock())
-	//				{
-	//					FMatrix DirMat;
-	//					DirMat.RotationZ(static_cast<float>(i) * 30.f);
-
-	//					FVector BulletDir = GetAxis(EAxis::Y).TransformNormal(DirMat).GetNormalized();
-	//					constexpr float Offset = 90.f;
-	//					FVector BulletPos = GetWorldPosition() + BulletDir * Offset;
-
-	//					Bullet->SetWorldPosition(BulletPos);
-	//					Bullet->CalcCollisionRadius();
-
-	//					Bullet->SetCloseTarget<CMonster>();
-	//					Bullet->SetCollisionTargetName("Monster");
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
 }
 
 void CPlayer::Destroy()
@@ -451,7 +348,7 @@ void CPlayer::Destroy()
 
 float CPlayer::TakeDamage(float Damage)
 {
-	HP = std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP));
+	HP = static_cast<int>(std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP)));
 
 	CRenderManager::GetInst()->EnablePostProcess("Hit");
 

@@ -26,9 +26,9 @@ private:
 	float ClearColor[4]{};
 
 public:
-	static std::shared_ptr<CRenderTarget> Create(const std::string& Key, UINT Width, UINT Height, DXGI_FORMAT Format, bool DepthEnable = false);
+	static std::shared_ptr<CRenderTarget> Create(const std::string& Key, UINT Width, UINT Height, DXGI_FORMAT Format, bool bEnableDepth = false);
 
-	bool Init(UINT Width, UINT Height, DXGI_FORMAT Format, bool DepthEnable = false);
+	bool Init(UINT Width, UINT Height, DXGI_FORMAT Format, bool bEnableDepth = false);
 	void SetTarget();
 	void ResetTarget();
 

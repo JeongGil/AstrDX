@@ -1,6 +1,7 @@
 #include "CPostProcess.h"
 
 #include "CRenderManager.h"
+#include "CRenderState.h"
 #include "../CDevice.h"
 #include "../Asset/CAssetManager.h"
 #include "../Asset/Shader/CShaderManager.h"
@@ -16,7 +17,7 @@ CPostProcess::~CPostProcess()
 
 bool CPostProcess::Init()
 {
-	Target = CRenderManager::GetInst()->FindRenderTarget("FinalTarget");
+	SetShader("NullBuffer");
 
 	return true;
 }
@@ -40,25 +41,28 @@ void CPostProcess::RenderFullScreenQuad()
 
 void CPostProcess::RenderPostProcess()
 {
-	if (auto Target = this->Target.lock())
+	if (Target)
 	{
 		Target->SetTarget();
+	}
 
-		Render();
-		RenderFullScreenQuad();
+	if (BlendState)
+	{
+		BlendState->SetState();
+	}
 
+	Render();
+	RenderFullScreenQuad();
+
+	if (BlendState)
+	{
+		BlendState->ResetState();
+	}
+
+	if (Target)
+	{
 		Target->ResetTarget();
 	}
-}
-
-void CPostProcess::SetRenderTarget(const std::weak_ptr<CRenderTarget>& Target)
-{
-	this->Target = Target;
-}
-
-void CPostProcess::SetRenderTarget(const std::string& Key)
-{
-	SetRenderTarget(CRenderManager::GetInst()->FindRenderTarget(Key));
 }
 
 void CPostProcess::SetShader(const std::string& Key)
@@ -67,4 +71,16 @@ void CPostProcess::SetShader(const std::string& Key)
 	{
 		Shader = ShaderMgr->FindShader(Key);
 	}
+}
+
+void CPostProcess::CreateRenderTarget(DXGI_FORMAT Format, bool bEnableDepth)
+{
+	FResolution RS = CDevice::GetInst()->GetResolution();
+
+	Target = CRenderTarget::Create(Key, RS.Width, RS.Height, Format, bEnableDepth);
+}
+
+void CPostProcess::SetBlendState(const std::string& Key)
+{
+	BlendState = CRenderManager::GetInst()->FindRenderState(Key).lock();
 }

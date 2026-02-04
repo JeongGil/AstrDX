@@ -18,14 +18,14 @@ CRenderTarget::~CRenderTarget()
 }
 
 std::shared_ptr<CRenderTarget> CRenderTarget::Create(const std::string& Key, UINT Width, UINT Height,
-	DXGI_FORMAT Format, bool DepthEnable)
+	DXGI_FORMAT Format, bool bEnableDepth)
 {
 	static std::shared_ptr<CRenderTarget> Target;
 	Target.reset(new CRenderTarget);
 
 	Target->SetKey(Key);
 
-	if (!Target->Init(Width, Height, Format, DepthEnable))
+	if (!Target->Init(Width, Height, Format, bEnableDepth))
 	{
 		Target.reset();
 		return {};
@@ -34,7 +34,7 @@ std::shared_ptr<CRenderTarget> CRenderTarget::Create(const std::string& Key, UIN
 	return Target;
 }
 
-bool CRenderTarget::Init(UINT Width, UINT Height, DXGI_FORMAT Format, bool DepthEnable)
+bool CRenderTarget::Init(UINT Width, UINT Height, DXGI_FORMAT Format, bool bEnableDepth)
 {
 	auto* Info = new FTextureInfo;
 
@@ -75,7 +75,7 @@ bool CRenderTarget::Init(UINT Width, UINT Height, DXGI_FORMAT Format, bool Depth
 
 	TextureInfos.push_back(Info);
 
-	if (DepthEnable)
+	if (bEnableDepth)
 	{
 		D3D11_TEXTURE2D_DESC DepthDesc{};
 		DepthDesc.Width = Width;

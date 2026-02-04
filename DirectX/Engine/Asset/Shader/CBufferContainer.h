@@ -29,7 +29,7 @@ struct FCBufferTransformData
 	FMatrix WV;
 	FMatrix WVP;
 	FVector PivotSize;
-	float Empty;
+	float Empty{};
 };
 
 struct FCBufferMaterialData

@@ -87,45 +87,32 @@ void CWorld::PostUpdate(const float DeltaTime)
 {
 	Begin();
 
-	auto It = Objects.begin();
-	while (It != Objects.end())
-	{
-		if (!It->second->GetAlive())
+	std::erase_if(Objects, [](const auto& Pair)
 		{
-			It = Objects.erase(It);
-			continue;
-		}
+			return !Pair.second->GetAlive();
+		});
 
-		It->second->PostUpdate(DeltaTime);
-		++It;
+	for (auto& Object : Objects | std::views::values)
+	{
+		if (Object->GetEnable())
+		{
+			Object->PostUpdate(DeltaTime);
+		}
 	}
 
 	Collision->Update(DeltaTime);
 
-	It = Objects.begin();
-	while (It != Objects.end())
+	std::erase_if(Objects, [](const auto& Pair)
+		{
+			return !Pair.second->GetAlive();
+		});
+
+	for (auto& Object : Objects | std::views::values)
 	{
-		auto Obj = It->second;
-		if (Obj.use_count() == 0)
+		if (Object->GetEnable())
 		{
-			It = Objects.erase(It);
-			continue;
+			Object->UpdateTransform();
 		}
-
-		if (!Obj->GetAlive())
-		{
-			It = Objects.erase(It);
-			continue;
-		}
-
-		if (!Obj->GetEnable())
-		{
-			It = Objects.erase(It);
-			continue;
-		}
-
-		Obj->UpdateTransform();
-		++It;
 	}
 }
 

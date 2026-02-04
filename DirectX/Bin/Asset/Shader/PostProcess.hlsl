@@ -1,3 +1,8 @@
+cbuffer CBHit : register(b10)
+{
+	float4 cbColor;
+};
+
 static float4 NullPos[4] =
 {
     float4(-1.f, 1.f, 0.f, 1.f),
@@ -25,7 +30,7 @@ struct PS_OUTPUT_COLOR
     float4 Color : SV_TARGET;
 };
 
-Texture2D tbBaseTexture : register(t0);
+Texture2D tbBlendTarget : register(t0);
 Texture2D tbHitTexture : register(t1);
 
 SamplerState sbPoint : register(s0);
@@ -42,9 +47,12 @@ VS_OUTPUT_TEX HitVS(uint VertexID : SV_VertexID)
 
 PS_OUTPUT_COLOR HitPS(VS_OUTPUT_TEX input)
 {
-    PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR) 0;
+    PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR)0;
     
-    output.Color = tbBaseTexture.Sample(sbPoint, input.UV);
+	float4 SrcColor = tbBlendTarget.Sample(sbPoint, input.UV);    
+	float4 DestColor = tbHitTexture.Sample(sbPoint, input.UV) * cbColor;
+    
+	output.Color = SrcColor + DestColor * DestColor.a;
     
     return output;
 }

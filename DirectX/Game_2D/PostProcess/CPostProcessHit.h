@@ -1,6 +1,7 @@
 #pragma once
 #include <Render/CPostProcess.h>
 
+class CCBufferHit;
 class CRenderManager;
 class CRenderTarget;
 class CTexture;
@@ -18,11 +19,12 @@ public:
 
 private:
 	float Elapsed{ 0.f };
-	float EnableTime{ 0.5f };
+	float Duration{ 0.1f };
 
 	std::weak_ptr<CRenderTarget> MainTarget;
 	std::weak_ptr<CTexture> HitTexture;
-	FColor Hitcolor;
+	FColor HitColor;
+	std::shared_ptr<CCBufferHit> HitCBuffer;
 
 public:
 	bool Init() override;
@@ -34,7 +36,10 @@ protected:
 public:
 	void SetEnableTime(float EnableTime)
 	{
-		this->EnableTime = EnableTime;
+		this->Duration = EnableTime;
 	}
+
+	void SetHitColor(const FColor& Color);
+	void SetHitColor(float r, float g, float b, float a);
 };
 

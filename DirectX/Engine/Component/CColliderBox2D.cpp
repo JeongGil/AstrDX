@@ -165,3 +165,4 @@ CColliderBox2D::CColliderBox2D()
 {
 	ColliderType = EColliderType::Box2D;
 }
+

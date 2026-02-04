@@ -22,50 +22,26 @@ bool CWorldCollision::Init()
 
 void CWorldCollision::Update(const float DeltaTime)
 {
-	//if (Interval > 0.f)
-	//{
-	//	Elapsed += DeltaTime;
-	//
-	//	if (Elapsed < Interval)
-	//	{
-	//		return;
-	//	}
-	//
-	//	Elapsed -= Interval;
-	//}
-
 	QuadTree->Update(DeltaTime);
 
-	auto SrcIt = Colliders.begin();
-	while (SrcIt != Colliders.end())
-	{
-		if (SrcIt->expired())
+	std::erase_if(Colliders, [&](const auto& WeakCollider)
 		{
-			SrcIt  = Colliders.erase(SrcIt);
-			continue;
-		}
+			auto Collider = WeakCollider.lock();
+			if (!Collider || !Collider->GetAlive())
+			{
+				return true;
+			}
 
-		auto SrcCollider = SrcIt->lock();
+			Collider->UpdateInfo();
+			if (!Collider->GetEnable())
+			{
+				return false;
+			}
 
-		if (!SrcCollider->GetAlive())
-		{
-			SrcIt = Colliders.erase(SrcIt);
-			continue;
-		}
+			QuadTree->AddCollider(WeakCollider);
 
-		if (!SrcCollider->GetEnable())
-		{
-			SrcCollider->UpdateInfo();
-			++SrcIt;
-			continue;
-		}
-
-		SrcCollider->UpdateInfo();
-
-		QuadTree->AddCollider(*SrcIt);
-
-		++SrcIt;
-	}
+			return false;
+		});
 
 	auto World = this->World.lock();
 	auto UIManager = World->GetUIManager().lock();
@@ -88,157 +64,6 @@ void CWorldCollision::Update(const float DeltaTime)
 	}
 
 	QuadTree->Collide(DeltaTime);
-
-	//UpdateInfo();
-
-	//auto SrcIt = Colliders.begin();
-	//while (SrcIt != Colliders.end())
-	//{
-	//	auto SrcCollider = SrcIt->lock();
-	//	if (!SrcCollider)
-	//	{
-	//		SrcIt = Colliders.erase(SrcIt);
-	//		continue;
-	//	}
-
-	//	if (!SrcCollider->GetAlive())
-	//	{
-	//		SrcIt = Colliders.erase(SrcIt);
-	//		continue;
-	//	}
-
-	//	if (!SrcCollider->GetEnable())
-	//	{
-	//		++SrcIt;
-	//		continue;
-	//	}
-
-	//	auto SrcProfile = SrcCollider->GetCollisionProfile();
-	//	if (!SrcProfile || !SrcProfile->bEnable)
-	//	{
-	//		++SrcIt;
-	//		continue;
-	//	}
-
-	//	auto DestIt = std::next(SrcIt);
-	//	while (DestIt != Colliders.end())
-	//	{
-	//		std::shared_ptr<CCollider> DestCollider = DestIt->lock();
-	//		if (!DestCollider)
-	//		{
-	//			DestIt = Colliders.erase(DestIt);
-	//			continue;
-	//		}
-
-	//		if (!DestCollider->GetAlive())
-	//		{
-	//			DestIt = Colliders.erase(DestIt);
-	//			continue;
-	//		}
-
-	//		if (!DestCollider->GetEnable())
-	//		{
-	//			++DestIt;
-	//			continue;
-	//		}
-
-	//		auto DestProfile = DestCollider->GetCollisionProfile();
-	//		if (!DestProfile || !DestProfile->bEnable)
-	//		{
-	//			++DestIt;
-	//			continue;
-	//		}
-
-	//		auto Src2Dest = SrcProfile->Interaction[DestProfile->Channel->Channel];
-	//		auto Dest2Src = DestProfile->Interaction[SrcProfile->Channel->Channel];
-
-	//		// Check interaction
-	//		if (Src2Dest == ECollisionInteraction::Ignore
-	//			|| Dest2Src == ECollisionInteraction::Ignore)
-	//		{
-	//			++DestIt;
-	//			continue;
-	//		}
-
-	//		if (Src2Dest != Dest2Src)
-	//		{
-	//			++DestIt;
-	//			continue;
-	//		}
-
-	//		FVector3 HitPoint, BlockMove;
-	//		if (SrcCollider->Collide(HitPoint, DestCollider))
-	//		{
-	//			auto SrcObj = SrcCollider->GetOwner().lock();
-	//			auto DestObj = DestCollider->GetOwner().lock();
-
-	//			if (Src2Dest == ECollisionInteraction::Block)
-	//			{
-	//				auto SrcVelocity = SrcObj->GetVelocity();
-	//				auto DestVelocity = DestObj->GetVelocity();
-
-	//				auto SrcPos = SrcObj->GetWorldPosition();
-	//				auto DestPos = DestObj->GetWorldPosition();
-
-	//				//if (!SrcVelocity.IsZero() && DestVelocity.IsZero())
-	//				//{
-	//				//	SrcObj->AddWorldPosition((SrcVelocity / -2.f) * 1.01f);
-	//				//	DestObj->AddWorldPosition((DestVelocity / -2.f) * 1.01f);
-	//				//
-	//				//	SrcCollider->UpdateInfo();
-	//				//}
-	//				//else if (!SrcVelocity.IsZero())
-	//				//{
-	//				//	SrcObj->AddWorldPosition(-(SrcVelocity * 1.01f));
-	//				//
-	//				//	SrcCollider->UpdateInfo();
-	//				//}
-	//				//else if (!DestVelocity.IsZero())
-	//				//{
-	//				//	DestObj->AddWorldPosition(-(DestVelocity * 1.01f));
-	//				//
-	//				//	DestCollider->UpdateInfo();
-	//				//}
-	//				//
-	//				//SrcObj->ClearPhysics();
-	//				//DestObj->ClearPhysics();
-
-	//				FCollisionManifold Manifold;
-
-	//				if (SrcCollider)
-
-	//				SrcCollider->CallOnCollisionBlock(HitPoint, DestCollider);
-	//				DestCollider->CallOnCollisionBlock(HitPoint, SrcCollider);
-	//			}
-	//			else
-	//			{
-	//				// OnCollisionBegin
-	//				if (!SrcCollider->CheckCollidingObject(DestCollider.get()))
-	//				{
-	//					SrcCollider->CallOnCollisionBegin(HitPoint, DestCollider);
-	//					DestCollider->CallOnCollisionBegin(HitPoint, SrcCollider);
-	//				}
-	//			}
-	//		}
-	//		else if (SrcCollider->CheckCollidingObject(DestCollider.get()))
-	//		{
-	//			// OnCollisionEnd
-	//			if (SrcProfile->Interaction[DestProfile->Channel->Channel] == ECollisionInteraction::Overlap)
-	//			{
-	//				SrcCollider->CallOnCollisionEnd(DestCollider.get());
-	//				DestCollider->CallOnCollisionEnd(SrcCollider.get());
-	//			}
-	//			else
-	//			{
-	//				
-	//			}
-	//		}
-
-	//		++DestIt;
-	//	}
-
-	//	++SrcIt;
-	//}
 }
 
 void CWorldCollision::Render()

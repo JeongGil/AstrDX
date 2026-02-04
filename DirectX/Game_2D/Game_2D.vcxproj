@@ -191,6 +191,7 @@
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
     <ClCompile Include="PostProcess\CPostProcessHit.cpp" />
+    <ClCompile Include="Shader\CCBufferHit.cpp" />
     <ClCompile Include="Shader\CShaderPostProcessHit.cpp" />
     <ClCompile Include="Table\CTableManager.cpp" />
     <ClCompile Include="Thread\CLoadingThread.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />
     <ClInclude Include="Inventory\CShop.h" />
     <ClInclude Include="PostProcess\CPostProcessHit.h" />
+    <ClInclude Include="Shader\CCBufferHit.h" />
     <ClInclude Include="Shader\CShaderPostProcessHit.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Monster\CMonster.h" />

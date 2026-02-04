@@ -189,6 +189,9 @@
     <ClCompile Include="Shader\CShaderPostProcessHit.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Shader\CCBufferHit.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -339,6 +342,9 @@
       <Filter>PostProcess</Filter>
     </ClInclude>
     <ClInclude Include="Shader\CShaderPostProcessHit.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\CCBufferHit.h">
       <Filter>Shader</Filter>
     </ClInclude>
   </ItemGroup>

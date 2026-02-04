@@ -110,7 +110,7 @@ void CMonster::Update(const float DeltaTime)
 
 float CMonster::TakeDamage(float Damage)
 {
-	HP = std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP));
+	HP = static_cast<int>(std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP)));
 
 	for (const auto& Callback : OnHPChanged)
 	{

@@ -178,6 +178,7 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 
 					DestCollider->CallOnCollisionBlock(HitPoint, *SrcIt);
 				}
+				// Overlap
 				else
 				{
 					if (!SrcCollider->CheckCollidingObject(DestCollider.get()))

@@ -19,4 +19,6 @@ bool CShaderPostProcessHit::Init(const std::string& PathName)
 	{
 		return false;
 	}
+
+	return true;
 }

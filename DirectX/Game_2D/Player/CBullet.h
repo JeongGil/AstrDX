@@ -1,7 +1,7 @@
 #pragma once
 #include <World/CWorld.h>
 
-#include "Object/CGameObject.h"
+#include <Object/CGameObject.h>
 
 class CColliderBox2D;
 class CProjectileMovementComponent;
