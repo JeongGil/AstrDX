@@ -212,12 +212,6 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 			}
 		}
 	}
-
-	std::erase_if(Colliders, [](const auto& Ptr)
-		{
-			auto Col = Ptr.lock();
-			return !Col || !Col->GetAlive();
-		});
 }
 
 bool CCollisionQuadTreeNode::CollideMouse(std::weak_ptr<CCollider>& Result, const float DeltaTime,
