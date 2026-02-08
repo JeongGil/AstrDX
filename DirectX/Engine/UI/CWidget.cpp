@@ -273,7 +273,7 @@ void CWidget::RenderBrush(const FUIBrush& Brush, const FVector& RenderPos, const
 
 	TransformCBuffer->SetWorldMatrix(WorldMat);
 	TransformCBuffer->SetViewMatrix(FMatrix::Identity);
-	TransformCBuffer->SetProjectionMatrix(UIProjectionMatrix);
+	TransformCBuffer->SetProjMatrix(UIProjMatrix);
 
 	FVector PivotSize = Pivot * Mesh->GetMeshSize();
 	TransformCBuffer->SetPivotSize(PivotSize);
@@ -349,7 +349,7 @@ void CWidget::RenderBrush(const FUIBrush& Brush, const FVector3& RenderPos, cons
 
 	TransformCBuffer->SetWorldMatrix(WorldMat);
 	TransformCBuffer->SetViewMatrix(FMatrix::Identity);
-	TransformCBuffer->SetProjectionMatrix(UIProjectionMatrix);
+	TransformCBuffer->SetProjMatrix(UIProjMatrix);
 
 	//FVector3	PivotSize = mPivot * Mesh->GetMeshSize();
 

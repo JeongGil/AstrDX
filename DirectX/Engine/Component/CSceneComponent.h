@@ -14,7 +14,8 @@ namespace ERenderOrder
 	{
 		Background = -100,
 
-		Default = 0,
+		Map = 0,
+		Default = 1,
 
 		CharacterLeg = 99,
 		CharacterBody = 100,
@@ -73,6 +74,8 @@ public:
 	{
 		this->RenderLayer = RenderLayer;
 	}
+
+	void SetRenderLayer(const std::string& Name);
 
 	bool TrySetRenderLayer(const int NewRenderLayer);
 
@@ -315,14 +318,8 @@ protected:
 
 protected:
 	CSceneComponent();
-
 	CSceneComponent(const CSceneComponent& other);
-
 	CSceneComponent(CSceneComponent&& other) noexcept;
-
-	CSceneComponent& operator=(const CSceneComponent& other);
-
-	CSceneComponent& operator=(CSceneComponent&& other) noexcept;
 
 public:
 	~CSceneComponent() override = default;

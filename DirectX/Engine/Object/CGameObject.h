@@ -257,7 +257,7 @@ public:
 	}
 
 	template <typename T>
-	std::weak_ptr<T> FindComponent(const std::string& Name)
+	std::weak_ptr<T> GetComponent(const std::string& Name)
 	{
 		for (const auto& Cmp : SceneComponents)
 		{
@@ -276,6 +276,33 @@ public:
 		}
 
 		return std::weak_ptr<T>();
+	}
+
+	template <typename T>
+	std::weak_ptr<T> GetComponent()
+	{
+		for (const auto& Cmp : SceneComponents)
+		{
+			if (Cmp)
+			{
+				if (auto Casted = std::dynamic_pointer_cast<T>(Cmp))
+				{
+					return Casted;
+				}
+			}
+		}
+		for (const auto& Cmp : ObjectComponents)
+		{
+			if (Cmp)
+			{
+				if (auto Casted = std::dynamic_pointer_cast<T>(Cmp))
+				{
+					return Casted;
+				}
+			}
+		}
+
+		return {};
 	}
 
 	template <typename T>

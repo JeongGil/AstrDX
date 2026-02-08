@@ -19,7 +19,7 @@ public:
 	{
 		Data.View = View;
 	}
-	void SetProjectionMatrix(const FMatrix& Proj)
+	void SetProjMatrix(const FMatrix& Proj)
 	{
 		Data.Proj = Proj;
 	}

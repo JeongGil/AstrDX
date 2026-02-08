@@ -2,8 +2,23 @@
 
 float CTimer::Update()
 {
-	prevTime = currTime;
-	currTime = std::chrono::steady_clock::now();
+	PrevTime = CurrTime;
+	CurrTime = std::chrono::steady_clock::now();
 
-	return deltaTime = std::chrono::duration<float>(currTime - prevTime).count();
+	DeltaTime = std::chrono::duration<float>(CurrTime - PrevTime).count();
+
+	Elapsed += DeltaTime;
+	if (++TickCounter == 60)
+	{
+		FPS = static_cast<float>(TickCounter) / Elapsed;
+		Elapsed = 0.f;
+		TickCounter = 0;
+
+		char FPSText[64] = {};
+
+		sprintf_s(FPSText, "FPS : %.5f\n", FPS);
+		OutputDebugStringA(FPSText);
+	}
+
+	return DeltaTime;
 }

@@ -64,3 +64,19 @@ struct FCBufferUIDefaultData
 	int BrushTextureEnable;
 	FVector2 BrushEmpty;
 };
+
+constexpr int MAX_BLUR_COUNT{ 16 };
+
+struct FCBufferBlur
+{
+	FVector2 TexelSize;
+	int Count;
+	float BlurEmpty;
+	FVector4 BlurWeight[(MAX_BLUR_COUNT + 1 + 3) / 4];
+};
+
+struct FCBufferTileMapData
+{
+	FVector2 LTUV;
+	FVector2 RBUV;
+};

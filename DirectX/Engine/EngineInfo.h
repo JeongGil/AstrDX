@@ -5,6 +5,7 @@
 #include <atlbase.h>
 #include <atlconv.h>
 #include <charconv>
+#include <chrono>
 #include <functional>
 #include <list>
 #include <map>
@@ -247,6 +248,28 @@ namespace EMouseState
 		End
 	};
 }
+
+enum ETileShape
+{
+	Rect,
+	Isometric,
+};
+
+namespace ETileTextureType
+{
+	enum Type
+	{
+		Back,
+		Tile,
+		End
+	};
+}
+
+struct FTileFrame
+{
+	FVector2 Start;
+	FVector2 End;
+};
 
 struct TableID
 {

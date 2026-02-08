@@ -4,9 +4,13 @@
 
 #include "CBlendState.h"
 #include "CDepthStencilState.h"
+#include "CPostProcessBlur.h"
 #include "CRenderState.h"
 #include "../CDevice.h"
 #include "../Asset/CAssetManager.h"
+#include "../Asset/Mesh/CMeshManager.h"
+#include "../Asset/Shader/CCBufferTransform.h"
+#include "../Asset/Shader/CCBufferUIDefault.h"
 #include "../Asset/Shader/CShader.h"
 #include "../Asset/Shader/CShaderManager.h"
 #include "../Asset/Texture/CRenderTarget.h"
@@ -41,6 +45,24 @@ bool CRenderManager::CreateLayer(const std::string& Name, int RenderOrder, ERend
 	RenderLayers.emplace(RenderOrder, FRenderLayer{ .Name = Name, .SortType = SortType });
 
 	return true;
+}
+
+int CRenderManager::GetLayerOrder(const std::string& Name)
+{
+	for (const auto& Pair : RenderLayers)
+	{
+		if (Pair.second.Name == Name)
+		{
+			return Pair.first;
+		}
+	}
+
+	return -1;
+}
+
+void CRenderManager::SetBlurEnable(bool bEnable)
+{
+	Blur->SetEnable(bEnable);
 }
 
 void CRenderManager::AddRenderLayer(const std::weak_ptr<CSceneComponent>& Component)
@@ -332,15 +354,16 @@ std::weak_ptr<CRenderState> CRenderManager::FindRenderState(const std::string& K
 bool CRenderManager::Init()
 {
 	AddBlendRenderTargetDesc("AlphaBlend", true,
-		D3D11_BLEND_SRC_ALPHA,
-		D3D11_BLEND_INV_SRC_ALPHA,
-		D3D11_BLEND_OP_ADD);
+		D3D11_BLEND_SRC_ALPHA, D3D11_BLEND_INV_SRC_ALPHA,
+		D3D11_BLEND_OP_ADD,
+		D3D11_BLEND_ONE, D3D11_BLEND_INV_SRC1_ALPHA);
 
 	CreateBlendState("AlphaBlend");
 
 	CreateDepthStencilState("DepthDisable", false);
 
-	CreateLayer("Background", ERenderOrder::Background, ERenderListSort::Y);
+	CreateLayer("Background", ERenderOrder::Background, ERenderListSort::None);
+	CreateLayer("Map", ERenderOrder::Map, ERenderListSort::None);
 	CreateLayer("Default", ERenderOrder::Default, ERenderListSort::Y);
 
 	CreateLayer("DebugDraw", ERenderOrder::DebugDraw, ERenderListSort::Y);
@@ -356,6 +379,30 @@ bool CRenderManager::Init()
 
 	NullBufferShader = CAssetManager::GetInst()->GetShaderManager().lock()->FindShader("NullBuffer");
 
+	Blur = CreatePostProcess<CPostProcessBlur>("Blur", 10).lock();
+	Blur->SetEnable(false);
+
+	if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
+	{
+		TargetMesh = MeshMgr->FindMesh("Mesh_UIRectTex").lock();
+	}
+
+	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
+	{
+		TargetShader = ShaderMgr->FindShader("UIDefault").lock();
+	}
+
+	TargetCBuffer.reset(new CCBufferUIDefault);
+	TargetCBuffer->Init();
+
+	TargetCBuffer->SetWidgetColor(FColor::White);
+	TargetCBuffer->SetAnimEnable(false);
+	TargetCBuffer->SetBrushTint(FColor::White);
+	TargetCBuffer->SetTextureEnable(true);
+
+	TargetTR.reset(new CCBufferTransform);
+	TargetTR->Init();
+
 	return true;
 }
 
@@ -365,6 +412,8 @@ void CRenderManager::Update(const float DeltaTime)
 	{
 		MouseWidget[MouseState]->Update(DeltaTime);
 	}
+
+	CSync _(&Crt);
 
 	std::erase_if(PostProcesses, [](const auto& PostProcess)
 		{
@@ -416,64 +465,124 @@ void CRenderManager::Render()
 					if (Cmp->GetEnable())
 					{
 						Cmp->Render();
-						Cmp->PostRender();
+						//Cmp->PostRender();
 					}
 				}
 			}
 		}
 	}
+
 	MainTarget->ResetTarget();
 
 	// 2. Post-Processing Chain
 	auto FinalTarget = FindRenderTarget("FinalTarget").lock();
-	std::shared_ptr<CRenderTarget> LastProcessedTarget = nullptr;
 
-	std::erase_if(PostProcesses, [](const auto& PP)
+	{
+		CSync _(&Crt);
+
+		std::shared_ptr<CRenderTarget> LastProcessedTarget = nullptr;
+		std::erase_if(PostProcesses, [](const auto& PP)
 		{
 			return !PP->IsActive();
 		});
 
-	if (!PostProcesses.empty())
-	{
-		std::weak_ptr<CRenderTarget> CurrentInput = MainTarget;
-
-		for (const auto& PP : PostProcesses)
+		if (!PostProcesses.empty())
 		{
-			if (PP->IsEnable())
-			{
-				PP->SetBlendTarget(CurrentInput);
-				PP->RenderPostProcess();
+			std::weak_ptr<CRenderTarget> CurrentInput = MainTarget;
 
-				CurrentInput = PP->GetTarget();
-				LastProcessedTarget = CurrentInput.lock();
+			for (const auto& PP : PostProcesses)
+			{
+				if (PP->IsEnable())
+				{
+					PP->SetBlendTarget(CurrentInput);
+					PP->RenderPostProcess();
+
+					CurrentInput = PP->GetTarget();
+					LastProcessedTarget = CurrentInput.lock();
+				}
 			}
 		}
-	}
 
-	// 3. Final Composite
-	if (LastProcessedTarget)
-	{
-		// If the post-process has been executed, the final output becomes FinalTarget
-		FinalTarget = LastProcessedTarget;
-	}
-	else
-	{
-		// If there is no post-process or it has not been executed, copy MainTarget to FinalTarget
-		FinalTarget->SetTarget();
-		MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
-		RenderFullScreenQuad();
-		FinalTarget->ResetTarget();
+		// 3. Final Composite
+		if (LastProcessedTarget)
+		{
+			// If the post-process has been executed, the final output becomes FinalTarget
+			FinalTarget = LastProcessedTarget;
+		}
+		else
+		{
+			// If there is no post-process or it has not been executed, copy MainTarget to FinalTarget
+			FinalTarget->SetTarget();
+			MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+			RenderFullScreenQuad();
+			FinalTarget->ResetTarget();
+		}
 	}
 
 	// 4. Output to BackBuffer & UI
 	// Output FinalTarget to the screen (BackBuffer)
 	FinalTarget->SetShader(0, EShaderBufferType::Pixel, 0);
 	RenderFullScreenQuad();
-	
+
 	// UI
 	SetState("AlphaBlend");
 
 	CWorldManager::GetInst()->RenderUI();
+
+	ResetState("AlphaBlend");
+
+	// Print render target to debug.
+	FVector Pos, Scale(400.f, 200.f, 1.f);
+
+	FMatrix	ScaleMat, TranslateMat, WorldMat;
+
+	ScaleMat.Scaling(Scale);
+	TranslateMat.Translation(Pos);
+
+	WorldMat = ScaleMat * TranslateMat;
+
+	TargetTR->SetWorldMatrix(WorldMat);
+	TargetTR->SetProjMatrix(CWidget::GetProjMatrix());
+
+	TargetTR->UpdateBuffer();
+
+	TargetCBuffer->UpdateBuffer();
+
+	MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+
+	TargetShader.lock()->SetShader();
+
+	TargetMesh.lock()->Render();
+
+	{
+		CSync sync(&Crt);
+
+		for (const auto& PostProcess : PostProcesses)
+		{
+			Pos.y += Scale.y;
+			TranslateMat.Translation(Pos);
+
+			WorldMat = ScaleMat * TranslateMat;
+
+			TargetTR->SetWorldMatrix(WorldMat);
+			TargetTR->SetProjMatrix(CWidget::GetProjMatrix());
+
+			TargetTR->UpdateBuffer();
+
+			TargetCBuffer->UpdateBuffer();
+
+			if (auto PostTarget = PostProcess->GetTarget().lock())
+			{
+				PostTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+			}
+
+			TargetShader.lock()->SetShader();
+
+			TargetMesh.lock()->Render();
+		}
+	}
+
+	SetState("AlphaBlend");
 
 	if (MouseWidget[MouseState])
 	{
@@ -483,8 +592,15 @@ void CRenderManager::Render()
 	ResetState("AlphaBlend");
 }
 
+CRenderManager::CRenderManager()
+{
+	InitializeCriticalSection(&Crt);
+}
+
 CRenderManager::~CRenderManager()
 {
+	DeleteCriticalSection(&Crt);
+
 	ResetState("DepthDisable");
 }
 

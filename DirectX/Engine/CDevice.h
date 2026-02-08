@@ -84,6 +84,11 @@ public:
 	 */
 	void EndRender();
 
+	[[nodiscard]] FVector2 GetTexelSize() const
+	{
+		return TexelSize;
+	}
+
 	[[nodiscard]] ID2D1RenderTarget* Get2DTarget() const
 	{
 		return m2DTarget;
@@ -130,6 +135,8 @@ private:
 	ID3D11DepthStencilView* DepthView = nullptr;
 
 	FResolution Resolution;
+
+	FVector2 TexelSize;
 
 	bool bWindowMode = false;
 

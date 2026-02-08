@@ -29,13 +29,18 @@ public:
 	virtual ~CWidget() = 0;
 
 protected:
-	inline static FMatrix UIProjectionMatrix;
+	inline static FMatrix UIProjMatrix;
 
 public:
 	static void CreateUIProjection(float Width, float Height)
 	{
-		UIProjectionMatrix = DirectX::XMMatrixOrthographicOffCenterLH(
+		UIProjMatrix = DirectX::XMMatrixOrthographicOffCenterLH(
 			0.f, Width, Height, 0.f, 0.f, 1000.f);
+	}
+
+	static const FMatrix& GetProjMatrix()
+	{
+		return UIProjMatrix;
 	}
 
 protected:

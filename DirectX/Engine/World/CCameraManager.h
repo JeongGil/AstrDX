@@ -21,7 +21,7 @@ public:
 	const FVector& GetMainCameraWorldPosition() const;
 	const FVector& GetMainCameraAxis(EAxis::Type Axis) const;
 	const FMatrix& GetViewMatrix()const;
-	const FMatrix& GetProjectionMatrix()const;
+	const FMatrix& GetProjMatrix()const;
 
 private:
 	std::unordered_multimap<std::string, std::weak_ptr<CCameraComponent>> Cameras;

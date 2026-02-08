@@ -147,7 +147,7 @@ void CCollider::Render()
 			if (auto CamMgr = World->GetCameraManager().lock())
 			{
 				ViewMat = CamMgr->GetViewMatrix();
-				ProjMat = CamMgr->GetProjectionMatrix();
+				ProjMat = CamMgr->GetProjMatrix();
 			}
 		}
 
@@ -166,7 +166,7 @@ void CCollider::Render()
 
 		TransformCBuffer->SetWorldMatrix(WorldMat);
 		TransformCBuffer->SetViewMatrix(ViewMat);
-		TransformCBuffer->SetProjectionMatrix(ProjMat);
+		TransformCBuffer->SetProjMatrix(ProjMat);
 
 		FVector PivotSize = Pivot * Mesh->GetMeshSize();
 		TransformCBuffer->SetPivotSize(PivotSize);

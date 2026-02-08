@@ -3,10 +3,14 @@
 #include "../EngineInfo.h"
 #include "../UI/CMouseWidget.h"
 #include "CPostProcess.h"
+#include "../Sync.h"
 
 class CRenderTarget;
 class CRenderState;
 class CSceneComponent;
+class CShader;
+class CMesh;
+class CCBufferUIDefault;
 
 struct FRenderLayer;
 
@@ -21,6 +25,7 @@ class CRenderManager
 {
 public:
 	bool CreateLayer(const std::string& Name, int RenderOrder, ERenderListSort SortType);
+	int GetLayerOrder(const std::string& Name);
 	void AddRenderLayer(const std::weak_ptr<CSceneComponent>& Component);
 	bool TrySetRenderLayer(int Old, int New, const std::weak_ptr<CSceneComponent>& WeakComponent);
 	void ClearRenderLayer(int LayerOrder);
@@ -82,6 +87,8 @@ public:
 	template <typename T>
 	std::weak_ptr<T> SetMouseWidget(EMouseState::Type State, const std::string& Key)
 	{
+		CSync _(&Crt);
+
 		auto& Widget = MouseWidget[State];
 		Widget.reset(new T);
 
@@ -100,6 +107,8 @@ public:
 	template <typename T>
 	std::weak_ptr<T> CreatePostProcess(const std::string& Key, int Order = 0)
 	{
+		CSync _(&Crt);
+
 		std::shared_ptr<CPostProcess> Obj{ new T };
 
 		Obj->SetKey(Key);
@@ -118,7 +127,7 @@ public:
 	}
 
 private:
-	CRenderManager() = default;
+	CRenderManager();
 	~CRenderManager();
 
 public:
@@ -142,11 +151,20 @@ private:
 	std::map<int, FRenderLayer> RenderLayers;
 	std::vector<std::shared_ptr<CPostProcess>> PostProcesses;
 
+	std::shared_ptr<CPostProcess> Blur;
+
 	EMouseState::Type MouseState = EMouseState::Normal;
 	std::shared_ptr<CMouseWidget> MouseWidget[EMouseState::End];
 
 	std::unordered_map<std::string, std::shared_ptr<CRenderTarget>> RenderTargets;
 	std::weak_ptr<CShader> NullBufferShader;
+
+	std::weak_ptr<CMesh> TargetMesh;
+	std::weak_ptr<CShader> TargetShader;
+	std::shared_ptr<CCBufferUIDefault> TargetCBuffer;
+	std::shared_ptr<CCBufferTransform> TargetTR;
+
+	CRITICAL_SECTION Crt;
 
 	inline static CRenderManager* Inst;
 
@@ -157,6 +175,8 @@ public:
 	}
 
 	void SetMouseWidget(EMouseState::Type State, CMouseWidget* Widget);
+
+	void SetBlurEnable(bool bEnable);
 
 private:
 	static bool SortPostProcess(const std::shared_ptr<CPostProcess>& A, const std::shared_ptr<CPostProcess>& B)

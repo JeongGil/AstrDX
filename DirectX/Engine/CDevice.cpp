@@ -7,6 +7,9 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 	Resolution.Height = height;
 	bWindowMode = windowMode;
 
+	TexelSize.x = 1.f / static_cast<float>(width);
+	TexelSize.y = 1.f / static_cast<float>(height);
+
 	UINT flag = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
 #ifdef _DEBUG
 	flag |= D3D11_CREATE_DEVICE_DEBUG;

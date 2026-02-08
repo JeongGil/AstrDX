@@ -58,7 +58,7 @@ const FMatrix& CCameraManager::GetViewMatrix() const
 	return FMatrix::Identity;
 }
 
-const FMatrix& CCameraManager::GetProjectionMatrix() const
+const FMatrix& CCameraManager::GetProjMatrix() const
 {
 	if (auto Cam = MainCamera.lock())
 	{

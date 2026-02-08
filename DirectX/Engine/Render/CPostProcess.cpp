@@ -52,6 +52,12 @@ void CPostProcess::RenderPostProcess()
 	}
 
 	Render();
+
+	if (auto BlendTarget = this->BlendTarget.BlendTarget.lock())
+	{
+		BlendTarget->SetShader(this->BlendTarget.Register, this->BlendTarget.ShaderBufferType, 0)
+	}
+
 	RenderFullScreenQuad();
 
 	if (BlendState)

@@ -279,13 +279,13 @@ void CMeshComponent::Render()
 		if (auto CamMgr = World->GetCameraManager().lock())
 		{
 			ViewMat = CamMgr->GetViewMatrix();
-			ProjMat = CamMgr->GetProjectionMatrix();
+			ProjMat = CamMgr->GetProjMatrix();
 		}
 	}
 
 	CBufferTransform->SetWorldMatrix(WorldMatrix);
 	CBufferTransform->SetViewMatrix(ViewMat);
-	CBufferTransform->SetProjectionMatrix(ProjMat);
+	CBufferTransform->SetProjMatrix(ProjMat);
 
 	FVector PivotSize = Pivot * Mesh->GetMeshSize();
 

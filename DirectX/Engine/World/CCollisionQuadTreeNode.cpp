@@ -298,7 +298,7 @@ void CCollisionQuadTreeNode::Render(const std::weak_ptr<CMesh>& Mesh, const std:
 		if (auto CamMgr = World->GetCameraManager().lock())
 		{
 			ViewMat = CamMgr->GetViewMatrix();
-			ProjMat = CamMgr->GetProjectionMatrix();
+			ProjMat = CamMgr->GetProjMatrix();
 		}
 	}
 
@@ -314,7 +314,7 @@ void CCollisionQuadTreeNode::Render(const std::weak_ptr<CMesh>& Mesh, const std:
 
 	TransformCBuffer->SetWorldMatrix(WorldMatrix);
 	TransformCBuffer->SetViewMatrix(ViewMat);
-	TransformCBuffer->SetProjectionMatrix(ProjMat);
+	TransformCBuffer->SetProjMatrix(ProjMat);
 
 	TransformCBuffer->UpdateBuffer();
 
