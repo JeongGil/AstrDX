@@ -37,30 +37,14 @@ CMovementComponent* CMovementComponent::Clone() const
 	return new CMovementComponent(*this);
 }
 
-CMovementComponent::CMovementComponent(const CMovementComponent& other) : CObjectComponent(other),
-UpdateComponent(other.UpdateComponent)
+CMovementComponent::CMovementComponent(const CMovementComponent& other) :
+	CObjectComponent(other),
+	UpdateComponent(other.UpdateComponent)
 {
 }
 
-CMovementComponent::CMovementComponent(CMovementComponent&& other) noexcept : CObjectComponent(std::move(other)),
-UpdateComponent(std::move(other.UpdateComponent))
+CMovementComponent::CMovementComponent(CMovementComponent&& other) noexcept :
+	CObjectComponent(std::move(other)),
+	UpdateComponent(std::move(other.UpdateComponent))
 {
-}
-
-CMovementComponent& CMovementComponent::operator=(const CMovementComponent& other)
-{
-	if (this == &other)
-		return *this;
-	CObjectComponent::operator =(other);
-	UpdateComponent = other.UpdateComponent;
-	return *this;
-}
-
-CMovementComponent& CMovementComponent::operator=(CMovementComponent&& other) noexcept
-{
-	if (this == &other)
-		return *this;
-	CObjectComponent::operator =(std::move(other));
-	UpdateComponent = std::move(other.UpdateComponent);
-	return *this;
 }

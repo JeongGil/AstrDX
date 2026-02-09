@@ -29,8 +29,6 @@ protected:
 	CMovementComponent() = default;
 	CMovementComponent(const CMovementComponent& other);
 	CMovementComponent(CMovementComponent&& other) noexcept;
-	CMovementComponent& operator=(const CMovementComponent& other);
-	CMovementComponent& operator=(CMovementComponent&& other) noexcept;
 
 public:
 	~CMovementComponent() override = default;

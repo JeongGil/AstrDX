@@ -36,7 +36,7 @@ CWidget::CWidget(const CWidget& other)
 	UIDefaultCBuffer.reset(new CCBufferUIDefault);
 	UIDefaultCBuffer->Init();
 
-	Key = other.Key;
+	SetKey(other.Key);
 	Pos = other.Pos;
 	RenderPos = other.RenderPos;
 	Size = other.Size;

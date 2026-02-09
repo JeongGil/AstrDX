@@ -38,9 +38,14 @@ public:
 		return Key;
 	}
 
-	void SetKey(const std::string& Name)
+	void SetKey(const std::string& Key)
 	{
-		this->Key = Name;
+		this->Key = Key;
+	}
+
+	void SetKey(std::string&& Key)
+	{
+		this->Key = std::move(Key);
 	}
 
 	bool GetAlive() const
@@ -395,62 +400,8 @@ protected:
 	}
 
 	CGameObject() = default;
-
-	CGameObject(const CGameObject& other)
-		: CObject(other),
-		World(other.World),
-		//SceneComponents(other.SceneComponents),
-		//Root(other.Root),
-		Key(other.Key),
-		bEnable(other.bEnable),
-		bAlive(other.bAlive)
-	{
-		CloneAndSetHierarchyComponents(other);
-	}
-
-	CGameObject(CGameObject&& other) noexcept
-		: CObject(std::move(other)),
-		World(std::move(other.World)),
-		SceneComponents(std::move(other.SceneComponents)),
-		Root(std::move(other.Root)),
-		Key(std::move(other.Key)),
-		bEnable(other.bEnable),
-		bAlive(other.bAlive)
-	{
-		other.SceneComponents.clear();
-		other.Root.reset();
-		other.bAlive = false;
-	}
-
-	CGameObject& operator=(const CGameObject& other)
-	{
-		if (this == &other)
-			return *this;
-		CObject::operator =(other);
-		World = other.World;
-		//SceneComponents = other.SceneComponents;
-		//Root = other.Root;
-		CloneAndSetHierarchyComponents(other);
-		Key = other.Key;
-		bEnable = other.bEnable;
-		bAlive = other.bAlive;
-		return *this;
-	}
-
-	CGameObject& operator=(CGameObject&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CObject::operator =(std::move(other));
-		World = std::move(other.World);
-		SceneComponents = std::move(other.SceneComponents);
-		Root = std::move(other.Root);
-		Key = std::move(other.Key);
-		bEnable = other.bEnable;
-		bAlive = other.bAlive;
-		other.bAlive = false;
-		return *this;
-	}
+	CGameObject(const CGameObject& other);
+	CGameObject(CGameObject&& other) noexcept;
 
 public:
 	~CGameObject() override = default;

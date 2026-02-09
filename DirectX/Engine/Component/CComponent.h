@@ -46,9 +46,14 @@ public:
 		return Key;
 	}
 
-	void SetKey(const std::string& Name)
+	void SetKey(const std::string& Key)
 	{
-		this->Key = Name;
+		this->Key = Key;
+	}
+
+	void SetKey(std::string&& Key)
+	{
+		this->Key = std::move(Key);
 	}
 
 	[[nodiscard]] EType GetType() const
@@ -86,56 +91,8 @@ protected:
 
 protected:
 	CComponent() = default;
-
-	CComponent(const CComponent& other)
-		: CObject(other),
-		//World(other.World),
-		//Owner(other.Owner),
-		Key(other.Key),
-		bAlive(other.bAlive),
-		bEnable(other.bEnable),
-		Type(other.Type)
-	{
-	}
-
-	CComponent(CComponent&& other) noexcept
-		: CObject(std::move(other)),
-		//World(std::move(other.World)),
-		//Owner(std::move(other.Owner)),
-		Key(std::move(other.Key)),
-		bEnable(other.bEnable),
-		bAlive(other.bAlive),
-		Type(other.Type)
-	{
-	}
-
-	CComponent& operator=(const CComponent& other)
-	{
-		if (this == &other)
-			return *this;
-		CObject::operator =(other);
-		//World = other.World;
-		//Owner = other.Owner;
-		Key = other.Key;
-		bEnable = other.bEnable;
-		bAlive = other.bAlive;
-		Type = other.Type;
-		return *this;
-	}
-
-	CComponent& operator=(CComponent&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CObject::operator =(std::move(other));
-		//World = std::move(other.World);
-		//Owner = std::move(other.Owner);
-		Key = std::move(other.Key);
-		bEnable = other.bEnable;
-		bAlive = other.bAlive;
-		Type = other.Type;
-		return *this;
-	}
+	CComponent(const CComponent& other);
+	CComponent(CComponent&& other) noexcept;
 
 public:
 	~CComponent() override;

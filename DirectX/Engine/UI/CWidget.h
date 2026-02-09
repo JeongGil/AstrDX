@@ -26,7 +26,7 @@ protected:
 	CWidget(const CWidget& other);
 
 public:
-	virtual ~CWidget() = 0;
+	~CWidget() override = 0;
 
 protected:
 	inline static FMatrix UIProjMatrix;

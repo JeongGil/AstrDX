@@ -51,7 +51,7 @@ bool CFontManager::LoadFont(const std::string& Key, const TCHAR* FontName, int W
 
 	std::shared_ptr<CFont> Font{new CFont};
 
-	Font->Key = Key;
+	Font->SetKey(Key);
 
 	if (!Font->LoadFont(WriteFactory, FontName, Weight, FontSize, LocalName, Stretch))
 	{
@@ -70,7 +70,7 @@ bool CFontManager::LoadFontCollection(const std::string& Key, const TCHAR* FileN
 
 	std::shared_ptr<CFontCollection> Collection{new CFontCollection};
 
-	Collection->Key = Key;
+	Collection->SetKey(Key);
 
 	if (!Collection->LoadFontCollection(WriteFactory, FileName, PathName))
 	{

@@ -16,8 +16,6 @@ protected:
 	CAnimation2DComponent() = default;
 	CAnimation2DComponent(const CAnimation2DComponent& other);
 	CAnimation2DComponent(CAnimation2DComponent&& other) noexcept;
-	CAnimation2DComponent& operator=(const CAnimation2DComponent& other);
-	CAnimation2DComponent& operator=(CAnimation2DComponent&& other) noexcept;
 
 public:
 	~CAnimation2DComponent() override = default;

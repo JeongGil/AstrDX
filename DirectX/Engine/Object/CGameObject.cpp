@@ -855,6 +855,32 @@ CGameObject* CGameObject::Clone()
 	return new CGameObject(*this);
 }
 
+CGameObject::CGameObject(const CGameObject& other) :
+	CObject(other),
+	World(other.World),
+	//SceneComponents(other.SceneComponents),
+	//Root(other.Root),
+	//Key(other.Key),
+	bEnable(other.bEnable),
+	bAlive(other.bAlive)
+{
+	SetKey(other.Key);
+	CloneAndSetHierarchyComponents(other);
+}
+
+CGameObject::CGameObject(CGameObject&& other) noexcept :
+	CObject(std::move(other)),
+	World(std::move(other.World)),
+	SceneComponents(std::move(other.SceneComponents)),
+	Root(std::move(other.Root)),
+	//Key(std::move(other.Key)),
+	bEnable(other.bEnable),
+	bAlive(other.bAlive)
+{
+	SetKey(std::move(other.Key));
+	other.bAlive = false;
+}
+
 void CGameObject::Destroy()
 {
 	for (auto& Cmp : SceneComponents)

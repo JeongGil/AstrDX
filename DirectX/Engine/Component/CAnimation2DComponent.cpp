@@ -7,40 +7,20 @@
 #include "../Asset/Texture/CTexture.h"
 #include "../World/CWorld.h"
 
-CAnimation2DComponent::CAnimation2DComponent(const CAnimation2DComponent& other): CObjectComponent(other),
-                                                                                  UpdateComponent(other.UpdateComponent),
-                                                                                  Animations(other.Animations),
-                                                                                  CurrentAnimation(other.CurrentAnimation)
+CAnimation2DComponent::CAnimation2DComponent(const CAnimation2DComponent& other) :
+	CObjectComponent(other),
+	UpdateComponent(other.UpdateComponent),
+	Animations(other.Animations),
+	CurrentAnimation(other.CurrentAnimation)
 {
 }
 
-CAnimation2DComponent::CAnimation2DComponent(CAnimation2DComponent&& other) noexcept: CObjectComponent(std::move(other)),
+CAnimation2DComponent::CAnimation2DComponent(CAnimation2DComponent&& other) noexcept :
+	CObjectComponent(std::move(other)),
 	UpdateComponent(std::move(other.UpdateComponent)),
 	Animations(std::move(other.Animations)),
 	CurrentAnimation(std::move(other.CurrentAnimation))
 {
-}
-
-CAnimation2DComponent& CAnimation2DComponent::operator=(const CAnimation2DComponent& other)
-{
-	if (this == &other)
-		return *this;
-	CObjectComponent::operator =(other);
-	UpdateComponent = other.UpdateComponent;
-	Animations = other.Animations;
-	CurrentAnimation = other.CurrentAnimation;
-	return *this;
-}
-
-CAnimation2DComponent& CAnimation2DComponent::operator=(CAnimation2DComponent&& other) noexcept
-{
-	if (this == &other)
-		return *this;
-	CObjectComponent::operator =(std::move(other));
-	UpdateComponent = std::move(other.UpdateComponent);
-	Animations = std::move(other.Animations);
-	CurrentAnimation = std::move(other.CurrentAnimation);
-	return *this;
 }
 
 bool CAnimation2DComponent::Init()
@@ -151,7 +131,7 @@ void CAnimation2DComponent::AddAnimation(const std::weak_ptr<CAnimation2D>& Anim
 			{
 				AnimationCBuffer->SetTextureType(Asset->GetTextureType());
 
-				if (MeshComponent->SetTexture(0,0,Asset->GetTexture()))
+				if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
 				{
 					bUpdateEnable = true;
 				}
@@ -164,7 +144,7 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 	bool bReverse)
 {
 	std::weak_ptr<CAnimation2D> WeakAnim;
-	
+
 	if (auto World = this->World.lock())
 	{
 		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
@@ -180,13 +160,13 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 	}
 
 	auto [It, Result] = Animations.try_emplace(Anim->GetKey(), std::shared_ptr<CAnimation2DSequence>(new CAnimation2DSequence));
-	
+
 	// Already exist.
 	if (!Result)
 	{
 		return;
 	}
-	
+
 	auto Sequence = It->second;
 
 	Sequence->SetAnimation2D(Anim);
@@ -314,7 +294,7 @@ void CAnimation2DComponent::SetShader()
 	if (auto Asset = CurrentAnimation->GetAsset().lock())
 	{
 		if (Asset->GetTextureType() == EAnimation2DTextureType::SpriteSheet)
-		{	
+		{
 			if (auto Texture = Asset->GetTexture().lock())
 			{
 				const auto& TexFrame = Asset->GetFrame(CurrentAnimation->GetCurrFrame());
