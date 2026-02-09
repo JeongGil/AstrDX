@@ -36,8 +36,6 @@ void CPlayer::AttackNotify()
 			Bullet->SetCollision("PlayerAttack");
 			Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75.f);
 			Bullet->SetWorldRotation(GetWorldRotation());
-			Bullet->SetCollisionTargetName("Monster");
-			Bullet->CalcCollisionRadius();
 		}
 	}
 }
@@ -130,8 +128,6 @@ void CPlayer::Skill1Press()
 		{
 			Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75.f);
 			Bullet->SetWorldRotation(GetWorldRotation());
-			Bullet->SetCollisionTargetName("Monster");
-			Bullet->CalcCollisionRadius();
 			Bullet->SetEnableMove(false);
 		}
 	}

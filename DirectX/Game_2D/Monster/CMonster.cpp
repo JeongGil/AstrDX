@@ -136,8 +136,6 @@ void CMonster::AttackNotify()
 			BulletObj->SetCollision("MonsterAttack");
 			BulletObj->SetWorldPosition(BulletPos);
 			BulletObj->SetWorldRotation(GetWorldRotation());
-			BulletObj->SetCollisionTargetName("Player");
-			BulletObj->CalcCollisionRadius();
 
 			auto Target = this->FireTarget.lock();
 

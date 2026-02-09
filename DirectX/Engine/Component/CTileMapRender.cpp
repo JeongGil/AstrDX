@@ -79,7 +79,7 @@ void CTileMapRender::Render()
 {
 	CSceneComponent::Render();
 
-	if (!Textures[ETileTextureType::Back].expired())
+	if (auto Texture = Textures[ETileTextureType::Back].lock())
 	{
 		FMatrix	ScaleMat, TranslateMat;
 
@@ -111,9 +111,7 @@ void CTileMapRender::Render()
 
 		TransformCBuffer->UpdateBuffer();
 
-		auto	Texture = Textures[ETileTextureType::Back].lock();
-
-		Texture->SetShader(1, EShaderBufferType::Pixel, 0);
+		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
 
 		auto State = AlphaBlend.lock();
 
@@ -137,7 +135,7 @@ void CTileMapRender::Render()
 	{
 		if (auto Texture = Textures[ETileTextureType::Tile].lock())
 		{
-			Texture->SetShader(0, EShaderBufferType::Pixel,				0);
+			Texture->SetShader(1, EShaderBufferType::Pixel, 0);
 
 			auto State = TileAlphaBlend.lock();
 
