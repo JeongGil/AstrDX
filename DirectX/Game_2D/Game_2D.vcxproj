@@ -184,6 +184,7 @@
     <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp" />
     <ClCompile Include="Inventory\CShop.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map\CTileMapMain.cpp" />
     <ClCompile Include="Monster\CMonster.cpp" />
     <ClCompile Include="Monster\CMonsterSpawnPoint.cpp" />
     <ClCompile Include="Player\CBullet.cpp" />
@@ -225,6 +226,7 @@
     <ClInclude Include="Inventory\CInventoryItem_Item.h" />
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />
     <ClInclude Include="Inventory\CShop.h" />
+    <ClInclude Include="Map\CTileMapMain.h" />
     <ClInclude Include="PostProcess\CPostProcessHit.h" />
     <ClInclude Include="Shader\CCBufferHit.h" />
     <ClInclude Include="Shader\CShaderPostProcessHit.h" />

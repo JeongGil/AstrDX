@@ -257,11 +257,11 @@ public:
 	}
 
 	template <typename T>
-	std::weak_ptr<T> GetComponent(const std::string& Name)
+	std::weak_ptr<T> GetComponent(const std::string& Key)
 	{
 		for (const auto& Cmp : SceneComponents)
 		{
-			if (Cmp->GetKey() == Name)
+			if (Cmp->GetKey() == Key)
 			{
 				return std::dynamic_pointer_cast<T>(Cmp);
 			}
@@ -269,7 +269,7 @@ public:
 
 		for (const auto& Cmp : ObjectComponents)
 		{
-			if (Cmp->GetKey() == Name)
+			if (Cmp->GetKey() == Key)
 			{
 				return std::dynamic_pointer_cast<T>(Cmp);
 			}

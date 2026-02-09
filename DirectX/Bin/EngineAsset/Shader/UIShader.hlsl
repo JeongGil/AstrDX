@@ -1,15 +1,8 @@
-
 #include "Share.hlsli"
 
 struct VS_INPUT_TEX
 {
 	float3 Pos : POSITION0;
-	float2 UV : TEXCOORD;
-};
-
-struct VS_OUTPUT_TEX
-{
-	float4 Pos : SV_POSITION;
 	float2 UV : TEXCOORD;
 };
 

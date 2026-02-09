@@ -61,12 +61,6 @@ struct VS_INPUT_TEX
 	float2 UV : TEXCOORD;
 };
 
-struct VS_OUTPUT_TEX
-{
-	float4 Pos : SV_POSITION;
-	float2 UV : TEXCOORD;
-};
-
 VS_OUTPUT_TEX DefaultTexVS(VS_INPUT_TEX input)
 {
 	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
@@ -76,6 +70,31 @@ VS_OUTPUT_TEX DefaultTexVS(VS_INPUT_TEX input)
 	output.Pos = mul(float4(Pos, 1.f), cbWVP);
 	output.UV = ComputeAnimation2DUV(input.UV);
 
+	return output;
+}
+
+VS_OUTPUT_TEX DefaultTexNoneAnimVS(VS_INPUT_TEX input)
+{
+	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
+    
+	float3 Pos = input.Pos - cbPivotSize;
+    
+    // x, y, z 에는 input.Pos의 x, y, z 가 들어가고 w에는 1.f이 들어간다.
+    // mul : 행렬 곱셈연산을 해준다.
+	output.Pos = mul(float4(Pos, 1.f), cbWVP);
+	output.UV = input.UV;
+
+	return output;
+}
+
+PS_OUTPUT_COLOR DefaultTexPS(VS_OUTPUT_TEX input)
+{
+	PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR) 0;
+    
+	float4 TextureColor = tbBaseTexture.Sample(sbPoint, input.UV);
+    
+	output.Color = TextureColor;
+    
 	return output;
 }
 
@@ -95,32 +114,6 @@ float4 FrameVS(float3 Pos : POSITION0) : SV_POSITION
 {
 	float4 OutputPos = mul(float4(Pos, 1.f), cbWVP);    
 	return OutputPos;
-}
-
-static float4 NullPos[4] =
-{
-	float4(-1.f, 1.f, 0.f, 1.f),
-    float4(1.f, 1.f, 0.f, 1.f),
-    float4(-1.f, -1.f, 0.f, 1.f),
-    float4(1.f, -1.f, 0.f, 1.f)
-};
-
-static float2 NullUV[4] =
-{
-	float2(0.f, 0.f),
-    float2(1.f, 0.f),
-    float2(0.f, 1.f),
-    float2(1.f, 1.f)
-};
-
-VS_OUTPUT_TEX NullTexVS(uint VertexID : SV_VertexID)
-{
-	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
-    
-	output.Pos = NullPos[VertexID];
-	output.UV = NullUV[VertexID];
-    
-	return output;
 }
 
 PS_OUTPUT_COLOR TexPS(VS_OUTPUT_TEX input)

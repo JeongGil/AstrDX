@@ -49,36 +49,8 @@ protected:
 
 protected:
 	CColliderBox2D();
-
-	CColliderBox2D(const CColliderBox2D& other)
-		: CCollider(other),
-		  Info(other.Info)
-	{
-	}
-
-	CColliderBox2D(CColliderBox2D&& other) noexcept
-		: CCollider(std::move(other)),
-		  Info(std::move(other.Info))
-	{
-	}
-
-	CColliderBox2D& operator=(const CColliderBox2D& other)
-	{
-		if (this == &other)
-			return *this;
-		CCollider::operator =(other);
-		Info = other.Info;
-		return *this;
-	}
-
-	CColliderBox2D& operator=(CColliderBox2D&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CCollider::operator =(std::move(other));
-		Info = std::move(other.Info);
-		return *this;
-	}
+	CColliderBox2D(const CColliderBox2D& other);
+	CColliderBox2D(CColliderBox2D&& other) noexcept;
 
 public:
 	~CColliderBox2D() override = default;

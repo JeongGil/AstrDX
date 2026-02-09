@@ -1,13 +1,22 @@
 #pragma once
 #include "CObjectComponent.h"
 
-#include "CTile.h"
-
+class CTile;
 class CCBufferTileMap;
 class CShader;
 class CCBufferTransform;
 class CMesh;
 class CGameObject;
+
+struct FTileMapInstancingBuffer
+{
+	FVector4 WVP0;
+	FVector4 WVP1;
+	FVector4 WVP2;
+	FVector4 WVP3;
+	FVector2 LTUV;
+	FVector2 RBUV;
+};
 
 class CTileMapComponent :
 	public CObjectComponent
@@ -24,12 +33,14 @@ public:
 
 protected:
 	std::vector<std::shared_ptr<CTile>>	Tiles;
-	ETileShape Shape{ ETileShape::Rect };
+	std::vector<FTileMapInstancingBuffer> TileInstData;
+	int InstancingCount{ 0 };
+	ETileShape Shape{ Rect };
 	FVector2 TileSize;
 	FVector2 MapSize;
 	int CountX{ 0 };
 	int CountY{ 0 };
-	bool TileOutLineRender{ false };
+	bool bRenderTileOutLine{ false };
 	std::weak_ptr<CMesh> OutLineMesh;
 	std::weak_ptr<CShader> OutLineShader;
 	std::weak_ptr<CMesh> TileMesh;

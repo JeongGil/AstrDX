@@ -18,6 +18,8 @@ private:
 	CTile();
 	CTile(const CTile& other) = default;
 	CTile(CTile&& other) noexcept = default;
+
+public:
 	~CTile();
 
 private:

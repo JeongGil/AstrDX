@@ -8,6 +8,12 @@
  * Temporary register: A register used during computations.
  */
 
+struct VS_OUTPUT_TEX
+{
+	float4 Pos : SV_POSITION;
+	float2 UV : TEXCOORD;
+};
+
 // A feature that transfers frequently changing values from the CPU to the GPU.
 cbuffer CBTransform : register(b0)
 {
@@ -96,4 +102,30 @@ float2 ComputeAnimation2DUV(float2 UV)
 	}
 
 	return Result;
+}
+
+static float4 NullPos[4] =
+{
+	float4(-1.f, 1.f, 0.f, 1.f),
+    float4(1.f, 1.f, 0.f, 1.f),
+    float4(-1.f, -1.f, 0.f, 1.f),
+    float4(1.f, -1.f, 0.f, 1.f)
+};
+
+static float2 NullUV[4] =
+{
+	float2(0.f, 0.f),
+    float2(1.f, 0.f),
+    float2(0.f, 1.f),
+    float2(1.f, 1.f)
+};
+
+VS_OUTPUT_TEX NullTexVS(uint VertexID : SV_VertexID)
+{
+	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX)0;
+    
+	output.Pos = NullPos[VertexID];
+	output.UV = NullUV[VertexID];
+    
+	return output;
 }

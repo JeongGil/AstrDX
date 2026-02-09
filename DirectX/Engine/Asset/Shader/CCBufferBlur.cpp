@@ -30,12 +30,14 @@ CCBufferBlur* CCBufferBlur::Clone()
 	return new CCBufferBlur(*this);
 }
 
-CCBufferBlur::CCBufferBlur(const CCBufferBlur& other) : CConstantBufferData(other),
-Data(other.Data)
+CCBufferBlur::CCBufferBlur(const CCBufferBlur& other) :
+	CConstantBufferData(other),
+	Data(other.Data)
 {
 }
 
-CCBufferBlur::CCBufferBlur(CCBufferBlur&& other) noexcept : CConstantBufferData(std::move(other)),
-Data(std::move(other.Data))
+CCBufferBlur::CCBufferBlur(CCBufferBlur&& other) noexcept :
+	CConstantBufferData(std::move(other)),
+	Data(std::move(other.Data))
 {
 }

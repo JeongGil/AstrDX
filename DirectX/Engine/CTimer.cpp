@@ -1,6 +1,6 @@
 #include "CTimer.h"
 
-float CTimer::Update()
+float CTimer::Update(HWND hWnd)
 {
 	PrevTime = CurrTime;
 	CurrTime = std::chrono::steady_clock::now();
@@ -17,7 +17,8 @@ float CTimer::Update()
 		char FPSText[64] = {};
 
 		sprintf_s(FPSText, "FPS : %.5f\n", FPS);
-		OutputDebugStringA(FPSText);
+		//OutputDebugStringA(FPSText);
+		SetWindowTextA(hWnd, FPSText);
 	}
 
 	return DeltaTime;

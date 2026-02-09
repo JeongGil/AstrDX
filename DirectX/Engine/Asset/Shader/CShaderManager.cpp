@@ -1,11 +1,15 @@
 #include "CShaderManager.h"
 
 #include "CConstantBuffer.h"
+#include "CShaderBlur.h"
 #include "CShaderCollider.h"
 #include "CShaderColor2D.h"
+#include "CShaderDefaultTex.h"
 #include "CShaderMaterialColor2D.h"
 #include "CShaderNullBuffer.h"
 #include "CShaderTexture2D.h"
+#include "CShaderTileMap.h"
+#include "CShaderTileMapInstancing.h"
 #include "CShaderUIDefault.h"
 
 bool CShaderManager::Init()
@@ -36,6 +40,16 @@ bool CShaderManager::Init()
 		return false;
 	}
 
+	if (!CreateCBuffer("Blur", sizeof(FCBufferBlur), 10, EShaderBufferType::Pixel))
+	{
+		return false;
+	}
+
+	if (!CreateCBuffer("TileMap", sizeof(FCBufferTileMapData), 10, EShaderBufferType::VP))
+	{
+		return false;
+	}
+
 	// Shader
 	if (!CreateShader<CShaderColor2D>("Color2D", "EngineShader"))
 	{
@@ -52,6 +66,11 @@ bool CShaderManager::Init()
 		return false;
 	}
 
+	if (!CreateShader<CShaderDefaultTex>("DefaultTex", "EngineShader"))
+	{
+		return false;
+	}
+
 	if (!CreateShader<CShaderCollider>("Collider", "EngineShader"))
 	{
 		return false;
@@ -63,6 +82,21 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderNullBuffer>("NullBuffer", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderBlur>("Blur", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderTileMap>("TileMap", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderTileMapInstancing>("TileMapInstancing", "EngineShader"))
 	{
 		return false;
 	}

@@ -12,6 +12,7 @@
 #include "../Player/CPlayer.h"
 #include "../PostProcess/CPostProcessHit.h"
 #include "../UI/CMainWidget.h"
+#include "../Map/CTileMapMain.h"
 
 bool CMainWorld::Init()
 {
@@ -25,6 +26,8 @@ bool CMainWorld::Init()
 	LoadSound();
 
 	CreateUI();
+
+	auto TileMap = CreateGameObject<CTileMapMain>("TileMap");
 
 	auto WeakPlayer = CreateGameObject<CPlayer>("Player");
 

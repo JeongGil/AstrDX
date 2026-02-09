@@ -58,8 +58,13 @@ public:
 		D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices = nullptr, int IndexSize = 0, int IndexCount = 0,
 		DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN, D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
+	bool CreateInstancingBuffer(int Size, int Count);
+	bool SetInstancingData(void* Data, int Count);
+
 	void Render() const;
+	void RenderInstancing();
 	void Render(size_t SlotIndex);
+	void RenderInstancing(size_t SlotIndex);
 
 	void SetMaterial(int SlotIndex);
 	void SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a);
@@ -84,12 +89,12 @@ public:
 
 	size_t GetSlotCount() const
 	{
-		return Slots.size();
+		return MeshSlots.size();
 	}
 
 	std::shared_ptr<FMeshSlot> GetSlot(size_t Index) const
 	{
-		return Slots[Index];
+		return MeshSlots[Index];
 	}
 
 protected:
@@ -97,7 +102,9 @@ protected:
 
 protected:
 	FVertexBuffer VertexBuffer;
-	std::vector<std::shared_ptr<FMeshSlot>> Slots;
+	FVertexBuffer InstancingBuffer;
+	int InstancingCount{ 0 };
+	std::vector<std::shared_ptr<FMeshSlot>> MeshSlots;
 	D3D11_PRIMITIVE_TOPOLOGY Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	FVector Min = FVector(FLT_MAX, FLT_MAX, FLT_MAX);

@@ -21,7 +21,6 @@ private:
 	float Elapsed{ 0.f };
 	float Duration{ 0.1f };
 
-	std::weak_ptr<CRenderTarget> MainTarget;
 	std::weak_ptr<CTexture> HitTexture;
 	FColor HitColor;
 	std::shared_ptr<CCBufferHit> HitCBuffer;

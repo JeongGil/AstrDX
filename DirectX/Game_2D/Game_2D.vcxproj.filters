@@ -76,6 +76,9 @@
     <Filter Include="Shader\HLSL">
       <UniqueIdentifier>{11f2df30-4a78-4db3-88a6-156202b1e6cd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Map">
+      <UniqueIdentifier>{0c69acc6-1417-48b5-a598-a2acf956ed7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -191,6 +194,9 @@
     </ClCompile>
     <ClCompile Include="Shader\CCBufferHit.cpp">
       <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\CTileMapMain.cpp">
+      <Filter>Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -346,6 +352,9 @@
     </ClInclude>
     <ClInclude Include="Shader\CCBufferHit.h">
       <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\CTileMapMain.h">
+      <Filter>Map</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

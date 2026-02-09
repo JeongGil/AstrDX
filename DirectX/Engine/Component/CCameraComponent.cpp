@@ -107,7 +107,7 @@ void CCameraComponent::PostUpdate(const float DeltaTime)
 
 	ViewMatrix.Transpose();
 
-	for (int i=0;i<EAxis::End; i++)
+	for (int i = 0; i < EAxis::End; i++)
 	{
 		ViewMatrix[3][i] = -WorldPosition.Dot(WorldAxis[i]);
 	}

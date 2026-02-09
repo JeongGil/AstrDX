@@ -12,7 +12,7 @@ class CTimer
 	inline static int TickCounter{ 0 };
 
 public:
-	static float Update();
+	static float Update(HWND hWnd);
 
 	static float GetDeltaTime()
 	{

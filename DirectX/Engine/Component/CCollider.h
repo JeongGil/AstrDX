@@ -133,57 +133,8 @@ protected:
 	CCollider* Clone() const override = 0;
 
 	CCollider() = default;
-
 	CCollider(const CCollider& other) = default;
-
-	CCollider(CCollider&& other) noexcept
-		: CSceneComponent(std::move(other)),
-		ColliderType(other.ColliderType),
-		Min(std::move(other.Min)),
-		Max(std::move(other.Max)),
-		RenderScale(std::move(other.RenderScale)),
-		bDrawDebug(other.bDrawDebug),
-		Profile(other.Profile),
-		CollidingObjects(std::move(other.CollidingObjects)),
-		Shader(std::move(other.Shader)),
-		Mesh(std::move(other.Mesh)),
-		TransformCBuffer(std::move(other.TransformCBuffer)),
-		ColliderCBuffer(std::move(other.ColliderCBuffer)),
-		OnCollisionBegin(std::move(other.OnCollisionBegin)),
-		OnCollisionEnd(std::move(other.OnCollisionEnd)),
-		OnCollisionBlock(std::move(other.OnCollisionBlock)),
-		OnCollisionMouseBegin(std::move(other.OnCollisionMouseBegin)),
-		OnCollisionMouseEnd(std::move(other.OnCollisionMouseEnd))
-	{
-		other.Profile = nullptr;
-	}
-
-	CCollider& operator=(const CCollider& other) = default;
-
-	CCollider& operator=(CCollider&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CSceneComponent::operator =(std::move(other));
-		ColliderType = other.ColliderType;
-		Min = std::move(other.Min);
-		Max = std::move(other.Max);
-		RenderScale = std::move(other.RenderScale);
-		bDrawDebug = other.bDrawDebug;
-		Profile = std::move(other.Profile);
-		other.Profile = nullptr;
-		CollidingObjects = std::move(other.CollidingObjects);
-		Shader = std::move(other.Shader);
-		Mesh = std::move(other.Mesh);
-		TransformCBuffer = std::move(other.TransformCBuffer);
-		ColliderCBuffer = std::move(other.ColliderCBuffer);
-		OnCollisionBegin = std::move(other.OnCollisionBegin);
-		OnCollisionEnd = std::move(other.OnCollisionEnd);
-		OnCollisionBlock = std::move(other.OnCollisionBlock);
-		OnCollisionMouseBegin = std::move(other.OnCollisionMouseBegin);
-		OnCollisionMouseEnd = std::move(other.OnCollisionMouseEnd);
-		return *this;
-	}
+	CCollider(CCollider&& other) noexcept;
 
 public:
 	~CCollider() override;

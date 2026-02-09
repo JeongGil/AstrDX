@@ -166,3 +166,15 @@ CColliderBox2D::CColliderBox2D()
 	ColliderType = EColliderType::Box2D;
 }
 
+CColliderBox2D::CColliderBox2D(const CColliderBox2D& other) :
+	CCollider(other),
+	Info(other.Info)
+{
+}
+
+CColliderBox2D::CColliderBox2D(CColliderBox2D&& other) noexcept :
+	CCollider(std::move(other)),
+	Info(std::move(other.Info))
+{
+}
+

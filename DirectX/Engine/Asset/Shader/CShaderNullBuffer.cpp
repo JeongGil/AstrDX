@@ -10,7 +10,7 @@ CShaderNullBuffer::~CShaderNullBuffer()
 
 bool CShaderNullBuffer::Init(const std::string& PathName)
 {
-	if (!LoadVertexShader("NullTexVS", TEXT("GlobalShader2D.hlsl"), PathName))
+	if (!LoadVertexShader("NullTexVS", TEXT("Share.hlsli"), PathName))
 	{
 		return false;
 	}

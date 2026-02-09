@@ -193,6 +193,28 @@ void CCollider::Render()
 	}
 }
 
+CCollider::CCollider(CCollider&& other) noexcept :
+	CSceneComponent(std::move(other)),
+	ColliderType(other.ColliderType),
+	Min(std::move(other.Min)),
+	Max(std::move(other.Max)),
+	RenderScale(std::move(other.RenderScale)),
+	bDrawDebug(other.bDrawDebug),
+	Profile(other.Profile),
+	CollidingObjects(std::move(other.CollidingObjects)),
+	Shader(std::move(other.Shader)),
+	Mesh(std::move(other.Mesh)),
+	TransformCBuffer(std::move(other.TransformCBuffer)),
+	ColliderCBuffer(std::move(other.ColliderCBuffer)),
+	OnCollisionBegin(std::move(other.OnCollisionBegin)),
+	OnCollisionEnd(std::move(other.OnCollisionEnd)),
+	OnCollisionBlock(std::move(other.OnCollisionBlock)),
+	OnCollisionMouseBegin(std::move(other.OnCollisionMouseBegin)),
+	OnCollisionMouseEnd(std::move(other.OnCollisionMouseEnd))
+{
+	other.Profile = nullptr;
+}
+
 CCollider::~CCollider()
 {
 	for (const auto& WeakOther : CollidingObjects | std::views::values)

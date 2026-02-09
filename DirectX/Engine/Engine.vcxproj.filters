@@ -558,9 +558,6 @@
     <ClInclude Include="Asset\Shader\CShaderTileMap.h">
       <Filter>Asset\Shader\Shader\TileMap</Filter>
     </ClInclude>
-    <ClInclude Include="Asset\Shader\CShaderDefaultTex.h">
-      <Filter>Asset\Shader\Shader\TileMap</Filter>
-    </ClInclude>
     <ClInclude Include="Asset\Shader\CShaderBlur.h">
       <Filter>Asset\Shader\Shader\Blur</Filter>
     </ClInclude>
@@ -569,6 +566,12 @@
     </ClInclude>
     <ClInclude Include="Asset\Shader\CCBufferBlur.h">
       <Filter>Asset\Shader\ConstantBuffer\Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderDefaultTex.h">
+      <Filter>Asset\Shader\Shader\Texture2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderTileMapInstancing.h">
+      <Filter>Asset\Shader\Shader\TileMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -856,9 +859,6 @@
     <ClCompile Include="Asset\Shader\CShaderTileMap.cpp">
       <Filter>Asset\Shader\Shader\TileMap</Filter>
     </ClCompile>
-    <ClCompile Include="Asset\Shader\CShaderDefaultTex.cpp">
-      <Filter>Asset\Shader\Shader\TileMap</Filter>
-    </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderBlur.cpp">
       <Filter>Asset\Shader\Shader\Blur</Filter>
     </ClCompile>
@@ -867,6 +867,12 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CCBufferBlur.cpp">
       <Filter>Asset\Shader\ConstantBuffer\Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderDefaultTex.cpp">
+      <Filter>Asset\Shader\Shader\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderTileMapInstancing.cpp">
+      <Filter>Asset\Shader\Shader\TileMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -882,6 +888,12 @@
       <Filter>Asset\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\Core\Bin\EngineAsset\Shader\UIShader.hlsl">
+      <Filter>Asset\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Core\Bin\EngineAsset\Shader\TileMap.hlsl">
+      <Filter>Asset\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Core\Bin\EngineAsset\Shader\EnginePostProcess.hlsl">
       <Filter>Asset\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

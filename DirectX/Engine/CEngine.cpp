@@ -104,7 +104,7 @@ void CEngine::Destroy()
 
 void CEngine::Loop()
 {
-	const float DeltaTime = CTimer::Update();
+	const float DeltaTime = CTimer::Update(hWnd);
 	Update(DeltaTime);
 
 	CAssetManager::GetInst()->Update();

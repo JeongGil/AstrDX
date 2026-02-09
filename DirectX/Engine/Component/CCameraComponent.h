@@ -49,60 +49,8 @@ public:
 
 protected:
 	CCameraComponent() = default;
-
-	CCameraComponent(const CCameraComponent& other)
-		: CSceneComponent(other),
-		  ProjectionType(other.ProjectionType),
-		  ViewMatrix(other.ViewMatrix),
-		  ProjectionMatrix(other.ProjectionMatrix),
-		  ViewAngleDegree(other.ViewAngleDegree),
-		  Width(other.Width),
-		  Height(other.Height),
-		  ViewDistance(other.ViewDistance)
-	{
-	}
-
-	CCameraComponent(CCameraComponent&& other) noexcept
-		: CSceneComponent(std::move(other)),
-		  ProjectionType(other.ProjectionType),
-		  ViewMatrix(std::move(other.ViewMatrix)),
-		  ProjectionMatrix(std::move(other.ProjectionMatrix)),
-		  ViewAngleDegree(other.ViewAngleDegree),
-		  Width(other.Width),
-		  Height(other.Height),
-		  ViewDistance(other.ViewDistance)
-	{
-	}
-
-	CCameraComponent& operator=(const CCameraComponent& other)
-	{
-		if (this == &other)
-			return *this;
-		CSceneComponent::operator =(other);
-		ProjectionType = other.ProjectionType;
-		ViewMatrix = other.ViewMatrix;
-		ProjectionMatrix = other.ProjectionMatrix;
-		ViewAngleDegree = other.ViewAngleDegree;
-		Width = other.Width;
-		Height = other.Height;
-		ViewDistance = other.ViewDistance;
-		return *this;
-	}
-
-	CCameraComponent& operator=(CCameraComponent&& other) noexcept
-	{
-		if (this == &other)
-			return *this;
-		CSceneComponent::operator =(std::move(other));
-		ProjectionType = other.ProjectionType;
-		ViewMatrix = std::move(other.ViewMatrix);
-		ProjectionMatrix = std::move(other.ProjectionMatrix);
-		ViewAngleDegree = other.ViewAngleDegree;
-		Width = other.Width;
-		Height = other.Height;
-		ViewDistance = other.ViewDistance;
-		return *this;
-	}
+	CCameraComponent(const CCameraComponent& other) = default;
+	CCameraComponent(CCameraComponent&& other) noexcept = default;
 
 public:
 	~CCameraComponent() override = default;

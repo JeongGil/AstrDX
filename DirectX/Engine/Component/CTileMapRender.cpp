@@ -113,7 +113,7 @@ void CTileMapRender::Render()
 
 		auto	Texture = Textures[ETileTextureType::Back].lock();
 
-		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+		Texture->SetShader(1, EShaderBufferType::Pixel, 0);
 
 		auto State = AlphaBlend.lock();
 
@@ -218,7 +218,7 @@ bool CTileMapRender::SetTexture(ETileTextureType::Type Type, const std::string& 
 		}
 	}
 
-	SetTexture(Type, Texture);
+	return SetTexture(Type, Texture);
 }
 
 bool CTileMapRender::SetTexture(ETileTextureType::Type Type, const std::string& Key, const TCHAR* FileName,
@@ -250,7 +250,7 @@ bool CTileMapRender::SetTexture(ETileTextureType::Type Type, const std::string& 
 		}
 	}
 
-	SetTexture(Type, Texture);
+	return SetTexture(Type, Texture);
 }
 
 void CTileMapRender::SetBackMesh(const std::weak_ptr<CMesh>& Mesh)

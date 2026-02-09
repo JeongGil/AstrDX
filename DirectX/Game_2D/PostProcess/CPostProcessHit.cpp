@@ -35,9 +35,8 @@ bool CPostProcessHit::Init()
 	HitCBuffer->SetColor(HitColor);
 
 	SetShader("Hit");
-	SetBlendState("AlphaBlend");
-
-	MainTarget = CRenderManager::GetInst()->FindRenderTarget("MainTarget");
+	SetOrder(20);
+	//SetBlendState("AlphaBlend");
 
 	if (auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock())
 	{
@@ -61,11 +60,6 @@ void CPostProcessHit::Update(const float DeltaTime)
 
 void CPostProcessHit::Render()
 {
-	if (auto Target = this->MainTarget.lock())
-	{
-		Target->SetShader(0, EShaderBufferType::Pixel, 0);
-	}
-
 	if (auto HitTex = HitTexture.lock())
 	{
 		HitTex->SetShader(1, EShaderBufferType::Pixel, 0);

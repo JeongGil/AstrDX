@@ -4,8 +4,8 @@
 #include "../Material/CMaterial.h"
 
 bool CMesh::CreateMesh(void* VertexData, int VertexSize, int VertexCount, D3D11_USAGE VertexUsage,
-                       D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount, DXGI_FORMAT Format,
-                       D3D11_USAGE IndexUsage)
+	D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount, DXGI_FORMAT Format,
+	D3D11_USAGE IndexUsage)
 {
 	VertexBuffer.Size = VertexSize;
 	VertexBuffer.Count = VertexCount;
@@ -40,7 +40,7 @@ bool CMesh::CreateMesh(void* VertexData, int VertexSize, int VertexCount, D3D11_
 		Slot->IndexBuffer.Count = IndexCount;
 		Slot->IndexBuffer.Format = Format;
 
-		Slots.push_back(Slot);
+		MeshSlots.push_back(Slot);
 
 		SetMaterial(0);
 
@@ -53,6 +53,140 @@ bool CMesh::CreateMesh(void* VertexData, int VertexSize, int VertexCount, D3D11_
 	return true;
 }
 
+bool CMesh::CreateInstancingBuffer(int Size, int Count)
+{
+	SAFE_RELEASE(InstancingBuffer.Buffer);
+
+	InstancingBuffer.Size = Size;
+	InstancingBuffer.Count = Count;
+
+	D3D11_BUFFER_DESC BufferDesc{};
+	BufferDesc.ByteWidth = Size * Count;
+	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	if (FAILED(CDevice::GetInst()->GetDevice()->CreateBuffer(&BufferDesc, nullptr, &InstancingBuffer.Buffer)))
+	{
+		return false;
+	}
+
+	return  true;
+}
+
+bool CMesh::SetInstancingData(void* Data, int Count)
+{
+	if (!InstancingBuffer.Buffer)
+	{
+		return false;
+	}
+
+	if (InstancingBuffer.Count < Count)
+	{
+		if (!CreateInstancingBuffer(InstancingBuffer.Size, Count * 2))
+		{
+			return false;
+		}
+	}
+
+	ID3D11DeviceContext* Context = CDevice::GetInst()->GetContext();
+
+	D3D11_MAPPED_SUBRESOURCE MS = {};
+
+	Context->Map(InstancingBuffer.Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MS);
+
+	memcpy(MS.pData, Data, InstancingBuffer.Size * Count);
+
+	Context->Unmap(InstancingBuffer.Buffer, 0);
+
+	InstancingCount = Count;
+
+	return true;
+}
+
+void CMesh::RenderInstancing()
+{
+	if (InstancingCount == 0)
+	{
+		return;
+	}
+
+	ID3D11DeviceContext* Context =
+		CDevice::GetInst()->GetContext();
+
+	Context->IASetPrimitiveTopology(Topology);
+
+	ID3D11Buffer* VB[2] =
+	{
+		VertexBuffer.Buffer,
+		InstancingBuffer.Buffer
+	};
+
+	UINT Stride[2] = { VertexBuffer.Size, InstancingBuffer.Size };
+	UINT Offset[2] = {};
+
+	Context->IASetVertexBuffers(0, 2, VB, Stride, Offset);
+
+	if (MeshSlots.empty())
+	{
+		Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		Context->DrawInstanced(VertexBuffer.Count, InstancingCount, 0, 0);
+	}
+	else
+	{
+		for (const auto& MeshSlot : MeshSlots)
+		{
+			if (MeshSlot->Material)
+			{
+				MeshSlot->Material->UpdateConstantBuffer();
+			}
+
+			Context->IASetIndexBuffer(MeshSlot->IndexBuffer.Buffer, MeshSlot->IndexBuffer.Format, 0);			// 인덱스 버퍼의 인덱스를 참고하여 화면에 도형을 출력한다.
+			Context->DrawIndexedInstanced(MeshSlot->IndexBuffer.Count, InstancingCount, 0, 0, 0);
+		}
+	}
+}
+
+void CMesh::RenderInstancing(size_t SlotIndex)
+{
+	if (InstancingCount == 0)
+	{
+		return;
+	}
+
+	ID3D11DeviceContext* Context = CDevice::GetInst()->GetContext();
+
+	Context->IASetPrimitiveTopology(Topology);
+
+	ID3D11Buffer* VB[2] =
+	{
+		VertexBuffer.Buffer,
+		InstancingBuffer.Buffer
+	};
+
+	UINT Stride[2] = { VertexBuffer.Size, InstancingBuffer.Size };
+	UINT Offset[2] = {};
+
+	Context->IASetVertexBuffers(0, 2, VB, Stride, Offset);
+	if (MeshSlots.empty())
+	{
+		Context->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);		Context->DrawInstanced(VertexBuffer.Count, InstancingCount,
+			0, 0);
+	}
+
+	else
+	{
+		const auto& MeshSlot = MeshSlots[SlotIndex];
+		if (MeshSlot->Material)
+		{
+			MeshSlot->Material->UpdateConstantBuffer();
+		}
+
+		Context->IASetIndexBuffer(MeshSlot->IndexBuffer.Buffer, MeshSlot->IndexBuffer.Format, 0);
+		Context->DrawIndexedInstanced(MeshSlot->IndexBuffer.Count, InstancingCount, 0, 0, 0);
+	}
+}
+
 void CMesh::Render() const
 {
 	UINT Stride = VertexBuffer.Size;
@@ -62,14 +196,14 @@ void CMesh::Render() const
 	CDevice::GetInst()->GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer.Buffer, &Stride, &Offset);
 
 	// No mesh slot (including index buffer).
-	if (Slots.empty())
+	if (MeshSlots.empty())
 	{
 		CDevice::GetInst()->GetContext()->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 		CDevice::GetInst()->GetContext()->Draw(VertexBuffer.Count, 0);
 	}
 	else
 	{
-		for (const auto& Slot : Slots)
+		for (const auto& Slot : MeshSlots)
 		{
 			if (Slot->Material)
 			{
@@ -95,14 +229,14 @@ void CMesh::Render(size_t SlotIndex)
 	CDevice::GetInst()->GetContext()->IASetVertexBuffers(0, 1, &VertexBuffer.Buffer, &Stride, &Offset);
 
 	// No mesh slot (including index buffer).
-	if (Slots.empty())
+	if (MeshSlots.empty())
 	{
 		CDevice::GetInst()->GetContext()->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
 		CDevice::GetInst()->GetContext()->Draw(VertexBuffer.Count, 0);
 	}
 	else
 	{
-		const auto& Slot = Slots[SlotIndex];
+		const auto& Slot = MeshSlots[SlotIndex];
 
 		CDevice::GetInst()->GetContext()->IASetIndexBuffer(
 			Slot->IndexBuffer.Buffer,
@@ -115,59 +249,59 @@ void CMesh::Render(size_t SlotIndex)
 
 void CMesh::SetMaterial(int SlotIndex)
 {
-	if (!Slots[SlotIndex]->Material)
+	if (!MeshSlots[SlotIndex]->Material)
 	{
-		Slots[SlotIndex]->Material.reset(new CMaterial);
-		Slots[SlotIndex]->Material->Init();
+		MeshSlots[SlotIndex]->Material.reset(new CMaterial);
+		MeshSlots[SlotIndex]->Material->Init();
 	}
 }
 
 void CMesh::SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a)
 {
-	if (!Slots[SlotIndex]->Material)
+	if (!MeshSlots[SlotIndex]->Material)
 	{
-		Slots[SlotIndex]->Material.reset(new CMaterial);
-		Slots[SlotIndex]->Material->Init();
+		MeshSlots[SlotIndex]->Material.reset(new CMaterial);
+		MeshSlots[SlotIndex]->Material->Init();
 	}
 
-	Slots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
+	MeshSlots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
 }
 
 void CMesh::SetMaterialBaseColor(int SlotIndex, int r, int g, int b, int a)
 {
-	if (!Slots[SlotIndex]->Material)
+	if (!MeshSlots[SlotIndex]->Material)
 	{
-		Slots[SlotIndex]->Material.reset(new CMaterial);
-		Slots[SlotIndex]->Material->Init();
+		MeshSlots[SlotIndex]->Material.reset(new CMaterial);
+		MeshSlots[SlotIndex]->Material->Init();
 	}
 
-	Slots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
+	MeshSlots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
 }
 
 void CMesh::SetMaterialBaseColor(int SlotIndex, const FVector4& Color)
 {
-	if (!Slots[SlotIndex]->Material)
+	if (!MeshSlots[SlotIndex]->Material)
 	{
-		Slots[SlotIndex]->Material.reset(new CMaterial);
-		Slots[SlotIndex]->Material->Init();
+		MeshSlots[SlotIndex]->Material.reset(new CMaterial);
+		MeshSlots[SlotIndex]->Material->Init();
 	}
 
-	Slots[SlotIndex]->Material->SetBaseColor(Color);
+	MeshSlots[SlotIndex]->Material->SetBaseColor(Color);
 }
 
 void CMesh::SetMaterialOpacity(int SlotIndex, float Opacity)
 {
-	if (!Slots[SlotIndex]->Material)
+	if (!MeshSlots[SlotIndex]->Material)
 	{
-		Slots[SlotIndex]->Material.reset(new CMaterial);
-		Slots[SlotIndex]->Material->Init();
+		MeshSlots[SlotIndex]->Material.reset(new CMaterial);
+		MeshSlots[SlotIndex]->Material->Init();
 	}
 
-	Slots[SlotIndex]->Material->SetOpacity(Opacity);
+	MeshSlots[SlotIndex]->Material->SetOpacity(Opacity);
 }
 
 bool CMesh::CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count,
-                         D3D11_USAGE Usage)
+	D3D11_USAGE Usage)
 {
 	UINT CPUAccessFlags = 0u;
 	if (Usage == D3D11_USAGE_DYNAMIC)
