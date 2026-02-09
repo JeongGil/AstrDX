@@ -126,6 +126,49 @@ bool CWorldAssetManager::LoadTexturesFullPath(const std::string& Key, const std:
 	return true;
 }
 
+bool CWorldAssetManager::LoadTextureArray(const std::string& Key, const std::vector<const TCHAR*>& FileNames,
+	const std::string& PathName)
+{
+	if (auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock())
+	{
+		std::string InnerKey = "Texture_" + Key;
+		if (!TexMgr->LoadTextureArray(InnerKey, FileNames, PathName))
+		{
+			return false;
+		}
+
+		if (!Assets.contains(InnerKey))
+		{
+			Assets.emplace(InnerKey, TexMgr->FindTexture(InnerKey));
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CWorldAssetManager::LoadTextureArrayFullPath(const std::string& Key, const std::vector<const TCHAR*>& FullPaths)
+{
+	if (auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock())
+	{
+		std::string InnerKey = "Texture_" + Key;
+		if (!TexMgr->LoadTextureArrayFullPath(InnerKey, FullPaths))
+		{
+			return false;
+		}
+
+		if (!Assets.contains(InnerKey))
+		{
+			Assets.emplace(InnerKey, TexMgr->FindTexture(InnerKey));
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
 std::weak_ptr<CTexture> CWorldAssetManager::FindTexture(const std::string& Key)
 {
 	auto InnerKey = "Texture_" + Key;

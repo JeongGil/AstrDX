@@ -33,6 +33,8 @@ public:
 	bool LoadTextureFullPath(const std::string& Key, const TCHAR* FullPath);
 	bool LoadTextures(const std::string& Key, const std::vector<const TCHAR*>& FileNames, const std::string& PathName);
 	bool LoadTexturesFullPath(const std::string& Key, const std::vector<const TCHAR*>& FullPaths);
+	bool LoadTextureArray(const std::string& Key, const std::vector<const TCHAR*>& FileNames, const std::string& PathName);
+	bool LoadTextureArrayFullPath(const std::string& Key, const std::vector<const TCHAR*>& FullPaths);
 
 	std::weak_ptr<CTexture> FindTexture(const std::string& Key);
 

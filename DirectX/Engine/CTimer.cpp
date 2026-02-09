@@ -17,8 +17,8 @@ float CTimer::Update(HWND hWnd)
 		char FPSText[64] = {};
 
 		sprintf_s(FPSText, "FPS : %.5f\n", FPS);
-		//OutputDebugStringA(FPSText);
-		SetWindowTextA(hWnd, FPSText);
+		OutputDebugStringA(FPSText);
+		//SetWindowTextA(hWnd, FPSText);
 	}
 
 	return DeltaTime;

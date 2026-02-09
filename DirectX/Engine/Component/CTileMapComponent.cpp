@@ -106,7 +106,8 @@ bool CTileMapComponent::Init()
 
 	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
 	{
-		TileShader = ShaderMgr->FindShader("TileMap");
+		//TileShader = ShaderMgr->FindShader("TileMap");
+		TileShader = ShaderMgr->FindShader("TileMapInstancing");
 	}
 
 	return true;
@@ -195,12 +196,21 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 
 			FMatrix	WorldMat = ScaleMat * TranslateMat;
 
-			//mTileIstData[mInstancingCount].WVP0
+			FMatrix	ViewMat = CameraMgr->GetViewMatrix();
+			FMatrix	ProjMat = CameraMgr->GetProjMatrix();
 
-			/*mTransform->SetWorldMatrix(WorldMat);
+			FMatrix	WVPMat = WorldMat * ViewMat * ProjMat;
 
-			mTransform->SetViewMatrix(CameraMgr->GetViewMatrix());
-			mTransform->SetProjMatrix(CameraMgr->GetProjMatrix());*/
+			auto& InstancingData = TileInstData[InstancingCount];
+			InstancingData.WVP0 = WVPMat[0];
+			InstancingData.WVP1 = WVPMat[1];
+			InstancingData.WVP2 = WVPMat[2];
+			InstancingData.WVP3 = WVPMat[3];
+
+			InstancingData.LTUV = Tile->GetFrameStart() / TileTextureSize;
+			InstancingData.RBUV = Tile->GetFrameEnd() / TileTextureSize;
+
+			++InstancingCount;
 		}
 	}
 }
@@ -304,75 +314,68 @@ void CTileMapComponent::RenderTile()
 		return;
 	}
 
-	auto World = this->World.lock();
-	if (!World)
-	{
-		World = CWorldManager::GetInst()->GetWorld().lock();
-	}
+	Mesh->SetInstancingData(&TileInstData[0], InstancingCount);
 
-	auto CameraMgr = World->GetCameraManager().lock();
-	if (!CameraMgr)
-	{
-		return;
-	}
+	Shader->SetShader();
 
-	for (int i = ViewStartY; i <= ViewEndY; i++)
-	{
-		for (int j = ViewStartX; j <= ViewEndX; j++)
-		{
-			int Idx = i * CountX + j;
+	Mesh->RenderInstancing();
 
-			const auto& Tile = Tiles[Idx];
-			if (!Tile->IsRender())
-			{
-				continue;
-			}
+	//auto World = this->World.lock();
+	//if (!World)
+	//{
+	//	World = CWorldManager::GetInst()->GetWorld().lock();
+	//}
 
-			FMatrix	ScaleMat, TranslateMat, WorldMat;
+	//auto CameraMgr = World->GetCameraManager().lock();
+	//if (!CameraMgr)
+	//{
+	//	return;
+	//}
 
-			ScaleMat.Scaling(TileSize);
+	//for (int i = ViewStartY; i <= ViewEndY; i++)
+	//{
+	//	for (int j = ViewStartX; j <= ViewEndX; j++)
+	//	{
+	//		int Idx = i * CountX + j;
 
-			FVector2	Pos = Tile->GetPos();
+	//		const auto& Tile = Tiles[Idx];
+	//		if (!Tile->IsRender())
+	//		{
+	//			continue;
+	//		}
 
-			Pos.x += Owner->GetWorldPosition().x;
-			Pos.y += Owner->GetWorldPosition().y;
+	//		FMatrix	ScaleMat, TranslateMat, WorldMat;
 
-			TranslateMat.Translation(Pos);
+	//		ScaleMat.Scaling(TileSize);
 
-			WorldMat = ScaleMat * TranslateMat;
+	//		FVector2	Pos = Tile->GetPos();
 
-			Transform->SetWorldMatrix(WorldMat);
+	//		Pos.x += Owner->GetWorldPosition().x;
+	//		Pos.y += Owner->GetWorldPosition().y;
 
-			Transform->SetViewMatrix(CameraMgr->GetViewMatrix());
-			Transform->SetProjMatrix(CameraMgr->GetProjMatrix());
+	//		TranslateMat.Translation(Pos);
 
-			Transform->UpdateBuffer();
+	//		WorldMat = ScaleMat * TranslateMat;
 
-			FVector2 LTUV = Tile->GetFrameStart() / TileTextureSize;
-			FVector2 RBUV = Tile->GetFrameEnd() / TileTextureSize;
+	//		Transform->SetWorldMatrix(WorldMat);
 
-			CBufferTileMap->SetUV(LTUV, RBUV);
+	//		Transform->SetViewMatrix(CameraMgr->GetViewMatrix());
+	//		Transform->SetProjMatrix(CameraMgr->GetProjMatrix());
 
-			CBufferTileMap->UpdateBuffer();
+	//		Transform->UpdateBuffer();
 
-			Shader->SetShader();
+	//		FVector2 LTUV = Tile->GetFrameStart() / TileTextureSize;
+	//		FVector2 RBUV = Tile->GetFrameEnd() / TileTextureSize;
 
-			Mesh->Render();
-		}
-	}
+	//		CBufferTileMap->SetUV(LTUV, RBUV);
 
-	// Determines the maximum number of tiles that can be visible on the screen.
-	FResolution	RS = CDevice::GetInst()->GetResolution();
+	//		CBufferTileMap->UpdateBuffer();
 
-	int	ViewCountX = RS.Width / TileSize.x + 3;
-	int	ViewCountY = RS.Height / TileSize.y + 3;
+	//		Shader->SetShader();
 
-	if (Mesh)
-	{
-		Mesh->CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
-
-		TileInstData.resize(ViewCountX * ViewCountY);
-	}
+	//		Mesh->Render();
+	//	}
+	//}
 }
 
 void CTileMapComponent::RenderTileOutLine()
@@ -398,6 +401,7 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 
 	auto Owner = this->Owner.lock();
 
+	// Disable this if tile map size is smaller than world.
 	if (auto Renderer = Owner->GetComponent<CTileMapRender>().lock())
 	{
 		Renderer->SetWorldScale(MapSize);
@@ -429,5 +433,18 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 			Tile->SetCenter(Tile->GetPos() + TileSize * 0.5f);
 			Tile->SetTextureFrame(TileTextureFrame);
 		}
+	}
+
+	// Determines the maximum number of tiles that can be visible on the screen.
+	FResolution	RS = CDevice::GetInst()->GetResolution();
+
+	int	ViewCountX = RS.Width / TileSize.x + 3;
+	int	ViewCountY = RS.Height / TileSize.y + 3;
+
+	if (auto Mesh = TileMesh.lock())
+	{
+		Mesh->CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
+
+		TileInstData.resize(ViewCountX * ViewCountY);
 	}
 }

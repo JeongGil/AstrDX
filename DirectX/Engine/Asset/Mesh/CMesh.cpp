@@ -111,8 +111,7 @@ void CMesh::RenderInstancing()
 		return;
 	}
 
-	ID3D11DeviceContext* Context =
-		CDevice::GetInst()->GetContext();
+	ID3D11DeviceContext* Context = CDevice::GetInst()->GetContext();
 
 	Context->IASetPrimitiveTopology(Topology);
 
@@ -258,24 +257,12 @@ void CMesh::SetMaterial(int SlotIndex)
 
 void CMesh::SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a)
 {
-	if (!MeshSlots[SlotIndex]->Material)
-	{
-		MeshSlots[SlotIndex]->Material.reset(new CMaterial);
-		MeshSlots[SlotIndex]->Material->Init();
-	}
-
-	MeshSlots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
+	SetMaterialBaseColor(SlotIndex, FColor(r, g, b, a));
 }
 
 void CMesh::SetMaterialBaseColor(int SlotIndex, int r, int g, int b, int a)
 {
-	if (!MeshSlots[SlotIndex]->Material)
-	{
-		MeshSlots[SlotIndex]->Material.reset(new CMaterial);
-		MeshSlots[SlotIndex]->Material->Init();
-	}
-
-	MeshSlots[SlotIndex]->Material->SetBaseColor(r, g, b, a);
+	SetMaterialBaseColor(SlotIndex, r / 255.f, g / 255.f, b / 255.f, a / 255.f);
 }
 
 void CMesh::SetMaterialBaseColor(int SlotIndex, const FVector4& Color)

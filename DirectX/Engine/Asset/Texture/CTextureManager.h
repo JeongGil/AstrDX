@@ -23,6 +23,8 @@ public:
 	bool LoadTextureFullPath(const std::string& Key, const TCHAR* FullPath, const std::string& PathName = "Texture");
 	bool LoadTextures(const std::string& Key, const std::vector<const TCHAR*>& FileNames, const std::string& PathName = "Texture");
 	bool LoadTexturesFullPath(const std::string& Key, const std::vector<const TCHAR*>& FullPaths, const std::string& PathName = "Texture");
+	bool LoadTextureArray(const std::string& Key, const std::vector<const TCHAR*>& FileNames, const std::string& PathName);
+	bool LoadTextureArrayFullPath(const std::string& Key, const std::vector<const TCHAR*>& FullPaths);
 
 	bool CreateSampler(const std::string& Key, D3D11_FILTER Filter,
 		D3D11_TEXTURE_ADDRESS_MODE u = D3D11_TEXTURE_ADDRESS_WRAP,

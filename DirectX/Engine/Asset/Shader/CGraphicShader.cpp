@@ -14,8 +14,8 @@ void CGraphicShader::SetShader()
 void CGraphicShader::AddInputDesc(const char* Semantic, UINT SemanticIndex, DXGI_FORMAT Format, UINT InputSlot,
                                   UINT Size, D3D11_INPUT_CLASSIFICATION InputSlotClass, UINT InstanceDataStepRate)
 {
-	InputDescs.emplace_back(Semantic, SemanticIndex, Format, InputSlot, Offset, InputSlotClass, InstanceDataStepRate);
-	Offset += Size;
+	InputDescs.emplace_back(Semantic, SemanticIndex, Format, InputSlot, Offsets[InputSlot], InputSlotClass, InstanceDataStepRate);
+	Offsets[InputSlot] += Size;
 }
 
 bool CGraphicShader::CreateInputLayout()

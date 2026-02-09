@@ -107,7 +107,7 @@ float2 ComputeInstancingTileUV(float2 UV, float2 LT, float2 RB)
 	return Result;
 }
 
-VS_OUTPUT_TEX TileMapInstancingVS(VS_INPUT_INSTANCING_TEX input)
+VS_OUTPUT_TEX TileMapInstancingVS(VS_INPUT_INSTANCING_TEX input, uint ID : SV_InstanceID)
 {
 	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
     

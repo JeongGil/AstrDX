@@ -73,7 +73,7 @@ bool CRenderTarget::Init(UINT Width, UINT Height, DXGI_FORMAT Format, bool bEnab
 	VP.Height = (float)Height;
 	VP.MaxDepth = 1.f;
 
-	TextureInfos.push_back(Info);
+	Textures.push_back(Info);
 
 	if (bEnableDepth)
 	{

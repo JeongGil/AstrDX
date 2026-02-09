@@ -134,8 +134,49 @@ bool CTextureManager::LoadTexturesFullPath(const std::string& Key, const std::ve
 	return true;
 }
 
+bool CTextureManager::LoadTextureArray(const std::string& Key, const std::vector<const TCHAR*>& FileNames,
+	const std::string& PathName)
+{
+	if (Textures.contains(Key))
+	{
+		return true;
+	}
+
+	auto Texture = std::shared_ptr<CTexture>(new CTexture);
+	Texture->SetKey(Key);
+
+	if (!Texture->LoadTextureArray(FileNames, PathName))
+	{
+		return false;
+	}
+
+	Textures.emplace(Key, Texture);
+
+	return true;
+}
+
+bool CTextureManager::LoadTextureArrayFullPath(const std::string& Key, const std::vector<const TCHAR*>& FullPaths)
+{
+	if (Textures.contains(Key))
+	{
+		return true;
+	}
+
+	auto Texture = std::shared_ptr<CTexture>(new CTexture);
+	Texture->SetKey(Key);
+
+	if (!Texture->LoadTextureArrayFullPath(FullPaths))
+	{
+		return false;
+	}
+
+	Textures.emplace(Key, Texture);
+
+	return true;
+}
+
 bool CTextureManager::CreateSampler(const std::string& Key, D3D11_FILTER Filter, D3D11_TEXTURE_ADDRESS_MODE u,
-	D3D11_TEXTURE_ADDRESS_MODE v, D3D11_TEXTURE_ADDRESS_MODE w, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC Func)
+                                    D3D11_TEXTURE_ADDRESS_MODE v, D3D11_TEXTURE_ADDRESS_MODE w, UINT MaxAnisotropy, D3D11_COMPARISON_FUNC Func)
 {
 	if (Samplers.contains(Key))
 	{

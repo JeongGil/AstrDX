@@ -33,7 +33,7 @@ protected:
 	// D3D11_INPUT_ELEMENT_DESC: Each element of the input register requires a single desc.
 	std::vector<D3D11_INPUT_ELEMENT_DESC> InputDescs;
 
-	UINT Offset = 0;
+	UINT Offsets[2]{};
 
 	ID3D11VertexShader* VS = nullptr;
 	// Buffer for bytecode after compilation.
