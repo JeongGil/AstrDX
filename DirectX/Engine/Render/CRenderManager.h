@@ -5,6 +5,7 @@
 #include "CPostProcess.h"
 #include "../Sync.h"
 
+class CRenderInstancing;
 class CRenderTarget;
 class CRenderState;
 class CSceneComponent;
@@ -12,13 +13,19 @@ class CShader;
 class CMesh;
 class CCBufferUIDefault;
 
-struct FRenderLayer;
-
 enum class ERenderListSort
 {
 	None,
 	Y,
 	Alpha,
+};
+
+struct FRenderLayer
+{
+	std::string Name;
+	std::list<std::weak_ptr<CSceneComponent>> RenderList;
+	std::unordered_map<size_t, std::shared_ptr<CRenderInstancing>> InstancingMap;
+	ERenderListSort SortType = ERenderListSort::Y;
 };
 
 class CRenderManager
@@ -185,10 +192,5 @@ private:
 	}
 };
 
-struct FRenderLayer
-{
-	std::string Name;
-	ERenderListSort SortType = ERenderListSort::Y;
-	std::list<std::weak_ptr<CSceneComponent>> RenderList;
-};
+
 

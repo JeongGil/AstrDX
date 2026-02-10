@@ -413,6 +413,24 @@ void CRenderManager::Update(const float DeltaTime)
 		MouseWidget[MouseState]->Update(DeltaTime);
 	}
 
+	for (auto& RenderLayer : RenderLayers | std::views::values)
+	{
+		std::erase_if(RenderLayer.RenderList, [](const std::weak_ptr<CSceneComponent>& WeakComp)
+			{
+				if (auto Comp = WeakComp.lock())
+				{
+					if (Comp->GetEnable())
+					{
+						// TODO: logic.
+					}
+
+					return false;
+				}
+
+				return true;
+			});
+	}
+
 	CSync _(&Crt);
 
 	std::erase_if(PostProcesses, [](const auto& PostProcess)
@@ -458,15 +476,22 @@ void CRenderManager::Render()
 					break;
 			}
 
-			for (const auto& WeakCmp : RenderList)
+			for (const auto& WeakComp : RenderList)
 			{
-				if (auto Cmp = WeakCmp.lock())
+				if (auto Comp = WeakComp.lock())
 				{
-					if (Cmp->GetEnable())
+					if (!Comp->GetEnable())
 					{
-						Cmp->Render();
-						//Cmp->PostRender();
+						continue;
 					}
+					
+					if (Comp->GetRenderOption() == EComponentRenderOption::Instancing)
+					{
+						continue;
+					}
+					
+					Comp->Render();
+					//Cmp->PostRender();
 				}
 			}
 		}

@@ -202,6 +202,9 @@
     <Filter Include="Asset\Shader\ConstantBuffer\Blur">
       <UniqueIdentifier>{1ac6c0a9-689a-4588-894f-850112b8855e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render\Instancing">
+      <UniqueIdentifier>{30b67493-85e2-4d97-aef5-db562f014d42}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -573,6 +576,9 @@
     <ClInclude Include="Asset\Shader\CShaderTileMapInstancing.h">
       <Filter>Asset\Shader\Shader\TileMap</Filter>
     </ClInclude>
+    <ClInclude Include="Render\CRenderInstancing.h">
+      <Filter>Render\Instancing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -873,6 +879,9 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderTileMapInstancing.cpp">
       <Filter>Asset\Shader\Shader\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\CRenderInstancing.cpp">
+      <Filter>Render\Instancing</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

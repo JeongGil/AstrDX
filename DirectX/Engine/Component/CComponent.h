@@ -51,11 +51,6 @@ public:
 		this->Key = Key;
 	}
 
-	void SetKey(std::string&& Key)
-	{
-		this->Key = std::move(Key);
-	}
-
 	[[nodiscard]] EType GetType() const
 	{
 		return Type;

@@ -42,12 +42,12 @@ void CMaterial::SetOpacity(float Opacity)
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexture(const std::weak_ptr<CTexture>& Texture, int Register,
-                                                          int ShaderBufferType, int Index)
+	int ShaderBufferType, int Index)
 {
 	auto Shared = Texture.lock();
 	std::shared_ptr<FMaterialTextureInfo> TexInfo(new FMaterialTextureInfo
 		{
-			.Name = Shared->GetKey(),
+			.Key = Shared->GetKey(),
 			.Texture = Texture,
 			.Register = Register,
 			.ShaderBufferType = ShaderBufferType,
@@ -59,12 +59,12 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexture(const std::weak_ptr<CT
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexture(const std::string& Key, int Register, int ShaderBufferType,
-                                                          int Index)
+	int Index)
 {
 	auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock();
 	std::shared_ptr<FMaterialTextureInfo> TexInfo(new FMaterialTextureInfo
 		{
-			.Name = Key,
+			.Key = Key,
 			.Texture = TexMgr->FindTexture(Key),
 			.Register = Register,
 			.ShaderBufferType = ShaderBufferType,
@@ -76,8 +76,8 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexture(const std::string& Key
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexture(const std::string& Key, const TCHAR* FileName,
-                                                          const std::string& PathName, int Register,
-                                                          int ShaderBufferType, int Index)
+	const std::string& PathName, int Register,
+	int ShaderBufferType, int Index)
 {
 	auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock();
 
@@ -85,7 +85,7 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexture(const std::string& Key
 
 	std::shared_ptr<FMaterialTextureInfo> TexInfo(new FMaterialTextureInfo
 		{
-			.Name = Key,
+			.Key = Key,
 			.Texture = TexMgr->FindTexture(Key),
 			.Register = Register,
 			.ShaderBufferType = ShaderBufferType,
@@ -105,7 +105,7 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextureFullPath(const std::str
 
 	std::shared_ptr<FMaterialTextureInfo> TexInfo(new FMaterialTextureInfo
 		{
-			.Name = Key,
+			.Key = Key,
 			.Texture = TexMgr->FindTexture(Key),
 			.Register = Register,
 			.ShaderBufferType = ShaderBufferType,
@@ -116,9 +116,9 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextureFullPath(const std::str
 	return TexInfo;
 }
 
-std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextures(const std::string& Key, std::vector<const TCHAR*>& FileNames,
-                                                           const std::string& PathName,
-                                                           int Register, int ShaderBufferType, int Index)
+std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextures(const std::string& Key, const std::vector<const TCHAR*>& FileNames,
+	const std::string& PathName,
+	int Register, int ShaderBufferType, int Index)
 {
 	auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock();
 
@@ -126,7 +126,7 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextures(const std::string& Ke
 
 	std::shared_ptr<FMaterialTextureInfo> TexInfo(new FMaterialTextureInfo
 		{
-			.Name = Key,
+			.Key = Key,
 			.Texture = TexMgr->FindTexture(Key),
 			.Register = Register,
 			.ShaderBufferType = ShaderBufferType,
@@ -138,8 +138,8 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextures(const std::string& Ke
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexturesFullPath(const std::string& Key,
-                                                                   std::vector<const TCHAR*>& FullPaths, int Register,
-                                                                   int ShaderBufferType, int Index)
+	const std::vector<const TCHAR*>& FullPaths, int Register,
+	int ShaderBufferType, int Index)
 {
 	auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock();
 
@@ -147,7 +147,7 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexturesFullPath(const std::st
 
 	std::shared_ptr<FMaterialTextureInfo> TexInfo(new FMaterialTextureInfo
 		{
-			.Name = Key,
+			.Key = Key,
 			.Texture = TexMgr->FindTexture(Key),
 			.Register = Register,
 			.ShaderBufferType = ShaderBufferType,
@@ -158,6 +158,50 @@ std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTexturesFullPath(const std::st
 	return TexInfo;
 }
 
+std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextureArray(const std::string& Key,
+	const std::vector<const TCHAR*>& FileNames, const std::string& PathName, int Register, int ShaderBufferType, int Index)
+{
+	std::weak_ptr<CTexture> Tex{};
+	if (auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock())
+	{
+		if (TexMgr->LoadTextureArray(Key, FileNames, PathName))
+		{
+			Tex = TexMgr->FindTexture(Key);
+		}
+	}
+
+	return TextureInfos.emplace_back(std::make_shared<FMaterialTextureInfo>(FMaterialTextureInfo
+		{
+			.Key = Key,
+			.Texture = Tex,
+			.Register = Register,
+			.ShaderBufferType = ShaderBufferType,
+			.Index = Index
+		}));
+}
+
+std::weak_ptr<FMaterialTextureInfo> CMaterial::AddTextureArrayFullPath(const std::string& Key,
+	const std::vector<const TCHAR*>& FullPaths, int Register, int ShaderBufferType, int Index)
+{
+	std::weak_ptr<CTexture> Tex{};
+	if (auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock())
+	{
+		if (TexMgr->LoadTextureArrayFullPath(Key, FullPaths))
+		{
+			Tex = TexMgr->FindTexture(Key);
+		}
+	}
+
+	return TextureInfos.emplace_back(std::make_shared<FMaterialTextureInfo>(FMaterialTextureInfo
+		{
+			.Key = Key,
+			.Texture = Tex,
+			.Register = Register,
+			.ShaderBufferType = ShaderBufferType,
+			.Index = Index
+		}));
+}
+
 bool CMaterial::SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture)
 {
 	if (TextureIndex >= TextureInfos.size())
@@ -165,22 +209,18 @@ bool CMaterial::SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Text
 		if (auto Tex = Texture.lock())
 		{
 			TextureInfos.emplace_back(new FMaterialTextureInfo
-			   {
-				   .Name = Tex->GetKey(),
-				   .Register = 0,
-				   .ShaderBufferType = EShaderBufferType::Pixel,
-				   .Index = 0,
-			   });
+				{
+					.Key = Tex->GetKey(),
+					.Texture = Tex,
+					.Register = 0,
+					.ShaderBufferType = EShaderBufferType::Pixel,
+					.Index = 0,
+				});
 		}
 	}
 
 	TextureInfos[TextureIndex]->Texture = Texture;
 
-	return true;
-}
-
-bool CMaterial::SetTextureIndex(int TextureIndex)
-{
 	return true;
 }
 
@@ -249,8 +289,8 @@ CMaterial::CMaterial()
 }
 
 CMaterial::CMaterial(const CMaterial& other) : CAsset(other),
-                                               BaseColor(other.BaseColor),
-                                               Opacity(other.Opacity)
+BaseColor(other.BaseColor),
+Opacity(other.Opacity)
 //MaterialCBuffer(other.MaterialCBuffer)
 {
 	MaterialCBuffer.reset(new CCBufferMaterial);

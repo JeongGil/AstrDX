@@ -260,6 +260,7 @@
     <ClInclude Include="Render\CDepthStencilState.h" />
     <ClInclude Include="Render\CPostProcess.h" />
     <ClInclude Include="Render\CPostProcessBlur.h" />
+    <ClInclude Include="Render\CRenderInstancing.h" />
     <ClInclude Include="Render\CRenderManager.h" />
     <ClInclude Include="Render\CRenderState.h" />
     <ClInclude Include="Sync.h" />
@@ -368,6 +369,7 @@
     <ClCompile Include="Render\CDepthStencilState.cpp" />
     <ClCompile Include="Render\CPostProcess.cpp" />
     <ClCompile Include="Render\CPostProcessBlur.cpp" />
+    <ClCompile Include="Render\CRenderInstancing.cpp" />
     <ClCompile Include="Render\CRenderManager.cpp" />
     <ClCompile Include="Render\CRenderState.cpp" />
     <ClCompile Include="UI\CButton.cpp" />

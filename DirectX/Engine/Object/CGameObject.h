@@ -43,11 +43,6 @@ public:
 		this->Key = Key;
 	}
 
-	void SetKey(std::string&& Key)
-	{
-		this->Key = std::move(Key);
-	}
-
 	bool GetAlive() const
 	{
 		return bAlive;

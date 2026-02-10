@@ -37,16 +37,23 @@ public:
 	                                                       int ShaderBufferType = EShaderBufferType::Pixel,
 	                                                       int Index = 0);
 
-	std::weak_ptr<FMaterialTextureInfo> AddTextures(const std::string& Key, std::vector<const TCHAR*>& FileNames,
+	std::weak_ptr<FMaterialTextureInfo> AddTextures(const std::string& Key, const std::vector<const TCHAR*>& FileNames,
 	                                                const std::string& PathName = "Texture", int Register = 0,
 	                                                int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
 	std::weak_ptr<FMaterialTextureInfo> AddTexturesFullPath(const std::string& Key,
-	                                                        std::vector<const TCHAR*>& FullPaths, int Register = 0,
+	                                                        const std::vector<const TCHAR*>& FullPaths, int Register = 0,
 	                                                        int ShaderBufferType = EShaderBufferType::Pixel,
 	                                                        int Index = 0);
 
+	std::weak_ptr<FMaterialTextureInfo> AddTextureArray(const std::string& Key, const std::vector<const TCHAR*>& FileNames,
+	                                                    const std::string& PathName = "Texture", int Register = 0,
+	                                                    int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTextureArrayFullPath(const std::string& Key,
+	                                                            const std::vector<const TCHAR*>& FullPaths, int Register = 0,
+	                                                            int ShaderBufferType = EShaderBufferType::Pixel,
+	                                                            int Index = 0);
+
 	bool SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture);
-	bool SetTextureIndex(int TextureIndex);
 
 protected:
 	FColor BaseColor = FColor::White;
@@ -82,7 +89,7 @@ public:
 
 struct FMaterialTextureInfo
 {
-	std::string Name;
+	std::string Key;
 	std::weak_ptr<CTexture> Texture;
 	int Register = 0;
 	int ShaderBufferType = EShaderBufferType::Pixel;

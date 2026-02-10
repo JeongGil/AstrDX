@@ -1,6 +1,8 @@
 #pragma once
 #include "../CObject.h"
 
+#include "../Utils.h"
+
 class CAsset :
 	public CObject
 {
@@ -13,17 +15,25 @@ public:
 		return AssetType;
 	}
 
+	[[nodiscard]] size_t GetID() const
+	{
+		return ID;
+	}
+
 	[[nodiscard]] const std::string& GetKey() const
 	{
 		return Key;
 	}
+
 	void SetKey(const std::string& Key)
 	{
 		this->Key = Key;
+		ID = CIDMaker::GetID(Key);
 	}
 
 protected:
 	std::string Key;
+	size_t ID;
 	EAssetType AssetType = EAssetType::None;
 
 protected:

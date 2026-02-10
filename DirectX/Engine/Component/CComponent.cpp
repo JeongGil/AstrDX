@@ -45,7 +45,7 @@ CComponent::CComponent(CComponent&& other) noexcept: CObject(std::move(other)),
                                                      bAlive(other.bAlive),
                                                      Type(other.Type)
 {
-	SetKey(std::move(other.Key));
+	SetKey(other.Key);
 }
 
 CComponent::~CComponent()

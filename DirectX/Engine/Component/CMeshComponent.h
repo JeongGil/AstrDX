@@ -21,6 +21,10 @@ class CMeshComponent :
 	friend CObject;
 
 public:
+	std::weak_ptr<CMesh> GetMesh() const override;
+	std::weak_ptr<CTexture> GetTexture() const override;
+	std::weak_ptr<CShader> GetShader() const override;
+
 	void SetMesh(const std::weak_ptr<CMesh>& Mesh);
 	void SetMesh(const std::string& Key);
 
@@ -60,6 +64,15 @@ public:
 	                                                        std::vector<const TCHAR*>& FullPaths, int Register = 0,
 	                                                        int ShaderBufferType = EShaderBufferType::Pixel,
 	                                                        int Index = 0);
+
+	std::weak_ptr<FMaterialTextureInfo> AddTextureArray(int SlotIdx, const std::string& Key,
+		std::vector<const TCHAR*>& FileNames,
+		const std::string& PathName = "Texture", int Register = 0,
+		int ShaderBufferType = EShaderBufferType::Pixel, int Index = 0);
+	std::weak_ptr<FMaterialTextureInfo> AddTextureArrayFullPath(int SlotIdx, const std::string& Key,
+		std::vector<const TCHAR*>& FullPaths, int Register = 0,
+		int ShaderBufferType = EShaderBufferType::Pixel,
+		int Index = 0);
 
 	bool SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
 	bool SetTextureIndex(int SlotIndex, int TextureIndex);

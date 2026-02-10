@@ -877,7 +877,7 @@ CGameObject::CGameObject(CGameObject&& other) noexcept :
 	bEnable(other.bEnable),
 	bAlive(other.bAlive)
 {
-	SetKey(std::move(other.Key));
+	SetKey(other.Key);
 	other.bAlive = false;
 }
 

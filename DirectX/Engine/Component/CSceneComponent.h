@@ -2,10 +2,20 @@
 #include "CComponent.h"
 #include <array>
 
+class CShader;
+class CTexture;
+class CMesh;
+
 enum class EComponentRender : unsigned char
 {
 	None,
 	Render,
+};
+
+enum class EComponentRenderOption : unsigned char
+{
+	Normal,
+	Instancing,
 };
 
 namespace ERenderOrder
@@ -60,6 +70,16 @@ public:
 	 */
 	void UpdateTransform();
 
+	[[nodiscard]] EComponentRenderOption GetRenderOption() const
+	{
+		return RenderOption;
+	}
+
+	void SetRenderOption(const EComponentRenderOption RenderOption)
+	{
+		this->RenderOption = RenderOption;
+	}
+
 	[[nodiscard]] EComponentRender GetRenderType() const
 	{
 		return RenderType;
@@ -78,6 +98,10 @@ public:
 	void SetRenderLayer(const std::string& Name);
 
 	bool TrySetRenderLayer(const int NewRenderLayer);
+
+	virtual std::weak_ptr<CMesh> GetMesh() const;
+	virtual std::weak_ptr<CTexture> GetTexture() const;
+	virtual std::weak_ptr<CShader> GetShader() const;
 
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;
@@ -235,12 +259,13 @@ public:
 
 protected:
 	std::weak_ptr<CSceneComponent> Parent;
-	EComponentRender RenderType = EComponentRender::None;
-	int RenderLayer = 0;
+	EComponentRender RenderType{ EComponentRender::None };
+	EComponentRenderOption RenderOption{ EComponentRenderOption::Normal };
+	int RenderLayer{ 0 };
 	std::vector<std::weak_ptr<CSceneComponent>> Children;
 
-	bool bInheritScale = true;
-	bool bInheritRotation = true;
+	bool bInheritScale{ true };
+	bool bInheritRotation{ true };
 
 	FVector Pivot;
 

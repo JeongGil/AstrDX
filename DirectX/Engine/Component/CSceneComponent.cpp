@@ -47,6 +47,21 @@ bool CSceneComponent::TrySetRenderLayer(const int NewRenderLayer)
 	return Result;
 }
 
+std::weak_ptr<CMesh> CSceneComponent::GetMesh() const
+{
+	return {};
+}
+
+std::weak_ptr<CTexture> CSceneComponent::GetTexture() const
+{
+	return {};
+}
+
+std::weak_ptr<CShader> CSceneComponent::GetShader() const
+{
+	return {};
+}
+
 const FVector& CSceneComponent::GetAxis(EAxis::Type Axis) const
 {
 	return WorldAxis[Axis];

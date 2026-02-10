@@ -15,6 +15,65 @@
 
 std::shared_ptr<CCBufferAnimation2D> CMeshComponent::EmptyAnimationCBuffer;
 
+std::weak_ptr<CMesh> CMeshComponent::GetMesh() const
+{
+	return Mesh;
+}
+
+std::weak_ptr<CTexture> CMeshComponent::GetTexture() const
+{
+	return {};
+}
+
+std::weak_ptr<CShader> CMeshComponent::GetShader() const
+{
+	return Shader;
+}
+
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureArray(int SlotIdx, const std::string& Key,
+	std::vector<const TCHAR*>& FileNames, const std::string& PathName, int Register, int ShaderBufferType, int Index)
+{
+	if (auto World = this->World.lock())
+	{
+		if (auto Mgr = World->GetWorldAssetManager().lock())
+		{
+			if (!Mgr->LoadTextureArray(Key, FileNames, PathName))
+			{
+				return {};
+			}
+
+			if (auto Tex = Mgr->FindTexture(Key).lock())
+			{
+				return MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+			}
+		}
+	}
+
+	return {};
+}
+
+std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureArrayFullPath(int SlotIdx, const std::string& Key,
+	std::vector<const TCHAR*>& FullPaths, int Register, int ShaderBufferType, int Index)
+{
+	if (auto World = this->World.lock())
+	{
+		if (auto Mgr = World->GetWorldAssetManager().lock())
+		{
+			if (!Mgr->LoadTextureArrayFullPath(Key, FullPaths))
+			{
+				return {};
+			}
+
+			if (auto Tex = Mgr->FindTexture(Key).lock())
+			{
+				return MaterialSlot[SlotIdx]->AddTexture(Tex, Register, ShaderBufferType, Index);
+			}
+		}
+	}
+
+	return {};
+}
+
 void CMeshComponent::SetMesh(const std::weak_ptr<CMesh>& Mesh)
 {
 	this->Mesh = Mesh;
@@ -117,7 +176,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, cons
 		}
 	}
 
-	return std::weak_ptr<FMaterialTextureInfo>();
+	return {};
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, const TCHAR* FileName, const std::string& PathName,
@@ -129,7 +188,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, cons
 		{
 			if (!Mgr->LoadTexture(Key, FileName, PathName))
 			{
-				return std::weak_ptr<FMaterialTextureInfo>();
+				return {};
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
@@ -139,7 +198,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, cons
 		}
 	}
 
-	return std::weak_ptr<FMaterialTextureInfo>();
+	return {};
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureFullPath(int SlotIdx, const std::string& Key,
@@ -152,7 +211,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureFullPath(int SlotI
 		{
 			if (!Mgr->LoadTextureFullPath(Key, FullPath))
 			{
-				return std::weak_ptr<FMaterialTextureInfo>();
+				return {};
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
@@ -162,7 +221,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureFullPath(int SlotI
 		}
 	}
 
-	return std::weak_ptr<FMaterialTextureInfo>();
+	return {};
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextures(int SlotIdx, const std::string& Key,
@@ -176,7 +235,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextures(int SlotIdx, con
 		{
 			if (!Mgr->LoadTextures(Key, FileNames, PathName))
 			{
-				return std::weak_ptr<FMaterialTextureInfo>();
+				return {};
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
@@ -186,7 +245,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextures(int SlotIdx, con
 		}
 	}
 
-	return std::weak_ptr<FMaterialTextureInfo>();
+	return {};
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexturesFullPath(int SlotIdx, const std::string& Key, std::vector<const TCHAR*>& FullPaths,
@@ -198,7 +257,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexturesFullPath(int Slot
 		{
 			if (!Mgr->LoadTexturesFullPath(Key, FullPaths))
 			{
-				return std::weak_ptr<FMaterialTextureInfo>();
+				return {};
 			}
 
 			if (auto Tex = Mgr->FindTexture(Key).lock())
@@ -208,7 +267,7 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexturesFullPath(int Slot
 		}
 	}
 
-	return std::weak_ptr<FMaterialTextureInfo>();
+	return {};
 }
 
 bool CMeshComponent::SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture)
@@ -228,7 +287,8 @@ bool CMeshComponent::SetTextureIndex(int SlotIndex, int TextureIndex)
 		return false;
 	}
 
-	return MaterialSlot[SlotIndex]->SetTextureIndex(TextureIndex);
+	return false;
+	//return MaterialSlot[SlotIndex]->SetTextureIndex(TextureIndex);
 }
 
 void CMeshComponent::CreateEmptyAnimationCBuffer()

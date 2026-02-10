@@ -95,6 +95,8 @@ bool CSoundManager::LoadSound(const std::string& Key, const std::string& GroupKe
 
 	std::shared_ptr<CSound>	Sound{new CSound};
 
+	Sound->SetKey(Key);
+
 	if (!Sound->LoadSound(System, Group, bLoop, FileName, PathName))
 	{
 		return false;
