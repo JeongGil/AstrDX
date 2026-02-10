@@ -20,9 +20,9 @@ std::weak_ptr<CMesh> CMeshComponent::GetMesh() const
 	return Mesh;
 }
 
-std::weak_ptr<CTexture> CMeshComponent::GetTexture() const
+std::weak_ptr<CTexture> CMeshComponent::GetTexture(int SlotIndex) const
 {
-	return {};
+	return MaterialSlot[SlotIndex]->GetTexture();
 }
 
 std::weak_ptr<CShader> CMeshComponent::GetShader() const
@@ -30,8 +30,13 @@ std::weak_ptr<CShader> CMeshComponent::GetShader() const
 	return Shader;
 }
 
+std::weak_ptr<CRenderState> CMeshComponent::GetBlendState(int SlotIndex) const
+{
+	return MaterialSlot[SlotIndex]->GetBlendState();
+}
+
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureArray(int SlotIdx, const std::string& Key,
-	std::vector<const TCHAR*>& FileNames, const std::string& PathName, int Register, int ShaderBufferType, int Index)
+                                                                    std::vector<const TCHAR*>& FileNames, const std::string& PathName, int Register, int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{

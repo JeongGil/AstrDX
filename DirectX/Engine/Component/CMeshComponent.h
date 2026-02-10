@@ -22,8 +22,9 @@ class CMeshComponent :
 
 public:
 	std::weak_ptr<CMesh> GetMesh() const override;
-	std::weak_ptr<CTexture> GetTexture() const override;
+	std::weak_ptr<CTexture> GetTexture(int SlotIndex = 0) const override;
 	std::weak_ptr<CShader> GetShader() const override;
+	std::weak_ptr<CRenderState> GetBlendState(int SlotIndex) const override;
 
 	void SetMesh(const std::weak_ptr<CMesh>& Mesh);
 	void SetMesh(const std::string& Key);

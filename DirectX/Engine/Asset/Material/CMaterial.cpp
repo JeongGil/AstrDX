@@ -7,6 +7,11 @@
 #include "../Texture/CTexture.h"
 #include "../Texture/CTextureManager.h"
 
+std::weak_ptr<CTexture> CMaterial::GetTexture(int Index) const
+{
+	return TextureInfos[Index]->Texture;
+}
+
 void CMaterial::SetBlendState(const std::string& Key)
 {
 	BlendState = CRenderManager::GetInst()->FindRenderState(Key);

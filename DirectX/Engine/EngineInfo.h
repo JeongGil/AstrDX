@@ -271,6 +271,60 @@ struct FTileFrame
 	FVector2 End;
 };
 
+struct FInstancingBuffer
+{
+	FVector4	WVP0;
+	FVector4	WVP1;
+	FVector4	WVP2;
+	FVector4	WVP3;
+	FVector2	LTUV;
+	FVector2	RBUV;
+	FColor	BaseColor;
+};
+
+struct FRenderKey
+{
+	size_t MeshID;
+	size_t TextureID;
+
+	FRenderKey& operator=(const FRenderKey& Other)
+	{
+		if (this == &Other)
+			return *this;
+		MeshID = Other.MeshID;
+		TextureID = Other.TextureID;
+		return *this;
+	}
+
+	FRenderKey& operator=(FRenderKey&& Other) noexcept
+	{
+		if (this == &Other)
+			return *this;
+		MeshID = Other.MeshID;
+		TextureID = Other.TextureID;
+		return *this;
+	}
+
+	friend bool operator==(const FRenderKey& Lhs, const FRenderKey& Rhs)
+	{
+		return Lhs.MeshID == Rhs.MeshID
+			&& Lhs.TextureID == Rhs.TextureID;
+	}
+
+	friend bool operator!=(const FRenderKey& Lhs, const FRenderKey& Rhs)
+	{
+		return !(Lhs == Rhs);
+	}
+};
+
+struct FRenderKeyHash
+{
+	size_t operator()(const FRenderKey& Key) const
+	{
+		return Key.MeshID ^ (Key.TextureID + 0x9e3779b9 + (Key.MeshID << 6) + (Key.MeshID >> 2));
+	}
+};
+
 struct TableID
 {
 	int value = -1;

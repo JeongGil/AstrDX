@@ -2,6 +2,7 @@
 #include "CComponent.h"
 #include <array>
 
+class CRenderState;
 class CShader;
 class CTexture;
 class CMesh;
@@ -100,8 +101,9 @@ public:
 	bool TrySetRenderLayer(const int NewRenderLayer);
 
 	virtual std::weak_ptr<CMesh> GetMesh() const;
-	virtual std::weak_ptr<CTexture> GetTexture() const;
+	virtual std::weak_ptr<CTexture> GetTexture(int SlotIndex = 0) const;
 	virtual std::weak_ptr<CShader> GetShader() const;
+	virtual std::weak_ptr<CRenderState> GetBlendState(int SlotIndex = 0) const;
 
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;

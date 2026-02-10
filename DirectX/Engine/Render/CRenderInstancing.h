@@ -25,8 +25,14 @@ private:
 	std::weak_ptr<CTexture> Texture;
 	std::weak_ptr<CShader> Shader;
 
+	bool bRender{ false };
+	std::vector<FInstancingBuffer> InstancingBuffers;
+
 public:
 	bool CompareAsset(const std::weak_ptr<CMesh>& Mesh, const std::weak_ptr<CTexture>& Texture);
+
+	bool CheckMesh(const std::weak_ptr<CMesh>& Mesh) const;
+	bool CheckTexture(const std::weak_ptr<CTexture>& Texture) const;
 	
 	void SetMesh(const std::weak_ptr<CMesh>& Mesh);
 	void SetTexture(const std::weak_ptr<CTexture>& Texture);
@@ -34,5 +40,10 @@ public:
 	void AddRenderComponent(const std::weak_ptr<CSceneComponent>& Component);
 
 	void Render();
+
+	size_t GetRenderCount() const
+	{
+		return RenderComponents.size();
+	}
 };
 

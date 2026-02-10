@@ -1,6 +1,7 @@
 #include "CSceneComponent.h"
 
 #include "../Render/CRenderManager.h"
+#include "../Render/CRenderState.h"
 
 void CSceneComponent::AddChild(const std::weak_ptr<CSceneComponent>& Child)
 {
@@ -52,12 +53,17 @@ std::weak_ptr<CMesh> CSceneComponent::GetMesh() const
 	return {};
 }
 
-std::weak_ptr<CTexture> CSceneComponent::GetTexture() const
+std::weak_ptr<CTexture> CSceneComponent::GetTexture(int SlotIndex) const
 {
 	return {};
 }
 
 std::weak_ptr<CShader> CSceneComponent::GetShader() const
+{
+	return {};
+}
+
+std::weak_ptr<CRenderState> CSceneComponent::GetBlendState(int SlotIndex) const
 {
 	return {};
 }

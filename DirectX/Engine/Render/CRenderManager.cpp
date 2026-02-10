@@ -5,6 +5,7 @@
 #include "CBlendState.h"
 #include "CDepthStencilState.h"
 #include "CPostProcessBlur.h"
+#include "CRenderInstancing.h"
 #include "CRenderState.h"
 #include "../CDevice.h"
 #include "../Asset/CAssetManager.h"
@@ -338,6 +339,43 @@ void CRenderManager::RenderFullScreenQuad()
 	Context->Draw(4, 0);
 }
 
+void CRenderManager::CheckInstancing(const std::shared_ptr<CSceneComponent>& Comp, FRenderLayer& Layer)
+{
+	auto Mesh = Comp->GetMesh().lock();
+	auto Tex = Comp->GetTexture().lock();
+
+	if (!Mesh || !Tex)
+	{
+		return;
+	}
+
+	FRenderKey Key{ Mesh->GetID(), Tex->GetID() };
+
+	auto [Begin, End] = Layer.InstancingMap.equal_range(Key);
+
+	std::shared_ptr<CRenderInstancing> Instancing;
+
+	for (auto It = Begin; It != End; ++It)
+	{
+		auto& Inst = It->second;
+		if (Inst->CheckMesh(Comp->GetMesh())
+			&& Inst->CheckTexture(Comp->GetTexture()))
+		{
+			Instancing = Inst;
+			break;
+		}
+	}
+
+	if (!Instancing)
+	{
+		Instancing.reset(new CRenderInstancing);
+		Instancing->SetMesh(Comp->GetMesh());
+		Instancing->SetTexture(Comp->GetTexture());
+	}
+
+	Instancing->AddRenderComponent(Comp);
+}
+
 std::weak_ptr<CRenderState> CRenderManager::FindRenderState(const std::string& Key)
 {
 	auto It = RenderStates.find(Key);
@@ -415,13 +453,13 @@ void CRenderManager::Update(const float DeltaTime)
 
 	for (auto& RenderLayer : RenderLayers | std::views::values)
 	{
-		std::erase_if(RenderLayer.RenderList, [](const std::weak_ptr<CSceneComponent>& WeakComp)
+		std::erase_if(RenderLayer.RenderList, [&](const std::weak_ptr<CSceneComponent>& WeakComp)
 			{
 				if (auto Comp = WeakComp.lock())
 				{
 					if (Comp->GetEnable())
 					{
-						// TODO: logic.
+						CheckInstancing(Comp, RenderLayer);
 					}
 
 					return false;
@@ -476,23 +514,24 @@ void CRenderManager::Render()
 					break;
 			}
 
-			for (const auto& WeakComp : RenderList)
+			auto RenderComps = RenderList
+				| std::views::transform([](auto& Weak) { return Weak.lock(); })
+				| std::views::filter([](const auto& Comp) { return Comp != nullptr; })
+				| std::views::filter([](const auto& Comp) { return Comp->GetEnable(); })
+				| std::views::filter([](const auto& Comp)
+					{
+						return Comp->GetRenderOption() != EComponentRenderOption::Instancing;
+					});
+
+			for (const auto& Comp : RenderComps)
 			{
-				if (auto Comp = WeakComp.lock())
-				{
-					if (!Comp->GetEnable())
-					{
-						continue;
-					}
-					
-					if (Comp->GetRenderOption() == EComponentRenderOption::Instancing)
-					{
-						continue;
-					}
-					
-					Comp->Render();
-					//Cmp->PostRender();
-				}
+				Comp->Render();
+				//Comp->PostRender();
+			}
+
+			for (const auto& Instancing : RenderLayer.InstancingMap | std::views::values)
+			{
+				Instancing->Render();
 			}
 		}
 	}
@@ -507,9 +546,9 @@ void CRenderManager::Render()
 
 		std::shared_ptr<CRenderTarget> LastProcessedTarget = nullptr;
 		std::erase_if(PostProcesses, [](const auto& PP)
-		{
-			return !PP->IsActive();
-		});
+			{
+				return !PP->IsActive();
+			});
 
 		if (!PostProcesses.empty())
 		{

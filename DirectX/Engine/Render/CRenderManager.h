@@ -24,7 +24,7 @@ struct FRenderLayer
 {
 	std::string Name;
 	std::list<std::weak_ptr<CSceneComponent>> RenderList;
-	std::unordered_map<size_t, std::shared_ptr<CRenderInstancing>> InstancingMap;
+	std::unordered_multimap<FRenderKey, std::shared_ptr<CRenderInstancing>, FRenderKeyHash> InstancingMap;
 	ERenderListSort SortType = ERenderListSort::Y;
 };
 
@@ -89,6 +89,7 @@ public:
 
 private:
 	void RenderFullScreenQuad();
+	void CheckInstancing(const std::shared_ptr<CSceneComponent>& Comp, FRenderLayer& Layer);
 
 public:
 	template <typename T>

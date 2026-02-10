@@ -16,6 +16,12 @@ class CMaterial :
 	friend class CMesh;
 
 public:
+	std::weak_ptr<CRenderState> GetBlendState() const
+	{
+		return BlendState;
+	}
+
+	std::weak_ptr<CTexture> GetTexture(int Index = 0) const;
 	void SetBlendState(const std::string& Key);
 	void SetBlendState(const std::weak_ptr<CRenderState>& State);
 
