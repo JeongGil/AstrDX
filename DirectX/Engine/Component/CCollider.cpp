@@ -15,7 +15,7 @@ void CCollider::SetDrawDebug(bool bDrawDebug)
 	{
 		RenderType = EComponentRender::Render;
 
-		CRenderManager::GetInst()->AddRenderLayer(std::dynamic_pointer_cast<CSceneComponent>(shared_from_this()));
+		//CRenderManager::GetInst()->AddRenderLayer(std::dynamic_pointer_cast<CSceneComponent>(shared_from_this()));
 
 		TransformCBuffer.reset(new CCBufferTransform);
 		TransformCBuffer->Init();

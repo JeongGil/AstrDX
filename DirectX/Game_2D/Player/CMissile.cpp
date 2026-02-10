@@ -24,7 +24,7 @@ bool CMissile::Init()
 		return false;
 	}
 
-	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
+	MeshComponent = CreateComponent<CMeshComponent>("MissileMesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("MaterialColor2D");
@@ -65,4 +65,18 @@ void CMissile::Update(const float DeltaTime)
 CMissile* CMissile::Clone()
 {
 	return new CMissile(*this);
+}
+
+CMissile::CMissile(const CMissile& other): CGameObject(other),
+                                           MeshComponent(other.MeshComponent),
+                                           CameraComponent(other.CameraComponent),
+                                           Distance(other.Distance)
+{
+}
+
+CMissile::CMissile(CMissile&& other) noexcept: CGameObject(std::move(other)),
+                                               MeshComponent(std::move(other.MeshComponent)),
+                                               CameraComponent(std::move(other.CameraComponent)),
+                                               Distance(other.Distance)
+{
 }

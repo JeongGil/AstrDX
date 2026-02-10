@@ -31,6 +31,8 @@ struct FRenderLayer
 class CRenderManager
 {
 public:
+	static bool SortYRenderList(const std::weak_ptr<CSceneComponent>& A, const std::weak_ptr<CSceneComponent>& B);
+
 	bool CreateLayer(const std::string& Name, int RenderOrder, ERenderListSort SortType);
 	int GetLayerOrder(const std::string& Name);
 	void AddRenderLayer(const std::weak_ptr<CSceneComponent>& Component);

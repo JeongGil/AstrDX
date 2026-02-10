@@ -37,7 +37,7 @@ bool CMainWorld::Init()
 		if (auto Monster = Weak.lock())
 		{
 			Monster->SetWorldPosition(-500.f + i * 30.f, 300.f);
-			Monster->SetWorldRotationZ(180.f);
+			//Monster->SetWorldRotationZ(180.f);
 		}
 	}
 

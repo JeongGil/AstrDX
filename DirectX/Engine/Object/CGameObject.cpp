@@ -660,14 +660,14 @@ void CGameObject::AddWorldPosition(float X, float Y) const
 
 void CGameObject::Begin()
 {
-	for (const auto& Cmp : SceneComponents)
+	for (const auto& Comp : SceneComponents)
 	{
-		Cmp->Begin();
+		Comp->Begin();
 	}
 
-	for (const auto& Cmp : ObjectComponents)
+	for (const auto& Comp : ObjectComponents)
 	{
-		Cmp->Begin();
+		Comp->Begin();
 	}
 }
 
@@ -712,91 +712,54 @@ void CGameObject::Update(const float DeltaTime)
 void CGameObject::PostUpdate(const float DeltaTime)
 {
 	// Scene components
-	auto SceneIt = SceneComponents.begin();
-	auto SceneEnd = SceneComponents.end();
-	while (SceneIt != SceneEnd)
-	{
-		auto Cmp = *SceneIt;
-		if (Cmp.use_count() == 0)
+	std::erase_if(SceneComponents, [&DeltaTime](auto& Comp)
 		{
-			SceneIt = SceneComponents.erase(SceneIt);
-			SceneEnd = SceneComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetAlive())
-		{
-			SceneIt = SceneComponents.erase(SceneIt);
-			SceneEnd = SceneComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetEnable())
-		{
-			SceneIt = SceneComponents.erase(SceneIt);
-			SceneEnd = SceneComponents.end();
-			continue;
-		}
+			if (!Comp || !Comp->GetAlive())
+			{
+				return true;
+			}
 
-		Cmp->PostUpdate(DeltaTime);
-		++SceneIt;
-	}
+			if (Comp->GetEnable())
+			{
+				Comp->PostUpdate(DeltaTime);
+			}
+
+			return false;
+		});
 
 	// Object components
-	auto ObjectIt = ObjectComponents.begin();
-	auto ObjectEnd = ObjectComponents.end();
-	while (ObjectIt != ObjectEnd)
-	{
-		auto Cmp = *ObjectIt;
-		if (Cmp.use_count() == 0)
+	std::erase_if(ObjectComponents, [&DeltaTime](auto& Comp)
 		{
-			ObjectIt = ObjectComponents.erase(ObjectIt);
-			ObjectEnd = ObjectComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetAlive())
-		{
-			ObjectIt = ObjectComponents.erase(ObjectIt);
-			ObjectEnd = ObjectComponents.end();
-			continue;
-		}
-		else if (!Cmp->GetEnable())
-		{
-			ObjectIt = ObjectComponents.erase(ObjectIt);
-			ObjectEnd = ObjectComponents.end();
-			continue;
-		}
+			if (!Comp || !Comp->GetAlive())
+			{
+				return true;
+			}
 
-		Cmp->PostUpdate(DeltaTime);
-		++ObjectIt;
-	}
+			if (Comp->GetEnable())
+			{
+				Comp->PostUpdate(DeltaTime);
+			}
+
+			return false;
+		});
 }
 
 void CGameObject::UpdateTransform()
 {
-	auto It = SceneComponents.begin();
-	while (It != SceneComponents.end())
-	{
-		auto Cmp = *It;
-		if (Cmp.use_count() == 0)
+	std::erase_if(SceneComponents, [](auto& Comp)
 		{
-			It = SceneComponents.erase(It);
-			continue;
-		}
+			if (!Comp || !Comp->GetAlive())
+			{
+				return true;
+			}
 
-		if (!Cmp->GetAlive())
-		{
-			It = SceneComponents.erase(It);
-			continue;
-		}
+			if (Comp->GetEnable())
+			{
+				Comp->UpdateTransform();
+			}
 
-		if (!Cmp->GetEnable())
-		{
-			++It;
-			continue;
-		}
-
-		Cmp->UpdateTransform();
-		++It;
-	}
+			return false;
+		});
 }
 
 void CGameObject::Render()
@@ -883,14 +846,14 @@ CGameObject::CGameObject(CGameObject&& other) noexcept :
 
 void CGameObject::Destroy()
 {
-	for (auto& Cmp : SceneComponents)
+	for (auto& Comp : SceneComponents)
 	{
-		Cmp->Destroy();
+		Comp->Destroy();
 	}
 
-	for (auto& Cmp : ObjectComponents)
+	for (auto& Comp : ObjectComponents)
 	{
-		Cmp->Destroy();
+		Comp->Destroy();
 	}
 
 	bAlive = false;

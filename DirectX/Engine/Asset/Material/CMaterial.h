@@ -25,6 +25,11 @@ public:
 	void SetBlendState(const std::string& Key);
 	void SetBlendState(const std::weak_ptr<CRenderState>& State);
 
+	FColor GetBaseColor() const
+	{
+		return BaseColor;
+	}
+
 	void SetBaseColor(float r, float g, float b, float a);
 	void SetBaseColor(int r, int g, int b, int a);
 	void SetBaseColor(const FColor& Color);

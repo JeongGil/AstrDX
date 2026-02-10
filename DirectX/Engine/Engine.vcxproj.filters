@@ -579,6 +579,9 @@
     <ClInclude Include="Render\CRenderInstancing.h">
       <Filter>Render\Instancing</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderTexture2DInstancing.h">
+      <Filter>Asset\Shader\Shader\Texture2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -882,6 +885,9 @@
     </ClCompile>
     <ClCompile Include="Render\CRenderInstancing.cpp">
       <Filter>Render\Instancing</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderTexture2DInstancing.cpp">
+      <Filter>Asset\Shader\Shader\Texture2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,11 @@
 
 std::weak_ptr<CTexture> CMaterial::GetTexture(int Index) const
 {
+	if (Index >= TextureInfos.size())
+	{
+		return {};
+	}
+
 	return TextureInfos[Index]->Texture;
 }
 

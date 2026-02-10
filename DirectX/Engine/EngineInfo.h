@@ -273,37 +273,20 @@ struct FTileFrame
 
 struct FInstancingBuffer
 {
-	FVector4	WVP0;
-	FVector4	WVP1;
-	FVector4	WVP2;
-	FVector4	WVP3;
-	FVector2	LTUV;
-	FVector2	RBUV;
+	FVector4 WVP0;
+	FVector4 WVP1;
+	FVector4 WVP2;
+	FVector4 WVP3;
+	FVector2 LTUV;
+	FVector2 RBUV;
 	FColor	BaseColor;
+	FVector PivotSize;
 };
 
 struct FRenderKey
 {
 	size_t MeshID;
 	size_t TextureID;
-
-	FRenderKey& operator=(const FRenderKey& Other)
-	{
-		if (this == &Other)
-			return *this;
-		MeshID = Other.MeshID;
-		TextureID = Other.TextureID;
-		return *this;
-	}
-
-	FRenderKey& operator=(FRenderKey&& Other) noexcept
-	{
-		if (this == &Other)
-			return *this;
-		MeshID = Other.MeshID;
-		TextureID = Other.TextureID;
-		return *this;
-	}
 
 	friend bool operator==(const FRenderKey& Lhs, const FRenderKey& Rhs)
 	{

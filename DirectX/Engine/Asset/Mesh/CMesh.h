@@ -97,6 +97,16 @@ public:
 		return MeshSlots[Index];
 	}
 
+	bool IsInstancingBufferCreated() const
+	{
+		if (InstancingBuffer.Buffer)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 protected:
 	static bool CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count, D3D11_USAGE Usage);
 

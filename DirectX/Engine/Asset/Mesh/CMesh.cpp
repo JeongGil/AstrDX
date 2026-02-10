@@ -184,6 +184,13 @@ void CMesh::RenderInstancing(size_t SlotIndex)
 		Context->IASetIndexBuffer(MeshSlot->IndexBuffer.Buffer, MeshSlot->IndexBuffer.Format, 0);
 		Context->DrawIndexedInstanced(MeshSlot->IndexBuffer.Count, InstancingCount, 0, 0, 0);
 	}
+
+	Stride[0] = 0;
+	Stride[1] = 0;
+	VB[0] = nullptr;
+	VB[1] = nullptr;
+
+	Context->IASetVertexBuffers(0, 2, VB, Stride, Offset);
 }
 
 void CMesh::Render() const

@@ -19,21 +19,22 @@
 #include "../Object/CGameObject.h"
 #include "../World/CWorldManager.h"
 
-static bool SortYRenderList(const std::weak_ptr<CSceneComponent>& A, const std::weak_ptr<CSceneComponent>& B)
+bool CRenderManager::SortYRenderList(const std::weak_ptr<CSceneComponent>& A, const std::weak_ptr<CSceneComponent>& B)
 {
-	auto SA = A.lock();
-	if (!SA)
+	auto Src = A.lock();
+	auto Dest = B.lock();
+
+	if (!Src)
 	{
 		return true;
 	}
 
-	auto SB = B.lock();
-	if (!SB)
+	if (!Dest)
 	{
 		return false;
 	}
-	// Descend to higher Y draw first.
-	return SA->GetWorldPosition().y > SB->GetWorldPosition().y;
+
+	return Src->GetWorldPosition().y > Dest->GetWorldPosition().y;
 }
 
 bool CRenderManager::CreateLayer(const std::string& Name, int RenderOrder, ERenderListSort SortType)
@@ -453,19 +454,20 @@ void CRenderManager::Update(const float DeltaTime)
 
 	for (auto& RenderLayer : RenderLayers | std::views::values)
 	{
-		std::erase_if(RenderLayer.RenderList, [&](const std::weak_ptr<CSceneComponent>& WeakComp)
+		std::erase_if(RenderLayer.RenderList, [&](const std::weak_ptr<CSceneComponent>& Weak)
 			{
-				if (auto Comp = WeakComp.lock())
+				auto Comp = Weak.lock();
+				if (!Comp || !Comp->GetAlive())
 				{
-					if (Comp->GetEnable())
-					{
-						CheckInstancing(Comp, RenderLayer);
-					}
-
-					return false;
+					return true;
 				}
 
-				return true;
+				if (Comp->GetEnable())
+				{
+					CheckInstancing(Comp, RenderLayer);
+				}
+
+				return false;
 			});
 	}
 
@@ -495,9 +497,15 @@ void CRenderManager::Render()
 		{
 			auto& RenderList = RenderLayer.RenderList;
 
-			std::erase_if(RenderList, [](const auto& Comp)
+			std::erase_if(RenderList, [](const std::weak_ptr<CSceneComponent>& Weak)
 				{
-					return Comp.expired();
+					auto Comp = Weak.lock();
+					if (!Comp || !Comp->GetAlive())
+					{
+						return true;
+					}
+
+					return false;
 				});
 
 			switch (RenderLayer.SortType)
@@ -532,6 +540,7 @@ void CRenderManager::Render()
 			for (const auto& Instancing : RenderLayer.InstancingMap | std::views::values)
 			{
 				Instancing->Render();
+				Instancing->RenderClear();
 			}
 		}
 	}

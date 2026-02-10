@@ -28,8 +28,6 @@ protected:
 	CBulletEffect() = default;
 	CBulletEffect(const CBulletEffect& other);
 	CBulletEffect(CBulletEffect&& other) noexcept;
-	CBulletEffect& operator=(const CBulletEffect& other);
-	CBulletEffect& operator=(CBulletEffect&& other) noexcept;
 
 public:
 	~CBulletEffect() override = default;

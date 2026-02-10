@@ -40,6 +40,9 @@ public:
 	EAnimation2DTextureType GetTextureType() const;
 	int GetCurrentFrame() const;
 
+	FVector2 GetAnimLTUV();
+	FVector2 GetAnimRBUV();
+
 	template <typename T>
 	void AddNotify(const std::string& AnimKey, const std::string& NotiKey, int Frame, T* Obj, void (T::* Func)())
 	{

@@ -62,19 +62,21 @@ void CWorld::Update(const float DeltaTime)
 
 	Input->Update(DeltaTime);
 
-	auto Curr = Objects.begin();
-	const auto End = Objects.end();
-	while (Curr != End)
-	{
-		if (!Curr->second->GetAlive())
+	std::erase_if(Objects, [&DeltaTime](const auto& Pair)
 		{
-			Curr = Objects.erase(Curr);
-			continue;
-		}
+			auto Object = Pair.second;
+			if (!Object || !Object->GetAlive())
+			{
+				return true;
+			}
 
-		Curr->second->Update(DeltaTime);
-		++Curr;
-	}
+			if (Object->GetEnable())
+			{
+				Object->Update(DeltaTime);
+			}
+
+			return false;
+		});
 
 	CameraManager->Update(DeltaTime);
 
@@ -92,7 +94,11 @@ void CWorld::PostUpdate(const float DeltaTime)
 			return !Pair.second->GetAlive();
 		});
 
-	for (auto& Object : Objects | std::views::values)
+	auto UpdateCandidates = Objects
+		| std::views::values
+		| std::views::filter([](const auto& Obj) {return Obj->GetEnable(); });
+
+	for (const auto& Object : UpdateCandidates)
 	{
 		if (Object->GetEnable())
 		{
@@ -155,12 +161,13 @@ void CWorld::RenderUI()
 
 void CWorld::Begin()
 {
-	for (const auto& WeakObject : StartObjects)
+	auto BeginCandidates = StartObjects
+		| std::views::transform([](auto& Weak) {return Weak.lock(); })
+		| std::views::filter([](const auto& Object) {return Object != nullptr; });
+
+	for (const auto& Candidate : BeginCandidates)
 	{
-		if (auto Object = WeakObject.lock())
-		{
-			Object->Begin();
-		}
+		Candidate->Begin();
 	}
 
 	StartObjects.clear();

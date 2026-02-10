@@ -25,6 +25,7 @@ public:
 	std::weak_ptr<CTexture> GetTexture(int SlotIndex = 0) const override;
 	std::weak_ptr<CShader> GetShader() const override;
 	std::weak_ptr<CRenderState> GetBlendState(int SlotIndex) const override;
+	FColor GetBaseColor(int SlotIndex) const override;
 
 	void SetMesh(const std::weak_ptr<CMesh>& Mesh);
 	void SetMesh(const std::string& Key);
@@ -78,9 +79,14 @@ public:
 	bool SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
 	bool SetTextureIndex(int SlotIndex, int TextureIndex);
 
-	void SetAnimationComponent(const std::weak_ptr<CAnimation2DComponent>& AnimComponent)
+	std::weak_ptr<CAnimation2DComponent> GetAnimComponent() const override
 	{
-		this->AnimationComponent = AnimComponent;
+		return AnimComponent;
+	}
+
+	void SetAnimComponent(const std::weak_ptr<CAnimation2DComponent>& AnimComponent)
+	{
+		this->AnimComponent = AnimComponent;
 	}
 
 	static void CreateEmptyAnimationCBuffer();
@@ -92,7 +98,7 @@ protected:
 	std::vector<std::shared_ptr<CMaterial>> MaterialSlot;
 	std::shared_ptr<CCBufferTransform> CBufferTransform;
 
-	std::weak_ptr<CAnimation2DComponent> AnimationComponent;
+	std::weak_ptr<CAnimation2DComponent> AnimComponent;
 	static std::shared_ptr<CCBufferAnimation2D> EmptyAnimationCBuffer;
 
 public:

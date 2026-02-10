@@ -35,6 +35,11 @@ std::weak_ptr<CRenderState> CMeshComponent::GetBlendState(int SlotIndex) const
 	return MaterialSlot[SlotIndex]->GetBlendState();
 }
 
+FColor CMeshComponent::GetBaseColor(int SlotIndex) const
+{
+	return MaterialSlot[SlotIndex]->GetBaseColor();
+}
+
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureArray(int SlotIdx, const std::string& Key,
                                                                     std::vector<const TCHAR*>& FileNames, const std::string& PathName, int Register, int ShaderBufferType, int Index)
 {
@@ -358,7 +363,7 @@ void CMeshComponent::Render()
 
 	Shader->SetShader();
 
-	auto Anim = AnimationComponent.lock();
+	auto Anim = AnimComponent.lock();
 	if (Anim)
 	{
 		Anim->SetShader();

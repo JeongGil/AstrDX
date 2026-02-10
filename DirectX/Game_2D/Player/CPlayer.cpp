@@ -160,7 +160,7 @@ bool CPlayer::Init()
 
 	auto World = this->World.lock();
 
-	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
+	MeshComponent = CreateComponent<CMeshComponent>("PlayerMesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");

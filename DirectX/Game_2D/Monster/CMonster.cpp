@@ -18,7 +18,7 @@ bool CMonster::Init()
 		return false;
 	}
 
-	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
+	MeshComponent = CreateComponent<CMeshComponent>("MonsterMesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");
@@ -127,29 +127,29 @@ CMonster* CMonster::Clone()
 
 void CMonster::AttackNotify()
 {
-	if (auto World = this->World.lock())
-	{
-		auto Bullet = World->CreateGameObject<CBullet>("Bullet");
-		if (auto BulletObj = Bullet.lock())
-		{
-			FVector	BulletPos = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
-			BulletObj->SetCollision("MonsterAttack");
-			BulletObj->SetWorldPosition(BulletPos);
-			BulletObj->SetWorldRotation(GetWorldRotation());
+	//if (auto World = this->World.lock())
+	//{
+	//	auto Bullet = World->CreateGameObject<CBullet>("Bullet");
+	//	if (auto BulletObj = Bullet.lock())
+	//	{
+	//		FVector	BulletPos = GetWorldPosition() + GetAxis(EAxis::Y) * 75.f;
+	//		BulletObj->SetCollision("MonsterAttack");
+	//		BulletObj->SetWorldPosition(BulletPos);
+	//		BulletObj->SetWorldRotation(GetWorldRotation());
 
-			auto Target = this->FireTarget.lock();
+	//		auto Target = this->FireTarget.lock();
 
-			FVector	TargetPos = Target->GetWorldPosition();
+	//		FVector	TargetPos = Target->GetWorldPosition();
 
-			if (Target)
-			{
-				FVector	Dir = TargetPos - BulletPos;
-				Dir.Normalize();
+	//		if (Target)
+	//		{
+	//			FVector	Dir = TargetPos - BulletPos;
+	//			Dir.Normalize();
 
-				BulletObj->SetMoveDirection(Dir);
-			}
-		}
-	}
+	//			BulletObj->SetMoveDirection(Dir);
+	//		}
+	//	}
+	//}
 }
 
 void CMonster::AttackFinish()

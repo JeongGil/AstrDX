@@ -108,7 +108,7 @@ bool CBullet::Init()
 		return false;
 	}
 
-	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
+	MeshComponent = CreateComponent<CMeshComponent>("BulletMesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("MaterialColor2D");

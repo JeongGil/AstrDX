@@ -8,6 +8,7 @@
 #include "CShaderMaterialColor2D.h"
 #include "CShaderNullBuffer.h"
 #include "CShaderTexture2D.h"
+#include "CShaderTexture2DInstancing.h"
 #include "CShaderTileMap.h"
 #include "CShaderTileMapInstancing.h"
 #include "CShaderUIDefault.h"
@@ -62,6 +63,11 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderTexture2D>("DefaultTexture2D", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderTexture2DInstancing>("DefaultTexture2DInstancing", "EngineShader"))
 	{
 		return false;
 	}

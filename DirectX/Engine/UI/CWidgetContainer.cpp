@@ -9,10 +9,12 @@ CWidgetContainer::CWidgetContainer(const CWidgetContainer& other) :
 {
 	Children.reserve(other.Children.size());
 
-	auto CloneView = other.Children | std::views::transform([](const auto& Child)
-		{
-			return std::shared_ptr<CWidget>(Child->Clone());
-		});
+	auto CloneView = other.Children
+		| std::views::filter([](const auto& Child) {return Child != nullptr; })
+		| std::views::transform([](const auto& Child)
+			{
+				return std::shared_ptr<CWidget>(Child->Clone());
+			});
 
 	std::ranges::copy(CloneView, std::back_inserter(Children));
 }

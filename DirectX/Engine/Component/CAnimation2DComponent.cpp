@@ -47,7 +47,7 @@ void CAnimation2DComponent::Update(const float DeltaTime)
 		auto MeshComponent = UpdateComponent.lock();
 		if (MeshComponent)
 		{
-			MeshComponent->SetAnimationComponent(std::dynamic_pointer_cast<CAnimation2DComponent>(shared_from_this()));
+			MeshComponent->SetAnimComponent(std::dynamic_pointer_cast<CAnimation2DComponent>(shared_from_this()));
 
 			if (!bUpdateEnable)
 			{
@@ -327,6 +327,60 @@ EAnimation2DTextureType CAnimation2DComponent::GetTextureType() const
 int CAnimation2DComponent::GetCurrentFrame() const
 {
 	return CurrentAnimation->GetCurrFrame();
+}
+
+FVector2 CAnimation2DComponent::GetAnimLTUV()
+{
+	auto Asset = CurrentAnimation->GetAsset().lock();
+	if (!Asset)
+	{
+		return {};
+	}
+
+	int Frame = CurrentAnimation->GetCurrFrame();
+
+	if (Asset->GetTextureType() == EAnimation2DTextureType::SpriteSheet)
+	{
+		const auto& TexFrame = Asset->GetFrame(Frame);
+
+		if (auto Texture = Asset->GetTexture().lock())
+		{
+			const auto* TexInfo = Texture->GetTexture();
+
+			return FVector2(TexFrame.Start.x / TexInfo->Width, TexFrame.Start.y / TexInfo->Height);
+		}
+
+		return {};
+	}
+
+	return {};
+}
+
+FVector2 CAnimation2DComponent::GetAnimRBUV()
+{
+	auto Asset = CurrentAnimation->GetAsset().lock();
+	if (!Asset)
+	{
+		return {};
+	}
+
+	int Frame = CurrentAnimation->GetCurrFrame();
+
+	if (Asset->GetTextureType() == EAnimation2DTextureType::SpriteSheet)
+	{
+		const auto& TexFrame = Asset->GetFrame(Frame);
+
+		if (auto Texture = Asset->GetTexture().lock())
+		{
+			const auto* TexInfo = Texture->GetTexture();
+
+			return FVector2((TexFrame.Start.x + TexFrame.Size.x) / TexInfo->Width, (TexFrame.Start.y + TexFrame.Size.y) / TexInfo->Height);
+		}
+
+		return {};
+	}
+
+	return {};
 }
 
 CAnimation2DComponent* CAnimation2DComponent::Clone() const

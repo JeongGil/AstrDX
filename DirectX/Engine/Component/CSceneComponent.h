@@ -2,6 +2,7 @@
 #include "CComponent.h"
 #include <array>
 
+class CAnimation2DComponent;
 class CRenderState;
 class CShader;
 class CTexture;
@@ -104,6 +105,8 @@ public:
 	virtual std::weak_ptr<CTexture> GetTexture(int SlotIndex = 0) const;
 	virtual std::weak_ptr<CShader> GetShader() const;
 	virtual std::weak_ptr<CRenderState> GetBlendState(int SlotIndex = 0) const;
+	virtual std::weak_ptr<CAnimation2DComponent> GetAnimComponent() const;
+	virtual FColor GetBaseColor(int SlotIndex = 0) const;
 
 	const FVector& GetAxis(EAxis::Type Axis) const;
 	const FVector& GetRelativeScale() const;

@@ -203,6 +203,7 @@
     <ClInclude Include="Asset\Shader\CShaderMaterialColor2D.h" />
     <ClInclude Include="Asset\Shader\CShaderNullBuffer.h" />
     <ClInclude Include="Asset\Shader\CShaderTexture2D.h" />
+    <ClInclude Include="Asset\Shader\CShaderTexture2DInstancing.h" />
     <ClInclude Include="Asset\Shader\CShaderTileMap.h" />
     <ClInclude Include="Asset\Shader\CShaderTileMapInstancing.h" />
     <ClInclude Include="Asset\Shader\CShaderUIDefault.h" />
@@ -324,6 +325,7 @@
     <ClCompile Include="Asset\Shader\CShaderMaterialColor2D.cpp" />
     <ClCompile Include="Asset\Shader\CShaderNullBuffer.cpp" />
     <ClCompile Include="Asset\Shader\CShaderTexture2D.cpp" />
+    <ClCompile Include="Asset\Shader\CShaderTexture2DInstancing.cpp" />
     <ClCompile Include="Asset\Shader\CShaderTileMap.cpp" />
     <ClCompile Include="Asset\Shader\CShaderTileMapInstancing.cpp" />
     <ClCompile Include="Asset\Shader\CShaderUIDefault.cpp" />

@@ -15,7 +15,7 @@ bool CBulletEffect::Init()
 		return false;
 	}
 
-	MeshComponent = CreateComponent<CMeshComponent>("Mesh");
+	MeshComponent = CreateComponent<CMeshComponent>("BulletEffectMesh");
 	if (auto Mesh = MeshComponent.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");
@@ -55,24 +55,4 @@ CBulletEffect::CBulletEffect(CBulletEffect&& other) noexcept: CGameObject(std::m
                                                               MeshComponent(std::move(other.MeshComponent)),
                                                               Animation2DComponent(std::move(other.Animation2DComponent))
 {
-}
-
-CBulletEffect& CBulletEffect::operator=(const CBulletEffect& other)
-{
-	if (this == &other)
-		return *this;
-	CGameObject::operator =(other);
-	MeshComponent = other.MeshComponent;
-	Animation2DComponent = other.Animation2DComponent;
-	return *this;
-}
-
-CBulletEffect& CBulletEffect::operator=(CBulletEffect&& other) noexcept
-{
-	if (this == &other)
-		return *this;
-	CGameObject::operator =(std::move(other));
-	MeshComponent = std::move(other.MeshComponent);
-	Animation2DComponent = std::move(other.Animation2DComponent);
-	return *this;
 }

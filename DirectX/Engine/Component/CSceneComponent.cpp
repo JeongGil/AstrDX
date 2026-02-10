@@ -68,6 +68,16 @@ std::weak_ptr<CRenderState> CSceneComponent::GetBlendState(int SlotIndex) const
 	return {};
 }
 
+std::weak_ptr<CAnimation2DComponent> CSceneComponent::GetAnimComponent() const
+{
+	return {};
+}
+
+FColor CSceneComponent::GetBaseColor(int SlotIndex) const
+{
+	return FColor::Black;
+}
+
 const FVector& CSceneComponent::GetAxis(EAxis::Type Axis) const
 {
 	return WorldAxis[Axis];
