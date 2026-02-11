@@ -61,6 +61,28 @@ struct VS_INPUT_TEX
 	float2 UV : TEXCOORD;
 };
 
+struct VS_INPUT_TEX_INSTANCING
+{
+	float3 Pos : POSITION0;
+	float2 UV : TEXCOORD;
+    
+	float4 WVP0 : INSTANCE_WVP0;
+	float4 WVP1 : INSTANCE_WVP1;
+	float4 WVP2 : INSTANCE_WVP2;
+	float4 WVP3 : INSTANCE_WVP3;
+	float2 LTUV : INSTANCE_UV0;
+	float2 RBUV : INSTANCE_UV1;
+	float4 Color : INSTANCE_COLOR0;
+	float3 PivotSize : INSTANCE_PIVOT0;
+};
+
+struct VS_OUTPUT_TEX_INSTANCING
+{
+	float4 Pos : SV_POSITION;
+	float2 UV : TEXCOORD;
+	float4 Color : TEXCOORD1;
+};
+
 VS_OUTPUT_TEX DefaultTexVS(VS_INPUT_TEX input)
 {
 	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
@@ -70,6 +92,58 @@ VS_OUTPUT_TEX DefaultTexVS(VS_INPUT_TEX input)
 	output.Pos = mul(float4(Pos, 1.f), cbWVP);
 	output.UV = ComputeAnimation2DUV(input.UV);
 
+	return output;
+}
+
+float2 ComputeInstancingUV(float2 UV, float2 LT, float2 RB)
+{
+	float2 Result;
+    
+	if (UV.x > 0.f)
+	{
+		Result.x = RB.x;
+	}
+	else
+	{
+		Result.x = LT.x;
+	}
+    
+	if (UV.y > 0.f)
+	{
+		Result.y = LT.y;
+	}
+	else
+	{
+		Result.y = RB.y;
+	}
+    
+	return Result;
+}
+
+VS_OUTPUT_TEX_INSTANCING DefaultTexInstancingVS(VS_INPUT_TEX_INSTANCING input, uint ID : SV_InstanceID)
+{
+	VS_OUTPUT_TEX_INSTANCING output = (VS_OUTPUT_TEX_INSTANCING) 0;
+    
+	float3 Pos = input.Pos - input.PivotSize;
+    
+	matrix WVP = matrix(input.WVP0, input.WVP1, input.WVP2, input.WVP3);
+    
+	output.Pos = mul(float4(Pos, 1.f), WVP);
+	output.UV = ComputeInstancingUV(input.UV, input.LTUV, input.RBUV);
+	output.Color = input.Color;
+
+	return output;
+}
+
+PS_OUTPUT_COLOR MaterialTexInstancingPS(VS_OUTPUT_TEX_INSTANCING input)
+{
+	PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR) 0;
+    
+	float4 TextureColor = tbBaseTexture.Sample(sbPoint, input.UV);
+    
+	output.Color.rgb = TextureColor.rgb * input.Color.rgb;
+	output.Color.a = TextureColor.a * input.Color.a;
+    
 	return output;
 }
 
@@ -112,7 +186,7 @@ PS_OUTPUT_COLOR MaterialTexPS(VS_OUTPUT_TEX input)
 
 float4 FrameVS(float3 Pos : POSITION0) : SV_POSITION
 {
-	float4 OutputPos = mul(float4(Pos, 1.f), cbWVP);    
+	float4 OutputPos = mul(float4(Pos, 1.f), cbWVP);
 	return OutputPos;
 }
 
