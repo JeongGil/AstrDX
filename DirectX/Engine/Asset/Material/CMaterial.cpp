@@ -252,6 +252,24 @@ void CMaterial::UpdateConstantBuffer(int TextureIndex)
 	}
 }
 
+void CMaterial::UpdateConstantBufferArray(int Register)
+{
+	for (const auto& TexInfo : TextureInfos)
+	{
+		if (auto Texture = TexInfo->Texture.lock())
+		{
+			Texture->SetShader(Register, TexInfo->ShaderBufferType, 0);
+		}
+	}
+
+	MaterialCBuffer->UpdateBuffer();
+
+	if (auto State = BlendState.lock())
+	{
+		State->SetState();
+	}
+}
+
 bool CMaterial::Init()
 {
 	MaterialCBuffer.reset(new CCBufferMaterial);
@@ -298,10 +316,11 @@ CMaterial::CMaterial()
 	AssetType = EAssetType::Material;
 }
 
-CMaterial::CMaterial(const CMaterial& other) : CAsset(other),
-BaseColor(other.BaseColor),
-Opacity(other.Opacity)
-//MaterialCBuffer(other.MaterialCBuffer)
+CMaterial::CMaterial(const CMaterial& other) :
+	CAsset(other),
+	BaseColor(other.BaseColor),
+	Opacity(other.Opacity)
+	//MaterialCBuffer(other.MaterialCBuffer)
 {
 	MaterialCBuffer.reset(new CCBufferMaterial);
 	MaterialCBuffer->Init();
@@ -309,35 +328,10 @@ Opacity(other.Opacity)
 	MaterialCBuffer->SetOpacity(Opacity);
 }
 
-CMaterial::CMaterial(CMaterial&& other) noexcept : CAsset(std::move(other)),
-BaseColor(std::move(other.BaseColor)),
-Opacity(other.Opacity),
-MaterialCBuffer(std::move(other.MaterialCBuffer))
+CMaterial::CMaterial(CMaterial&& other) noexcept :
+	CAsset(std::move(other)),
+	BaseColor(std::move(other.BaseColor)),
+	Opacity(other.Opacity),
+	MaterialCBuffer(std::move(other.MaterialCBuffer))
 {
-}
-
-CMaterial& CMaterial::operator=(const CMaterial& other)
-{
-	if (this == &other)
-		return *this;
-	CAsset::operator =(other);
-	BaseColor = other.BaseColor;
-	Opacity = other.Opacity;
-	//MaterialCBuffer = other.MaterialCBuffer;
-	MaterialCBuffer.reset(new CCBufferMaterial);
-	MaterialCBuffer->Init();
-	MaterialCBuffer->SetBaseColor(BaseColor);
-	MaterialCBuffer->SetOpacity(Opacity);
-	return *this;
-}
-
-CMaterial& CMaterial::operator=(CMaterial&& other) noexcept
-{
-	if (this == &other)
-		return *this;
-	CAsset::operator =(std::move(other));
-	BaseColor = std::move(other.BaseColor);
-	Opacity = other.Opacity;
-	MaterialCBuffer = std::move(other.MaterialCBuffer);
-	return *this;
 }

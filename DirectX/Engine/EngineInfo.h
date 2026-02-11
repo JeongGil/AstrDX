@@ -51,6 +51,45 @@ struct FResolution
 	int Height = 0;
 };
 
+struct FVertexBuffer
+{
+	ID3D11Buffer* Buffer = nullptr;
+
+	// size of single vertex
+	int Size = 0;
+	int Count = 0;
+
+	FVertexBuffer() = default;
+	~FVertexBuffer()
+	{
+		if (Buffer)
+		{
+			Buffer->Release();
+		}
+	}
+};
+
+struct FIndexBuffer
+{
+	ID3D11Buffer* Buffer = nullptr;
+
+	// size of single index
+	int Size = 0;
+	int Count = 0;
+
+	// used to specify the index type when accessing or outputting using an index.
+	DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN;
+
+	FIndexBuffer() = default;
+	~FIndexBuffer()
+	{
+		if (Buffer)
+		{
+			Buffer->Release();
+		}
+	}
+};
+
 struct FVertexColor
 {
 	FVector Pos;
@@ -130,6 +169,7 @@ enum class EAnimation2DTextureType
 	None = -1,
 	SpriteSheet,
 	Frame,
+	Array,
 };
 
 enum class EAssetType
@@ -271,7 +311,7 @@ struct FTileFrame
 	FVector2 End;
 };
 
-struct FInstancingBuffer
+struct FInstancingData
 {
 	FVector4 WVP0;
 	FVector4 WVP1;
@@ -281,16 +321,20 @@ struct FInstancingBuffer
 	FVector2 RBUV;
 	FColor	BaseColor;
 	FVector PivotSize;
+	int ArrayTextureEnable = 0;
+	int AnimFrame = 0;
 };
 
 struct FRenderKey
 {
 	size_t MeshID;
+	size_t ShaderID;
 	size_t TextureID;
 
 	friend bool operator==(const FRenderKey& Lhs, const FRenderKey& Rhs)
 	{
 		return Lhs.MeshID == Rhs.MeshID
+			&& Lhs.ShaderID == Rhs.ShaderID
 			&& Lhs.TextureID == Rhs.TextureID;
 	}
 
@@ -304,7 +348,11 @@ struct FRenderKeyHash
 {
 	size_t operator()(const FRenderKey& Key) const
 	{
-		return Key.MeshID ^ (Key.TextureID + 0x9e3779b9 + (Key.MeshID << 6) + (Key.MeshID >> 2));
+		size_t Seed = Key.MeshID;
+		Seed ^= Key.TextureID + 0x9e3779b9 + (Seed << 6) + (Seed >> 2);
+		Seed ^= Key.ShaderID + 0x9e3779b9 + (Seed << 6) + (Seed >> 2);
+
+		return Seed;
 	}
 };
 

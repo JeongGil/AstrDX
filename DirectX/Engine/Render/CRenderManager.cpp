@@ -344,13 +344,20 @@ void CRenderManager::CheckInstancing(const std::shared_ptr<CSceneComponent>& Com
 {
 	auto Mesh = Comp->GetMesh().lock();
 	auto Tex = Comp->GetTexture().lock();
+	auto Shader = Comp->GetShader().lock();
 
-	if (!Mesh || !Tex)
+	if (!Mesh || !Shader)
 	{
 		return;
 	}
 
-	FRenderKey Key{ Mesh->GetID(), Tex->GetID() };
+	size_t TexID{ 0 };
+	if (Tex)
+	{
+		TexID = Tex->GetID();
+	}
+
+	FRenderKey Key{ .MeshID = Mesh->GetID(), .ShaderID = Shader->GetID(), .TextureID = TexID };
 
 	auto [Begin, End] = Layer.InstancingMap.equal_range(Key);
 
@@ -469,6 +476,11 @@ void CRenderManager::Update(const float DeltaTime)
 
 				return false;
 			});
+
+		for (const auto& Instancing : RenderLayer.InstancingMap | std::views::values)
+		{
+			Instancing->Update(DeltaTime);
+		}
 	}
 
 	CSync _(&Crt);

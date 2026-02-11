@@ -153,7 +153,7 @@ void CMainWorld::LoadAnimation2D()
 
 	//======= Explosion =======
 	WorldAssetManager->CreateAnimation("Explosion");
-	WorldAssetManager->SetAnimation2DTextureType("Explosion", EAnimation2DTextureType::Frame);
+	WorldAssetManager->SetAnimation2DTextureType("Explosion", EAnimation2DTextureType::Array);
 
 	for (int i = 1; i <= 89; i++)
 	{

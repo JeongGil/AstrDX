@@ -12,6 +12,8 @@ CTexture::CTexture()
 
 CTexture::~CTexture()
 {
+	SAFE_RELEASE(ArraySRV);
+
 	for (auto& Texture : Textures)
 	{
 		SAFE_DELETE(Texture);

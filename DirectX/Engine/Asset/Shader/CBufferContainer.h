@@ -42,11 +42,11 @@ struct FCBufferMaterialData
 struct FCBufferAnimation2DData
 {
 	FVector2 LTUV;
-	FVector2 RBUV;
+	FVector2 RBUV{ 1.f, 1.f };
 	int bEnableAnimation2D = 0;
 	int TextureType = -1;
 	int TextureSymmetry = 0;
-	float Empty;
+	int AnimFrame;
 };
 
 struct FCBufferColliderData

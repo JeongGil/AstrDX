@@ -22,6 +22,11 @@ std::weak_ptr<CMesh> CMeshComponent::GetMesh() const
 
 std::weak_ptr<CTexture> CMeshComponent::GetTexture(int SlotIndex) const
 {
+	if (SlotIndex >= MaterialSlot.size())
+	{
+		return {};
+	}
+
 	return MaterialSlot[SlotIndex]->GetTexture();
 }
 
@@ -32,16 +37,26 @@ std::weak_ptr<CShader> CMeshComponent::GetShader() const
 
 std::weak_ptr<CRenderState> CMeshComponent::GetBlendState(int SlotIndex) const
 {
+	if (SlotIndex >= MaterialSlot.size())
+	{
+		return {};
+	}
+
 	return MaterialSlot[SlotIndex]->GetBlendState();
 }
 
 FColor CMeshComponent::GetBaseColor(int SlotIndex) const
 {
+	if (SlotIndex >= MaterialSlot.size())
+	{
+		return FColor::Black;
+	}
+
 	return MaterialSlot[SlotIndex]->GetBaseColor();
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureArray(int SlotIdx, const std::string& Key,
-                                                                    std::vector<const TCHAR*>& FileNames, const std::string& PathName, int Register, int ShaderBufferType, int Index)
+	std::vector<const TCHAR*>& FileNames, const std::string& PathName, int Register, int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{
@@ -90,12 +105,17 @@ void CMeshComponent::SetMesh(const std::weak_ptr<CMesh>& Mesh)
 
 	if (auto Mesh = this->Mesh.lock())
 	{
-		MaterialSlot.clear();
-		auto MeshSlotCount = Mesh->GetSlotCount();
-		for (size_t i = 0; i < MeshSlotCount; ++i)
+		if (MaterialSlot.empty())
 		{
-			auto Slot = Mesh->GetSlot(i);
-			MaterialSlot.emplace_back(std::shared_ptr<CMaterial>(Slot->Material->Clone()));
+			size_t SlotCount = Mesh->GetSlotCount();
+			for (size_t i = 0; i < SlotCount; i++)
+			{
+				if (auto Slot = Mesh->GetSlot(i))
+				{
+					std::shared_ptr<CMaterial> Mtrl(Slot->Material->Clone());
+					MaterialSlot.push_back(Mtrl);
+				}
+			}
 		}
 	}
 }
@@ -166,14 +186,14 @@ void CMeshComponent::SetMaterialOpacity(int SlotIndex, float Opacity)
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, const std::weak_ptr<CTexture>& Texture,
-                                                               int Register, int ShaderBufferType,
-                                                               int Index)
+	int Register, int ShaderBufferType,
+	int Index)
 {
 	return MaterialSlot[SlotIdx]->AddTexture(Texture, Register, ShaderBufferType, Index);
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, const std::string& Key, int Register,
-                                                               int ShaderBufferType, int Index)
+	int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{
@@ -212,8 +232,8 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTexture(int SlotIdx, cons
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureFullPath(int SlotIdx, const std::string& Key,
-                                                                       const TCHAR* FullPath, int Register,
-                                                                       int ShaderBufferType, int Index)
+	const TCHAR* FullPath, int Register,
+	int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{
@@ -235,9 +255,9 @@ std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextureFullPath(int SlotI
 }
 
 std::weak_ptr<FMaterialTextureInfo> CMeshComponent::AddTextures(int SlotIdx, const std::string& Key,
-                                                                std::vector<const TCHAR*>& FileNames,
-                                                                const std::string& PathName, int Register,
-                                                                int ShaderBufferType, int Index)
+	std::vector<const TCHAR*>& FileNames,
+	const std::string& PathName, int Register,
+	int ShaderBufferType, int Index)
 {
 	if (auto World = this->World.lock())
 	{
@@ -284,7 +304,10 @@ bool CMeshComponent::SetTexture(int SlotIndex, int TextureIndex, const std::weak
 {
 	if (static_cast<int>(MaterialSlot.size()) <= SlotIndex)
 	{
-		return false;
+		std::shared_ptr<CMaterial> Mtrl(new CMaterial);
+		Mtrl->Init();
+
+		MaterialSlot.push_back(Mtrl);
 	}
 
 	return MaterialSlot[SlotIndex]->SetTexture(TextureIndex, Texture);
@@ -381,13 +404,19 @@ void CMeshComponent::Render()
 		{
 			if (Anim)
 			{
-				if (Anim->GetTextureType() == EAnimation2DTextureType::SpriteSheet)
+				switch (Anim->GetTextureType())
 				{
-					Material->UpdateConstantBuffer();
-				}
-				else
-				{
-					Material->UpdateConstantBuffer(Anim->GetCurrentFrame());
+					case EAnimation2DTextureType::None:
+						break;
+					case EAnimation2DTextureType::SpriteSheet:
+						Material->UpdateConstantBuffer();
+						break;
+					case EAnimation2DTextureType::Frame:
+						Material->UpdateConstantBuffer(Anim->GetCurrentFrame());
+						break;
+					case EAnimation2DTextureType::Array:
+						Material->UpdateConstantBufferArray(1);
+						break;
 				}
 			}
 			else
@@ -417,17 +446,17 @@ CMeshComponent::CMeshComponent()
 	RenderType = EComponentRender::Render;
 }
 
-CMeshComponent::CMeshComponent(const CMeshComponent& other): CSceneComponent(other),
-                                                             Shader(other.Shader),
-                                                             Mesh(other.Mesh),
-                                                             CBufferTransform(other.CBufferTransform->Clone())
+CMeshComponent::CMeshComponent(const CMeshComponent& other) : CSceneComponent(other),
+Shader(other.Shader),
+Mesh(other.Mesh),
+CBufferTransform(other.CBufferTransform->Clone())
 {
 }
 
-CMeshComponent::CMeshComponent(CMeshComponent&& other) noexcept: CSceneComponent(std::move(other)),
-                                                                 Shader(std::move(other.Shader)),
-                                                                 Mesh(std::move(other.Mesh)),
-                                                                 CBufferTransform(std::move(other.CBufferTransform))
+CMeshComponent::CMeshComponent(CMeshComponent&& other) noexcept : CSceneComponent(std::move(other)),
+Shader(std::move(other.Shader)),
+Mesh(std::move(other.Mesh)),
+CBufferTransform(std::move(other.CBufferTransform))
 {
 	other.Shader.reset();
 	other.Mesh.reset();

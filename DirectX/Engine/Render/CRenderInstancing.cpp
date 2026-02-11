@@ -1,6 +1,8 @@
 #include "CRenderInstancing.h"
 
+#include "CRenderManager.h"
 #include "CRenderState.h"
+#include "../CDevice.h"
 #include "../Utils.h"
 #include "../Asset/CAssetManager.h"
 #include "../Asset/Mesh/CMesh.h"
@@ -9,6 +11,8 @@
 #include "../Component/CAnimation2DComponent.h"
 #include "../Component/CSceneComponent.h"
 #include "../World/CWorld.h"
+
+constexpr int INSTANCING_START_COUNT{ 5 };
 
 bool SortYRenderList(const std::weak_ptr<CSceneComponent>& A, const std::weak_ptr<CSceneComponent>& B)
 {
@@ -98,43 +102,191 @@ void CRenderInstancing::AddRenderComponent(const std::weak_ptr<CSceneComponent>&
 
 	if (!bRender)
 	{
-		if (RenderComponents.size() >= INSTANCING_THRESHOLD)
+		if (RenderComponents.size() >= INSTANCING_START_COUNT)
 		{
 			bRender = true;
 
-			auto Mesh = this->Mesh.lock();
-			if (Mesh && !Mesh->IsInstancingBufferCreated())
+			if (!InstancingBuffer.Buffer)
 			{
-				Mesh->CreateInstancingBuffer(sizeof(FInstancingBuffer), INSTANCING_THRESHOLD);
+				CreateInstancingBuffer(sizeof(FInstancingData), INSTANCING_START_COUNT);
 			}
 
-			auto RenderSettingCandidates = RenderComponents
+			auto RenderCompsView = RenderComponents
 				| std::views::transform([](auto& Weak) {return Weak.lock(); })
 				| std::views::filter([](const auto& Comp) {return Comp != nullptr; });
 
-			for (const auto& Candidate : RenderSettingCandidates)
+			for (const auto& Comp : RenderCompsView)
 			{
-				Candidate->SetRenderOption(EComponentRenderOption::Instancing);
+				Comp->SetRenderOption(EComponentRenderOption::Instancing);
 			}
 		}
 	}
-	else if (RenderComponents.size() < INSTANCING_THRESHOLD)
+	else if (RenderComponents.size() < INSTANCING_START_COUNT)
 	{
 		bRender = false;
 
-		auto RenderSettingCandidates = RenderComponents
+		auto RenderCompsView = RenderComponents
 			| std::views::transform([](auto& Weak) {return Weak.lock(); })
 			| std::views::filter([](const auto& Comp) {return Comp != nullptr; });
 
-		for (const auto& Candidate : RenderSettingCandidates)
+		for (const auto& Comp : RenderCompsView)
 		{
-			Candidate->SetRenderOption(EComponentRenderOption::Normal);
+			Comp->SetRenderOption(EComponentRenderOption::Normal);
 		}
 	}
 	else
 	{
 		Comp->SetRenderOption(EComponentRenderOption::Instancing);
 	}
+}
+
+void CRenderInstancing::Update(const float DeltaTime)
+{
+	if (!bRender || RenderComponents.empty())
+	{
+		return;
+	}
+
+	if (RenderComponents.size() > 1)
+	{
+		RenderComponents.sort(CRenderManager::SortYRenderList);
+	}
+
+	InstancingData.resize(RenderComponents.size());
+	InstancingCount = 0;
+
+	auto World = this->World.lock();
+	if (!World)
+	{
+		return;
+	}
+
+	auto CamMgr = World->GetCameraManager().lock();
+	if (!CamMgr)
+	{
+		return;
+	}
+
+	auto Mesh = this->Mesh.lock();
+	if (!Mesh)
+	{
+		return;
+	}
+
+	auto Texture = this->Texture.lock();
+
+	auto RenderCompsView = RenderComponents
+		| std::views::transform([](const auto& Weak) { return Weak.lock(); })
+		| std::views::filter([](const auto& Comp) {return Comp != nullptr; });
+	for (const auto& Comp : RenderCompsView)
+
+	{
+		// 인스턴싱용 버퍼를 채워준다.
+		FMatrix	ScaleMat, RotMat, TranslateMat, WorldMat;
+
+		ScaleMat.Scaling(Comp->GetWorldScale());
+		RotMat.Rotation(Comp->GetWorldRotation());
+		TranslateMat.Translation(Comp->GetWorldPosition());
+
+		WorldMat = ScaleMat * RotMat * TranslateMat;
+
+		FMatrix	ViewMat = CamMgr->GetViewMatrix();
+		FMatrix	ProjMat = CamMgr->GetProjMatrix();
+
+		FMatrix	WVPMat = WorldMat * ViewMat * ProjMat;
+
+		auto& InstancingDatum = InstancingData[InstancingCount];
+
+		InstancingDatum.WVP0 = WVPMat[0];
+		InstancingDatum.WVP1 = WVPMat[1];
+		InstancingDatum.WVP2 = WVPMat[2];
+		InstancingDatum.WVP3 = WVPMat[3];
+
+		InstancingDatum.ArrayTextureEnable = 0;
+		InstancingDatum.AnimFrame = 0;
+
+		if (auto AnimCom = Comp->GetAnimComponent().lock())
+		{
+			InstancingDatum.LTUV = AnimCom->GetAnimLTUV();
+			InstancingDatum.RBUV = AnimCom->GetAnimRBUV();
+
+			InstancingDatum.AnimFrame = AnimCom->GetCurrentFrame();
+
+			if (AnimCom->GetTextureType() == EAnimation2DTextureType::Array)
+			{
+				InstancingDatum.ArrayTextureEnable = 1;
+			}
+		}
+		else
+		{
+			if (Texture && Texture->GetTextureType() == ETextureType::Array)
+			{
+				InstancingDatum.ArrayTextureEnable = 1;
+			}
+
+			InstancingDatum.LTUV = FVector2(0.f, 0.f);
+			InstancingDatum.RBUV = FVector2(1.f, 1.f);
+		}
+
+		FVector Pivot = Comp->GetPivot();
+		FVector PivotSize = Pivot * Mesh->GetMeshSize();
+
+		InstancingDatum.PivotSize = PivotSize;
+		InstancingDatum.BaseColor = Comp->GetBaseColor();
+
+		++InstancingCount;
+	}
+
+	SetInstancingData(&InstancingData[0], InstancingCount);
+}
+
+bool CRenderInstancing::CreateInstancingBuffer(int Size, int Count)
+{
+	SAFE_RELEASE(InstancingBuffer.Buffer);
+
+	InstancingBuffer.Size = Size;
+	InstancingBuffer.Count = Count;
+
+	D3D11_BUFFER_DESC BufferDesc{};
+	BufferDesc.ByteWidth = Size * Count;
+	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+	if (FAILED(CDevice::GetInst()->GetDevice()->CreateBuffer(&BufferDesc, nullptr, &InstancingBuffer.Buffer)))
+	{
+		return false;
+	}
+
+	return true;
+}
+
+bool CRenderInstancing::SetInstancingData(void* Data, int Count)
+{
+	if (!InstancingBuffer.Buffer)
+	{
+		return false;
+	}
+
+	if (InstancingBuffer.Count < Count)
+	{
+		if (!CreateInstancingBuffer(InstancingBuffer.Size, Count * 2))
+		{
+			return false;
+		}
+	}
+
+	ID3D11DeviceContext* Context = CDevice::GetInst()->GetContext();
+
+	D3D11_MAPPED_SUBRESOURCE MS{};
+
+	Context->Map(InstancingBuffer.Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MS);
+
+	memcpy(MS.pData, Data, InstancingBuffer.Size * Count);
+
+	Context->Unmap(InstancingBuffer.Buffer, 0);
+
+	return true;
 }
 
 void CRenderInstancing::Render()
@@ -144,23 +296,11 @@ void CRenderInstancing::Render()
 		return;
 	}
 
-	if (RenderComponents.size() > 1)
-	{
-		RenderComponents.sort(SortYRenderList);
-	}
-
 	auto BlendState = this->BlendState.lock();
 	if (BlendState)
 	{
 		BlendState->SetState();
 	}
-
-	InstancingBuffers.clear();
-	InstancingBuffers.resize(RenderComponents.size());
-
-	int InstancingCount{ 0 };
-	auto World = this->World.lock();
-	auto CamMgr = World->GetCameraManager().lock();
 
 	auto Mesh = this->Mesh.lock();
 	auto Shader = this->Shader.lock();
@@ -174,63 +314,27 @@ void CRenderInstancing::Render()
 
 	for (const auto& Comp : RenderCompView)
 	{
-		FMatrix	ScaleMat, RotMat, TranslateMat;
-
-		ScaleMat.Scaling(Comp->GetWorldScale());
-		RotMat.Rotation(Comp->GetWorldRotation());
-		TranslateMat.Translation(Comp->GetWorldPosition());
-
-		FMatrix WorldMat = ScaleMat * RotMat * TranslateMat;
-
-		FMatrix	ViewMat = CamMgr->GetViewMatrix();
-		FMatrix	ProjMat = CamMgr->GetProjMatrix();
-
-		FMatrix	WVPMat = WorldMat * ViewMat * ProjMat;
-
-		auto& InstancingBuffer = InstancingBuffers[InstancingCount];
-		InstancingBuffer.WVP0 = WVPMat[0];
-		InstancingBuffer.WVP1 = WVPMat[1];
-		InstancingBuffer.WVP2 = WVPMat[2];
-		InstancingBuffer.WVP3 = WVPMat[3];
-
-		if (auto AnimComp = Comp->GetAnimComponent().lock())
-		{
-			InstancingBuffer.LTUV = AnimComp->GetAnimLTUV();
-			InstancingBuffer.RBUV = AnimComp->GetAnimRBUV();
-		}
-		else
-		{
-			InstancingBuffer.LTUV = FVector2(0.f, 0.f);
-			InstancingBuffer.RBUV = FVector2(1.f, 1.f);
-		}
-
-		FVector Pivot = Comp->GetPivot();
-		FVector PivotSize = Pivot * Mesh->GetMeshSize();
-
-		InstancingBuffer.PivotSize = PivotSize;
-		InstancingBuffer.BaseColor = Comp->GetBaseColor();
-
-		++InstancingCount;
-
 		Comp->SetRenderOption(EComponentRenderOption::Normal);
 	}
 
-	Mesh->SetInstancingData(&InstancingBuffers[0], InstancingCount);
-
 	if (Texture)
 	{
-		Texture->SetShader(0, EShaderBufferType::Pixel, 0);
+		int Register = 0;
+		if (Texture->GetTextureType() == ETextureType::Array)
+		{
+			Register = 1;
+		}
+
+		Texture->SetShader(Register, EShaderBufferType::Pixel, 0);
 	}
 
 	Shader->SetShader();
-	Mesh->RenderInstancing();
+	Mesh->RenderInstancing(InstancingBuffer, InstancingCount);
 
 	if (BlendState)
 	{
 		BlendState->ResetState();
 	}
-
-	RenderComponents.clear();
 }
 
 void CRenderInstancing::RenderClear()

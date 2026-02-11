@@ -40,7 +40,7 @@ cbuffer CBAnimation2D : register(b2)
 	int cbEnableAnimation2D;
 	int cbAnimation2DTextureType;
 	int cbTextureSymmetry;
-	float cbAnimation2DEmpty;
+	int cbAnimation2DFrame;
 }
 
 SamplerState sbPoint : register(s0);

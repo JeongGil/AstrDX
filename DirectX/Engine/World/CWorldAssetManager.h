@@ -59,6 +59,11 @@ public:
 	bool SetTexturesFullPath(const std::string& AnimKey, const std::string& TexKey,
 		std::vector<const TCHAR*>& FullPaths);
 
+	bool SetTextureArray(const std::string& AnimKey, const std::string& TexKey, std::vector<const TCHAR*>& FileNames,
+		const std::string& PathName = "Texture");
+	bool SetTextureArrayFullPath(const std::string& AnimKey, const std::string& TexKey,
+		std::vector<const TCHAR*>& FullPaths);
+
 	bool AddFrame(const std::string& AnimKey, FVector2 Start, FVector2 Size);
 	bool AddFrame(const std::string& AnimKey, float x, float y, float w, float h);
 

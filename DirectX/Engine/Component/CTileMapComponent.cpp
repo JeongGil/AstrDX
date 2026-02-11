@@ -194,6 +194,12 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 
 			TranslateMat.Translation(Pos);
 
+			//FMatrix	RotMat;
+
+			//RotMat.RotationZ(230.f);
+			//RotMat.Rotation(FVector3(0.f, 0.f, 238.f));
+
+			//WorldMat = ScaleMat * RotMat * TranslateMat;
 			FMatrix	WorldMat = ScaleMat * TranslateMat;
 
 			FMatrix	ViewMat = CameraMgr->GetViewMatrix();
@@ -213,6 +219,8 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 			++InstancingCount;
 		}
 	}
+
+	SetInstancingData(&TileInstData[0], InstancingCount);
 }
 
 void CTileMapComponent::PostRender()
@@ -314,11 +322,9 @@ void CTileMapComponent::RenderTile()
 		return;
 	}
 
-	Mesh->SetInstancingData(&TileInstData[0], InstancingCount);
-
 	Shader->SetShader();
 
-	Mesh->RenderInstancing();
+	Mesh->RenderInstancing(InstancingBuffer, InstancingCount);
 
 	//auto World = this->World.lock();
 	//if (!World)
@@ -441,10 +447,59 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 	int	ViewCountX = RS.Width / TileSize.x + 3;
 	int	ViewCountY = RS.Height / TileSize.y + 3;
 
-	if (auto Mesh = TileMesh.lock())
-	{
-		Mesh->CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
+	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
 
-		TileInstData.resize(ViewCountX * ViewCountY);
+	TileInstData.resize(ViewCountX * ViewCountY);
+}
+
+bool CTileMapComponent::CreateInstancingBuffer(int Size, int Count)
+{
+	SAFE_RELEASE(InstancingBuffer.Buffer);
+
+	InstancingBuffer.Size = Size;
+	InstancingBuffer.Count = Count;
+
+	D3D11_BUFFER_DESC BufferDesc{};
+	BufferDesc.ByteWidth = Size * Count;
+	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+
+	if (FAILED(CDevice::GetInst()->GetDevice()->CreateBuffer(&BufferDesc, nullptr, &InstancingBuffer.Buffer)))
+	{
+		return false;
 	}
+
+	return true;
+}
+
+bool CTileMapComponent::SetInstancingData(void* Data, int Count)
+{
+	if (!InstancingBuffer.Buffer)
+	{
+		return false;
+	}
+
+	if (InstancingBuffer.Count < Count)
+	{
+		if (!CreateInstancingBuffer(InstancingBuffer.Size, Count * 2))
+		{
+			return false;
+		}
+	}
+
+	ID3D11DeviceContext* Context = CDevice::GetInst()->GetContext();
+
+	D3D11_MAPPED_SUBRESOURCE MS{};
+
+	Context->Map(InstancingBuffer.Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MS);
+
+	memcpy(MS.pData, Data, InstancingBuffer.Size * Count);
+
+	Context->Unmap(InstancingBuffer.Buffer, 0);
+
+	InstancingCount = Count;
+
+	return true;
 }

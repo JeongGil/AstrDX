@@ -68,6 +68,11 @@ public:
 		return Textures.size();
 	}
 
+	ETextureType GetTextureType() const
+	{
+		return TextureType;
+	}
+
 protected:
 	// Designed to allow multiple images to be composed into a single texture.
 	std::vector<FTextureInfo*> Textures;

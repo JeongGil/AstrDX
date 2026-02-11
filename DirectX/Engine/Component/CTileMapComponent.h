@@ -34,6 +34,7 @@ public:
 protected:
 	std::vector<std::shared_ptr<CTile>>	Tiles;
 	std::vector<FTileMapInstancingBuffer> TileInstData;
+	FVertexBuffer InstancingBuffer;
 	int InstancingCount{ 0 };
 	ETileShape Shape{ Rect };
 	FVector2 TileSize;
@@ -79,6 +80,10 @@ public:
 	void RenderTileOutLine();
 
 	void CreateTile(ETileShape Shape, int CountX, int CountY, const FVector2& TileSize, int TileTextureFrame = -1);
+
+private:
+	bool CreateInstancingBuffer(int Size, int Count);
+	bool SetInstancingData(void* Data, int Count);
 
 public:
 	[[nodiscard]] ETileShape GetTileShape() const

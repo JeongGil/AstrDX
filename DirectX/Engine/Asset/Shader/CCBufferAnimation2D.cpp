@@ -22,32 +22,14 @@ CConstantBufferData* CCBufferAnimation2D::Clone()
 	return new CCBufferAnimation2D(*this);
 }
 
-CCBufferAnimation2D::CCBufferAnimation2D(const CCBufferAnimation2D& other)
-	: CConstantBufferData(other),
+CCBufferAnimation2D::CCBufferAnimation2D(const CCBufferAnimation2D& other) :
+	CConstantBufferData(other),
 	Data(other.Data)
 {
 }
 
-CCBufferAnimation2D::CCBufferAnimation2D(CCBufferAnimation2D&& other) noexcept
-	: CConstantBufferData(std::move(other)),
+CCBufferAnimation2D::CCBufferAnimation2D(CCBufferAnimation2D&& other) noexcept :
+	CConstantBufferData(std::move(other)),
 	Data(std::move(other.Data))
 {
-}
-
-CCBufferAnimation2D& CCBufferAnimation2D::operator=(const CCBufferAnimation2D& other)
-{
-	if (this == &other)
-		return *this;
-	CConstantBufferData::operator =(other);
-	Data = other.Data;
-	return *this;
-}
-
-CCBufferAnimation2D& CCBufferAnimation2D::operator=(CCBufferAnimation2D&& other) noexcept
-{
-	if (this == &other)
-		return *this;
-	CConstantBufferData::operator =(std::move(other));
-	Data = std::move(other.Data);
-	return *this;
 }

@@ -41,7 +41,7 @@ void CPathManager::Clear()
 		delete[] Path;
 	}
 
-	Paths.clear();
+	CPathManager::Paths.clear();
 }
 
 bool CPathManager::CreatePath(const std::string& Key, const TCHAR* Path, const std::string& BasePathName)

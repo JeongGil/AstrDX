@@ -400,6 +400,64 @@ bool CWorldAssetManager::SetTexturesFullPath(const std::string& AnimKey, const s
 	return true;
 }
 
+bool CWorldAssetManager::SetTextureArray(const std::string& AnimKey, const std::string& TexKey,
+	std::vector<const TCHAR*>& FileNames, const std::string& PathName)
+{
+	std::string	Key = "Animation2D_" + AnimKey;
+
+	auto It = Assets.find(Key);
+	if (It == Assets.end())
+	{
+		return false;
+	}
+
+	if (!LoadTextureArray(TexKey, FileNames, PathName))
+	{
+		return false;
+	}
+
+	auto Texture = FindTexture(TexKey);
+
+	auto Anim = std::dynamic_pointer_cast<CAnimation2D>(It->second);
+	if (!Anim)
+	{
+		return false;
+	}
+
+	Anim->SetTexture(Texture);
+
+	return true;
+}
+
+bool CWorldAssetManager::SetTextureArrayFullPath(const std::string& AnimKey, const std::string& TexKey,
+	std::vector<const TCHAR*>& FullPaths)
+{
+	std::string	Key = "Animation2D_" + AnimKey;
+
+	auto It = Assets.find(Key);
+	if (It == Assets.end())
+	{
+		return false;
+	}
+
+	if (!LoadTextureArrayFullPath(TexKey, FullPaths))
+	{
+		return false;
+	}
+
+	auto Texture = FindTexture(TexKey);
+
+	auto Anim = std::dynamic_pointer_cast<CAnimation2D>(It->second);
+	if (!Anim)
+	{
+		return false;
+	}
+
+	Anim->SetTexture(Texture);
+
+	return true;
+}
+
 bool CWorldAssetManager::AddFrame(const std::string& AnimKey, FVector2 Start, FVector2 Size)
 {
 	auto InnerKey = "Animation2D_" + AnimKey;

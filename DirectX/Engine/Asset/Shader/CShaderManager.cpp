@@ -6,6 +6,7 @@
 #include "CShaderColor2D.h"
 #include "CShaderDefaultTex.h"
 #include "CShaderMaterialColor2D.h"
+#include "CShaderMaterialColor2DInstancing.h"
 #include "CShaderNullBuffer.h"
 #include "CShaderTexture2D.h"
 #include "CShaderTexture2DInstancing.h"
@@ -26,7 +27,7 @@ bool CShaderManager::Init()
 		return false;
 	}
 
-	if (!CreateCBuffer("Animation2D", sizeof(FCBufferAnimation2DData), 2, EShaderBufferType::Vertex))
+	if (!CreateCBuffer("Animation2D", sizeof(FCBufferAnimation2DData), 2, EShaderBufferType::VP))
 	{
 		return false;
 	}
@@ -58,6 +59,11 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderMaterialColor2D>("MaterialColor2D", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderMaterialColor2DInstancing>("MaterialColor2DInstancing", "EngineShader"))
 	{
 		return false;
 	}

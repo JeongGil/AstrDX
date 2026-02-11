@@ -14,7 +14,6 @@ class CRenderInstancing
 {
 	friend CRenderManager;
 
-	static constexpr int INSTANCING_THRESHOLD{ 32 };
 private:
 	CRenderInstancing();
 
@@ -30,9 +29,12 @@ private:
 	std::weak_ptr<CRenderState> BlendState;
 
 	bool bRender{ false };
-	std::vector<FInstancingBuffer> InstancingBuffers;
+	std::vector<FInstancingData> InstancingData;
 
 	std::weak_ptr<CWorld> World;
+
+	FVertexBuffer InstancingBuffer;
+	int InstancingCount{ 0 };
 
 public:
 	bool CompareAsset(const std::weak_ptr<CMesh>& Mesh, const std::weak_ptr<CTexture>& Texture);
@@ -45,9 +47,16 @@ public:
 
 	void AddRenderComponent(const std::weak_ptr<CSceneComponent>& Component);
 
+	void Update(const float DeltaTime);
+
 	void Render();
 	void RenderClear();
+		
+private:
+	bool CreateInstancingBuffer(int Size, int Count);
+	bool SetInstancingData(void* Data, int Count);
 
+public:
 	size_t GetRenderCount() const
 	{
 		return RenderComponents.size();

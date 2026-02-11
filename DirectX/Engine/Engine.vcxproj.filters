@@ -582,6 +582,9 @@
     <ClInclude Include="Asset\Shader\CShaderTexture2DInstancing.h">
       <Filter>Asset\Shader\Shader\Texture2D</Filter>
     </ClInclude>
+    <ClInclude Include="Asset\Shader\CShaderMaterialColor2DInstancing.h">
+      <Filter>Asset\Shader\Shader\MaterialColor2D</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -888,6 +891,9 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderTexture2DInstancing.cpp">
       <Filter>Asset\Shader\Shader\Texture2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset\Shader\CShaderMaterialColor2DInstancing.cpp">
+      <Filter>Asset\Shader\Shader\MaterialColor2D</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

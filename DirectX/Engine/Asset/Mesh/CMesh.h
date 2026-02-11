@@ -3,45 +3,6 @@
 
 class CMaterial;
 
-struct FVertexBuffer
-{
-	ID3D11Buffer* Buffer = nullptr;
-
-	// size of single vertex
-	int Size = 0;
-	int Count = 0;
-
-	FVertexBuffer() = default;
-	~FVertexBuffer()
-	{
-		if (Buffer)
-		{
-			Buffer->Release();
-		}
-	}
-};
-
-struct FIndexBuffer
-{
-	ID3D11Buffer* Buffer = nullptr;
-
-	// size of single index
-	int Size = 0;
-	int Count = 0;
-
-	// used to specify the index type when accessing or outputting using an index.
-	DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN;
-
-	FIndexBuffer() = default;
-	~FIndexBuffer()
-	{
-		if (Buffer)
-		{
-			Buffer->Release();
-		}
-	}
-};
-
 struct FMeshSlot
 {
 	FIndexBuffer IndexBuffer;
@@ -58,13 +19,10 @@ public:
 		D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices = nullptr, int IndexSize = 0, int IndexCount = 0,
 		DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN, D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
-	bool CreateInstancingBuffer(int Size, int Count);
-	bool SetInstancingData(void* Data, int Count);
-
 	void Render() const;
-	void RenderInstancing();
+	void RenderInstancing(const FVertexBuffer& InstancingBuffer, int Count);
 	void Render(size_t SlotIndex);
-	void RenderInstancing(size_t SlotIndex);
+	void RenderInstancing(size_t SlotIndex, const FVertexBuffer& InstancingBuffer, int Count);
 
 	void SetMaterial(int SlotIndex);
 	void SetMaterialBaseColor(int SlotIndex, float r, float g, float b, float a);
@@ -97,23 +55,11 @@ public:
 		return MeshSlots[Index];
 	}
 
-	bool IsInstancingBufferCreated() const
-	{
-		if (InstancingBuffer.Buffer)
-		{
-			return true;
-		}
-
-		return false;
-	}
-
 protected:
 	static bool CreateBuffer(ID3D11Buffer** Buffer, D3D11_BIND_FLAG Flag, void* Data, int Size, int Count, D3D11_USAGE Usage);
 
 protected:
 	FVertexBuffer VertexBuffer;
-	FVertexBuffer InstancingBuffer;
-	int InstancingCount{ 0 };
 	std::vector<std::shared_ptr<FMeshSlot>> MeshSlots;
 	D3D11_PRIMITIVE_TOPOLOGY Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 

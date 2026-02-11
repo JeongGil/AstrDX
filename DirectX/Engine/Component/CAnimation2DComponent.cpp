@@ -44,26 +44,28 @@ void CAnimation2DComponent::Update(const float DeltaTime)
 
 	if (CurrentAnimation)
 	{
-		auto MeshComponent = UpdateComponent.lock();
-		if (MeshComponent)
+		if (auto MeshComponent = UpdateComponent.lock())
 		{
 			MeshComponent->SetAnimComponent(std::dynamic_pointer_cast<CAnimation2DComponent>(shared_from_this()));
 
-			if (!bUpdateEnable)
-			{
-				if (auto Asset = CurrentAnimation->GetAsset().lock())
-				{
-					AnimationCBuffer->SetTextureType(Asset->GetTextureType());
+			bUpdateEnable = true;
+			//if (!bUpdateEnable)
+			//{
+			//	if (auto Asset = CurrentAnimation->GetAsset().lock())
+			//	{
+			//		AnimationCBuffer->SetTextureType(Asset->GetTextureType());
 
-					if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
-					{
-						bUpdateEnable = true;
-					}
-				}
-			}
+			//		if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
+			//		{
+			//			bUpdateEnable = true;
+			//		}
+			//	}
+			//}
 		}
 
 		CurrentAnimation->Update(DeltaTime);
+
+		AnimationCBuffer->SetAnimFrame(CurrentAnimation->GetCurrFrame());
 	}
 }
 
@@ -84,14 +86,18 @@ void CAnimation2DComponent::SetUpdateComponent(const std::weak_ptr<CMeshComponen
 	if (auto MeshComponent = UpdateComponent.lock();
 		MeshComponent && CurrentAnimation)
 	{
+		if (!bUpdateEnable)
+		{
+			MeshComponent->SetAnimComponent(std::dynamic_pointer_cast<CAnimation2DComponent>(shared_from_this()));
+
+			bUpdateEnable = true;
+		}
+
 		if (auto Asset = CurrentAnimation->GetAsset().lock())
 		{
 			AnimationCBuffer->SetTextureType(Asset->GetTextureType());
 
-			if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
-			{
-				bUpdateEnable = true;
-			}
+			MeshComponent->SetTexture(0, 0, Asset->GetTexture());
 		}
 	}
 }
@@ -127,14 +133,17 @@ void CAnimation2DComponent::AddAnimation(const std::weak_ptr<CAnimation2D>& Anim
 		if (auto MeshComponent = UpdateComponent.lock();
 			MeshComponent && CurrentAnimation)
 		{
+			if (!bUpdateEnable)
+			{
+				MeshComponent->SetAnimComponent(std::dynamic_pointer_cast<CAnimation2DComponent>(shared_from_this()));
+
+				bUpdateEnable = true;
+			}
+
 			if (auto Asset = CurrentAnimation->GetAsset().lock())
 			{
 				AnimationCBuffer->SetTextureType(Asset->GetTextureType());
-
-				if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
-				{
-					bUpdateEnable = true;
-				}
+				MeshComponent->SetTexture(0, 0, Asset->GetTexture());
 			}
 		}
 	}
@@ -182,14 +191,17 @@ void CAnimation2DComponent::AddAnimation(const std::string& AnimKey, float PlayT
 		if (auto MeshComponent = UpdateComponent.lock();
 			MeshComponent && CurrentAnimation)
 		{
+			if (!bUpdateEnable)
+			{
+				MeshComponent->SetAnimComponent(std::dynamic_pointer_cast<CAnimation2DComponent>(shared_from_this()));
+
+				bUpdateEnable = true;
+			}
+
 			if (auto Asset = CurrentAnimation->GetAsset().lock())
 			{
 				AnimationCBuffer->SetTextureType(Asset->GetTextureType());
-
-				if (MeshComponent->SetTexture(0, 0, Asset->GetTexture()))
-				{
-					bUpdateEnable = true;
-				}
+				MeshComponent->SetTexture(0, 0, Asset->GetTexture());
 			}
 		}
 	}
@@ -309,6 +321,10 @@ void CAnimation2DComponent::SetShader()
 					(TexFrame.Start.y + TexFrame.Size.y) / TexInfo->Height);
 			}
 		}
+		//else if (Asset->GetTextureType() == EAnimation2DTextureType::Array)
+		//{
+		//	int a = 0;
+		//}
 	}
 
 	AnimationCBuffer->UpdateBuffer();
@@ -380,7 +396,7 @@ FVector2 CAnimation2DComponent::GetAnimRBUV()
 		return {};
 	}
 
-	return {};
+	return {1.f, 1.f};
 }
 
 CAnimation2DComponent* CAnimation2DComponent::Clone() const

@@ -290,6 +290,7 @@ bool CCollisionQuadTreeNode::SortMouseCollision(const std::weak_ptr<CCollider>& 
 
 void CCollisionQuadTreeNode::Render(const std::weak_ptr<CMesh>& Mesh, const std::weak_ptr<CShader>& Shader)
 {
+#ifdef _DEBUG
 	FMatrix ViewMat;
 	FMatrix ProjMat;
 
@@ -331,6 +332,7 @@ void CCollisionQuadTreeNode::Render(const std::weak_ptr<CMesh>& Mesh, const std:
 			Child->Render(Mesh, Shader);
 		}
 	}
+#endif
 }
 
 void CCollisionQuadTreeNode::ReturnNodePool(std::vector<std::shared_ptr<CCollisionQuadTreeNode>>& NodePool)

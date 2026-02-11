@@ -6,14 +6,25 @@
 class CCBufferMaterial;
 class CTexture;
 class CRenderState;
+class CMaterialManager;
+class CMesh;
+class CMeshComponent;
 
-struct FMaterialTextureInfo;
+struct FMaterialTextureInfo
+{
+	std::string Key;
+	std::weak_ptr<CTexture> Texture;
+	int Register = 0;
+	int ShaderBufferType = EShaderBufferType::Pixel;
+	int Index = 0;
+};
 
 class CMaterial :
     public CAsset
 {
-	friend class CMaterialManager;
-	friend class CMesh;
+	friend CMaterialManager;
+	friend CMesh;
+	friend CMeshComponent;
 
 public:
 	std::weak_ptr<CRenderState> GetBlendState() const
@@ -80,6 +91,7 @@ public:
 	bool Init();
 	void UpdateConstantBuffer();
 	void UpdateConstantBuffer(int TextureIndex);
+	void UpdateConstantBufferArray(int Register);
 	void Reset();
 	CMaterial* Clone() const;
 
@@ -90,20 +102,7 @@ protected:
 
 	CMaterial(CMaterial&& other) noexcept;
 
-	CMaterial& operator=(const CMaterial& other);
-
-	CMaterial& operator=(CMaterial&& other) noexcept;
-
 public:
 	~CMaterial() override = default;
-};
-
-struct FMaterialTextureInfo
-{
-	std::string Key;
-	std::weak_ptr<CTexture> Texture;
-	int Register = 0;
-	int ShaderBufferType = EShaderBufferType::Pixel;
-	int Index = 0;
 };
 

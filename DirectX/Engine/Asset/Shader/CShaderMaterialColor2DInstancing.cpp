@@ -1,28 +1,28 @@
-#include "CShaderTexture2DInstancing.h"
+#include "CShaderMaterialColor2DInstancing.h"
 
-CShaderTexture2DInstancing::CShaderTexture2DInstancing()
+CShaderMaterialColor2DInstancing::CShaderMaterialColor2DInstancing()
 {
 }
 
-CShaderTexture2DInstancing::~CShaderTexture2DInstancing()
+CShaderMaterialColor2DInstancing::~CShaderMaterialColor2DInstancing()
 {
 }
 
-bool CShaderTexture2DInstancing::Init(const std::string& PathName)
+bool CShaderMaterialColor2DInstancing::Init(const std::string& PathName)
 {
-	if (!LoadVertexShader("DefaultTexInstancingVS", TEXT("GlobalShader2D.hlsl"), PathName))
+	if (!LoadVertexShader("Color2DInstancingVS", TEXT("GlobalShader2D.hlsl"),		PathName))
 	{
 		return false;
 	}
 
-	if (!LoadPixelShader("MaterialTexInstancingPS", TEXT("GlobalShader2D.hlsl"), PathName))
+	if (!LoadPixelShader("Color2DPS",		TEXT("GlobalShader2D.hlsl"), PathName))
 	{
 		return false;
 	}
 
-	AddInputDesc("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,
-		0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0);
-	AddInputDesc("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8,
+	AddInputDesc("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,
+		D3D11_INPUT_PER_VERTEX_DATA, 0);
+	AddInputDesc("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 16,
 		D3D11_INPUT_PER_VERTEX_DATA, 0);
 
 	AddInputDesc("INSTANCE_WVP", 0,

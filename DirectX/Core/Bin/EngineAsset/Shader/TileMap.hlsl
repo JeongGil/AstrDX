@@ -97,11 +97,11 @@ float2 ComputeInstancingTileUV(float2 UV, float2 LT, float2 RB)
     
 	if (UV.y > 0.f)
 	{
-		Result.y = LT.y;
+		Result.y = RB.y;
 	}
 	else
 	{
-		Result.y = RB.y;
+		Result.y = LT.y;		
 	}
     
 	return Result;

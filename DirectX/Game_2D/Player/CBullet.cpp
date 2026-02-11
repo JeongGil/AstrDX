@@ -113,6 +113,7 @@ bool CBullet::Init()
 	{
 		Mesh->SetShader("MaterialColor2D");
 		Mesh->SetMesh("CenterRectColor");
+		Mesh->SetMaterialBaseColor(0, 255, 0, 0, 255);
 		Mesh->SetRelativeScale(50, 50);
 	}
 

@@ -46,11 +46,14 @@ public:
 		Data.TextureSymmetry = bSymmetry ? 1 : 0;
 	}
 
+	void SetAnimFrame(int Frame)
+	{
+		Data.AnimFrame = Frame;
+	}
+
 	CCBufferAnimation2D() = default;
 	CCBufferAnimation2D(const CCBufferAnimation2D& other);
 	CCBufferAnimation2D(CCBufferAnimation2D&& other) noexcept;
-	CCBufferAnimation2D& operator=(const CCBufferAnimation2D& other);
-	CCBufferAnimation2D& operator=(CCBufferAnimation2D&& other) noexcept;
 	~CCBufferAnimation2D() override = default;
 
 private:
