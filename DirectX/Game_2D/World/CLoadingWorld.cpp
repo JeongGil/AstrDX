@@ -1,6 +1,7 @@
 #include "CLoadingWorld.h"
 
 #include <CThreadManager.h>
+#include <Render/CRenderManager.h>
 #include <World/CWorld.h>
 #include <World/CWorldManager.h>
 
@@ -36,14 +37,21 @@ void CLoadingWorld::Update(const float DeltaTime)
 {
 	CWorld::Update(DeltaTime);
 
-	if (Thread && Thread->IsComplete())
+	if (Thread && Thread->GetComplete())
 	{
 		CWorldManager::GetInst()->CompleteAsyncWorld();
+
+		if (LoadType == EWorldType::Editor)
+		{
+			CRenderManager::GetInst()->SetDebugTarget(false);
+		}
 	}
 }
 
 void CLoadingWorld::Load(EWorldType WorldType)
 {
+	LoadType = WorldType;
+
 	Thread = CThreadManager::GetInst().Create<CLoadingThread>("LoadingThread");
 	if (Thread)
 	{

@@ -487,12 +487,12 @@ void CRenderManager::Update(const float DeltaTime)
 
 	std::erase_if(PostProcesses, [](const auto& PostProcess)
 		{
-			return !PostProcess->IsActive();
+			return !PostProcess->GetActive();
 		});
 
 	for (const auto& PostProcess : PostProcesses)
 	{
-		if (PostProcess->IsEnable())
+		if (PostProcess->GetEnable())
 		{
 			PostProcess->Update(DeltaTime);
 		}
@@ -568,7 +568,7 @@ void CRenderManager::Render()
 		std::shared_ptr<CRenderTarget> LastProcessedTarget = nullptr;
 		std::erase_if(PostProcesses, [](const auto& PP)
 			{
-				return !PP->IsActive();
+				return !PP->GetActive();
 			});
 
 		if (!PostProcesses.empty())
@@ -577,7 +577,7 @@ void CRenderManager::Render()
 
 			for (const auto& PP : PostProcesses)
 			{
-				if (PP->IsEnable())
+				if (PP->GetEnable())
 				{
 					PP->SetBlendTarget(CurrentInput);
 					PP->RenderPostProcess();
@@ -617,53 +617,56 @@ void CRenderManager::Render()
 	ResetState("AlphaBlend");
 
 	// Print render target to debug.
-	FVector Pos, Scale(400.f, 200.f, 1.f);
-
-	FMatrix	ScaleMat, TranslateMat, WorldMat;
-
-	ScaleMat.Scaling(Scale);
-	TranslateMat.Translation(Pos);
-
-	WorldMat = ScaleMat * TranslateMat;
-
-	TargetTR->SetWorldMatrix(WorldMat);
-	TargetTR->SetProjMatrix(CWidget::GetProjMatrix());
-
-	TargetTR->UpdateBuffer();
-
-	TargetCBuffer->UpdateBuffer();
-
-	MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
-
-	TargetShader.lock()->SetShader();
-
-	TargetMesh.lock()->Render();
-
+	if (bDebugTarget)
 	{
-		CSync sync(&Crt);
+		FVector Pos, Scale(400.f, 200.f, 1.f);
 
-		for (const auto& PostProcess : PostProcesses)
+		FMatrix	ScaleMat, TranslateMat, WorldMat;
+
+		ScaleMat.Scaling(Scale);
+		TranslateMat.Translation(Pos);
+
+		WorldMat = ScaleMat * TranslateMat;
+
+		TargetTR->SetWorldMatrix(WorldMat);
+		TargetTR->SetProjMatrix(CWidget::GetProjMatrix());
+
+		TargetTR->UpdateBuffer();
+
+		TargetCBuffer->UpdateBuffer();
+
+		MainTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+
+		TargetShader.lock()->SetShader();
+
+		TargetMesh.lock()->Render();
+
 		{
-			Pos.y += Scale.y;
-			TranslateMat.Translation(Pos);
+			CSync sync(&Crt);
 
-			WorldMat = ScaleMat * TranslateMat;
-
-			TargetTR->SetWorldMatrix(WorldMat);
-			TargetTR->SetProjMatrix(CWidget::GetProjMatrix());
-
-			TargetTR->UpdateBuffer();
-
-			TargetCBuffer->UpdateBuffer();
-
-			if (auto PostTarget = PostProcess->GetTarget().lock())
+			for (const auto& PostProcess : PostProcesses)
 			{
-				PostTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+				Pos.y += Scale.y;
+				TranslateMat.Translation(Pos);
+
+				WorldMat = ScaleMat * TranslateMat;
+
+				TargetTR->SetWorldMatrix(WorldMat);
+				TargetTR->SetProjMatrix(CWidget::GetProjMatrix());
+
+				TargetTR->UpdateBuffer();
+
+				TargetCBuffer->UpdateBuffer();
+
+				if (auto PostTarget = PostProcess->GetTarget().lock())
+				{
+					PostTarget->SetShader(0, EShaderBufferType::Pixel, 0);
+				}
+
+				TargetShader.lock()->SetShader();
+
+				TargetMesh.lock()->Render();
 			}
-
-			TargetShader.lock()->SetShader();
-
-			TargetMesh.lock()->Render();
 		}
 	}
 

@@ -14,6 +14,7 @@ public:
 
 private:
 	std::shared_ptr<CLoadingThread> Thread;
+	EWorldType LoadType;
 
 public:
 	bool Init() override;

@@ -20,6 +20,7 @@ public:
 
 private:
 	void OnClickStart();
+	void OnClickEditor();
 	void OnClickExit();
 };
 

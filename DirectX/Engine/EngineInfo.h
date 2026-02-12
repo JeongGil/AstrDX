@@ -325,6 +325,13 @@ struct FInstancingData
 	int AnimFrame = 0;
 };
 
+enum class ETileType
+{
+	Normal,
+	UnableToMove,
+	End
+};
+
 struct FRenderKey
 {
 	size_t MeshID;

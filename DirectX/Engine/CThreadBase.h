@@ -47,7 +47,7 @@ public:
 		this->Key = Key;
 	}
 
-	[[nodiscard]] bool IsComplete()
+	[[nodiscard]] bool GetComplete()
 	{
 		CSync _(&Crt);
 

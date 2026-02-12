@@ -5,9 +5,9 @@
 #include "../Asset/Mesh/CMeshManager.h"
 #include "../Asset/Texture/CTextureManager.h"
 
-bool CWorldAssetManager::CreateMesh(const std::string& Key, void* Vertices, int VertexSize, int VertexCount,
-	D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
-	DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
+bool CWorldAssetManager::CreateMesh(const std::string& Key, bool bKeep, void* Vertices, int VertexSize,
+                                    int VertexCount, D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize,
+                                    int IndexCount, DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
 {
 	auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock();
 	if (!MeshMgr)
@@ -16,8 +16,8 @@ bool CWorldAssetManager::CreateMesh(const std::string& Key, void* Vertices, int 
 	}
 
 	auto InnerKey = "Mesh_" + Key;
-	if (!MeshMgr->CreateMesh(InnerKey, Vertices, VertexSize, VertexCount, VertexUsage, Topology, Indices,
-		IndexSize, IndexCount, Format, IndexUsage))
+	if (!MeshMgr->CreateMesh(InnerKey, bKeep, Vertices, VertexSize, VertexCount, VertexUsage, Topology,
+	                         Indices, IndexSize, IndexCount, Format, IndexUsage))
 	{
 		return false;
 	}
@@ -652,10 +652,10 @@ bool CWorldAssetManager::Init()
 
 	unsigned short	CenterRectColorIdx[6] = { 0, 1, 3, 0, 3, 2 };
 
-	if (!CreateMesh("CenterRectColor", CenterRectColor, sizeof(FVertexColor),
-		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT,
-		D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("CenterRectColor", false, CenterRectColor,
+	                sizeof(FVertexColor), 4, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterRectColorIdx, 2, 6,
+	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -683,8 +683,16 @@ void CWorldAssetManager::ClearAsset()
 
 CWorldAssetManager::~CWorldAssetManager()
 {
-	for (auto& Asset : Assets)
+	for (auto& Asset : Assets | std::views::values)
 	{
+		if (Asset && !Asset->GetKeep())
+		{
+			const auto& AssetKey = Asset->GetKey();
+			const auto AssetType = Asset->GetAssetType();
 
+			CAssetManager::GetInst()->ReleaseAsset(AssetKey, AssetType);
+		}
 	}
+
+	Assets.clear();
 }

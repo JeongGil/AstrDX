@@ -189,6 +189,7 @@
     <ClCompile Include="Monster\CMonsterSpawnPoint.cpp" />
     <ClCompile Include="Player\CBullet.cpp" />
     <ClCompile Include="Player\CBulletEffect.cpp" />
+    <ClCompile Include="Player\CEditorPlayer.cpp" />
     <ClCompile Include="Player\CMissile.cpp" />
     <ClCompile Include="Player\CPlayer.cpp" />
     <ClCompile Include="PostProcess\CPostProcessHit.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Shader\CShaderPostProcessHit.cpp" />
     <ClCompile Include="Table\CTableManager.cpp" />
     <ClCompile Include="Thread\CLoadingThread.cpp" />
+    <ClCompile Include="UI\CEditorWidget.cpp" />
     <ClCompile Include="UI\CInventory.cpp" />
     <ClCompile Include="UI\CLoadingWidget.cpp" />
     <ClCompile Include="UI\CMainWidget.cpp" />
@@ -205,6 +207,7 @@
     <ClCompile Include="UI\CStartWidget.cpp" />
     <ClCompile Include="UI\CWorldHUD.cpp" />
     <ClCompile Include="World\CBrotatoWorld_Battle.cpp" />
+    <ClCompile Include="World\CEditorWorld.cpp" />
     <ClCompile Include="World\CLoadingWorld.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
     <ClCompile Include="World\CStartWorld.cpp" />
@@ -227,6 +230,7 @@
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />
     <ClInclude Include="Inventory\CShop.h" />
     <ClInclude Include="Map\CTileMapMain.h" />
+    <ClInclude Include="Player\CEditorPlayer.h" />
     <ClInclude Include="PostProcess\CPostProcessHit.h" />
     <ClInclude Include="Shader\CCBufferHit.h" />
     <ClInclude Include="Shader\CShaderPostProcessHit.h" />
@@ -249,6 +253,7 @@
     <ClInclude Include="Table\WeaponInfo.h" />
     <ClInclude Include="Table\WeaponTable.h" />
     <ClInclude Include="Thread\CLoadingThread.h" />
+    <ClInclude Include="UI\CEditorWidget.h" />
     <ClInclude Include="UI\CInventory.h" />
     <ClInclude Include="UI\CLoadingWidget.h" />
     <ClInclude Include="UI\CMainWidget.h" />
@@ -259,6 +264,7 @@
     <ClInclude Include="UI\CWorldHUD.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="World\CBrotatoWorld_Battle.h" />
+    <ClInclude Include="World\CEditorWorld.h" />
     <ClInclude Include="World\CLoadingWorld.h" />
     <ClInclude Include="World\CMainWorld.h" />
     <ClInclude Include="World\CStartWorld.h" />

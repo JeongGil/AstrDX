@@ -178,7 +178,7 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 			int	Idx = i * CountX + j;
 			auto& Tile = Tiles[Idx];
 
-			if (!Tile->IsRender())
+			if (!Tile->GetRender())
 			{
 				continue;
 			}
@@ -345,7 +345,7 @@ void CTileMapComponent::RenderTile()
 	//		int Idx = i * CountX + j;
 
 	//		const auto& Tile = Tiles[Idx];
-	//		if (!Tile->IsRender())
+	//		if (!Tile->GetRender())
 	//		{
 	//			continue;
 	//		}

@@ -29,5 +29,10 @@ public:
 	void PostUpdate(const float DeltaTime) override;
 	void Render() override;
 	void Destroy() override;
+
+	std::weak_ptr<CTileMapComponent> GetTileMap() const
+	{
+		return TileMap;
+	}
 };
 

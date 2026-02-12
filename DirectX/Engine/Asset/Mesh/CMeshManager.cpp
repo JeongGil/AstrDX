@@ -15,10 +15,10 @@ bool CMeshManager::Init()
 
 	unsigned short CenterRectColorIdx[6] = { 0, 1, 3, 0, 3, 2 };
 
-	if (!CreateMesh("Mesh_CenterRectColor", CenterRectColor, sizeof(FVertexColor),
-		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT,
-		D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_CenterRectColor", true, CenterRectColor,
+	                sizeof(FVertexColor), 4, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterRectColorIdx, 2, 6,
+	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -33,10 +33,10 @@ bool CMeshManager::Init()
 
 	unsigned short CenterFrameRectIdx[5]{ 0, 1, 3, 2, 0 };
 
-	if (!CreateMesh("Mesh_CenterFrameRect", CenterFrameRect, sizeof(FVector),
-		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
-		CenterFrameRectIdx, 2, 5, DXGI_FORMAT_R16_UINT,
-		D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_CenterFrameRect", true, CenterFrameRect,
+	                sizeof(FVector), 4, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP, CenterFrameRectIdx, 2, 5,
+	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -51,10 +51,10 @@ bool CMeshManager::Init()
 
 	unsigned short LBFrameRectIdx[5]{ 0, 1, 3, 2, 0 };
 
-	if (!CreateMesh("Mesh_LBFrameRect", LBFrameRect, sizeof(FVector),
-		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
-		LBFrameRectIdx, 2, 5, DXGI_FORMAT_R16_UINT,
-		D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_LBFrameRect", true, LBFrameRect,
+	                sizeof(FVector), 4, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP, LBFrameRectIdx, 2, 5,
+	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -74,11 +74,11 @@ bool CMeshManager::Init()
 
 	FrameSphere2DIdx.push_back(0);
 
-	if (!CreateMesh("Mesh_FrameSphere2D", &FrameSphere2D[0], sizeof(FVector),
-		static_cast<int>(FrameSphere2D.size()), D3D11_USAGE_IMMUTABLE,
-		D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP, &FrameSphere2DIdx[0],
-		2, static_cast<int>(FrameSphere2DIdx.size()),
-		DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_FrameSphere2D", true, &FrameSphere2D[0],
+	                sizeof(FVector), static_cast<int>(FrameSphere2D.size()),
+	                D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
+	                &FrameSphere2DIdx[0], 2,
+	                static_cast<int>(FrameSphere2DIdx.size()), DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -92,9 +92,9 @@ bool CMeshManager::Init()
 		FVertexTex(0.5f, -0.5f, 0.f, 1.f, 1.f)
 	};
 
-	if (!CreateMesh("Mesh_CenterRectTex", CenterRectTexture, sizeof(FVertexTex),
-		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_CenterRectTex", true, CenterRectTexture,
+	                sizeof(FVertexTex), 4, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -107,11 +107,11 @@ bool CMeshManager::Init()
 		FVertexTex(1.f, 0.f, 0.f, 1.f, 1.f)
 	};
 
-	if (!CreateMesh("Mesh_RectTex", RectTexture,
-		sizeof(FVertexTex),
-		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT,
-		D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_RectTex", true,
+	                RectTexture,
+	                sizeof(FVertexTex), 4, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterRectColorIdx, 2, 6,
+	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -124,11 +124,11 @@ bool CMeshManager::Init()
 		FVertexTex(1.f, 1.f, 0.f, 1.f, 1.f)
 	};
 
-	if (!CreateMesh("Mesh_UIRectTex", UIRectTexture,
-		sizeof(FVertexTex),
-		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-		CenterRectColorIdx, 2, 6, DXGI_FORMAT_R16_UINT,
-		D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_UIRectTex", true,
+	                UIRectTexture,
+	                sizeof(FVertexTex), 4, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterRectColorIdx, 2, 6,
+	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -149,11 +149,11 @@ bool CMeshManager::Init()
 		1, 5, 7, 1, 7, 3, 5, 4, 6, 5, 6, 7, 4, 0, 2, 4, 2, 6,
 		4, 5, 1, 4, 1, 0, 2, 3, 7, 2, 7, 6 };
 
-	if (!CreateMesh("Mesh_CenterCubeColor", CenterCubeColor,
-		sizeof(FVertexColor),
-		8, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST,
-		CenterCubeColorIdx, 2, 36, DXGI_FORMAT_R16_UINT,
-		D3D11_USAGE_IMMUTABLE))
+	if (!CreateMesh("Mesh_CenterCubeColor", true,
+	                CenterCubeColor,
+	                sizeof(FVertexColor), 8, D3D11_USAGE_IMMUTABLE,
+	                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterCubeColorIdx, 2, 36,
+	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -164,9 +164,9 @@ bool CMeshManager::Init()
 		FVector(0.f, 1.f, 0.f)
 	};
 
-	if (!CreateMesh("Mesh_LineUP2D", LineUp,
-		sizeof(FVector),
-		2, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP))
+	if (!CreateMesh("Mesh_LineUP2D", true,
+	                LineUp,
+	                sizeof(FVector), 2, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP))
 	{
 		return false;
 	}
@@ -177,9 +177,9 @@ bool CMeshManager::Init()
 		FVector(1.f, 0.f, 0.f)
 	};
 
-	if (!CreateMesh("Mesh_LineRight2D", LineRight,
-		sizeof(FVector),
-		2, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP))
+	if (!CreateMesh("Mesh_LineRight2D", true,
+	                LineRight,
+	                sizeof(FVector), 2, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP))
 	{
 		return false;
 	}
@@ -199,9 +199,9 @@ void CMeshManager::ReleaseAsset(const std::string& Key)
 	}
 }
 
-bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int VertexSize, int VertexCount,
-	D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize, int IndexCount,
-	DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
+bool CMeshManager::CreateMesh(const std::string& Key, bool bKeep, void* Vertices, int VertexSize,
+                              int VertexCount, D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize,
+                              int IndexCount, DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
 {
 	if (Meshes.contains(Key))
 	{
@@ -209,6 +209,8 @@ bool CMeshManager::CreateMesh(const std::string& Key, void* Vertices, int Vertex
 	}
 
 	std::shared_ptr<CMesh> NewMesh(new CMesh);
+	NewMesh->SetKeep(bKeep);
+
 	if (!NewMesh->CreateMesh(Vertices, VertexSize, VertexCount, VertexUsage, Topology,
 		Indices, IndexSize, IndexCount, Format, IndexUsage))
 	{
@@ -232,6 +234,14 @@ std::weak_ptr<CMesh> CMeshManager::FindMesh(const std::string& Key) const
 	else
 	{
 		return std::weak_ptr<CMesh>();
+	}
+}
+
+void CMeshManager::KeepMesh(const std::string& Key, bool bKeep)
+{
+	for (const auto& Mesh : Meshes | std::views::values)
+	{
+		Mesh->SetKeep(bKeep);
 	}
 }
 

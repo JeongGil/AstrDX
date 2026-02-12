@@ -6,4 +6,11 @@ enum class EWorldType
 	Start,
 	Loading,
 	Main,
+	Editor,
+};
+
+enum class EEditorMode
+{
+	TileType,
+	TileFrame,
 };

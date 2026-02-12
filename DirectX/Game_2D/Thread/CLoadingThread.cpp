@@ -4,6 +4,7 @@
 
 #include "../World/CMainWorld.h"
 #include "../World/CStartWorld.h"
+#include "../World/CEditorWorld.h"
 
 CLoadingThread::CLoadingThread()
 {
@@ -27,6 +28,13 @@ void CLoadingThread::Run()
 		break;
 	case EWorldType::Main:
 		CWorldManager::GetInst()->CreateAsyncWorld<CMainWorld>();
+		break;
+	case EWorldType::None:
+		break;
+	case EWorldType::Loading:
+		break;
+	case EWorldType::Editor:
+		CWorldManager::GetInst()->CreateAsyncWorld<CEditorWorld>();
 		break;
 	}
 }

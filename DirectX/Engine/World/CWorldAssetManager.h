@@ -15,10 +15,10 @@ class CWorldAssetManager
 public:
 #pragma region Mesh
 
-	bool CreateMesh(const std::string& Key, void* Vertices, int VertexSize, int VertexCount,
-		D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices = nullptr,
-		int IndexSize = 0, int IndexCount = 0, DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN,
-		D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
+	bool CreateMesh(const std::string& Key, bool bKeep, void* Vertices, int VertexSize,
+	                int VertexCount, D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology,
+	                void* Indices = nullptr, int IndexSize = 0, int IndexCount = 0,
+	                DXGI_FORMAT Format = DXGI_FORMAT_UNKNOWN, D3D11_USAGE IndexUsage = D3D11_USAGE_DEFAULT);
 
 	std::weak_ptr<CMesh> FindMesh(const std::string& Key);
 

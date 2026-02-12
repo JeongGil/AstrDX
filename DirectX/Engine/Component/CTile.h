@@ -4,12 +4,6 @@
 
 class CTileMapComponent;
 
-enum class ETileType
-{
-	Normal,
-	UnableToMove,
-};
-
 class CTile
 {
 	friend CTileMapComponent;
@@ -134,7 +128,7 @@ public:
 		SetFrame(FVector2(x, y), FVector2(w, h));
 	}
 
-	[[nodiscard]] bool IsRender() const
+	[[nodiscard]] bool GetRender() const
 	{
 		return bRender;
 	}

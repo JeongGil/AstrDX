@@ -35,7 +35,7 @@ bool CStartWidget::Init()
 	{
 		FVector ButtonPos;
 		ButtonPos.x = RS.Width / 2.f;
-		ButtonPos.y = RS.Height / 2.f - 100.f;
+		ButtonPos.y = RS.Height / 2.f - 150.f;
 
 		StartButton->SetPivot(0.5f, 0.5f);
 		StartButton->SetPos(ButtonPos);
@@ -61,7 +61,7 @@ bool CStartWidget::Init()
 	{
 		FVector ButtonPos;
 		ButtonPos.x = RS.Width / 2.f;
-		ButtonPos.y = RS.Height / 2.f + 100.f;
+		ButtonPos.y = RS.Height / 2.f + 150.f;
 
 		ExitButton->SetPivot(0.5f, 0.5f);
 		ExitButton->SetPos(ButtonPos);
@@ -83,6 +83,29 @@ bool CStartWidget::Init()
 		ExitButton->SetEventCallback<CStartWidget>(EButtonEventState::Click, this, &CStartWidget::OnClickExit);
 	}
 
+	if (auto EditorButton = CreateWidget<CButton>("EditorButton", 1).lock())
+	{
+		FVector ButtonPos;
+		ButtonPos.x = RS.Width / 2.f;
+		ButtonPos.y = RS.Height / 2.f;
+
+		EditorButton->SetPivot(0.5f, 0.5f);
+		EditorButton->SetPos(ButtonPos);
+		EditorButton->SetSize(200.f, 100.f);
+		EditorButton->SetTexture(EButtonState::Normal, "EditorButton", TEXT("Start.png"));
+		EditorButton->SetTint(EButtonState::Normal, FVector4(0.8f, 0.8f, 0.8f, 1.f));
+
+		EditorButton->SetTexture(EButtonState::Hovered, "EditorButton", TEXT("Start.png"));
+		EditorButton->SetTint(EButtonState::Hovered, FVector4(1.f, 1.f, 1.f, 1.f));
+
+		EditorButton->SetTexture(EButtonState::Click, "EditorButton", TEXT("Start.png"));
+		EditorButton->SetTint(EButtonState::Click, FVector4(0.6f, 0.6f, 0.6f, 1.f));
+
+		EditorButton->SetTexture(EButtonState::Disable, "EditorButton", TEXT("Start.png"));
+
+		EditorButton->SetEventCallback<CStartWidget>(EButtonEventState::Click, this, &CStartWidget::OnClickEditor);
+	}
+
 	return true;
 }
 
@@ -101,6 +124,14 @@ void CStartWidget::OnClickStart()
 	if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
 	{
 		World->Load(EWorldType::Main);
+	}
+}
+
+void CStartWidget::OnClickEditor()
+{
+	if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
+	{
+		World->Load(EWorldType::Editor);
 	}
 }
 

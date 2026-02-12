@@ -227,7 +227,7 @@ bool CPlayer::Init()
 	if (auto Cam = CameraComponent.lock())
 	{
 		const auto& Resolution = CDevice::GetInst()->GetResolution();
-		Cam->SetProjection(CCameraComponent::EProjectionType::Orthogonal,
+		Cam->SetProjection(ECameraProjectionType::Orthogonal,
 			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
 		Cam->SetInheritRotation(false);

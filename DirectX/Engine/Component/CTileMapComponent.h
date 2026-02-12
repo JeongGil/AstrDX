@@ -111,6 +111,11 @@ public:
 		return CountY;
 	}
 
+	[[nodiscard]] size_t GetTileFrameCount() const
+	{
+		return TileFrames.size();
+	}
+
 	void SetTileTextureSize(const FVector2& Size)
 	{
 		TileTextureSize = Size;

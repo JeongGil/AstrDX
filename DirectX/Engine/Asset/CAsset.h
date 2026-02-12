@@ -3,13 +3,40 @@
 
 #include "../Utils.h"
 
+class CAssetManager;
+class CWorldAssetManager;
+
 class CAsset :
 	public CObject
 {
-	friend class CAssetManager;
-	friend class CWorldAssetManager;
+	friend CAssetManager;
+	friend CWorldAssetManager;
+
+protected:
+	CAsset() = default;
+	CAsset(const CAsset& other) = default;
+	CAsset(CAsset&& other) noexcept = default;
 
 public:
+	virtual ~CAsset() = 0;
+
+protected:
+	std::string Key;
+	size_t ID;
+	EAssetType AssetType{ EAssetType::None };
+	bool bKeep{ false };
+
+public:
+	[[nodiscard]] bool GetKeep() const
+	{
+		return bKeep;
+	}
+
+	void SetKeep(const bool bKeep)
+	{
+		this->bKeep = bKeep;
+	}
+
 	[[nodiscard]] EAssetType GetAssetType() const
 	{
 		return AssetType;
@@ -30,20 +57,5 @@ public:
 		this->Key = Key;
 		ID = CIDMaker::GetID(Key);
 	}
-
-protected:
-	std::string Key;
-	size_t ID;
-	EAssetType AssetType = EAssetType::None;
-
-protected:
-	CAsset() = default;
-	CAsset(const CAsset& other) = default;
-	CAsset(CAsset&& other) noexcept = default;
-	CAsset& operator=(const CAsset& other) = default;
-	CAsset& operator=(CAsset&& other) noexcept = default;
-
-public:
-	virtual ~CAsset() = 0;
 };
 

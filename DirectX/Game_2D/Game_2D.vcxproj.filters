@@ -79,6 +79,9 @@
     <Filter Include="Map">
       <UniqueIdentifier>{0c69acc6-1417-48b5-a598-a2acf956ed7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Editor">
+      <UniqueIdentifier>{9b2376f7-a3cb-4cb4-ab8a-0f933dc2f47a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -197,6 +200,15 @@
     </ClCompile>
     <ClCompile Include="Map\CTileMapMain.cpp">
       <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CEditorWorld.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CEditorWidget.cpp">
+      <Filter>UI\Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Player\CEditorPlayer.cpp">
+      <Filter>Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -355,6 +367,15 @@
     </ClInclude>
     <ClInclude Include="Map\CTileMapMain.h">
       <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CEditorWorld.h">
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CEditorWidget.h">
+      <Filter>UI\Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Player\CEditorPlayer.h">
+      <Filter>Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

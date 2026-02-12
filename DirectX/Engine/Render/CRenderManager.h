@@ -174,11 +174,18 @@ private:
 	std::shared_ptr<CCBufferUIDefault> TargetCBuffer;
 	std::shared_ptr<CCBufferTransform> TargetTR;
 
+	bool bDebugTarget{ true };
+
 	CRITICAL_SECTION Crt;
 
 	inline static CRenderManager* Inst;
 
 public:
+	void SetDebugTarget(bool bDebug)
+	{
+		bDebugTarget = bDebug;
+	}
+
 	[[nodiscard]] EMouseState::Type GetMouseState() const
 	{
 		return MouseState;

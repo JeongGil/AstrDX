@@ -3,7 +3,7 @@
 #include "../CDevice.h"
 #include "../World/CWorld.h"
 
-void CCameraComponent::SetProjection(EProjectionType Type, float ViewAngleDegree, float Width, float Height,
+void CCameraComponent::SetProjection(ECameraProjectionType Type, float ViewAngleDegree, float Width, float Height,
 	float ViewDistance)
 {
 	this->ProjectionType = Type;
@@ -14,13 +14,13 @@ void CCameraComponent::SetProjection(EProjectionType Type, float ViewAngleDegree
 
 	switch (Type)
 	{
-		case EProjectionType::Perspective:
+		case ECameraProjectionType::Perspective:
 		{
 			ProjectionMatrix = DirectX::XMMatrixPerspectiveFovLH(
 				DirectX::XMConvertToRadians(ViewAngleDegree), Width / Height, 0.1f, ViewDistance);
 			break;
 		}
-		case EProjectionType::Orthogonal:
+		case ECameraProjectionType::Orthogonal:
 		{
 			ProjectionMatrix = DirectX::XMMatrixOrthographicOffCenterLH(
 				Width / -2.f, Width / 2.f, Height / -2.f, Height / 2.f, 0.f, ViewDistance);
@@ -42,7 +42,7 @@ bool CCameraComponent::Init()
 	}
 
 	FResolution Resolution = CDevice::GetInst()->GetResolution();
-	SetProjection(EProjectionType::Perspective, 90, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
+	SetProjection(ECameraProjectionType::Perspective, 90, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
 	if (auto World = this->World.lock())
 	{

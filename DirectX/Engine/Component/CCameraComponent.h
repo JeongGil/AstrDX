@@ -1,19 +1,19 @@
 #pragma once
 #include "CSceneComponent.h"
 
+class CGameObject;
+
+enum class ECameraProjectionType : unsigned char
+{
+	Perspective,
+	Orthogonal,
+};
 
 class CCameraComponent :
 	public CSceneComponent
 {
-	friend class CGameObject;
+	friend CGameObject;
 	friend CObject;
-
-public:
-	enum class EProjectionType : unsigned char
-	{
-		Perspective,
-		Orthogonal,
-	};
 
 public:
 	[[nodiscard]] const FMatrix& GetViewMatrix() const
@@ -26,13 +26,13 @@ public:
 		return ProjectionMatrix;
 	}
 
-	void SetProjection(EProjectionType Type, float ViewAngleDegree, float Width, float Height, float ViewDistance);
+	void SetProjection(ECameraProjectionType Type, float ViewAngleDegree, float Width, float Height, float ViewDistance);
 
 protected:
 	CCameraComponent* Clone() const override;
 
 protected:
-	EProjectionType ProjectionType = EProjectionType::Perspective;
+	ECameraProjectionType ProjectionType = ECameraProjectionType::Perspective;
 
 	FMatrix ViewMatrix;
 	FMatrix ProjectionMatrix;

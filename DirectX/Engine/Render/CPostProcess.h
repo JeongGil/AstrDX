@@ -52,7 +52,7 @@ public:
 		return Target;
 	}
 
-	[[nodiscard]] bool IsActive() const
+	[[nodiscard]] bool GetActive() const
 	{
 		return bActive;
 	}
@@ -62,7 +62,7 @@ public:
 		bActive = false;
 	}
 
-	[[nodiscard]] bool IsEnable() const
+	[[nodiscard]] bool GetEnable() const
 	{
 		return bEnable;
 	}
