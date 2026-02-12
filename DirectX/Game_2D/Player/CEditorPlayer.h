@@ -35,6 +35,7 @@ private:
 	ETileType TileType{ ETileType::Normal };
 
 	std::shared_ptr<CTile> HoveredTile;
+	FColor PrevColor{ FColor::White };
 
 public:
 	void Begin() override;

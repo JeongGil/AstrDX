@@ -72,8 +72,8 @@ protected:
 	CTileMapComponent* Clone() const override;
 
 public:
-	void SetTileOutLineRender(bool bRender);
-	void SetTileOutLineRender(bool bRender, int Index);
+	void SetTileOutlineRender(bool bRender);
+	void SetTileOutlineRender(bool bRender, int Index);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::weak_ptr<class CTexture>& Texture);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::string& Key);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture");
@@ -140,6 +140,8 @@ public:
 
 		return Tiles[Index];
 	}
+
+	void SetTileFrame(int Index, int Frame);
 
 	void SetTileTextureSize(const FVector2& Size)
 	{

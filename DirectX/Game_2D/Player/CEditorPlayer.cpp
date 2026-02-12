@@ -108,11 +108,13 @@ void CEditorPlayer::Update(float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 	
-	if (auto Tile = GetTile().lock())
+	auto Tile = GetTile().lock();
+	if (Tile && Tile->GetType() != ETileType::UnableToMove)
 	{
 		if (HoveredTile && HoveredTile != Tile)
 		{
-			HoveredTile->SetOutlineColor(FColor::White);
+			PrevColor = Tile->GetOutlineColor();
+			HoveredTile->SetOutlineColor(PrevColor);
 		}
 
 		HoveredTile = Tile;
@@ -122,7 +124,7 @@ void CEditorPlayer::Update(float DeltaTime)
 	{
 		if (HoveredTile)
 		{
-			HoveredTile->SetOutlineColor(FColor::White);
+			HoveredTile->SetOutlineColor(PrevColor);
 		}
 
 		HoveredTile.reset();
@@ -167,7 +169,29 @@ void CEditorPlayer::LeftClick()
 	{
 		if (auto TileMap = TileMapObj->GetTileMap().lock())
 		{
+			if (auto Tile = GetTile().lock())
+			{
+				switch (EditorMode)
+				{
+				case EEditorMode::TileType:
+					if (TileType == ETileType::Normal)
+					{
+						Tile->SetOutlineColor(FColor::White);
+						PrevColor = FColor::White;
+					}
+					else if (TileType == ETileType::UnableToMove)
+					{
+						Tile->SetOutlineColor(FColor::Red);
+						PrevColor = FColor::Red;
+					}
 
+					Tile->SetType(TileType);
+					break;
+				case EEditorMode::TileFrame:
+					TileMap->SetTileFrame(Tile->GetIndex(), EditorFrame);
+					break;
+				}
+			}
 		}
 	}
 }

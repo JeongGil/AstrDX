@@ -25,21 +25,47 @@ private:
 	FVector2 FrameStart;
 	FVector2 FrameEnd;
 	bool bRender{ false };
-	bool bOutLineRender{ false };
+	bool bOutlineRender{ false };
 	FColor OutlineColor{ FColor::White };
+
+	int IndexX{ 0 };
+	int IndexY{ 0 };
+	int Index{ 0 };
 
 public:
 	void Save(FILE* File);
 	void Load(FILE* File);
 
-	[[nodiscard]] bool GetOutLineRender() const
+	[[nodiscard]] int GetIndexX() const
 	{
-		return bOutLineRender;
+		return IndexX;
 	}
 
-	void SetOutLineRender(const bool bOutLineRender)
+	[[nodiscard]] int GetIndexY() const
 	{
-		this->bOutLineRender = bOutLineRender;
+		return IndexY;
+	}
+
+	[[nodiscard]] int GetIndex() const
+	{
+		return Index;
+	}
+
+	void SetIndex(int x, int y, int Index)
+	{
+		IndexX = x;
+		IndexY = y;
+		this->Index = Index;
+	}
+
+	[[nodiscard]] bool GetOutlineRender() const
+	{
+		return bOutlineRender;
+	}
+
+	void SetOutlineRender(const bool bOutlineRender)
+	{
+		this->bOutlineRender = bOutlineRender;
 	}
 
 	[[nodiscard]] FColor GetOutlineColor() const

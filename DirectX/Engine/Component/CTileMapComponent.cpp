@@ -172,7 +172,7 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 				++InstancingCount;
 			}
 
-			if (Tile->GetOutLineRender())
+			if (Tile->GetOutlineRender())
 			{
 				auto& LineInstancingData = TileLineInstData[LineInstancingCount];
 				const auto& TileInstancingData = TileInstData[InstancingCount - 1];
@@ -208,11 +208,11 @@ CTileMapComponent* CTileMapComponent::Clone() const
 	return new CTileMapComponent(*this);
 }
 
-void CTileMapComponent::SetTileOutLineRender(bool bRender)
+void CTileMapComponent::SetTileOutlineRender(bool bRender)
 {
 	for (const auto& Tile : Tiles)
 	{
-		Tile->SetOutLineRender(bRender);
+		Tile->SetOutlineRender(bRender);
 	}
 	//bRenderTileOutLine = bRender;
 
@@ -227,9 +227,9 @@ void CTileMapComponent::SetTileOutLineRender(bool bRender)
 	//}
 }
 
-void CTileMapComponent::SetTileOutLineRender(bool bRender, int Index)
+void CTileMapComponent::SetTileOutlineRender(bool bRender, int Index)
 {
-	Tiles[Index]->SetOutLineRender(bRender);
+	Tiles[Index]->SetOutlineRender(bRender);
 }
 
 bool CTileMapComponent::CreateLineInstancingBuffer(int Size, int Count)
@@ -326,6 +326,13 @@ std::weak_ptr<CTile> CTileMapComponent::GetTile(const FVector& Pos) const
 std::weak_ptr<CTile> CTileMapComponent::GetTile(float x, float y) const
 {
 	return GetTile(GetTileIndex(x, y));
+}
+
+void CTileMapComponent::SetTileFrame(int Index, int Frame)
+{
+	auto& TileFrame = TileFrames[Frame];
+
+	Tiles[Index]->SetFrame(TileFrame.Start, TileFrame.End);
 }
 
 bool CTileMapComponent::SetTileTexture(ETileTextureType::Type Type, const std::weak_ptr<class CTexture>& Texture)
@@ -510,6 +517,7 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 
 			auto& Tile = Tiles[Index];
 			Tile.reset<CTile>(new CTile);
+			Tile->SetIndex(j, i, Index);
 
 			switch (Shape)
 			{
@@ -523,7 +531,7 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 			Tile->SetSize(TileSize);
 			Tile->SetCenter(Tile->GetPos() + TileSize * 0.5f);
 			Tile->SetTextureFrame(TileTextureFrame);
-			Tile->SetOutLineRender(bOutLineRender);
+			Tile->SetOutlineRender(bOutLineRender);
 		}
 	}
 

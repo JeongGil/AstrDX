@@ -31,7 +31,7 @@ bool CEditorWorld::Init()
 	{
 		if (auto TileMap = TileMapObj->GetTileMap().lock())
 		{
-			TileMap->SetTileOutLineRender(true);
+			TileMap->SetTileOutlineRender(true);
 		}
 	}
 
