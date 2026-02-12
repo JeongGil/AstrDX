@@ -463,6 +463,7 @@ struct FVector4
 	static FVector4	Red;
 	static FVector4	Blue;
 	static FVector4	Green;
+	static FVector4	Yellow;
 	static FVector4 Transparent;
 };
 

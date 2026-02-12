@@ -16,54 +16,6 @@ CTileMapComponent::CTileMapComponent()
 {
 }
 
-CTileMapComponent::CTileMapComponent(const CTileMapComponent& other) :
-	CObjectComponent(other),
-	Tiles(other.Tiles),
-	Shape(other.Shape),
-	TileSize(other.TileSize),
-	MapSize(other.MapSize),
-	CountX(other.CountX),
-	CountY(other.CountY),
-	bRenderTileOutLine(other.bRenderTileOutLine),
-	OutLineMesh(other.OutLineMesh),
-	OutLineShader(other.OutLineShader),
-	TileMesh(other.TileMesh),
-	TileShader(other.TileShader),
-	Transform(other.Transform),
-	CBufferTileMap(other.CBufferTileMap),
-	TileTextureSize(other.TileTextureSize),
-	TileFrames(other.TileFrames),
-	ViewStartX(other.ViewStartX),
-	ViewStartY(other.ViewStartY),
-	ViewEndX(other.ViewEndX),
-	ViewEndY(other.ViewEndY)
-{
-}
-
-CTileMapComponent::CTileMapComponent(CTileMapComponent&& other) noexcept :
-	CObjectComponent(std::move(other)),
-	Tiles(std::move(other.Tiles)),
-	Shape(other.Shape),
-	TileSize(std::move(other.TileSize)),
-	MapSize(std::move(other.MapSize)),
-	CountX(other.CountX),
-	CountY(other.CountY),
-	bRenderTileOutLine(other.bRenderTileOutLine),
-	OutLineMesh(std::move(other.OutLineMesh)),
-	OutLineShader(std::move(other.OutLineShader)),
-	TileMesh(std::move(other.TileMesh)),
-	TileShader(std::move(other.TileShader)),
-	Transform(std::move(other.Transform)),
-	CBufferTileMap(std::move(other.CBufferTileMap)),
-	TileTextureSize(std::move(other.TileTextureSize)),
-	TileFrames(std::move(other.TileFrames)),
-	ViewStartX(other.ViewStartX),
-	ViewStartY(other.ViewStartY),
-	ViewEndX(other.ViewEndX),
-	ViewEndY(other.ViewEndY)
-{
-}
-
 CTileMapComponent::~CTileMapComponent()
 {
 }
@@ -94,6 +46,7 @@ bool CTileMapComponent::Init()
 		if (auto AssetMgr = World->GetWorldAssetManager().lock())
 		{
 			TileMesh = AssetMgr->FindMesh("RectTex");
+			OutLineMesh = AssetMgr->FindMesh("LBFrameRect");
 		}
 	}
 	else
@@ -101,6 +54,7 @@ bool CTileMapComponent::Init()
 		if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
 		{
 			TileMesh = MeshMgr->FindMesh("Mesh_RectTex");
+			OutLineMesh = MeshMgr->FindMesh("Mesh_LBFrameRect");
 		}
 	}
 
@@ -108,6 +62,7 @@ bool CTileMapComponent::Init()
 	{
 		//TileShader = ShaderMgr->FindShader("TileMap");
 		TileShader = ShaderMgr->FindShader("TileMapInstancing");
+		OutLineShader = ShaderMgr->FindShader("TileMapLineInstancing");
 	}
 
 	return true;
@@ -170,6 +125,7 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 	auto CameraMgr = World->GetCameraManager().lock();
 
 	InstancingCount = 0;
+	LineInstancingCount = 0;
 
 	for (int i = ViewStartY; i <= ViewEndY; ++i)
 	{
@@ -178,49 +134,63 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 			int	Idx = i * CountX + j;
 			auto& Tile = Tiles[Idx];
 
-			if (!Tile->GetRender())
+			if (Tile->GetRender())
 			{
-				continue;
+				FMatrix	ScaleMat, TranslateMat;
+
+				ScaleMat.Scaling(TileSize);
+
+				FVector2 Pos = Tile->GetPos();
+
+				Pos.x += Owner->GetWorldPosition().x;
+				Pos.y += Owner->GetWorldPosition().y;
+
+				TranslateMat.Translation(Pos);
+
+				//FMatrix	RotMat;
+
+				//RotMat.RotationZ(230.f);
+				//RotMat.Rotation(FVector3(0.f, 0.f, 238.f));
+
+				//WorldMat = ScaleMat * RotMat * TranslateMat;
+				FMatrix	WorldMat = ScaleMat * TranslateMat;
+
+				FMatrix	ViewMat = CameraMgr->GetViewMatrix();
+				FMatrix	ProjMat = CameraMgr->GetProjMatrix();
+
+				FMatrix	WVPMat = WorldMat * ViewMat * ProjMat;
+
+				auto& InstancingData = TileInstData[InstancingCount];
+				InstancingData.WVP0 = WVPMat[0];
+				InstancingData.WVP1 = WVPMat[1];
+				InstancingData.WVP2 = WVPMat[2];
+				InstancingData.WVP3 = WVPMat[3];
+
+				InstancingData.LTUV = Tile->GetFrameStart() / TileTextureSize;
+				InstancingData.RBUV = Tile->GetFrameEnd() / TileTextureSize;
+
+				++InstancingCount;
 			}
 
-			FMatrix	ScaleMat, TranslateMat;
+			if (Tile->GetOutLineRender())
+			{
+				auto& LineInstancingData = TileLineInstData[LineInstancingCount];
+				const auto& TileInstancingData = TileInstData[InstancingCount - 1];
 
-			ScaleMat.Scaling(TileSize);
+				LineInstancingData.WVP0 = TileInstancingData.WVP0;
+				LineInstancingData.WVP1 = TileInstancingData.WVP1;
+				LineInstancingData.WVP2 = TileInstancingData.WVP2;
+				LineInstancingData.WVP3 = TileInstancingData.WVP3;
 
-			FVector2 Pos = Tile->GetPos();
+				LineInstancingData.Color = Tiles[Idx]->GetOutlineColor();
 
-			Pos.x += Owner->GetWorldPosition().x;
-			Pos.y += Owner->GetWorldPosition().y;
-
-			TranslateMat.Translation(Pos);
-
-			//FMatrix	RotMat;
-
-			//RotMat.RotationZ(230.f);
-			//RotMat.Rotation(FVector3(0.f, 0.f, 238.f));
-
-			//WorldMat = ScaleMat * RotMat * TranslateMat;
-			FMatrix	WorldMat = ScaleMat * TranslateMat;
-
-			FMatrix	ViewMat = CameraMgr->GetViewMatrix();
-			FMatrix	ProjMat = CameraMgr->GetProjMatrix();
-
-			FMatrix	WVPMat = WorldMat * ViewMat * ProjMat;
-
-			auto& InstancingData = TileInstData[InstancingCount];
-			InstancingData.WVP0 = WVPMat[0];
-			InstancingData.WVP1 = WVPMat[1];
-			InstancingData.WVP2 = WVPMat[2];
-			InstancingData.WVP3 = WVPMat[3];
-
-			InstancingData.LTUV = Tile->GetFrameStart() / TileTextureSize;
-			InstancingData.RBUV = Tile->GetFrameEnd() / TileTextureSize;
-
-			++InstancingCount;
+				++LineInstancingCount;
+			}
 		}
 	}
 
 	SetInstancingData(&TileInstData[0], InstancingCount);
+	SetLineInstancingData(&TileLineInstData[0], LineInstancingCount);
 }
 
 void CTileMapComponent::PostRender()
@@ -240,17 +210,122 @@ CTileMapComponent* CTileMapComponent::Clone() const
 
 void CTileMapComponent::SetTileOutLineRender(bool bRender)
 {
-	bRenderTileOutLine = bRender;
-
-	if (bRenderTileOutLine)
+	for (const auto& Tile : Tiles)
 	{
+		Tile->SetOutLineRender(bRender);
+	}
+	//bRenderTileOutLine = bRender;
 
-	}
-	else
+	//if (bRenderTileOutLine)
+	//{
+
+	//}
+	//else
+	//{
+	//	OutLineMesh.reset();
+	//	OutLineShader.reset();
+	//}
+}
+
+void CTileMapComponent::SetTileOutLineRender(bool bRender, int Index)
+{
+	Tiles[Index]->SetOutLineRender(bRender);
+}
+
+bool CTileMapComponent::CreateLineInstancingBuffer(int Size, int Count)
+{
+	SAFE_RELEASE(LineInstancingBuffer.Buffer);
+
+	LineInstancingBuffer.Size = Size;
+	LineInstancingBuffer.Count = Count;
+
+	D3D11_BUFFER_DESC BufferDesc{};
+	BufferDesc.ByteWidth = Size * Count;
+	BufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	BufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	BufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+
+	if (FAILED(CDevice::GetInst()->GetDevice()->CreateBuffer(&BufferDesc, nullptr, &LineInstancingBuffer.Buffer)))
 	{
-		OutLineMesh.reset();
-		OutLineShader.reset();
+		return false;
 	}
+
+	return true;
+}
+
+bool CTileMapComponent::SetLineInstancingData(void* Data, int Count)
+{
+	if (!LineInstancingBuffer.Buffer)
+	{
+		return false;
+	}
+
+	if (LineInstancingBuffer.Count < Count)
+	{
+		if (!CreateLineInstancingBuffer(LineInstancingBuffer.Size, Count * 2))
+		{
+			return false;
+		}
+	}
+
+	ID3D11DeviceContext* Context = CDevice::GetInst()->GetContext();
+
+	D3D11_MAPPED_SUBRESOURCE MS{};
+
+	Context->Map(LineInstancingBuffer.Buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MS);
+
+	memcpy(MS.pData, Data, LineInstancingBuffer.Size * Count);
+
+	Context->Unmap(LineInstancingBuffer.Buffer, 0);
+
+	LineInstancingCount = Count;
+
+	return true;
+}
+
+int CTileMapComponent::GetTileIndex(const FVector2& Pos) const
+{
+	return GetTileIndex(Pos.x, Pos.y);
+}
+
+int CTileMapComponent::GetTileIndex(const FVector& Pos) const
+{
+	return GetTileIndex(Pos.x, Pos.y);
+}
+
+int CTileMapComponent::GetTileIndex(float x, float y) const
+{
+	auto Owner = this->Owner.lock();
+	if (!Owner)
+	{
+		return -1;
+	}
+
+	FVector OwnerPos = Owner->GetWorldPosition();
+
+	x = x - OwnerPos.x;
+	y = y - OwnerPos.y;
+
+	int	IndexX = x / TileSize.x;
+	int	IndexY = y / TileSize.y;
+
+	return IndexY * CountX + IndexX;
+}
+
+std::weak_ptr<CTile> CTileMapComponent::GetTile(const FVector2& Pos) const
+{
+	return GetTile(GetTileIndex(Pos));
+}
+
+std::weak_ptr<CTile> CTileMapComponent::GetTile(const FVector& Pos) const
+{
+	return GetTile(GetTileIndex(Pos));
+}
+
+std::weak_ptr<CTile> CTileMapComponent::GetTile(float x, float y) const
+{
+	return GetTile(GetTileIndex(x, y));
 }
 
 bool CTileMapComponent::SetTileTexture(ETileTextureType::Type Type, const std::weak_ptr<class CTexture>& Texture)
@@ -314,10 +389,11 @@ void CTileMapComponent::SetTileFrameAll(int FrameIndex)
 
 void CTileMapComponent::RenderTile()
 {
-	auto Owner = this->Owner.lock();
+	//auto Owner = this->Owner.lock();
 	auto Shader = TileShader.lock();
 	auto Mesh = TileMesh.lock();
-	if (!Owner || !Shader || !Mesh)
+	if (//!Owner ||
+		!Shader || !Mesh)
 	{
 		return;
 	}
@@ -386,10 +462,19 @@ void CTileMapComponent::RenderTile()
 
 void CTileMapComponent::RenderTileOutLine()
 {
+	if (auto Shader = OutLineShader.lock())
+	{
+		Shader->SetShader();
+	}
+
+	if (auto Mesh = OutLineMesh.lock())
+	{
+		Mesh->RenderInstancing(LineInstancingBuffer, LineInstancingCount);
+	}
 }
 
 void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, const FVector2& TileSize,
-	int TileTextureFrame)
+	int TileTextureFrame, bool bOutLineRender)
 {
 	this->Shape = Shape;
 	this->CountX = CountX;
@@ -438,6 +523,7 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 			Tile->SetSize(TileSize);
 			Tile->SetCenter(Tile->GetPos() + TileSize * 0.5f);
 			Tile->SetTextureFrame(TileTextureFrame);
+			Tile->SetOutLineRender(bOutLineRender);
 		}
 	}
 
@@ -448,8 +534,10 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 	int	ViewCountY = RS.Height / TileSize.y + 3;
 
 	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
+	CreateLineInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
 
 	TileInstData.resize(ViewCountX * ViewCountY);
+	TileLineInstData.resize(ViewCountX * ViewCountY);
 }
 
 bool CTileMapComponent::CreateInstancingBuffer(int Size, int Count)

@@ -3,6 +3,7 @@
 
 #include "../ClientInfo.h"
 
+class CTile;
 class CEditorWidget;
 class CTileMapObject;
 class CObjectMovementComponent;
@@ -33,6 +34,8 @@ private:
 	int EditorFrame{ 0 };
 	ETileType TileType{ ETileType::Normal };
 
+	std::shared_ptr<CTile> HoveredTile;
+
 public:
 	void Begin() override;
 	bool Init() override;
@@ -49,5 +52,7 @@ private:
 	void ChangeMode();
 	void ChangeTileType();
 	void ChangeFrame();
+
+	std::weak_ptr<CTile> GetTile();
 };
 

@@ -207,6 +207,7 @@
     <ClInclude Include="Asset\Shader\CShaderTexture2DInstancing.h" />
     <ClInclude Include="Asset\Shader\CShaderTileMap.h" />
     <ClInclude Include="Asset\Shader\CShaderTileMapInstancing.h" />
+    <ClInclude Include="Asset\Shader\CShaderTileMapLineInstancing.h" />
     <ClInclude Include="Asset\Shader\CShaderUIDefault.h" />
     <ClInclude Include="Asset\Sound\CSound.h" />
     <ClInclude Include="Asset\Sound\CSoundManager.h" />
@@ -330,6 +331,7 @@
     <ClCompile Include="Asset\Shader\CShaderTexture2DInstancing.cpp" />
     <ClCompile Include="Asset\Shader\CShaderTileMap.cpp" />
     <ClCompile Include="Asset\Shader\CShaderTileMapInstancing.cpp" />
+    <ClCompile Include="Asset\Shader\CShaderTileMapLineInstancing.cpp" />
     <ClCompile Include="Asset\Shader\CShaderUIDefault.cpp" />
     <ClCompile Include="Asset\Sound\CSound.cpp" />
     <ClCompile Include="Asset\Sound\CSoundManager.cpp" />

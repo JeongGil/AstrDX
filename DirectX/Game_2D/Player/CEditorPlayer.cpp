@@ -1,10 +1,11 @@
 #include "CEditorPlayer.h"
 
-#include <World/CWorld.h>
-#include <Object/CTileMapObject.h>
+#include <CDevice.h>
 #include <Component/CCameraComponent.h>
 #include <Component/CObjectMovementComponent.h>
-#include <CDevice.h>
+#include <Component/CTile.h>
+#include <Object/CTileMapObject.h>
+#include <World/CWorld.h>
 
 #include "../UI/CEditorWidget.h"
 
@@ -106,6 +107,26 @@ bool CEditorPlayer::Init()
 void CEditorPlayer::Update(float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
+	
+	if (auto Tile = GetTile().lock())
+	{
+		if (HoveredTile && HoveredTile != Tile)
+		{
+			HoveredTile->SetOutlineColor(FColor::White);
+		}
+
+		HoveredTile = Tile;
+		Tile->SetOutlineColor(FColor::Yellow);
+	}
+	else
+	{
+		if (HoveredTile)
+		{
+			HoveredTile->SetOutlineColor(FColor::White);
+		}
+
+		HoveredTile.reset();
+	}
 }
 
 void CEditorPlayer::MoveUp()
@@ -203,5 +224,23 @@ void CEditorPlayer::ChangeFrame()
 	if (auto Widget = EditorWidget.lock())
 	{
 		Widget->SetTileFrame(EditorFrame);
+	}
+}
+
+std::weak_ptr<CTile> CEditorPlayer::GetTile()
+{
+	if (auto World = this->World.lock())
+	{
+		if (auto Input = World->GetInput().lock())
+		{
+			if (auto TileMapObj = TileMap.lock())
+			{
+				if (auto TileMap = TileMapObj->GetTileMap().lock())
+				{
+					auto MousePos = Input->GetMouseWorldPos();
+					return TileMap->GetTile(MousePos);
+				}
+			}
+		}
 	}
 }

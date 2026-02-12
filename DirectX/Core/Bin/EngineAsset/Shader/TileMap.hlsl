@@ -17,6 +17,20 @@ struct VS_INPUT_INSTANCING_TEX
 	float4 WVP3 : INSTANCE_WVP3;
 	float2 LTUV : INSTANCE_UV0;
 	float2 RBUV : INSTANCE_UV1;
+	float4 Color : INSTANCE_COLOR0;
+};
+
+struct VS_OUTPUT_OUTLINECOLOR
+{
+	float4 Pos : SV_POSITION;
+	float4 Color : TEXCOORD;
+};
+
+struct VS_OUTPUT_TEX_COLOR
+{
+	float4 Pos : SV_POSITION;
+	float2 UV : TEXCOORD;
+	float4 Color : TEXCOORD1;
 };
 
 cbuffer CBTileMap : register(b10)
@@ -101,31 +115,53 @@ float2 ComputeInstancingTileUV(float2 UV, float2 LT, float2 RB)
 	}
 	else
 	{
-		Result.y = LT.y;		
+		Result.y = LT.y;
 	}
     
 	return Result;
 }
 
-VS_OUTPUT_TEX TileMapInstancingVS(VS_INPUT_INSTANCING_TEX input, uint ID : SV_InstanceID)
+VS_OUTPUT_TEX_COLOR TileMapInstancingVS(VS_INPUT_INSTANCING_TEX input, uint ID : SV_InstanceID)
 {
-	VS_OUTPUT_TEX output = (VS_OUTPUT_TEX) 0;
+	VS_OUTPUT_TEX_COLOR output = (VS_OUTPUT_TEX_COLOR) 0;
     
 	matrix WVP = matrix(input.WVP0, input.WVP1, input.WVP2, input.WVP3);
     
 	output.Pos = mul(float4(input.Pos, 1.f), WVP);
 	output.UV = ComputeInstancingTileUV(input.UV, input.LTUV, input.RBUV);
+	output.Color = input.Color;
 	
 	return output;
 }
 
-PS_OUTPUT_COLOR TileMapInstancingPS(VS_OUTPUT_TEX input)
+PS_OUTPUT_COLOR TileMapInstancingPS(VS_OUTPUT_TEX_COLOR input)
 {
 	PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR) 0;
     
 	float4 TextureColor = tbTileTexture.Sample(sbLinear, input.UV);
     
-	output.Color = TextureColor;
+	output.Color = TextureColor * input.Color;
+    
+	return output;
+}
+
+VS_OUTPUT_OUTLINECOLOR TileMapLineInstancingVS(VS_INPUT_INSTANCING_TEX input, uint ID : SV_InstanceID)
+{
+	VS_OUTPUT_OUTLINECOLOR output = (VS_OUTPUT_OUTLINECOLOR) 0;
+    
+	matrix WVP = matrix(input.WVP0, input.WVP1, input.WVP2, input.WVP3);
+    
+	output.Pos = mul(float4(input.Pos, 1.f), WVP);
+	output.Color = input.Color;
+	
+	return output;
+}
+
+PS_OUTPUT_COLOR TileMapLineInstancingPS(VS_OUTPUT_OUTLINECOLOR input)
+{
+	PS_OUTPUT_COLOR output = (PS_OUTPUT_COLOR) 0;
+    
+	output.Color = input.Color;
     
 	return output;
 }

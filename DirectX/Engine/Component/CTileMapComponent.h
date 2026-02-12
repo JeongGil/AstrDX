@@ -16,6 +16,7 @@ struct FTileMapInstancingBuffer
 	FVector4 WVP3;
 	FVector2 LTUV;
 	FVector2 RBUV;
+	FColor Color{ FColor::White };
 };
 
 class CTileMapComponent :
@@ -25,8 +26,8 @@ class CTileMapComponent :
 
 protected:
 	CTileMapComponent();
-	CTileMapComponent(const CTileMapComponent& other);
-	CTileMapComponent(CTileMapComponent&& other) noexcept;
+	CTileMapComponent(const CTileMapComponent& other) = default;
+	CTileMapComponent(CTileMapComponent&& other) noexcept = default;
 
 public:
 	~CTileMapComponent() override;
@@ -34,8 +35,11 @@ public:
 protected:
 	std::vector<std::shared_ptr<CTile>>	Tiles;
 	std::vector<FTileMapInstancingBuffer> TileInstData;
+	std::vector<FTileMapInstancingBuffer> TileLineInstData;
 	FVertexBuffer InstancingBuffer;
+	FVertexBuffer LineInstancingBuffer;
 	int InstancingCount{ 0 };
+	int LineInstancingCount{ 0 };
 	ETileShape Shape{ Rect };
 	FVector2 TileSize;
 	FVector2 MapSize;
@@ -69,6 +73,7 @@ protected:
 
 public:
 	void SetTileOutLineRender(bool bRender);
+	void SetTileOutLineRender(bool bRender, int Index);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::weak_ptr<class CTexture>& Texture);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::string& Key);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture");
@@ -79,11 +84,15 @@ public:
 	void RenderTile();
 	void RenderTileOutLine();
 
-	void CreateTile(ETileShape Shape, int CountX, int CountY, const FVector2& TileSize, int TileTextureFrame = -1);
+	void CreateTile(ETileShape Shape, int CountX, int CountY, const FVector2& TileSize, int TileTextureFrame = -1, bool bOutLineRender =
+		                false);
 
 private:
 	bool CreateInstancingBuffer(int Size, int Count);
 	bool SetInstancingData(void* Data, int Count);
+
+	bool CreateLineInstancingBuffer(int Size, int Count);
+	bool SetLineInstancingData(void* Data, int Count);
 
 public:
 	[[nodiscard]] ETileShape GetTileShape() const
@@ -114,6 +123,22 @@ public:
 	[[nodiscard]] size_t GetTileFrameCount() const
 	{
 		return TileFrames.size();
+	}
+
+	int GetTileIndex(const FVector2& Pos) const;
+	int GetTileIndex(const FVector& Pos) const;
+	int GetTileIndex(float x, float y) const;
+	std::weak_ptr<CTile> GetTile(const FVector2& Pos) const;
+	std::weak_ptr<CTile> GetTile(const FVector& Pos) const;
+	std::weak_ptr<CTile> GetTile(float x, float y) const;
+	std::weak_ptr<CTile> GetTile(int Index) const
+	{
+		if (Index < 0 || Index >= static_cast<int>(Tiles.size()))
+		{
+			return {};
+		}
+
+		return Tiles[Index];
 	}
 
 	void SetTileTextureSize(const FVector2& Size)

@@ -12,6 +12,7 @@
 #include "CShaderTexture2DInstancing.h"
 #include "CShaderTileMap.h"
 #include "CShaderTileMapInstancing.h"
+#include "CShaderTileMapLineInstancing.h"
 #include "CShaderUIDefault.h"
 
 bool CShaderManager::Init()
@@ -109,6 +110,11 @@ bool CShaderManager::Init()
 	}
 
 	if (!CreateShader<CShaderTileMapInstancing>("TileMapInstancing", "EngineShader"))
+	{
+		return false;
+	}
+
+	if (!CreateShader<CShaderTileMapLineInstancing>("TileMapLineInstancing", "EngineShader"))
 	{
 		return false;
 	}

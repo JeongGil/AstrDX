@@ -27,6 +27,14 @@ bool CEditorWorld::Init()
 	Player = CreateGameObject<CEditorPlayer>("Player");
 	TileMap = CreateGameObject<CTileMapMain>("TileMap");
 
+	if (auto TileMapObj = TileMap.lock())
+	{
+		if (auto TileMap = TileMapObj->GetTileMap().lock())
+		{
+			TileMap->SetTileOutLineRender(true);
+		}
+	}
+
 	return true;
 }
 void CEditorWorld::Update(const float DeltaTime)

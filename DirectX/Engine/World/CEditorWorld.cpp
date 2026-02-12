@@ -16,9 +16,7 @@ bool CEditorWorld::Init()
 	}
 
 	LoadAnimation2D();
-
 	LoadSound();
-
 	CreateUI();
 
 	return false;

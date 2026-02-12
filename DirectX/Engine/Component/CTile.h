@@ -25,10 +25,37 @@ private:
 	FVector2 FrameStart;
 	FVector2 FrameEnd;
 	bool bRender{ false };
+	bool bOutLineRender{ false };
+	FColor OutlineColor{ FColor::White };
 
 public:
 	void Save(FILE* File);
 	void Load(FILE* File);
+
+	[[nodiscard]] bool GetOutLineRender() const
+	{
+		return bOutLineRender;
+	}
+
+	void SetOutLineRender(const bool bOutLineRender)
+	{
+		this->bOutLineRender = bOutLineRender;
+	}
+
+	[[nodiscard]] FColor GetOutlineColor() const
+	{
+		return OutlineColor;
+	}
+
+	void SetOutlineColor(const FColor& OutlineColor)
+	{
+		this->OutlineColor = OutlineColor;
+	}
+
+	void SetOutlineColor(float r, float g, float b, float a)
+	{
+		SetOutlineColor(FColor(r, g, b, a));
+	}
 
 	[[nodiscard]] ETileType GetType() const
 	{

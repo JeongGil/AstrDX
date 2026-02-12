@@ -39,6 +39,9 @@ bool CShaderTileMapInstancing::Init(const std::string& PathName)
 	AddInputDesc("INSTANCE_UV", 1, DXGI_FORMAT_R32G32_FLOAT, 1, 8,
 		D3D11_INPUT_PER_INSTANCE_DATA, 1);
 
+	AddInputDesc("INSTANCE_COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16,
+		D3D11_INPUT_PER_INSTANCE_DATA, 1);
+
 	if (!CreateInputLayout())
 	{
 		return false;
