@@ -243,4 +243,6 @@ std::weak_ptr<CTile> CEditorPlayer::GetTile()
 			}
 		}
 	}
+
+	return {};
 }
