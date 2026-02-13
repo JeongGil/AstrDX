@@ -290,7 +290,7 @@ protected:
 	FVector Accel;
 	FVector PhysicsVelocity;
 
-	std::array<FVector, EAxis::End> WorldAxis =
+	FVector WorldAxis[EAxis::End] =
 	{
 		FVector::Axis[EAxis::X],
 		FVector::Axis[EAxis::Y],

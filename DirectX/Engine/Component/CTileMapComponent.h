@@ -1,6 +1,7 @@
 #pragma once
 #include "CObjectComponent.h"
 
+class CTileMapRender;
 class CTile;
 class CCBufferTileMap;
 class CShader;
@@ -45,15 +46,17 @@ protected:
 	FVector2 MapSize;
 	int CountX{ 0 };
 	int CountY{ 0 };
-	bool bRenderTileOutLine{ false };
-	std::weak_ptr<CMesh> OutLineMesh;
-	std::weak_ptr<CShader> OutLineShader;
+	bool bRenderTileOutline{ false };
+	std::weak_ptr<CMesh> OutlineMesh;
+	std::weak_ptr<CShader> OutlineShader;
 	std::weak_ptr<CMesh> TileMesh;
 	std::weak_ptr<CShader> TileShader;
 	std::shared_ptr<CCBufferTransform> Transform;
 	std::shared_ptr<CCBufferTileMap> CBufferTileMap;
 	FVector2 TileTextureSize;
 	std::vector<FTileFrame> TileFrames;
+
+	std::weak_ptr<CTileMapRender> TileMapRender;
 
 	int ViewStartX{ 0 };
 	int ViewStartY{ 0 };
@@ -74,6 +77,10 @@ protected:
 public:
 	void SetTileOutlineRender(bool bRender);
 	void SetTileOutlineRender(bool bRender, int Index);
+	void SetOutlineMesh(const std::string& Key);
+	void SetOutlineShader(const std::string& Key);
+	void SetTileMesh(const std::string& Key);
+	void SetTileShader(const std::string& Key);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::weak_ptr<class CTexture>& Texture);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::string& Key);
 	bool SetTileTexture(ETileTextureType::Type Type, const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture");
@@ -84,8 +91,13 @@ public:
 	void RenderTile();
 	void RenderTileOutLine();
 
-	void CreateTile(ETileShape Shape, int CountX, int CountY, const FVector2& TileSize, int TileTextureFrame = -1, bool bOutLineRender =
-		                false);
+	void CreateTile(ETileShape Shape, int CountX, int CountY, const FVector2& TileSize,
+		int TileTextureFrame = -1, bool bOutLineRender = false);
+
+	void Save(const TCHAR* FileName, const std::string& PathName = "Asset");
+	void SaveFullPath(const TCHAR* FullPath);
+	void Load(const TCHAR* FileName, const std::string& PathName = "Asset");
+	void LoadFullPath(const TCHAR* FullPath);
 
 private:
 	bool CreateInstancingBuffer(int Size, int Count);
@@ -93,6 +105,9 @@ private:
 
 	bool CreateLineInstancingBuffer(int Size, int Count);
 	bool SetLineInstancingData(void* Data, int Count);
+
+	int GetTileRenderIndexX(const FVector2& Pos) const;
+	int GetTileRenderIndexY(const FVector2& Pos) const;
 
 public:
 	[[nodiscard]] ETileShape GetTileShape() const
@@ -151,6 +166,11 @@ public:
 	void SetTileTextureSize(float x, float y)
 	{
 		SetTileTextureSize(FVector2(x, y));
+	}
+
+	void SetTileMapRender(const std::weak_ptr<CTileMapRender>& Render)
+	{
+		TileMapRender = Render;
 	}
 };
 

@@ -167,6 +167,8 @@ void CTileMapRender::SetTileMapComponent(const std::weak_ptr<CTileMapComponent>&
 
 	if (auto TileMapComp = TileMap.lock())
 	{
+		TileMapComp->SetTileMapRender(std::dynamic_pointer_cast<CTileMapRender>(shared_from_this()));
+
 		SetWorldScale(TileMapComp->GetMapSize());
 	}
 }
@@ -251,6 +253,89 @@ bool CTileMapRender::SetTexture(ETileTextureType::Type Type, const std::string& 
 	return SetTexture(Type, Texture);
 }
 
+bool CTileMapRender::SetTextureFullPath(ETileTextureType::Type Type, const std::string& Key, const TCHAR* FullPath)
+{
+	auto& WeakTexture = Textures[Type];
+
+	if (auto World = this->World.lock())
+	{
+		auto AssetMgr = World->GetWorldAssetManager().lock();
+
+		if (!AssetMgr->LoadTextureFullPath(Key, FullPath))
+		{
+			return false;
+		}
+
+		WeakTexture = AssetMgr->FindTexture(Key);
+	}
+	else
+	{
+		auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock();
+
+		auto InnerKey = "Texture_" + Key;
+		if (!TexMgr->LoadTextureFullPath(InnerKey, FullPath))
+		{
+			return false;
+		}
+
+		WeakTexture = TexMgr->FindTexture(InnerKey);
+	}
+
+	if (Type == ETileTextureType::Tile)
+	{
+		auto Texture = WeakTexture.lock();
+
+		if (auto TileMap = this->TileMap.lock())
+		{
+			TileMap->SetTileTextureSize((float)Texture->GetTexture()->Width, (float)Texture->GetTexture()->Height);
+		}
+	}
+
+	return true;
+}
+
+bool CTileMapRender::SetTextureFullPath(ETileTextureType::Type Type, const std::string& Key,
+	const std::vector<const TCHAR*>& FullPaths)
+{
+	auto& WeakTexture = Textures[Type];
+
+	if (auto World = this->World.lock())
+	{
+		auto AssetMgr = World->GetWorldAssetManager().lock();
+
+		if (!AssetMgr->LoadTexturesFullPath(Key, FullPaths))
+		{
+			return false;
+		}
+
+		WeakTexture = AssetMgr->FindTexture(Key);
+	}
+	else
+	{
+		auto TexMgr = CAssetManager::GetInst()->GetTextureManager().lock();
+
+		auto InnerKey = "Texture_" + Key;
+		if (!TexMgr->LoadTexturesFullPath(InnerKey, FullPaths))
+		{
+			return false;
+		}
+
+		WeakTexture = TexMgr->FindTexture(InnerKey);
+	}
+
+	if (Type == ETileTextureType::Tile)
+	{
+		auto Texture = WeakTexture.lock();
+
+		if (auto TileMap = this->TileMap.lock())
+		{
+			TileMap->SetTileTextureSize((float)Texture->GetTexture()->Width, (float)Texture->GetTexture()->Height);
+		}
+	}
+
+	return true;
+}
+
 void CTileMapRender::SetBackMesh(const std::weak_ptr<CMesh>& Mesh)
 {
 	BackMesh = Mesh;
@@ -309,4 +394,236 @@ void CTileMapRender::AddTileFrame(const FVector2& Start, const FVector2& End)
 void CTileMapRender::AddTileFrame(float StartX, float StartY, float EndX, float EndY)
 {
 	AddTileFrame(FVector2(StartX, StartY), FVector2(EndX, EndY));
+}
+
+void CTileMapRender::Save(FILE* File)
+{
+	auto BackShader = this->BackShader.lock();
+
+	bool Enable = false;
+
+	if (BackShader)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	if (BackShader)
+	{
+		std::string	Key = BackShader->GetKey();
+		size_t Count = Key.length();
+
+		fwrite(&Count, sizeof(size_t), 1, File);
+		fwrite(Key.c_str(), 1, Key.length(), File);
+	}
+
+	auto BackMesh = this->BackMesh.lock();
+
+	Enable = false;
+
+	if (BackMesh)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	if (BackMesh)
+	{
+		std::string	Key = BackMesh->GetSplitKey();
+		size_t Count = Key.length();
+
+		fwrite(&Count, sizeof(size_t), 1, File);
+		fwrite(Key.c_str(), 1, Key.length(), File);
+	}
+
+	for (const auto& WeakTexture : Textures)
+	{
+		auto Texture = WeakTexture.lock();
+
+		Enable = false;
+
+		if (Texture)
+		{
+			Enable = true;
+		}
+
+		fwrite(&Enable, sizeof(bool), 1, File);
+
+		if (Texture)
+		{
+			std::string Key = Texture->GetSplitKey();
+			size_t Count = Key.length();
+
+			fwrite(&Count, sizeof(size_t), 1, File);
+			fwrite(Key.c_str(), 1, Key.length(), File);
+
+			Texture->Save(File);
+		}
+	}
+
+	auto Blend = AlphaBlend.lock();
+
+	Enable = false;
+
+	if (Blend)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	auto TileBlend = TileAlphaBlend.lock();
+
+	Enable = false;
+
+	if (TileBlend)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	size_t Size = TileFrames.size();
+
+	fwrite(&Size, sizeof(size_t), 1, File);
+
+	fwrite(&TileFrames[0], sizeof(FTileFrame), Size, File);
+
+	fwrite(&WorldScale, sizeof(FVector3), 1, File);
+	fwrite(&WorldRotation, sizeof(FVector3), 1, File);
+	fwrite(&WorldPosition, sizeof(FVector3), 1, File);
+	fwrite(WorldAxis, sizeof(FVector3), EAxis::End, File);
+}
+
+void CTileMapRender::Load(FILE* File)
+{
+	bool Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		char Name[256] = {};
+
+		size_t Count = 0;
+
+		fread(&Count, sizeof(size_t), 1, File);
+
+		fread(Name, 1, Count, File);
+
+		SetBackShader(Name);
+	}
+
+	Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		char Name[256] = {};
+
+		size_t Count = 0;
+
+		fread(&Count, sizeof(size_t), 1, File);
+
+		fread(Name, 1, Count, File);
+
+		SetBackMesh(Name);
+	}
+
+	for (int i = 0; i < ETileTextureType::End; ++i)
+	{
+		Enable = false;
+
+		fread(&Enable, sizeof(bool), 1, File);
+
+		if (Enable)
+		{
+			char Name[256] = {};
+
+			size_t	Count = 0;
+
+			fread(&Count, sizeof(size_t), 1, File);
+
+			fread(Name, 1, Count, File);
+
+			// Get tex full path.
+			size_t	TexCount = 0;
+			fread(&TexCount, sizeof(size_t), 1, File);
+
+			if (TexCount > 1)
+			{
+				std::vector<const TCHAR*>	FullPaths;
+
+				for (size_t j = 0; j < TexCount; ++j)
+				{
+					size_t PathCount = 0;
+
+					TCHAR* FullPath = new TCHAR[MAX_PATH];
+					memset(FullPath, 0, sizeof(TCHAR) * MAX_PATH);
+
+					fread(&PathCount, sizeof(size_t), 1, File);
+					fread(FullPath, sizeof(wchar_t), PathCount, File);
+
+					FullPaths.push_back(FullPath);
+				}
+
+				SetTextureFullPath((ETileTextureType::Type)i, Name, FullPaths);
+
+				for (auto& FullPath : FullPaths)
+				{
+					SAFE_DELETE_ARRAY(FullPath);
+				}
+			}
+			else
+			{
+				size_t PathCount = 0;
+				TCHAR FullPath[MAX_PATH] = {};
+
+				fread(&PathCount, sizeof(size_t), 1, File);
+				fread(FullPath, sizeof(wchar_t), PathCount, File);
+
+				SetTextureFullPath((ETileTextureType::Type)i, Name, FullPath);
+			}
+		}
+	}
+
+	Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		EnableAlphaBlend();
+	}
+
+	Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		EnableTileAlphaBlend();
+	}
+
+	size_t	Size = 0;
+
+	fread(&Size, sizeof(size_t), 1, File);
+
+	TileFrames.clear();
+
+	TileFrames.resize(Size);
+
+	fread(&TileFrames[0], sizeof(FTileFrame), Size, File);
+
+	fread(&WorldScale, sizeof(FVector3), 1, File);
+	fread(&WorldRotation, sizeof(FVector3), 1, File);
+	fread(&WorldPosition, sizeof(FVector3), 1, File);
+	fread(WorldAxis, sizeof(FVector3), EAxis::End, File);
+
+	SetWorldPosition(WorldPosition);
+	SetWorldScale(WorldScale);
+	SetWorldRotation(WorldRotation);
 }

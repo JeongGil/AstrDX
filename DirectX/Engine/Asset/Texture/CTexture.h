@@ -31,6 +31,8 @@ struct FTextureInfo
 	unsigned int Width = 0;
 	unsigned int Height = 0;
 
+	std::wstring FullPath;
+
 	~FTextureInfo()
 	{
 		SAFE_RELEASE(Image);
@@ -57,6 +59,8 @@ public:
 	bool LoadTextureArrayFullPath(const std::vector<const TCHAR*>& FullPaths);
 
 	void SetShader(UINT Register, int ShaderBufferType, int TextureIndex);
+
+	void Save(FILE* File);
 
 	const FTextureInfo* GetTexture(size_t Index = 0) const
 	{

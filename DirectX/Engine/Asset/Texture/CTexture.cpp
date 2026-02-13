@@ -89,6 +89,7 @@ bool CTexture::LoadTextureFullPath(const TCHAR* FullPath)
 	}
 
 	Texture->Image = Image;
+	Texture->FullPath = FullPath;
 
 	Textures.push_back(Texture);
 
@@ -210,6 +211,7 @@ bool CTexture::LoadTextureArrayFullPath(const std::vector<const TCHAR*>& FullPat
 		}
 
 		Texture->Image = Image;
+		Texture->FullPath = FullPath;
 
 		Texture->Width = (unsigned int)Image->GetImages()[0].width;
 		Texture->Height = (unsigned int)Image->GetImages()[0].height;
@@ -330,6 +332,21 @@ void CTexture::SetShader(UINT Register, int ShaderBufferType, int TextureIndex)
 	if ((ShaderBufferType & EShaderBufferType::Compute) != 0)
 	{
 		CDevice::GetInst()->GetContext()->CSSetShaderResources(Register, 1, &SRV);
+	}
+}
+
+void CTexture::Save(FILE* File)
+{
+	size_t Size = Textures.size();
+
+	fwrite(&Size, sizeof(size_t), 1, File);
+
+	for (const auto& Texture : Textures)
+	{
+		size_t Count = Texture->FullPath.length();
+
+		fwrite(&Count, sizeof(size_t), 1, File);
+		fwrite(Texture->FullPath.c_str(), sizeof(wchar_t), Count, File);
 	}
 }
 

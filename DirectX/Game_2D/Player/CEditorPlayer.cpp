@@ -1,11 +1,13 @@
 #include "CEditorPlayer.h"
 
 #include <CDevice.h>
+#include <Asset/CPathManager.h>
 #include <Component/CCameraComponent.h>
 #include <Component/CObjectMovementComponent.h>
 #include <Component/CTile.h>
 #include <Object/CTileMapObject.h>
 #include <World/CWorld.h>
+#include <CEngine.h>
 
 #include "../UI/CEditorWidget.h"
 
@@ -107,7 +109,7 @@ bool CEditorPlayer::Init()
 void CEditorPlayer::Update(float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
-	
+
 	auto Tile = GetTile().lock();
 	if (Tile && Tile->GetType() != ETileType::UnableToMove)
 	{
@@ -173,23 +175,23 @@ void CEditorPlayer::LeftClick()
 			{
 				switch (EditorMode)
 				{
-				case EEditorMode::TileType:
-					if (TileType == ETileType::Normal)
-					{
-						Tile->SetOutlineColor(FColor::White);
-						PrevColor = FColor::White;
-					}
-					else if (TileType == ETileType::UnableToMove)
-					{
-						Tile->SetOutlineColor(FColor::Red);
-						PrevColor = FColor::Red;
-					}
+					case EEditorMode::TileType:
+						if (TileType == ETileType::Normal)
+						{
+							Tile->SetOutlineColor(FColor::White);
+							PrevColor = FColor::White;
+						}
+						else if (TileType == ETileType::UnableToMove)
+						{
+							Tile->SetOutlineColor(FColor::Red);
+							PrevColor = FColor::Red;
+						}
 
-					Tile->SetType(TileType);
-					break;
-				case EEditorMode::TileFrame:
-					TileMap->SetTileFrame(Tile->GetIndex(), EditorFrame);
-					break;
+						Tile->SetType(TileType);
+						break;
+					case EEditorMode::TileFrame:
+						TileMap->SetTileFrame(Tile->GetIndex(), EditorFrame);
+						break;
 				}
 			}
 		}
@@ -198,10 +200,89 @@ void CEditorPlayer::LeftClick()
 
 void CEditorPlayer::Save()
 {
+	OPENFILENAME ofn{};
+
+	// Array to store the selected path
+	TCHAR FullPath[MAX_PATH] = {};
+	TCHAR Filter[] = TEXT("모든파일\0*.*\0Map파일\0*.tlm\0");
+
+	TCHAR DefaultPath[MAX_PATH] = {};
+
+	const TCHAR* AssetPath = CPathManager::FindPath("Asset");
+
+	lstrcpy(DefaultPath, AssetPath);
+	lstrcat(DefaultPath, TEXT("Map\\"));
+
+	// Specify the size of the structure
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	// Specify the owner window handle
+	ofn.hwndOwner = CEngine::GetInst()->GetWindowHandle();
+	// Specify the file filter
+	ofn.lpstrFilter = Filter;
+	// Specify the default extension. If set, it automatically appends 
+	// the extension even if not explicitly typed.
+	ofn.lpstrDefExt = TEXT("tlm");
+	// Specify the initial directory to open.
+	ofn.lpstrInitialDir = DefaultPath;
+	// Maximum number of characters in the path array
+	ofn.nMaxFile = MAX_PATH;
+	// When a path is selected in the dialog, it is stored 
+	// in the array at this address.
+	ofn.lpstrFile = FullPath;
+
+	ShowCursor(TRUE);
+
+	// Execute if the user clicks Save instead of Cancel
+	if (GetSaveFileName(&ofn) != 0)
+	{
+		if (auto TileMapObj = TileMap.lock())
+		{
+			if (auto TileMap = TileMapObj->GetTileMap().lock())
+			{
+				TileMap->SaveFullPath(FullPath);
+			}
+		}
+	}
+
+	ShowCursor(FALSE);
 }
 
 void CEditorPlayer::Load()
 {
+	OPENFILENAME ofn = {};
+
+	TCHAR FullPath[MAX_PATH] = {};
+	TCHAR Filter[] = TEXT("모든파일\0*.*\0Map파일\0*.tlm\0");
+
+	TCHAR DefaultPath[MAX_PATH] = {};
+
+	const TCHAR* AssetPath = CPathManager::FindPath("Asset");
+
+	lstrcpy(DefaultPath, AssetPath);
+	lstrcat(DefaultPath, TEXT("Map\\"));
+
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner = CEngine::GetInst()->GetWindowHandle();
+	ofn.lpstrFilter = Filter;
+	ofn.lpstrDefExt = TEXT("tlm");
+	ofn.lpstrInitialDir = DefaultPath;
+	ofn.nMaxFile = MAX_PATH;
+	ofn.lpstrFile = FullPath;
+
+	ShowCursor(TRUE);
+
+	if (GetOpenFileName(&ofn) != 0)
+	{
+		if (auto TileMapObj = TileMap.lock())
+		{
+			if (auto TileMap = TileMapObj->GetTileMap().lock())
+			{
+				TileMap->LoadFullPath(FullPath);
+			}
+		}
+	}
+
+	ShowCursor(FALSE);
 }
 
 void CEditorPlayer::ChangeMode()

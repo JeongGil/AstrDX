@@ -4,6 +4,7 @@
 #include "CTileMapRender.h"
 #include "../CDevice.h"
 #include "../Asset/CAssetManager.h"
+#include "../Asset/CPathManager.h"
 #include "../Asset/Mesh/CMeshManager.h"
 #include "../Asset/Shader/CCBufferTileMap.h"
 #include "../Asset/Shader/CCBufferTransform.h"
@@ -46,7 +47,6 @@ bool CTileMapComponent::Init()
 		if (auto AssetMgr = World->GetWorldAssetManager().lock())
 		{
 			TileMesh = AssetMgr->FindMesh("RectTex");
-			OutLineMesh = AssetMgr->FindMesh("LBFrameRect");
 		}
 	}
 	else
@@ -54,7 +54,6 @@ bool CTileMapComponent::Init()
 		if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
 		{
 			TileMesh = MeshMgr->FindMesh("Mesh_RectTex");
-			OutLineMesh = MeshMgr->FindMesh("Mesh_LBFrameRect");
 		}
 	}
 
@@ -62,7 +61,7 @@ bool CTileMapComponent::Init()
 	{
 		//TileShader = ShaderMgr->FindShader("TileMap");
 		TileShader = ShaderMgr->FindShader("TileMapInstancing");
-		OutLineShader = ShaderMgr->FindShader("TileMapLineInstancing");
+		OutlineShader = ShaderMgr->FindShader("TileMapLineInstancing");
 	}
 
 	return true;
@@ -214,22 +213,74 @@ void CTileMapComponent::SetTileOutlineRender(bool bRender)
 	{
 		Tile->SetOutlineRender(bRender);
 	}
-	//bRenderTileOutLine = bRender;
+	//bRenderTileOutline = bRender;
 
-	//if (bRenderTileOutLine)
+	//if (bRenderTileOutline)
 	//{
 
 	//}
 	//else
 	//{
-	//	OutLineMesh.reset();
-	//	OutLineShader.reset();
+	//	OutlineMesh.reset();
+	//	OutlineShader.reset();
 	//}
 }
 
 void CTileMapComponent::SetTileOutlineRender(bool bRender, int Index)
 {
 	Tiles[Index]->SetOutlineRender(bRender);
+}
+
+void CTileMapComponent::SetOutlineMesh(const std::string& Key)
+{
+	if (auto World = this->World.lock())
+	{
+		if (auto AssetMgr = World->GetWorldAssetManager().lock())
+		{
+			OutlineMesh = AssetMgr->FindMesh(Key);
+		}
+	}
+	else
+	{
+		if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
+		{
+			OutlineMesh = MeshMgr->FindMesh("Mesh_" + Key);
+		}
+	}
+}
+
+void CTileMapComponent::SetOutlineShader(const std::string& Key)
+{
+	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
+	{
+		OutlineShader = ShaderMgr->FindShader(Key);
+	}
+}
+
+void CTileMapComponent::SetTileMesh(const std::string& Key)
+{
+	if (auto World = this->World.lock())
+	{
+		if (auto AssetMgr = World->GetWorldAssetManager().lock())
+		{
+			TileMesh = AssetMgr->FindMesh(Key);
+		}
+	}
+	else
+	{
+		if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
+		{
+			TileMesh = MeshMgr->FindMesh("Mesh_" + Key);
+		}
+	}
+}
+
+void CTileMapComponent::SetTileShader(const std::string& Key)
+{
+	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
+	{
+		TileShader = ShaderMgr->FindShader(Key);
+	}
 }
 
 bool CTileMapComponent::CreateLineInstancingBuffer(int Size, int Count)
@@ -284,6 +335,146 @@ bool CTileMapComponent::SetLineInstancingData(void* Data, int Count)
 	return true;
 }
 
+int CTileMapComponent::GetTileRenderIndexX(const FVector2& Pos) const
+{
+	FVector WorldPosition = Owner.lock()->GetWorldPosition();
+
+	switch (Shape)
+	{
+		case Rect:
+		{
+			// Calculates the relative position from the starting point of the tilemap.
+			float Convert = Pos.x - WorldPosition.x;
+
+			float Value = Convert / TileSize.x;
+
+			int Index = (int)Value;
+
+			if (Index < 0)
+			{
+				return 0;
+			}
+			else if (Index >= CountX)
+			{
+				return CountX - 1;
+			}
+
+			return Index;
+		}
+		case Isometric:
+		{
+			FVector2	ConvertPos;
+			ConvertPos.x = Pos.x - WorldPosition.x;
+			ConvertPos.y = Pos.y - WorldPosition.y;
+
+			// y 인덱스가 홀수인지 짝수인지에 따라 다르다.
+		}
+	}
+
+	return -1;
+}
+
+int CTileMapComponent::GetTileRenderIndexY(const FVector2& Pos) const
+{
+	switch (Shape)
+	{
+		case Rect:
+		{
+			// Calculate the relative position from the starting point of the tilemap.
+			float Convert = Pos.y - Owner.lock()->GetWorldPosition().y;
+
+			float Value = Convert / TileSize.y;
+
+			int Index = (int)Value;
+
+			if (Index < 0)
+			{
+				return 0;
+			}
+			else if (Index >= CountY)
+			{
+				return CountY - 1;
+			}
+
+			return Index;
+		}
+		case Isometric:
+		{
+			FVector2	ConvertPos;
+			ConvertPos.x = Pos.x - Owner.lock()->GetWorldPosition().x;
+			ConvertPos.y = Pos.y - Owner.lock()->GetWorldPosition().y;
+
+			float RatioX = ConvertPos.x / TileSize.x;
+			float RatioY = ConvertPos.y / TileSize.y;
+
+			// Convert to index.
+			int	IndexX = (int)RatioX;
+			int	IndexY = (int)RatioY;
+
+			if (IndexX < 0)
+			{
+				IndexX = 0;
+			}
+			else if (IndexX >= CountX)
+			{
+				IndexX = CountX - 1;
+			}
+
+			if (IndexY < 0)
+			{
+				IndexY = 0;
+			}
+			else if (IndexY >= CountY)
+			{
+				IndexY = CountY - 1;
+			}
+
+			// Subtract the integer part and leave only the decimal part.
+			RatioX -= (int)RatioX;
+			RatioY -= (int)RatioY;
+
+			// If it exists in the lower part of the rectangular area
+			if (RatioY < 0.5f)
+			{
+				// If it is the lower-left triangle of the lower-left rectangle
+				// based on the rectangular area
+				if (RatioY < 0.5f - RatioX)
+				{
+				}
+
+				// If it is the lower-right triangle of the lower-right rectangle
+				// based on the rectangular area
+				else if (RatioY < RatioX - 0.5f)
+				{
+				}
+			}
+
+			// If it exists in the upper part of the rectangular area
+			else if (RatioY > 0.5f)
+			{
+				// If it is the upper-left triangle of the upper-left rectangle
+				// based on the rectangular area
+				if (RatioY - 0.5f > RatioX)
+				{
+				}
+
+				// If it is the upper-right triangle of the upper-right rectangle
+				// based on the rectangular area
+				else if (RatioY - 0.5f > 1.f - RatioX)
+				{
+				}
+			}
+
+			// If it exists in the center
+			else
+			{
+			}
+		}
+	}
+
+	return -1;
+}
+
 int CTileMapComponent::GetTileIndex(const FVector2& Pos) const
 {
 	return GetTileIndex(Pos.x, Pos.y);
@@ -307,8 +498,8 @@ int CTileMapComponent::GetTileIndex(float x, float y) const
 	x = x - OwnerPos.x;
 	y = y - OwnerPos.y;
 
-	int	IndexX = x / TileSize.x;
-	int	IndexY = y / TileSize.y;
+	int	IndexX = static_cast<int>(x / TileSize.x);
+	int	IndexY = static_cast<int>(y / TileSize.y);
 
 	return IndexY * CountX + IndexX;
 }
@@ -469,12 +660,12 @@ void CTileMapComponent::RenderTile()
 
 void CTileMapComponent::RenderTileOutLine()
 {
-	if (auto Shader = OutLineShader.lock())
+	if (auto Shader = OutlineShader.lock())
 	{
 		Shader->SetShader();
 	}
 
-	if (auto Mesh = OutLineMesh.lock())
+	if (auto Mesh = OutlineMesh.lock())
 	{
 		Mesh->RenderInstancing(LineInstancingBuffer, LineInstancingCount);
 	}
@@ -491,9 +682,39 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 	switch (Shape)
 	{
 		case Rect:
-			MapSize = TileSize * FVector2((float)CountX, (float)CountY);
+			MapSize = TileSize * FVector2(static_cast<float>(CountX), static_cast<float>(CountY));
+			if (auto World = this->World.lock())
+			{
+				if (auto AssetMgr = World->GetWorldAssetManager().lock())
+				{
+					OutlineMesh = AssetMgr->FindMesh("LBFrameRect");
+				}
+			}
+			else
+			{
+				if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
+				{
+					OutlineMesh = MeshMgr->FindMesh("Mesh_LBFrameRect");
+				}
+			}
 			break;
 		case Isometric:
+			MapSize.x = TileSize.x * CountX + TileSize.x * 0.5f;
+			MapSize.y = TileSize.y + TileSize.y * 0.5f * (CountY - 1);
+			if (auto World = this->World.lock())
+			{
+				if (auto AssetMgr = World->GetWorldAssetManager().lock())
+				{
+					OutlineMesh = AssetMgr->FindMesh("IstFrameRect");
+				}
+			}
+			else
+			{
+				if (auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock())
+				{
+					OutlineMesh = MeshMgr->FindMesh("Mesh_IstFrameRect");
+				}
+			}
 			break;
 	}
 
@@ -525,6 +746,14 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 					Tile->SetPos(j * TileSize.x, i * TileSize.y);
 					break;
 				case Isometric:
+					if (i % 2 == 0)
+					{
+						Tile->SetPos(j * TileSize.x, i * TileSize.y * 0.5f);
+					}
+					else
+					{
+						Tile->SetPos(j * TileSize.x + TileSize.x * 0.5f, i * TileSize.y * 0.5f);
+					}
 					break;
 			}
 
@@ -538,14 +767,307 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 	// Determines the maximum number of tiles that can be visible on the screen.
 	FResolution	RS = CDevice::GetInst()->GetResolution();
 
-	int	ViewCountX = RS.Width / TileSize.x + 3;
-	int	ViewCountY = RS.Height / TileSize.y + 3;
+	int	ViewCountX = static_cast<int>(RS.Width / TileSize.x + 3);
+	int	ViewCountY = static_cast<int>(RS.Height / TileSize.y + 3);
 
 	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
 	CreateLineInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
 
 	TileInstData.resize(ViewCountX * ViewCountY);
 	TileLineInstData.resize(ViewCountX * ViewCountY);
+}
+
+void CTileMapComponent::Save(const TCHAR* FileName, const std::string& PathName)
+{
+	TCHAR	FullPath[MAX_PATH] = {};
+
+	lstrcpy(FullPath, CPathManager::FindPath(PathName));
+	lstrcat(FullPath, FileName);
+
+	SaveFullPath(FullPath);
+}
+
+void CTileMapComponent::SaveFullPath(const TCHAR* FullPath)
+{
+	char	FullPathMultibyte[MAX_PATH] = {};
+
+	int Length = WideCharToMultiByte(CP_ACP, 0, FullPath,
+		-1, nullptr, 0, nullptr, nullptr);
+	WideCharToMultiByte(CP_ACP, 0, FullPath, -1,
+		FullPathMultibyte, Length, nullptr, nullptr);
+
+	FILE* File = nullptr;
+
+	fopen_s(&File, FullPathMultibyte, "wb");
+
+	if (!File)
+	{
+		return;
+	}
+
+	if (auto Render = TileMapRender.lock())
+	{
+		Render->Save(File);
+	}
+
+	size_t Size = Tiles.size();
+
+	fwrite(&Size, sizeof(size_t), 1, File);
+
+	for (const auto& Tile : Tiles)
+	{
+		Tile->Save(File);
+	}
+
+	fwrite(&Shape, sizeof(ETileShape), 1, File);
+	fwrite(&TileSize, sizeof(FVector2), 1, File);
+	fwrite(&MapSize, sizeof(FVector2), 1, File);
+
+	fwrite(&CountX, sizeof(int), 1, File);
+	fwrite(&CountY, sizeof(int), 1, File);
+
+	fwrite(&bRenderTileOutline, sizeof(bool), 1, File);
+
+	auto OutlineMesh = this->OutlineMesh.lock();
+
+	bool Enable = false;
+
+	if (OutlineMesh)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	if (OutlineMesh)
+	{
+		std::string	Key = OutlineMesh->GetSplitKey();
+		size_t Count = Key.length();
+
+		fwrite(&Count, sizeof(size_t), 1, File);
+		fwrite(Key.c_str(), 1, Key.length(), File);
+	}
+
+	auto OutlineShader = this->OutlineShader.lock();
+
+	Enable = false;
+
+	if (OutlineShader)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	if (OutlineShader)
+	{
+		std::string	Key = OutlineShader->GetKey();
+		size_t Count = Key.length();
+
+		fwrite(&Count, sizeof(size_t), 1, File);
+		fwrite(Key.c_str(), 1, Key.length(), File);
+	}
+
+	auto TileMesh = this->TileMesh.lock();
+
+	Enable = false;
+
+	if (TileMesh)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	if (TileMesh)
+	{
+		std::string	Key = TileMesh->GetSplitKey();
+		size_t Count = Key.length();
+
+		fwrite(&Count, sizeof(size_t), 1, File);
+		fwrite(Key.c_str(), 1, Key.length(), File);
+	}
+
+	auto TileShader = this->TileShader.lock();
+
+	Enable = false;
+
+	if (TileShader)
+	{
+		Enable = true;
+	}
+
+	fwrite(&Enable, sizeof(bool), 1, File);
+
+	if (TileShader)
+	{
+		std::string	Key = TileShader->GetKey();
+		size_t Count = Key.length();
+
+		fwrite(&Count, sizeof(size_t), 1, File);
+		fwrite(Key.c_str(), 1, Key.length(), File);
+	}
+
+	fwrite(&TileTextureSize, sizeof(FVector2), 1, File);
+
+	Size = TileFrames.size();
+
+	fwrite(&Size, sizeof(size_t), 1, File);
+
+	fwrite(&TileFrames[0], sizeof(FTileFrame), Size, File);
+
+	fclose(File);
+}
+
+void CTileMapComponent::Load(const TCHAR* FileName, const std::string& PathName)
+{
+	TCHAR FullPath[MAX_PATH] = {};
+
+	lstrcpy(FullPath, CPathManager::FindPath(PathName));
+	lstrcat(FullPath, FileName);
+
+	LoadFullPath(FullPath);
+}
+
+void CTileMapComponent::LoadFullPath(const TCHAR* FullPath)
+{
+	char FullPathMultibyte[MAX_PATH] = {};
+
+	int Length = WideCharToMultiByte(CP_ACP, 0, FullPath, -1, nullptr, 0, nullptr, nullptr);
+	WideCharToMultiByte(CP_ACP, 0, FullPath, -1,
+		FullPathMultibyte, Length, nullptr, nullptr);
+
+	FILE* File = nullptr;
+
+	fopen_s(&File, FullPathMultibyte, "rb");
+
+	if (!File)
+	{
+		return;
+	}
+
+	if (auto Render = TileMapRender.lock())
+	{
+		Render->Load(File);
+	}
+
+	size_t Size = 0;
+
+	fread(&Size, sizeof(size_t), 1, File);
+
+	Tiles.clear();
+	Tiles.resize(Size);
+
+	for (auto& Tile : Tiles)
+	{
+		Tile.reset(new CTile);
+		Tile->Load(File);
+	}
+
+	FResolution	RS = CDevice::GetInst()->GetResolution();
+
+	int	ViewCountX = (int)(RS.Width / TileSize.x + 3);
+	int	ViewCountY = (int)(RS.Height / TileSize.y + 3);
+
+	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
+
+	CreateLineInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
+
+	TileInstData.clear();
+	TileLineInstData.clear();
+
+	TileInstData.resize(ViewCountX * ViewCountY);
+	TileLineInstData.resize(ViewCountX * ViewCountY);
+
+	fread(&Shape, sizeof(ETileShape), 1, File);
+	fread(&TileSize, sizeof(FVector2), 1, File);
+	fread(&MapSize, sizeof(FVector2), 1, File);
+
+	fread(&CountX, sizeof(int), 1, File);
+	fread(&CountY, sizeof(int), 1, File);
+
+	fread(&bRenderTileOutline, sizeof(bool), 1, File);
+
+	bool Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		char Key[256] = {};
+
+		size_t	Count = 0;
+
+		fread(&Count, sizeof(size_t), 1, File);
+
+		fread(Key, 1, Count, File);
+
+		SetOutlineMesh(Key);
+	}
+
+	Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		char Key[256] = {};
+
+		size_t	Count = 0;
+
+		fread(&Count, sizeof(size_t), 1, File);
+
+		fread(Key, 1, Count, File);
+
+		SetOutlineShader(Key);
+	}
+
+	Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		char Key[256] = {};
+
+		size_t	Count = 0;
+
+		fread(&Count, sizeof(size_t), 1, File);
+
+		fread(Key, 1, Count, File);
+
+		SetTileMesh(Key);
+	}
+
+	Enable = false;
+
+	fread(&Enable, sizeof(bool), 1, File);
+
+	if (Enable)
+	{
+		char Key[256] = {};
+
+		size_t	Count = 0;
+
+		fread(&Count, sizeof(size_t), 1, File);
+
+		fread(Key, 1, Count, File);
+
+		SetTileShader(Key);
+	}
+
+	fread(&TileTextureSize, sizeof(FVector2), 1, File);
+
+	Size = 0;
+
+	fread(&Size, sizeof(size_t), 1, File);
+
+	TileFrames.clear();
+	TileFrames.resize(Size);
+
+	fread(&TileFrames[0], sizeof(FTileFrame), Size, File);
+
+	fclose(File);
 }
 
 bool CTileMapComponent::CreateInstancingBuffer(int Size, int Count)

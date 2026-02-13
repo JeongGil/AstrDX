@@ -59,6 +59,25 @@ bool CMeshManager::Init()
 		return false;
 	}
 
+	FVector IsmFrameRect[4] =
+	{
+		FVector3(0.5f, 1.f, 0.f),
+		FVector3(1.f, 0.5f, 0.f),
+		FVector3(0.5f, 0.f, 0.f),
+		FVector3(0.f, 0.5f, 0.f)
+	};
+
+	unsigned short IsmFrameRectIdx[5] = { 0, 1, 2, 3, 0 };
+
+	if (!CreateMesh("Mesh_IstFrameRect",
+		true, IsmFrameRect, sizeof(FVector3),
+		4, D3D11_USAGE_IMMUTABLE, D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP,
+		IsmFrameRectIdx, 2, 5, DXGI_FORMAT_R16_UINT,
+		D3D11_USAGE_IMMUTABLE))
+	{
+		return false;
+	}
+
 	std::vector<FVector> FrameSphere2D;
 	for (int i = 0; i < 360; i += 12)
 	{

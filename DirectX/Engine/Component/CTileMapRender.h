@@ -47,6 +47,8 @@ public:
 	bool SetTexture(ETileTextureType::Type Type, const std::weak_ptr<CTexture>& Texture);
 	bool SetTexture(ETileTextureType::Type Type, const std::string& Key);
 	bool SetTexture(ETileTextureType::Type Type, const std::string& Key, const TCHAR* FileName, const std::string& PathName = "Texture");
+	bool SetTextureFullPath(ETileTextureType::Type Type, const std::string& Key, const TCHAR* FullPath);
+	bool SetTextureFullPath(ETileTextureType::Type Type, const std::string& Key, const std::vector<const TCHAR*>& FullPaths);
 	void SetBackMesh(const std::weak_ptr<CMesh>& Mesh);
 	void SetBackMesh(const std::string& Key);
 	void SetBackShader(const std::weak_ptr<CShader>& Shader);
@@ -54,6 +56,9 @@ public:
 	void SetTileFrameSize(float x, float y);
 	void AddTileFrame(const FVector2& Start, const FVector2& End);
 	void AddTileFrame(float StartX, float StartY, float EndX, float EndY);
+
+	void Save(FILE* File);
+	void Load(FILE* File);
 
 	std::weak_ptr<CTexture> GetTexture(ETileTextureType::Type Type) const
 	{

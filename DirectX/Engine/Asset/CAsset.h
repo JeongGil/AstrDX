@@ -22,6 +22,7 @@ public:
 
 protected:
 	std::string Key;
+	std::string SplitKey;
 	size_t ID;
 	EAssetType AssetType{ EAssetType::None };
 	bool bKeep{ false };
@@ -52,10 +53,23 @@ public:
 		return Key;
 	}
 
+	[[nodiscard]] const std::string& GetSplitKey() const
+	{
+		return SplitKey;
+	}
+
 	void SetKey(const std::string& Key)
 	{
 		this->Key = Key;
+		SplitKey = Key;
+
 		ID = CIDMaker::GetID(Key);
+
+		auto Pos = SplitKey.find('_');
+		if (Pos != std::string::npos)
+		{
+			SplitKey.erase(0, Pos + 1);
+		}
 	}
 };
 
