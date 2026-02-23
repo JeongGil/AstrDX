@@ -100,6 +100,25 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 			ViewEndY = (int)((Center.y + RS.Height * 0.5f) / TileSize.y);
 			break;
 		case Isometric:
+			FVector2 LB, RT;
+
+			LB.x = Center.x - RS.Width * 0.5f;
+			LB.y = Center.y - RS.Height * 0.5f;
+
+			RT.x = Center.x + RS.Width * 0.5f;
+			RT.y = Center.y + RS.Height * 0.5f;
+
+			ViewStartX = GetTileRenderIndexX(LB);
+			ViewStartY = GetTileRenderIndexY(LB);
+
+			ViewEndX = GetTileRenderIndexX(RT);
+			ViewEndY = GetTileRenderIndexY(RT);
+
+			ViewStartX -= 2;
+			ViewEndX += 2;
+
+			ViewStartY -= 2;
+			ViewEndY += 2;
 			break;
 	}
 
@@ -367,7 +386,37 @@ int CTileMapComponent::GetTileRenderIndexX(const FVector2& Pos) const
 			ConvertPos.x = Pos.x - WorldPosition.x;
 			ConvertPos.y = Pos.y - WorldPosition.y;
 
-			// y 인덱스가 홀수인지 짝수인지에 따라 다르다.
+			// It depends on whether the y index is odd or even.
+			int	IndexY = GetTileRenderIndexY(ConvertPos);
+
+			int	IndexX = -1;
+
+			float Value = 0.f;
+
+			// even
+			if (IndexY % 2 == 0)
+			{
+				Value = ConvertPos.x / TileSize.x;
+			}
+			// odd
+			else
+			{
+				Value = (ConvertPos.x - TileSize.x * 0.5f) / TileSize.x;
+			}
+
+			if (Value < 0.f)
+			{
+				return 0;
+			}
+
+			IndexX = (int)Value;
+
+			if (IndexX >= CountX)
+			{
+				return CountX - 1;
+			}
+
+			return IndexX;
 		}
 	}
 
@@ -440,13 +489,42 @@ int CTileMapComponent::GetTileRenderIndexY(const FVector2& Pos) const
 				// based on the rectangular area
 				if (RatioY < 0.5f - RatioX)
 				{
+					// If it's the very bottom
+					if (IndexY == 0)
+					{
+						return 0;
+					}
+					// If it's the very left
+					else if (IndexX == 0)
+					{
+						// Only when the Y index is even, it doesn't exist.
+						// However, since it needs to be drawn here, only exceptions
+						// that are out of range are handled.
+						if (IndexY < 0)
+						{
+							return 0;
+						}
+						else if (IndexY >= CountY)
+						{
+							return CountY - 1;
+						}
+					}
+					return IndexY * 2 - 1;
 				}
 
 				// If it is the lower-right triangle of the lower-right rectangle
 				// based on the rectangular area
 				else if (RatioY < RatioX - 0.5f)
 				{
+					if (IndexY == 0)
+					{
+						return 0;
+					}
+
+					return IndexY * 2 - 1;
 				}
+
+				return IndexY * 2;
 			}
 
 			// If it exists in the upper part of the rectangular area
@@ -456,18 +534,56 @@ int CTileMapComponent::GetTileRenderIndexY(const FVector2& Pos) const
 				// based on the rectangular area
 				if (RatioY - 0.5f > RatioX)
 				{
+					if (IndexX == 0)
+					{
+						if (IndexY < 0)
+						{
+							return 0;
+						}
+						else if (IndexY >= CountY)
+						{
+							return CountY - 1;
+						}
+					}
+					else if (IndexY * 2 + 1 >= CountY)
+					{
+						return CountY - 1;
+					}
+
+					return IndexY * 2 + 1;
 				}
 
 				// If it is the upper-right triangle of the upper-right rectangle
 				// based on the rectangular area
 				else if (RatioY - 0.5f > 1.f - RatioX)
 				{
+					if (IndexX >= CountX)
+					{
+						if (IndexY < 0)
+						{
+							return 0;
+						}
+						else if (IndexY >= CountY)
+						{
+							return - 1;
+						}
+					}
+					else if (IndexY * 2 + 1 >= CountY)
+					{
+						return CountY - 1;
+					}
+
+					return IndexY * 2 + 1;
 				}
+
+
+				return IndexY * 2;
 			}
 
 			// If it exists in the center
 			else
 			{
+				return IndexY * 2;
 			}
 		}
 	}
@@ -770,6 +886,11 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 	int	ViewCountX = static_cast<int>(RS.Width / TileSize.x + 3);
 	int	ViewCountY = static_cast<int>(RS.Height / TileSize.y + 3);
 
+	if (Shape == Isometric)
+	{
+		ViewCountX = ViewCountX * 2 + 2;
+	}
+
 	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
 	CreateLineInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
 
@@ -968,6 +1089,11 @@ void CTileMapComponent::LoadFullPath(const TCHAR* FullPath)
 
 	int	ViewCountX = (int)(RS.Width / TileSize.x + 3);
 	int	ViewCountY = (int)(RS.Height / TileSize.y + 3);
+
+	if (Shape == Isometric)
+	{
+		ViewCountY *= 2;
+	}
 
 	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
 
