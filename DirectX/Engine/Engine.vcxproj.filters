@@ -205,6 +205,9 @@
     <Filter Include="Render\Instancing">
       <UniqueIdentifier>{30b67493-85e2-4d97-aef5-db562f014d42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="World\Navigation">
+      <UniqueIdentifier>{a1a9bb96-eb75-4459-8e14-088f28f24a49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -588,6 +591,12 @@
     <ClInclude Include="Asset\Shader\CShaderTileMapLineInstancing.h">
       <Filter>Asset\Shader\Shader\TileMap</Filter>
     </ClInclude>
+    <ClInclude Include="World\CThreadNavigation.h">
+      <Filter>World\Navigation</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CWorldNavigation.h">
+      <Filter>World\Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -900,6 +909,12 @@
     </ClCompile>
     <ClCompile Include="Asset\Shader\CShaderTileMapLineInstancing.cpp">
       <Filter>Asset\Shader\Shader\TileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CThreadNavigation.cpp">
+      <Filter>World\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CWorldNavigation.cpp">
+      <Filter>World\Navigation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

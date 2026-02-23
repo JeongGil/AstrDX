@@ -20,6 +20,8 @@ bool CWorldManager::Init()
 		return false;
 	}
 
+	World->BeginManager();
+
 	return true;
 }
 
@@ -57,6 +59,8 @@ bool CWorldManager::ChangeWorld()
 	if (NextWorld)
 	{
 		World = std::move(NextWorld);
+
+		World->BeginManager();
 
 		return true;
 	}

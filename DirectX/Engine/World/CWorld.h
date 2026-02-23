@@ -10,8 +10,13 @@
 #include "../Object/CGameObject.h"
 #include "CWorldUIManager.h"
 
+class CWorldNavigation;
+class CWorldManager;
+
 class CWorld : public std::enable_shared_from_this<CWorld>
 {
+	friend CWorldManager;
+
 public:
 	/**
 	 * @brief Creates a new game object of the specified type and assigns it to the world.
@@ -86,6 +91,11 @@ public:
 		StartObjects.push_back(NewObject);
 
 		return NewObject;
+	}
+
+	std::weak_ptr<CWorldNavigation> GetNavigation() const
+	{
+		return Navigation;
 	}
 
 	std::weak_ptr<CCameraManager> GetCameraManager() const
@@ -190,6 +200,7 @@ protected:
 	std::shared_ptr<CInput> Input;
 	std::shared_ptr<CWorldCollision> Collision;
 	std::shared_ptr<CWorldUIManager> UIManager;
+	std::shared_ptr<CWorldNavigation> Navigation;
 
 public:
 	void InputActive();
@@ -206,6 +217,7 @@ public:
 
 private:
 	void Begin();
+	void BeginManager();
 
 public:
 	CWorld();

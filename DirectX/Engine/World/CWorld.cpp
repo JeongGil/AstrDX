@@ -1,5 +1,7 @@
 #include "CWorld.h"
 
+#include "CWorldNavigation.h"
+
 void CWorld::InputActive()
 {
 	Input->DeviceAcquire();
@@ -50,6 +52,13 @@ bool CWorld::Init()
 		return false;
 	}
 
+	Navigation.reset(new CWorldNavigation);
+	Navigation->SetWorld(std::dynamic_pointer_cast<CWorld>(shared_from_this()));
+	if (!Navigation->Init())
+	{
+		return false;
+	}
+
 	Objects.reserve(10000);
 	StartObjects.reserve(200);
 
@@ -81,6 +90,8 @@ void CWorld::Update(const float DeltaTime)
 	CameraManager->Update(DeltaTime);
 
 	WorldAssetManager->Update(DeltaTime);
+
+	Navigation->Update(DeltaTime);
 
 	UIManager->Update(DeltaTime);
 }
@@ -171,6 +182,11 @@ void CWorld::Begin()
 	}
 
 	StartObjects.clear();
+}
+
+void CWorld::BeginManager()
+{
+	Navigation->Begin();
 }
 
 CWorld::CWorld()

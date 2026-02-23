@@ -42,6 +42,11 @@ private:
 	static unsigned int __stdcall ThreadFunc(void* Arg);
 
 public:
+	[[nodiscard]] const std::string& GetKey() const
+	{
+		return Key;
+	}
+
 	void SetKey(const std::string& Key)
 	{
 		this->Key = Key;
