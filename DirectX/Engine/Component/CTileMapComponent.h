@@ -143,6 +143,8 @@ public:
 	int GetTileIndex(const FVector2& Pos) const;
 	int GetTileIndex(const FVector& Pos) const;
 	int GetTileIndex(float x, float y) const;
+	int GetTileIndexX(const FVector2& Pos) const;
+	int GetTileIndexY(const FVector2& Pos) const;
 	std::weak_ptr<CTile> GetTile(const FVector2& Pos) const;
 	std::weak_ptr<CTile> GetTile(const FVector& Pos) const;
 	std::weak_ptr<CTile> GetTile(float x, float y) const;

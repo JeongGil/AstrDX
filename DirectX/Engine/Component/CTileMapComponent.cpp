@@ -192,15 +192,31 @@ void CTileMapComponent::PostUpdate(const float DeltaTime)
 
 			if (Tile->GetOutlineRender())
 			{
+				FMatrix ScaleMat, TranslateMat, WorldMat;
+
+				ScaleMat.Scaling(TileSize);
+
+				FVector2 Pos = Tile->GetPos();
+				Pos.x += Owner->GetWorldPosition().x;
+				Pos.y += Owner->GetWorldPosition().y;
+
+				TranslateMat.Translation(Pos);
+
+				WorldMat = ScaleMat * TranslateMat;
+
+				FMatrix ViewMat = CameraMgr->GetViewMatrix();
+				FMatrix ProjMat = CameraMgr->GetProjMatrix();
+
+				FMatrix WVPMat = WorldMat * ViewMat * ProjMat;
+
 				auto& LineInstancingData = TileLineInstData[LineInstancingCount];
-				const auto& TileInstancingData = TileInstData[InstancingCount - 1];
 
-				LineInstancingData.WVP0 = TileInstancingData.WVP0;
-				LineInstancingData.WVP1 = TileInstancingData.WVP1;
-				LineInstancingData.WVP2 = TileInstancingData.WVP2;
-				LineInstancingData.WVP3 = TileInstancingData.WVP3;
+				LineInstancingData.WVP0 = WVPMat[0];
+				LineInstancingData.WVP1 = WVPMat[1];
+				LineInstancingData.WVP2 = WVPMat[2];
+				LineInstancingData.WVP3 = WVPMat[3];
 
-				LineInstancingData.Color = Tiles[Idx]->GetOutlineColor();
+				LineInstancingData.Color = Tile->GetOutlineColor();
 
 				++LineInstancingCount;
 			}
@@ -565,7 +581,7 @@ int CTileMapComponent::GetTileRenderIndexY(const FVector2& Pos) const
 						}
 						else if (IndexY >= CountY)
 						{
-							return - 1;
+							return -1;
 						}
 					}
 					else if (IndexY * 2 + 1 >= CountY)
@@ -593,7 +609,27 @@ int CTileMapComponent::GetTileRenderIndexY(const FVector2& Pos) const
 
 int CTileMapComponent::GetTileIndex(const FVector2& Pos) const
 {
-	return GetTileIndex(Pos.x, Pos.y);
+	auto Owner = this->Owner.lock();
+
+	FVector OwnerPos = Owner->GetWorldPosition();
+	FVector2 ConvertPos;
+
+	ConvertPos.x = Pos.x - OwnerPos.x;
+	ConvertPos.y = Pos.y - OwnerPos.y;
+
+	int	IndexX = GetTileIndexX(ConvertPos);
+	if (IndexX == -1)
+	{
+		return -1;
+	}
+
+	int	IndexY = GetTileIndexY(ConvertPos);
+	if (IndexY == -1)
+	{
+		return -1;
+	}
+
+	return IndexY * CountX + IndexX;
 }
 
 int CTileMapComponent::GetTileIndex(const FVector& Pos) const
@@ -603,21 +639,210 @@ int CTileMapComponent::GetTileIndex(const FVector& Pos) const
 
 int CTileMapComponent::GetTileIndex(float x, float y) const
 {
-	auto Owner = this->Owner.lock();
-	if (!Owner)
+	return GetTileIndex(FVector2(x, y));
+}
+
+int CTileMapComponent::GetTileIndexX(const FVector2& Pos) const
+{
+	switch (Shape)
 	{
-		return -1;
+		case Rect:
+		{
+			// Calculates the relative position from the starting point of the tile map.
+			float Convert = Pos.x - this->Owner.lock()->GetWorldPosition().x;
+
+			float Value = Convert / TileSize.x;
+
+			int Index = (int)Value;
+
+			if (Index < 0 || Index >= CountX)
+				return -1;
+
+			return Index;
+		}
+		case Isometric:
+		{
+			FVector2 ConvertPos;
+			ConvertPos.x = Pos.x - this->Owner.lock()->GetWorldPosition().x;
+			ConvertPos.y = Pos.y - this->Owner.lock()->GetWorldPosition().y;
+
+			int	IndexY = GetTileIndexY(ConvertPos);
+
+			int	IndexX = -1;
+
+			float Value = 0.f;
+
+			// even
+			if (IndexY % 2 == 0)
+			{
+				Value = ConvertPos.x / TileSize.x;
+			}
+			// odd
+			else
+			{
+				Value = (ConvertPos.x - TileSize.x * 0.5f) / TileSize.x;
+			}
+
+			if (Value < 0.f)
+			{
+				return -1;
+			}
+
+			IndexX = (int)Value;
+			if (IndexX >= CountX)
+			{
+				return -1;
+			}
+
+			return IndexX;
+		}
 	}
 
-	FVector OwnerPos = Owner->GetWorldPosition();
+	return -1;
+}
 
-	x = x - OwnerPos.x;
-	y = y - OwnerPos.y;
+int CTileMapComponent::GetTileIndexY(const FVector2& Pos) const
+{
+	switch (Shape)
+	{
+		case Rect:
+		{
+			float Convert = Pos.y - this->Owner.lock()->GetWorldPosition().y;
 
-	int	IndexX = static_cast<int>(x / TileSize.x);
-	int	IndexY = static_cast<int>(y / TileSize.y);
+			float Value = Convert / TileSize.y;
 
-	return IndexY * CountX + IndexX;
+			int Index = (int)Value;
+
+			if (Index < 0 || Index >= CountY)
+			{
+				return -1;
+			}
+
+			return Index;
+		}
+		case Isometric:
+		{
+			FVector2 ConvertPos;
+			ConvertPos.x = Pos.x - this->Owner.lock()->GetWorldPosition().x;
+			ConvertPos.y = Pos.y - this->Owner.lock()->GetWorldPosition().y;
+
+			if (ConvertPos.x < 0.f || ConvertPos.x > MapSize.x
+				|| ConvertPos.y < 0.f || ConvertPos.y > MapSize.y)
+			{
+				return -1;
+			}
+
+			float RatioX = ConvertPos.x / TileSize.x;
+			float RatioY = ConvertPos.y / TileSize.y;
+
+			int	IndexX = (int)RatioX;
+			int	IndexY = (int)RatioY;
+
+			RatioX -= (int)RatioX;
+			RatioY -= (int)RatioY;
+
+			if (RatioY < 0.5f)
+			{
+				if (RatioY < 0.5f - RatioX)
+				{
+					if (IndexY == 0)
+					{
+						return -1;
+					}
+					else if (IndexX == 0)
+					{
+						if (IndexY < 0)
+						{
+							return -1;
+						}
+						else if (IndexX == 0)
+						{
+							return -1;
+						}
+						else if (IndexY >= CountY / 2 + 1)
+						{
+							return -1;
+						}
+					}
+
+					return IndexY * 2 - 1;
+				}
+				else if (RatioY < RatioX - 0.5f)
+				{
+					if (IndexY == 0)
+					{
+						return -1;
+					}
+					else if (IndexY >= CountY / 2 + 1)
+					{
+						return -1;
+					}
+
+					return IndexY * 2 - 1;
+				}
+				else if (IndexY >= CountY / 2)
+				{
+					return -1;
+				}
+
+				return IndexY * 2;
+			}
+			else if (RatioY > 0.5f)
+			{
+				if (RatioY - 0.5f > RatioX)
+				{
+					if (IndexX == 0)
+					{
+						return -1;
+					}
+					else if (IndexY * 2 + 1 >= CountY)
+					{
+						return -1;
+					}
+					else if (IndexY >= CountY / 2)
+					{
+						return -1;
+					}
+
+					return IndexY * 2 + 1;
+				}
+				else if (RatioY - 0.5f > 1.f - RatioX)
+				{
+					if (IndexX >= CountX)
+					{
+						return -1;
+					}
+					else if (IndexY * 2 + 1 >= CountY)
+					{
+						return -1;
+					}
+					else if (IndexY >= CountY / 2)
+					{
+						return -1;
+					}
+
+					return IndexY * 2 + 1;
+				}
+				else if (IndexY >= CountY / 2)
+				{
+					return -1;
+				}
+
+				return IndexY * 2;
+			}
+			else
+			{
+				if (IndexY >= CountY / 2)
+				{
+					return -1;
+				}
+
+				return IndexY * 2;
+			}
+		}
+	}
+
+	return -1;
 }
 
 std::weak_ptr<CTile> CTileMapComponent::GetTile(const FVector2& Pos) const
@@ -883,12 +1108,12 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 	// Determines the maximum number of tiles that can be visible on the screen.
 	FResolution	RS = CDevice::GetInst()->GetResolution();
 
-	int	ViewCountX = static_cast<int>(RS.Width / TileSize.x + 3);
+	int	ViewCountX = static_cast<int>(RS.Width / TileSize.x + 5);
 	int	ViewCountY = static_cast<int>(RS.Height / TileSize.y + 3);
 
 	if (Shape == Isometric)
 	{
-		ViewCountX = ViewCountX * 2 + 2;
+		ViewCountY = ViewCountY * 2 + 2;
 	}
 
 	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);
@@ -1092,7 +1317,7 @@ void CTileMapComponent::LoadFullPath(const TCHAR* FullPath)
 
 	if (Shape == Isometric)
 	{
-		ViewCountY *= 2;
+		ViewCountY = ViewCountY * 2 + 2;
 	}
 
 	CreateInstancingBuffer(sizeof(FTileMapInstancingBuffer), ViewCountX * ViewCountY);

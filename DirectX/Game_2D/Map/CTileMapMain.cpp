@@ -28,30 +28,30 @@ bool CTileMapMain::Init()
 
 		Render->SetWorldScale(6400.f, 6400.f);
 
-		//Render->SetTexture(ETileTextureType::Tile, "MainTile", TEXT("Floors.png"));
-		Render->SetTexture(ETileTextureType::Tile, "MainTile", TEXT("Diablos_Lair_Floor_TRS/Diablos_Lair_Floor.png"));
+		Render->SetTexture(ETileTextureType::Tile, "MainTile", TEXT("Floors.png"));
+		//Render->SetTexture(ETileTextureType::Tile, "MainTile", TEXT("Diablos_Lair_Floor_TRS/Diablos_Lair_Floor.png"));
 
-		//for (int i = 0; i < 5; ++i)
-		//{
-		//	Render->AddTileFrame(0.f, i * 64.f, 64.f, 64.f + i * 64.f);
-		//}
-
-		for (int i = 0; i < 76; ++i)
+		for (int i = 0; i < 5; ++i)
 		{
-			for (int j = 0; j < 5; ++j)
-			{
-				Render->AddTileFrame(j * 160.f, i * 80.f, (j + 1) * 160.f, (i + 1) * 80.f);
-			}
+			Render->AddTileFrame(0.f, i * 64.f, 64.f, 64.f + i * 64.f);
 		}
+
+		//for (int i = 0; i < 76; ++i)
+		//{
+		//	for (int j = 0; j < 5; ++j)
+		//	{
+		//		Render->AddTileFrame(j * 160.f, i * 80.f, (j + 1) * 160.f, (i + 1) * 80.f);
+		//	}
+		//}
 	}
 
 	if (auto TileMap = this->TileMap.lock())
 	{
-		//TileMap->CreateTile(ETileShape::Rect, 100, 100, FVector2(64.f, 64.f));
-		TileMap->CreateTile(ETileShape::Isometric, 100, 100, FVector2(160.f, 80.f));
+		TileMap->CreateTile(ETileShape::Rect, 100, 100, FVector2(64.f, 64.f));
+		//TileMap->CreateTile(ETileShape::Isometric, 100, 100, FVector2(160.f, 80.f));
 
-		//TileMap->SetTileFrameAll(0);
-		TileMap->SetTileFrameAll(3);
+		TileMap->SetTileFrameAll(0);
+		//TileMap->SetTileFrameAll(3);
 	}
 
 	return true;
