@@ -140,6 +140,7 @@ public:
 		return TileFrames.size();
 	}
 
+	ETileType GetTileType(int Index) const;
 	int GetTileIndex(const FVector2& Pos) const;
 	int GetTileIndex(const FVector& Pos) const;
 	int GetTileIndex(float x, float y) const;

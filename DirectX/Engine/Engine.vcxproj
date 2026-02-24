@@ -285,6 +285,7 @@
     <ClInclude Include="World\CCollisionQuadTreeNode.h" />
     <ClInclude Include="World\CEditorWorld.h" />
     <ClInclude Include="World\CInput.h" />
+    <ClInclude Include="World\CNavigation.h" />
     <ClInclude Include="World\CThreadNavigation.h" />
     <ClInclude Include="World\CWorld.h" />
     <ClInclude Include="World\CWorldAssetManager.h" />
@@ -394,6 +395,7 @@
     <ClCompile Include="World\CCollisionQuadTreeNode.cpp" />
     <ClCompile Include="World\CEditorWorld.cpp" />
     <ClCompile Include="World\CInput.cpp" />
+    <ClCompile Include="World\CNavigation.cpp" />
     <ClCompile Include="World\CThreadNavigation.cpp" />
     <ClCompile Include="World\CWorld.cpp" />
     <ClCompile Include="World\CWorldAssetManager.cpp" />

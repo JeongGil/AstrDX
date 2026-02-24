@@ -23,7 +23,11 @@ void CThreadQueue::push(int Header, int Size, unsigned char* Data)
 
 	this->Data[Push].Header = Header;
 	this->Data[Push].Size = Size;
-	memcpy(this->Data[Push].Data, Data, Size);
+
+	if (Data)
+	{
+		memcpy(this->Data[Push].Data, Data, Size);
+	}
 
 	++this->Size;
 }
@@ -41,7 +45,11 @@ void CThreadQueue::pop(int& Header, int& Size, unsigned char* Data)
 
 	Header = this->Data[Pop].Header;
 	Size = this->Data[Pop].Size;
-	memcpy(Data, this->Data[Pop].Data, Size);
+
+	if (Size > 0)
+	{
+		memcpy(Data, this->Data[Pop].Data, Size);
+	}
 
 	--this->Size;
 }

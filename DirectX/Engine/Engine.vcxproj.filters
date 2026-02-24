@@ -597,6 +597,9 @@
     <ClInclude Include="World\CWorldNavigation.h">
       <Filter>World\Navigation</Filter>
     </ClInclude>
+    <ClInclude Include="World\CNavigation.h">
+      <Filter>World\Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -914,6 +917,9 @@
       <Filter>World\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="World\CWorldNavigation.cpp">
+      <Filter>World\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CNavigation.cpp">
       <Filter>World\Navigation</Filter>
     </ClCompile>
   </ItemGroup>

@@ -607,6 +607,11 @@ int CTileMapComponent::GetTileRenderIndexY(const FVector2& Pos) const
 	return -1;
 }
 
+ETileType CTileMapComponent::GetTileType(int Index) const
+{
+	return Tiles[Index]->GetType();
+}
+
 int CTileMapComponent::GetTileIndex(const FVector2& Pos) const
 {
 	auto Owner = this->Owner.lock();
