@@ -56,6 +56,14 @@ FVector3::FVector3(const DirectX::XMVECTOR& v)
 	DirectX::XMStoreFloat3(reinterpret_cast<DirectX::XMFLOAT3*>(this), v);
 }
 
+FVector3& FVector3::operator=(FVector2 v)
+{
+	x = v.x;
+	y = v.y;
+	z = 0.f;
+	return *this;
+}
+
 #pragma endregion
 
 #pragma region Equal
@@ -497,6 +505,16 @@ float FVector3::Distance(const FVector3& v)	const
 float FVector3::SqrDistance(const FVector3& v) const
 {
 	return (*this - v).SqrLength();
+}
+
+float FVector3::Distance(FVector2 v) const
+{
+	return Distance(FVector3(v));
+}
+
+float FVector3::SqrDistance(FVector2 v) const
+{
+	return SqrDistance(FVector3(v));
 }
 
 DirectX::XMVECTOR FVector3::Convert()	const

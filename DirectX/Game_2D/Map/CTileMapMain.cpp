@@ -56,3 +56,11 @@ bool CTileMapMain::Init()
 
 	return true;
 }
+
+void CTileMapMain::LoadTileMap(const TCHAR* FileName, const std::string& PathName)
+{
+	if (auto TileMap = this->TileMap.lock())
+	{
+		TileMap->Load(FileName, PathName);
+	}
+}

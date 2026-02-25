@@ -1,8 +1,10 @@
 #pragma once
 #include "CMovementComponent.h"
+#include "../World/CNavAgent.h"
 
 class CObjectMovementComponent :
-    public CMovementComponent
+	public CMovementComponent,
+	public CNavAgent
 {
 	friend class CGameObject;
 
@@ -46,7 +48,14 @@ public:
 	bool Init() override;
 	void Update(const float Delta) override;
 	void PostUpdate(const float DeltaTime) override;
+	void PostRender() override;
 	void Destroy() override;
+
+	void Move(const FVector& Pos);
+	void Move(const FVector2& Pos);
+	void MovePath(const FVector& Pos);
+	void MovePath(const FVector2& Pos);
+	void StartPath() override;
 
 protected:
 	CObjectMovementComponent* Clone() const override;

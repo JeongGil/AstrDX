@@ -1,7 +1,9 @@
 #include "CWorldNavigation.h"
 
+#include "../World/CNavAgent.h"
 #include "CThreadNavigation.h"
 #include "../CThreadManager.h"
+#include "../Component/CComponent.h"
 
 CWorldNavigation::CWorldNavigation()
 {
@@ -20,11 +22,66 @@ CWorldNavigation::~CWorldNavigation()
 
 bool CWorldNavigation::Init()
 {
+	NavQueue.reset(new CThreadQueue);
+
 	return true;
 }
 
 void CWorldNavigation::Update(const float DeltaTime)
 {
+	int QueueSize = NavQueue->size();
+
+	int Header = 0;
+	int Size = 0;
+	UCHAR Data[1024] = {};
+
+	for (int i = 0; i < QueueSize; i++)
+	{
+		NavQueue->pop(Header, Size, Data);
+
+		switch (Header)
+		{
+			case ENavigationHeader::FindComplete:
+				NavigationComplete(Size, Data);
+				break;
+			default:
+				break;
+		}
+	}
+}
+
+void CWorldNavigation::AddData(int Header, int Size, UCHAR* Data)
+{
+	NavQueue->push(Header, Size, Data);
+}
+
+void CWorldNavigation::NavigationComplete(int Size, UCHAR* Data)
+{
+	int	DataSize = 0;
+
+	CComponent* AgPtr = nullptr;
+
+	memcpy(&AgPtr, Data, sizeof(CComponent*));
+	DataSize += sizeof(CComponent*);
+
+	std::shared_ptr<CNavAgent> Agent = std::dynamic_pointer_cast<CNavAgent>(AgPtr->shared_from_this());
+
+	int	PathCount = 0;
+	memcpy(&PathCount, Data + DataSize, sizeof(int));
+	DataSize += sizeof(int);
+
+	Agent->StartPathPoint();
+
+	for (int i = 0; i < PathCount; ++i)
+	{
+		FVector Pos;
+		memcpy(&Pos, Data + DataSize, sizeof(FVector3));
+		DataSize += sizeof(FVector3);
+
+		Agent->AddPathPoint(Pos);
+	}
+
+	Agent->StartPath();
 }
 
 void CWorldNavigation::CreateNavigationThread(int Count, const std::weak_ptr<CTileMapComponent>& TileMap)
@@ -51,7 +108,7 @@ void CWorldNavigation::CreateNavigationThread(int Count, const std::weak_ptr<CTi
 	}
 }
 
-void CWorldNavigation::FindPath(const FVector2& Start, const FVector2& End)
+void CWorldNavigation::FindPath(const FVector& Start, const FVector& End, CComponent* Agent)
 {
 	int	QueueCount = INT_MAX;
 	int	Index = -1;
@@ -81,11 +138,14 @@ void CWorldNavigation::FindPath(const FVector2& Start, const FVector2& End)
 
 	int	DataSize = 0;
 
-	memcpy(Data, &Start, sizeof(FVector2));
-	DataSize += sizeof(FVector2);
+	memcpy(Data, &Start, sizeof(FVector));
+	DataSize += sizeof(FVector);
 
-	memcpy(Data + DataSize, &End, sizeof(FVector2));
-	DataSize += sizeof(FVector2);
+	memcpy(Data + DataSize, &End, sizeof(FVector));
+	DataSize += sizeof(FVector);
+
+	memcpy(Data + DataSize, &Agent, sizeof(CComponent*));
+	DataSize += sizeof(CComponent*);
 
 	Threads[Index]->AddData(Header, DataSize, Data);
 }

@@ -17,10 +17,8 @@ class CThreadQueue
 
 	inline const static int MAX_DATA = 200;
 
-private:
-	CThreadQueue();
-
 public:
+	CThreadQueue();
 	~CThreadQueue();
 
 private:

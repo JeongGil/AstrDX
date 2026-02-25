@@ -2,6 +2,7 @@
 
 #include "../EngineInfo.h"
 
+class CComponent;
 class CThreadQueue;
 class CTileMapComponent;
 class CThreadNavigation;
@@ -26,11 +27,14 @@ private:
 public:
 	bool Init();
 	void Update(const float DeltaTime);
+	void AddData(int Header, int Size, UCHAR* Data);
 	void CreateNavigationThread(int Count, const std::weak_ptr<CTileMapComponent>& TileMap);
-	void FindPath(const FVector2& Start, const FVector2& End);
+	void FindPath(const FVector& Start, const FVector& End, CComponent* Agent);	
 
 private:
 	void Begin();
+
+	void NavigationComplete(int Size, UCHAR* Data);
 
 public:
 	std::weak_ptr<CWorld> GetWorld() const

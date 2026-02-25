@@ -14,7 +14,7 @@ void CThreadQueue::push(int Header, int Size, unsigned char* Data)
 {
 	CSync _(&Crt);
 
-	if (Size == MAX_DATA)
+	if (this->Size == MAX_DATA)
 	{
 		return;
 	}
@@ -36,7 +36,7 @@ void CThreadQueue::pop(int& Header, int& Size, unsigned char* Data)
 {
 	CSync _(&Crt);
 
-	if (Size == 0)
+	if (this->Size == 0)
 	{
 		return;
 	}

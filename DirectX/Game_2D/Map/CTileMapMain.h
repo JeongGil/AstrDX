@@ -19,5 +19,7 @@ public:
 
 	void Begin() override;
 	bool Init() override;
+
+	void LoadTileMap(const TCHAR* FileName, const std::string& PathName = "Root");
 };
 

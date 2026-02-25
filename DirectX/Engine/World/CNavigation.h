@@ -75,10 +75,10 @@ private:
 
 public:
 	void SetTileMap(const std::weak_ptr<CTileMapComponent>& TileMap);
-	bool FindPath(const FVector2& Start, const FVector2& End, std::list<FVector2>& Paths);
+	bool FindPath(const FVector& Start, const FVector& End, std::list<FVector>& Paths);
 
 private:
-	bool FindNode(FNavNode* Node, FNavNode* EndNode, const FVector2& End, std::list<FVector2>& Paths);
+	bool FindNode(FNavNode* Node, FNavNode* EndNode, const FVector& End, std::list<FVector>& Paths);
 
 	FNavNode* GetCorner(ESearchDir::Type Dir, FNavNode* Node, FNavNode* EndNode);
 	void AddDir(ESearchDir::Type Dir, FNavNode* Node);

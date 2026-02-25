@@ -600,6 +600,9 @@
     <ClInclude Include="World\CNavigation.h">
       <Filter>World\Navigation</Filter>
     </ClInclude>
+    <ClInclude Include="World\CNavAgent.h">
+      <Filter>World\Navigation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico">
@@ -920,6 +923,9 @@
       <Filter>World\Navigation</Filter>
     </ClCompile>
     <ClCompile Include="World\CNavigation.cpp">
+      <Filter>World\Navigation</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CNavAgent.cpp">
       <Filter>World\Navigation</Filter>
     </ClCompile>
   </ItemGroup>

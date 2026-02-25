@@ -12,6 +12,7 @@
 #include "../Object/CGameObject.h"
 #include "../World/CWorld.h"
 #include "../World/CWorldManager.h"
+#include "../World/CWorldNavigation.h"
 
 CTileMapComponent::CTileMapComponent()
 {
@@ -1025,11 +1026,13 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 	this->CountY = CountY;
 	this->TileSize = TileSize;
 
+	auto World = this->World.lock();
+
 	switch (Shape)
 	{
 		case Rect:
 			MapSize = TileSize * FVector2(static_cast<float>(CountX), static_cast<float>(CountY));
-			if (auto World = this->World.lock())
+			if (World)
 			{
 				if (auto AssetMgr = World->GetWorldAssetManager().lock())
 				{
@@ -1047,7 +1050,7 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 		case Isometric:
 			MapSize.x = TileSize.x * CountX + TileSize.x * 0.5f;
 			MapSize.y = TileSize.y + TileSize.y * 0.5f * (CountY - 1);
-			if (auto World = this->World.lock())
+			if (World)
 			{
 				if (auto AssetMgr = World->GetWorldAssetManager().lock())
 				{
@@ -1126,6 +1129,14 @@ void CTileMapComponent::CreateTile(ETileShape Shape, int CountX, int CountY, con
 
 	TileInstData.resize(ViewCountX * ViewCountY);
 	TileLineInstData.resize(ViewCountX * ViewCountY);
+
+	if (auto Nav = World->GetNavigation().lock())
+	{
+		SYSTEM_INFO SysInfo = {};
+		GetSystemInfo(&SysInfo);
+
+		Nav->CreateNavigationThread((int)SysInfo.dwNumberOfProcessors, std::dynamic_pointer_cast<CTileMapComponent>(shared_from_this()));
+	}
 }
 
 void CTileMapComponent::Save(const TCHAR* FileName, const std::string& PathName)
@@ -1424,6 +1435,18 @@ void CTileMapComponent::LoadFullPath(const TCHAR* FullPath)
 	fread(&TileFrames[0], sizeof(FTileFrame), Size, File);
 
 	fclose(File);
+
+	if (auto World = this->World.lock())
+	{
+		// 내비게이션 스레드를 생성한다.
+		if (auto Nav = World->GetNavigation().lock())
+		{
+			SYSTEM_INFO	SysInfo = {};
+			GetSystemInfo(&SysInfo);
+
+			Nav->CreateNavigationThread((int)SysInfo.dwNumberOfProcessors, std::dynamic_pointer_cast<CTileMapComponent>(shared_from_this()));
+		}
+	}
 }
 
 bool CTileMapComponent::CreateInstancingBuffer(int Size, int Count)

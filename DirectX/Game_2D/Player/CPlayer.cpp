@@ -151,6 +151,20 @@ void CPlayer::Skill1Release()
 	}
 }
 
+void CPlayer::MoveTarget()
+{
+	if (auto Move = MovementComponent.lock())
+	{
+		if (auto World = this->World.lock())
+		{
+			if (auto Input = World->GetInput().lock())
+			{
+				Move->MovePath(Input->GetMouseWorldPos());
+			}
+		}
+	}
+}
+
 bool CPlayer::Init()
 {
 	if (!CGameObject::Init())
@@ -297,6 +311,9 @@ bool CPlayer::Init()
 
 		Input->AddBindKey("Jump", VK_RETURN);
 		Input->SetBindFunction<CPlayer>("Jump", EInputType::Press, this, &CPlayer::JumpKey);
+
+		Input->AddBindKey("MoveTarget", VK_RBUTTON);
+		Input->SetBindFunction<CPlayer>("MoveTarget", EInputType::Press, this, &CPlayer::MoveTarget);
 	}
 
 	MovementComponent = CreateComponent<CObjectMovementComponent>("Movement");

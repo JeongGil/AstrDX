@@ -32,6 +32,7 @@ private:
 	void Skill1Press();
 	void Skill1Hold();
 	void Skill1Release();
+	void MoveTarget();
 
 private:
 

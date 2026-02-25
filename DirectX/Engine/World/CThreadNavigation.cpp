@@ -2,7 +2,11 @@
 
 #include <thread>
 
+#include "CNavAgent.h"
 #include "CNavigation.h"
+#include "CWorldNavigation.h"
+#include "../Component/CComponent.h"
+
 
 CThreadNavigation::CThreadNavigation()
 {
@@ -35,18 +39,47 @@ void CThreadNavigation::Run()
 			{
 				case ENavigationHeader::FindPath:
 				{
-					FVector2 Start, End;
+					FVector Start, End;
 
-					memcpy(&Start, Data, sizeof(FVector2));
-					memcpy(&End, Data + sizeof(FVector2),
-						sizeof(FVector2));
+					int DataSize = 0;
+
+					memcpy(&Start, Data, sizeof(FVector));
+					DataSize += sizeof(FVector);
+					memcpy(&End, Data + DataSize, sizeof(FVector));
+					DataSize += sizeof(FVector);
+
+					CComponent* AgPtr = nullptr;
+					memcpy(&AgPtr, Data + DataSize, sizeof(CComponent*));
+
+					std::shared_ptr<CNavAgent> Agent = std::dynamic_pointer_cast<CNavAgent>(AgPtr->shared_from_this());
 
 					// Performs pathfinding.
-					std::list<FVector2>	PathList;
+					std::list<FVector>	PathList;
 
 					if (Navigation->FindPath(Start, End, PathList))
 					{
 						// If a path is found, it adds the route.
+						memset(Data, 0, 1024);
+						DataSize = 0;
+
+						memcpy(Data, &AgPtr, sizeof(CComponent*));
+						DataSize += sizeof(CComponent*);
+
+						int	Count = (int)PathList.size();
+						memcpy(Data + DataSize, &Count, sizeof(int));
+						DataSize += sizeof(int);
+
+						for (const auto& Path : PathList)
+						{
+							FVector Pos = Path;
+							memcpy(Data + DataSize, &Pos, sizeof(FVector3));
+							DataSize += sizeof(FVector3);
+						}
+
+						if (auto WorldNav = WorldNavigation.lock())
+						{
+							WorldNav->AddData(ENavigationHeader::FindComplete, DataSize, Data);
+						}
 					}
 
 					break;

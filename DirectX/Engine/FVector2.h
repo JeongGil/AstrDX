@@ -25,6 +25,13 @@ struct FVector2
 	{
 	}
 
+	explicit FVector2(FVector v) :
+		x(v.x),
+		y(v.y)
+	{
+	}
+
+
 #pragma endregion Construction
 
 #pragma region Equal

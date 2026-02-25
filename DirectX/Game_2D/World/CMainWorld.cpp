@@ -27,19 +27,23 @@ bool CMainWorld::Init()
 
 	CreateUI();
 
-	auto TileMap = CreateGameObject<CTileMapMain>("TileMap");
+	auto WeakTileMap = CreateGameObject<CTileMapMain>("TileMap");
+	if (auto TileMap = WeakTileMap.lock())
+	{
+		TileMap->LoadTileMap(TEXT("Map/MainMap.tlm"), "Asset");
+	}
 
 	auto WeakPlayer = CreateGameObject<CPlayer>("Player");
 
-	for (int i = 0; i < 30; i++)
-	{
-		auto Weak = CreateGameObject<CMonster>("Monster");
-		if (auto Monster = Weak.lock())
-		{
-			Monster->SetWorldPosition(-500.f + i * 30.f, 300.f);
-			//Monster->SetWorldRotationZ(180.f);
-		}
-	}
+	//for (int i = 0; i < 30; i++)
+	//{
+	//	auto Weak = CreateGameObject<CMonster>("Monster");
+	//	if (auto Monster = Weak.lock())
+	//	{
+	//		Monster->SetWorldPosition(-500.f + i * 30.f, 300.f);
+	//		//Monster->SetWorldRotationZ(180.f);
+	//	}
+	//}
 
 	std::weak_ptr<CGameObject> Wall = CreateGameObject<CGameObject>("Wall");
 
@@ -53,21 +57,21 @@ bool CMainWorld::Init()
 	WallBox->SetWorldPosition(0.f, -200.f);
 	WallBox->SetStatic(true);
 
-	auto WeakMonster = CreateGameObject<CMonster>("Monster");
-	if (auto Monster = WeakMonster.lock())
-	{
-		Monster->SetWorldPosition(400.f, 300.f);
-		Monster->SetWorldRotationZ(180.f);
-	}
+	//auto WeakMonster = CreateGameObject<CMonster>("Monster");
+	//if (auto Monster = WeakMonster.lock())
+	//{
+	//	Monster->SetWorldPosition(400.f, 300.f);
+	//	Monster->SetWorldRotationZ(180.f);
+	//}
 
-	auto WeakMSP = CreateGameObject<CMonsterSpawnPoint>("SpawnPoint");
-	if (auto MSP = WeakMSP.lock())
-	{
-		MSP->SetWorldPosition(100.f, 0.f);
-		MSP->SetWorldRotationZ(20.f);
-		MSP->SetSpawnType<CMonster>();
-		MSP->SetSpawnTime(5.f);
-	}
+	//auto WeakMSP = CreateGameObject<CMonsterSpawnPoint>("SpawnPoint");
+	//if (auto MSP = WeakMSP.lock())
+	//{
+	//	MSP->SetWorldPosition(100.f, 0.f);
+	//	MSP->SetWorldRotationZ(20.f);
+	//	MSP->SetSpawnType<CMonster>();
+	//	MSP->SetSpawnTime(5.f);
+	//}
 
 	if (!CRenderManager::GetInst()->CheckPostProcess("Hit"))
 	{

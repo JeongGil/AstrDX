@@ -48,7 +48,7 @@ void CNavigation::SetTileMap(const std::weak_ptr<CTileMapComponent>& TileMap)
 	}
 }
 
-bool CNavigation::FindPath(const FVector2& Start, const FVector2& End, std::list<FVector2>& Paths)
+bool CNavigation::FindPath(const FVector& Start, const FVector& End, std::list<FVector>& Paths)
 {
 	auto TileMap = this->TileMap.lock();
 
@@ -154,7 +154,7 @@ bool CNavigation::FindPath(const FVector2& Start, const FVector2& End, std::list
 
 	StartNode->NodeType = ENavNodeType::Open;
 	StartNode->Dist = 0.f;
-	StartNode->Heuristic = StartNode->Center.Distance(End);
+	StartNode->Heuristic = End.Distance(StartNode->Center);
 	StartNode->Total = StartNode->Heuristic;
 
 	// The initial starting node begins by checking all 8 directions.
@@ -199,8 +199,72 @@ bool CNavigation::FindPath(const FVector2& Start, const FVector2& End, std::list
 	return false;
 }
 
-bool CNavigation::FindNode(FNavNode* Node, FNavNode* EndNode, const FVector2& End, std::list<FVector2>& Paths)
+bool CNavigation::FindNode(FNavNode* Node, FNavNode* EndNode, const FVector& End, std::list<FVector>& Paths)
 {
+	for (const auto& Dir : Node->SearchDirs)
+	{
+		// 현재 방향으로 탐색해나가며 코너를 찾아온다.
+		FNavNode* Corner = GetCorner(Dir, Node, EndNode);
+
+		// 코너가 없을 경우 다음 방향을 검사하게 한다.
+		if (!Corner)
+		{
+			continue;
+		}
+
+		if (Corner == EndNode)
+		{
+			UsedNodes.emplace_back(Corner);
+
+			// 도착점을 경로에 넣어준다.
+			Paths.emplace_back(End);
+
+			FNavNode* PathNode = Node;
+
+			while (PathNode)
+			{
+				FVector Center;
+				Center = PathNode->Center;
+
+				Paths.emplace_front(Center);
+				PathNode = PathNode->Parent;
+			}
+
+			// 시작노드의 위치는 필요없기 때문에 제거한다.
+			Paths.pop_front();
+
+			return true;
+		}
+
+		float Dist = Node->Dist + Node->Center.Distance(Corner->Center);
+
+		// 구해준 코너가 열린목록에 이미 들어가 있는 노드일 경우
+		if (Corner->NodeType == ENavNodeType::Open)
+		{
+			if (Corner->Dist > Dist)
+			{
+				Corner->Dist = Dist;
+				Corner->Total = Dist + Corner->Heuristic;
+				Corner->Parent = Node;
+
+				AddDir(Dir, Corner);
+			}
+		}
+		else
+		{
+			Corner->NodeType = ENavNodeType::Open;
+			Corner->Dist = Dist;
+			Corner->Heuristic = End.Distance(Corner->Center);
+			Corner->Total = Dist + Corner->Heuristic;
+			Corner->Parent = Node;
+
+			OpenNodes.emplace_back(Corner);
+			UsedNodes.emplace_back(Corner);
+
+			AddDir(Dir, Corner);
+		}
+	}
+
 	return false;
 }
 
