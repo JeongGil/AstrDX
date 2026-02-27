@@ -3,15 +3,16 @@
 
 class CPlayerCharacter;
 
-class CNonPlayerCharacter :
+class CEnemy :
     public CCharacter
 {
 public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
+	float TakeDamage(float Damage) override;
 
 protected:
-	CNonPlayerCharacter* Clone() override;
+	CEnemy* Clone() override;
 
 protected:
 	std::weak_ptr<CMeshComponent> Mesh;

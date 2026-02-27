@@ -1,4 +1,4 @@
-#include "CNonPlayerCharacter.h"
+#include "CEnemy.h"
 
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
@@ -9,7 +9,7 @@
 #include "../Table/MiscInfo.h"
 #include "../Table/MiscTable.h"
 
-bool CNonPlayerCharacter::Init()
+bool CEnemy::Init()
 {
 	if (!CCharacter::Init())
 	{
@@ -52,7 +52,7 @@ bool CNonPlayerCharacter::Init()
 	return true;
 }
 
-void CNonPlayerCharacter::Update(const float DeltaTime)
+void CEnemy::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
 
@@ -70,7 +70,14 @@ void CNonPlayerCharacter::Update(const float DeltaTime)
 	}
 }
 
-CNonPlayerCharacter* CNonPlayerCharacter::Clone()
+float CEnemy::TakeDamage(float Damage)
 {
-	return new CNonPlayerCharacter(*this);
+
+
+	return 0.f;
+}
+
+CEnemy* CEnemy::Clone()
+{
+	return new CEnemy(*this);
 }
