@@ -116,14 +116,8 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 			auto SrcToDest = SrcProfile->Interaction[DestProfile->Channel->Channel];
 			auto DestToSrc = DestProfile->Interaction[SrcProfile->Channel->Channel];
 
-			if (SrcToDest == ECollisionInteraction::Ignore
-				|| DestToSrc == ECollisionInteraction::Ignore)
-			{
-				continue;
-			}
-
-			// Cannot solve block vs overlap.
-			if (SrcToDest != DestToSrc)
+			auto GCI = min(SrcToDest, DestToSrc);
+			if (GCI == ECollisionInteraction::Ignore)
 			{
 				continue;
 			}
@@ -131,7 +125,8 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 			FVector HitPoint, BlockMove;
 			if (SrcCollider->Collide(HitPoint, DestCollider))
 			{
-				if (SrcToDest == ECollisionInteraction::Block)
+				// Block
+				if (GCI == ECollisionInteraction::Block)
 				{
 					auto SrcObj = SrcCollider->GetOwner().lock();
 					auto DestObj = DestCollider->GetOwner().lock();
