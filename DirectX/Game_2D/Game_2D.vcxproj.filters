@@ -123,7 +123,7 @@
     <ClCompile Include="Character\CCharacter.cpp">
       <Filter>Character</Filter>
     </ClCompile>
-    <ClCompile Include="Character\CNonPlayerCharacter.cpp">
+    <ClCompile Include="Character\CEnemy.cpp">
       <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="CHitPointComponent.cpp">
@@ -248,7 +248,7 @@
     <ClInclude Include="Character\CCharacter.h">
       <Filter>Character</Filter>
     </ClInclude>
-    <ClInclude Include="Character\CNonPlayerCharacter.h">
+    <ClInclude Include="Character\CEnemy.h">
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Strings.h">

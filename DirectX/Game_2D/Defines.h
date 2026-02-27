@@ -124,6 +124,7 @@ namespace EStat
 		/// Unit: %
 		/// </summary>
 		EnemySpeed,
+		AbsorbAttack,
 #pragma endregion
 	};
 }
@@ -202,7 +203,7 @@ namespace ESpecialEffect
 
 struct FDamageScale
 {
-	EStat::Type DamageType = EStat::None;
+	EStat::Type StatType = EStat::None;
 	int ScalePercent = 0;
 };
 

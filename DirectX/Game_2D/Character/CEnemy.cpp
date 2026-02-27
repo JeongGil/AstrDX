@@ -70,9 +70,13 @@ void CEnemy::Update(const float DeltaTime)
 	}
 }
 
-float CEnemy::TakeDamage(float Damage)
+float CEnemy::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
-
+	auto PC = std::dynamic_pointer_cast<CPlayerCharacter>(Instigator.lock());
+	if (!PC)
+	{
+		return 0.f;
+	}
 
 	return 0.f;
 }

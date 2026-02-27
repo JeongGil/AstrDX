@@ -5,7 +5,7 @@
 #include <Render/CRenderManager.h>
 
 #include "../Strings.h"
-#include "../Character/CNonPlayerCharacter.h"
+#include "../Character/CEnemy.h"
 #include "../Character/CPlayerCharacter.h"
 #include "../Inventory/CInventoryData.h"
 #include "../Table/CTableManager.h"
@@ -46,19 +46,19 @@ bool CBrotatoWorld_Battle::Init()
 	}
 
 	/*static int Counter = 0;
-	auto WNPC = CreateGameObject<CNonPlayerCharacter>("Monster_" + std::to_string(Counter));
+	auto WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
 	if (auto NPC = WNPC.lock())
 	{
 		NPC->SetWorldPosition(300, 300);
 	}*/
 
-	//WNPC = CreateGameObject<CNonPlayerCharacter>("Monster_" + std::to_string(Counter));
+	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
 	//if (auto NPC = WNPC.lock())
 	//{
 	//	NPC->SetWorldPosition(-300, 300);
 	//}
 
-	//WNPC = CreateGameObject<CNonPlayerCharacter>("Monster_" + std::to_string(Counter));
+	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
 	//if (auto NPC = WNPC.lock())
 	//{
 	//	NPC->SetWorldPosition(300, -300);

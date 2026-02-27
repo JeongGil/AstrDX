@@ -108,7 +108,7 @@ void CMonster::Update(const float DeltaTime)
 	}
 }
 
-float CMonster::TakeDamage(float Damage)
+float CMonster::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
 	HP = static_cast<int>(std::clamp(static_cast<float>(HP) - Damage, 0.f, static_cast<float>(MaxHP)));
 

@@ -18,9 +18,11 @@ bool CGlobalSetting::Init()
 
 	CCollisionInfoManager::GetInst()->CreateChannel("PlayerAttack");
 	CCollisionInfoManager::GetInst()->CreateChannel("MonsterAttack");
+	CCollisionInfoManager::GetInst()->CreateChannel("FindEnemy");
 
 	CCollisionInfoManager::GetInst()->CreateProfile("PlayerAttack", "PlayerAttack", true);
 	CCollisionInfoManager::GetInst()->CreateProfile("MonsterAttack", "MonsterAttack", true);
+	CCollisionInfoManager::GetInst()->CreateProfile("FindEnemy", "FindEnemy", true, ECollisionInteraction::Ignore);
 
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("PlayerAttack", "PlayerAttack", ECollisionInteraction::Ignore);
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("PlayerAttack", "Player", ECollisionInteraction::Ignore);
@@ -35,13 +37,16 @@ bool CGlobalSetting::Init()
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("Player", "MonsterAttack", ECollisionInteraction::Block);
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("MonsterAttack", "Player", ECollisionInteraction::Block);
 
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("FindEnemy", "Monster", ECollisionInteraction::Overlap);
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("Monster", "FindEnemy", ECollisionInteraction::Overlap);
+
 	if (auto MouseWidget = CRenderManager::GetInst()->SetMouseWidget<CMouseWidget>(EMouseState::Normal, "MouseNormal").lock())
 	{
 		std::vector<const TCHAR*> TextureFileName;
 		for (int i = 0; i < 12; i++)
 		{
 			TCHAR* FileName = new TCHAR[MAX_PATH];
-			memset(FileName, 0, sizeof(TCHAR)* MAX_PATH);
+			memset(FileName, 0, sizeof(TCHAR) * MAX_PATH);
 			wsprintf(FileName, TEXT("Mouse/Default/%d.png"), i);
 
 			TextureFileName.push_back(FileName);

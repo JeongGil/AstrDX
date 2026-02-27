@@ -4,6 +4,8 @@
 #include "../Inventory/CInventoryItem_Weapon.h"
 #include <chrono>
 
+class CCollider;
+class CColliderSphere2D;
 class CMeshComponent;
 class CPlayerCharacter;
 class CInventoryItem_Weapon;
@@ -16,6 +18,7 @@ class CWeapon_Battle :
 public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
+	void PostUpdate(const float DeltaTime) override;
 
 protected:
 	CWeapon_Battle* Clone() override;
@@ -64,10 +67,17 @@ protected:
 private:
 	std::weak_ptr<CSceneComponent> GetClosestEnemy();
 
+	static int CalcAttackRange(const FWeaponInfo* WeaponInfo, const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
+	static float CalcAttackDamage(const FWeaponInfo* WeaponInfo, const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
+
+	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
+
 protected:
 	std::weak_ptr<CPlayerCharacter> Owner{};
 	std::weak_ptr<CColliderBox2D> Collider{};
 	std::weak_ptr<CMeshComponent> Mesh{};
+
+	std::weak_ptr<CColliderSphere2D> SearchCollider{};
 
 	TableID WeaponInfoID{ -1 };
 	std::weak_ptr<CInventoryItem_Weapon> Origin{};

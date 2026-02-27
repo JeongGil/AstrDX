@@ -163,7 +163,7 @@ public:
 	virtual void Render();
 	virtual void PostRender();
 	virtual void Destroy();
-	virtual float TakeDamage(float Damage);
+	virtual float TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator);
 
 protected:
 	virtual CGameObject* Clone();

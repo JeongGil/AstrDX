@@ -9,7 +9,7 @@ class CEnemy :
 public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
-	float TakeDamage(float Damage) override;
+	float TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator) override;
 
 protected:
 	CEnemy* Clone() override;

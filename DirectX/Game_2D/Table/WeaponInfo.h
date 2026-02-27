@@ -19,6 +19,7 @@ struct FWeaponInfo
 	int BaseDamage;
 	FDamageScale DamageScale1;
 	FDamageScale DamageScale2;
+	FDamageScale DamageScale3;
 	
 	int CooldownMS;
 	
@@ -65,17 +66,24 @@ struct FWeaponInfo
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<uint8_t>(Segment, Uint8Val)) { return false; }
-			DamageScale1.DamageType = static_cast<EStat::Type>(Uint8Val);
+			DamageScale1.StatType = static_cast<EStat::Type>(Uint8Val);
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, DamageScale1.ScalePercent)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<uint8_t>(Segment, Uint8Val)) { return false; }
-			DamageScale2.DamageType = static_cast<EStat::Type>(Uint8Val);
+			DamageScale2.StatType = static_cast<EStat::Type>(Uint8Val);
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, DamageScale2.ScalePercent)) { return false; }
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			if (!TryParse<uint8_t>(Segment, Uint8Val)) { return false; }
+			DamageScale3.StatType = static_cast<EStat::Type>(Uint8Val);
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			if (!TryParse<int>(Segment, DamageScale3.ScalePercent)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, CooldownMS)) { return false; }

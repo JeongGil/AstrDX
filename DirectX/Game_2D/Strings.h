@@ -66,6 +66,7 @@ namespace Key
 	{
 		inline const std::string Mesh = "Mesh";
 		inline const std::string Collider = "Collider";
+		inline const std::string SearchCollider = "SearchCollider";
 		inline const std::string Root = "Root";
 		inline const std::string Potato = "Potato";
 		inline const std::string Leg = "Leg";

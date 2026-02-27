@@ -20,10 +20,15 @@ public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
 	void PostUpdate(const float DeltaTime) override;
+	float TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator) override;
 
 	void SetCharacterVisual(TableID VisualInfoID);
 
 	void AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon);
+
+	int GetStat(EStat::Type StatType);
+
+	static int GetToolTipDmgReductionPercent(int Armor);
 
 protected:
 	CPlayerCharacter* Clone() override;
@@ -38,6 +43,8 @@ private:
 
 	void SetAnchorPosition(size_t WeaponCount);
 
+	static float GetArmoredDmgRatio(int Armor);
+
 protected:
 	TableID CharacterVisualInfoID = TableID(-1);
 
@@ -51,6 +58,8 @@ protected:
 	std::array<std::shared_ptr<CSceneComponent>, INVENTORY_MAX_WEAPON> WeaponAnchors;
 
 	std::weak_ptr<CObjectMovementComponent> MovementComponent;
+
+	int RemainAbsorbAttackStack = 0;
 
 private:
 	inline static std::unordered_map<size_t, std::vector<FVector2>> AnchorPositions =

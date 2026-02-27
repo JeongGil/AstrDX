@@ -172,7 +172,7 @@
     <ClCompile Include="CGlobalSetting.cpp" />
     <ClCompile Include="Character\CCharacter.cpp" />
     <ClCompile Include="Character\CCharacterData.cpp" />
-    <ClCompile Include="Character\CNonPlayerCharacter.cpp" />
+    <ClCompile Include="Character\CEnemy.cpp" />
     <ClCompile Include="Character\CPlayerCharacter.cpp" />
     <ClCompile Include="Character\CWeapon_Battle.cpp" />
     <ClCompile Include="CHitPointComponent.cpp" />
@@ -216,7 +216,7 @@
     <ClInclude Include="CGlobalSetting.h" />
     <ClInclude Include="Character\CCharacter.h" />
     <ClInclude Include="Character\CCharacterData.h" />
-    <ClInclude Include="Character\CNonPlayerCharacter.h" />
+    <ClInclude Include="Character\CEnemy.h" />
     <ClInclude Include="Character\CPlayerCharacter.h" />
     <ClInclude Include="Character\CWeapon_Battle.h" />
     <ClInclude Include="CHitPointComponent.h" />

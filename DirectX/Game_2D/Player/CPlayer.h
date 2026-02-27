@@ -65,7 +65,7 @@ public:
 	void Update(const float DeltaTime) override;
 	void Destroy() override;
 
-	float TakeDamage(float Damage) override;
+	float TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator) override;
 
 protected:
 	CPlayer() = default;

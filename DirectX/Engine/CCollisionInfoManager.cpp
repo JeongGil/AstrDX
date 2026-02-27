@@ -126,10 +126,10 @@ bool CCollisionInfoManager::CreateProfile(const std::string& Key, ECollisionChan
 	}
 }
 
-bool CCollisionInfoManager::SetProfileInteraction(const std::string& Key, const std::string& ChannelKey,
+bool CCollisionInfoManager::SetProfileInteraction(const std::string& ProfileKey, const std::string& ChannelKey,
 	ECollisionInteraction::Type Interaction)
 {
-	auto Profile = FindProfile(Key);
+	auto Profile = FindProfile(ProfileKey);
 	if (!Profile)
 	{
 		return false;

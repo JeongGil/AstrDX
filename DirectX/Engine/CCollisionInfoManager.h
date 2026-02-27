@@ -12,7 +12,7 @@ public:
 	bool CreateProfile(const std::string& Key, const std::string& ChannelKey, bool bEnable, ECollisionInteraction::Type DefaultInteraction = ECollisionInteraction::Block);
 	bool CreateProfile(const std::string& Key, ECollisionChannel::Type Channel, bool bEnable, ECollisionInteraction::Type DefaultInteraction = ECollisionInteraction::Block);
 
-	bool SetProfileInteraction(const std::string& Key, const std::string& ChannelKey, ECollisionInteraction::Type Interaction);
+	bool SetProfileInteraction(const std::string& ProfileKey, const std::string& ChannelKey, ECollisionInteraction::Type Interaction);
 	bool SetProfileInteraction(const std::string& Key, ECollisionChannel::Type Channel, ECollisionInteraction::Type Interaction);
 
 	bool SetProfileEnable(const std::string& Key, bool bEnable);

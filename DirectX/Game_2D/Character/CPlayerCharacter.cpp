@@ -1,22 +1,23 @@
 #include "CPlayerCharacter.h"
 
+#include <atlbase.h>
+#include <atlconv.h>
 #include <CDevice.h>
+#include <CEngine.h>
+#include <Asset/Material/CMaterial.h>
 #include <Component/CCameraComponent.h>
+#include <Component/CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 #include <Component/CObjectMovementComponent.h>
-#include <World/CWorld.h>
-#include <Asset/Material/CMaterial.h>
 #include <Component/CSceneComponent.h>
-#include <Component/CColliderBox2D.h>
+#include <World/CWorld.h>
 
+#include "CEnemy.h"
 #include "CWeapon_Battle.h"
 #include "../Strings.h"
 #include "../Inventory/CInventoryItem_Weapon.h"
 #include "../Table/CharacterVisualTable.h"
 #include "../Table/MiscTable.h"
-
-#include <atlbase.h>
-#include <atlconv.h>
 
 bool CPlayerCharacter::Init()
 {
@@ -124,6 +125,8 @@ bool CPlayerCharacter::Init()
 		}
 	}
 
+	RemainAbsorbAttackStack = GetStat(EStat::AbsorbAttack);
+
 	return true;
 }
 
@@ -155,6 +158,37 @@ void CPlayerCharacter::Update(const float DeltaTime)
 void CPlayerCharacter::PostUpdate(const float DeltaTime)
 {
 	CCharacter::PostUpdate(DeltaTime);
+}
+
+float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
+{
+	auto Enemy = std::dynamic_pointer_cast<CEnemy>(Instigator.lock());
+	if (!Enemy)
+	{
+		return 0.f;
+	}
+
+	auto MT = CEngine::GetInst()->GetMT();
+	std::uniform_real_distribution<float> Dist(0.f, 100.f);
+	auto Dice = Dist(MT);
+	if (Dice < GetStat(EStat::Dodge) * 0.01f)
+	{
+		// TODO: Generate Dodge event.
+
+		return 0.f;
+	}
+
+	if (RemainAbsorbAttackStack > 0)
+	{
+		--RemainAbsorbAttackStack;
+
+		return 0.f;
+	}
+
+	// Round enemy damage before apply armor.
+	Damage = round(Damage);
+
+	return Damage * GetArmoredDmgRatio(GetStat(EStat::Armor));
 }
 
 void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
@@ -204,6 +238,23 @@ void CPlayerCharacter::SetAnchorPosition(size_t WeaponCount)
 	}
 }
 
+float CPlayerCharacter::GetArmoredDmgRatio(int Armor)
+{
+	float fArmor = static_cast<float>(Armor);
+
+	if (Armor > 0)
+	{		
+		return 1.f / (1.f + fArmor / 15.f);
+	}
+
+	if (Armor < 0)
+	{
+		return (15.f - 2.f * fArmor) / (15.f - fArmor);
+	}
+
+	return 1.f;
+}
+
 void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
 {
 	CharacterVisualInfoID = VisualInfoID;
@@ -250,6 +301,16 @@ void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Wea
 	}
 
 	SetAnchorPosition(Weapons.size());
+}
+
+int CPlayerCharacter::GetStat(EStat::Type StatType)
+{
+	return 0;
+}
+
+int CPlayerCharacter::GetToolTipDmgReductionPercent(int Armor)
+{
+	return static_cast<int>(round((1.f - GetArmoredDmgRatio(Armor)) * 100.f));
 }
 
 CPlayerCharacter* CPlayerCharacter::Clone()
