@@ -32,6 +32,11 @@ void CInventoryData::AddWeapon(const FShopGoods& WeaponGoods)
 	{
 		return;
 	}
+
+	// TODO: 작업 필요.
+	assert(false);
+
+	RefreshWeaponTypeCounts();
 }
 
 void CInventoryData::AddWeapon(TableID WeaponID)
@@ -49,6 +54,8 @@ void CInventoryData::AddWeapon(TableID WeaponID)
 
 	auto Added = Weapons.emplace_back(std::make_shared<CInventoryItem_Weapon>());
 	Added->SetWeaponInfoID(WeaponID);
+
+	RefreshWeaponTypeCounts();
 }
 
 void CInventoryData::RemoveWeapon(size_t SlotIdx)
@@ -58,6 +65,8 @@ void CInventoryData::RemoveWeapon(size_t SlotIdx)
 	if (SlotIdx < Weapons.size())
 	{
 		Weapons.erase(Weapons.begin() + SlotIdx);
+
+		RefreshWeaponTypeCounts();
 	}
 }
 
@@ -75,7 +84,31 @@ void CInventoryData::RemoveWeapon(const std::weak_ptr<CInventoryItem_Weapon>& We
 		if (It->get() == InvenWeapon.get())
 		{
 			Weapons.erase(It);
+
+			RefreshWeaponTypeCounts();
+
 			return;
+		}
+	}
+}
+
+void CInventoryData::RefreshWeaponTypeCounts()
+{
+	WeaponTypeCounts.clear();
+
+	for (const auto& Weapon : Weapons)
+	{
+		FWeaponInfo* Info;
+		if (WeaponTable::GetInst().TryGet(Weapon->GetWeaponInfoID(), Info))
+		{
+			for (int i = 0; i <= 16; i++)
+			{
+				auto Type = static_cast<EWeaponType::Type>(1 << i);
+				if (Info->WeaponType & Type)
+				{
+					++WeaponTypeCounts[Type];
+				}
+			}
 		}
 	}
 }

@@ -83,6 +83,8 @@ private:
 	std::weak_ptr<CProjectileMovementComponent> MovementComponent;
 	std::weak_ptr<CColliderBox2D> Body;
 
+	std::weak_ptr<CGameObject> Instigator;
+
 public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
@@ -98,5 +100,15 @@ protected:
 
 public:
 	~CBullet() override = default;
+
+	[[nodiscard]] std::weak_ptr<CGameObject> GetInstigator() const
+	{
+		return Instigator;
+	}
+
+	void SetInstigator(const std::weak_ptr<CGameObject>& Instigator)
+	{
+		this->Instigator = Instigator;
+	}
 };
 

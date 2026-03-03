@@ -56,7 +56,7 @@ bool CWeapon_Battle::Init()
 	SearchCollider = CreateComponent<CColliderSphere2D>(Key::Comp::SearchCollider, Key::Comp::Root);
 	if (auto Search = SearchCollider.lock())
 	{
-
+		Search->SetOnCollisionBlock<CWeapon_Battle>(this, &CWeapon_Battle::OnSearchCollisionBlock);
 	}
 
 	if (const auto* Misc = MiscTable::GetInst().Get())
@@ -71,17 +71,61 @@ void CWeapon_Battle::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 
+	const FWeaponInfo* WeaponInfo = WeaponTable::GetInst().Get(GetWeaponInfoID());
+
 	if (auto Anchor = PosAnchor.lock())
 	{
 		SetWorldPosition(Anchor->GetWorldPosition());
 	}
 
-	//Target = GetClosestEnemy();
-	//if (auto Target = this->Target.lock())
-	//{
-	//	// Look at target.
-	//	float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldRotation(), EAxis::Y);
-	//	SetWorldRotationZ(Degree);
+	// 대상 조준
+	if (auto Target = ClosestEnemy.lock())
+	{
+		float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldRotation(), EAxis::Y);
+		SetWorldRotationZ(Degree);
+	}
+
+	// 근접공격은 공격모션 종료 후 대기시간 감소.
+	// 원거리 무기 or 근접공격의 모션 종료
+	if (!bOnMeleeAttack)
+	{
+		ElapsedCooldownTime += DeltaTime;
+	}
+
+	if (WeaponInfo != nullptr)
+	{
+		float CooldownSec = WeaponInfo->CooldownMS * 0.001f;
+		if (ElapsedCooldownTime >= CooldownSec)
+		{
+			if (ElapsedCooldownTime == std::numeric_limits<float>::infinity())
+			{
+				ElapsedCooldownTime = 0.f;
+			}
+			else
+			{
+				ElapsedCooldownTime -= CooldownSec;
+			}
+
+			// 근접공격은 따로
+			if (WeaponInfo->bIsMeleeWeapon)
+			{
+				bOnMeleeAttack = true;
+				ElapsedMeleeMovingTime = 0.f;
+			}
+			// 원거리 투사체
+			else
+			{
+				
+			}
+		}
+	}
+
+	// 근접 무기 공격중 무기 이동 처리.
+	if (bOnMeleeAttack)
+	{
+		
+	}
+
 
 	//	// Attack
 	//	if (auto InvenWeapon = Origin.lock())
@@ -124,6 +168,10 @@ void CWeapon_Battle::PostUpdate(const float DeltaTime)
 {
 	CGameObject::PostUpdate(DeltaTime);
 
+	// 오브젝트의 PostUpdate이후 충돌 처리됨.
+	// 그 전에 초기화.
+	ClosestSqrDist = FLT_MAX;
+	ClosestEnemy.reset();
 	if (const FWeaponInfo* Info = WeaponTable::GetInst().Get(GetWeaponInfoID()))
 	{
 		if (auto Search = SearchCollider.lock())
@@ -208,7 +256,7 @@ int CWeapon_Battle::CalcAttackRange(const FWeaponInfo* WeaponInfo,
 		return 0.f;
 	}
 
-	return WeaponInfo->Range + PC->GetStat(EStat::Range);
+	return WeaponInfo->Range + static_cast<int>(PC->GetStat(EStat::Range));
 }
 
 float CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
@@ -248,7 +296,7 @@ float CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 	auto MT = CEngine::GetInst()->GetMT();
 	std::uniform_real_distribution<float> Dist(0.f, 100.f);
 	float Dice = Dist(MT);
-	if (Dice < WeaponInfo->CritChancePercent*0.01f)
+	if (Dice < WeaponInfo->CritChancePercent * 0.01f)
 	{
 		Damage *= WeaponInfo->CritDamagePercent * 0.01f;
 	}
@@ -283,5 +331,20 @@ void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 	if (ColChar && ColChar->GetAlive() && ColChar->GetEnable())
 	{
 		// TODO: 넉백
+	}
+}
+
+void CWeapon_Battle::OnSearchCollisionBlock(const FVector& HitPoint, CCollider* Other)
+{
+	if (Other == nullptr)
+	{
+		return;
+	}
+
+	auto SqrDist = (GetWorldPosition() - Other->GetWorldPosition()).SqrLength();
+	if (SqrDist < ClosestSqrDist)
+	{
+		ClosestSqrDist = SqrDist;
+		ClosestEnemy = Other->GetOwner();
 	}
 }

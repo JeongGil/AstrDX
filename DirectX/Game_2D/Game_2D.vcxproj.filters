@@ -147,9 +147,6 @@
     <ClCompile Include="Inventory\CInventoryItem.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="Character\CCharacterData.cpp">
-      <Filter>Character</Filter>
-    </ClCompile>
     <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
@@ -305,9 +302,6 @@
     <ClInclude Include="Inventory\CInventoryItem.h">
       <Filter>Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="Character\CCharacterData.h">
-      <Filter>Character</Filter>
-    </ClInclude>
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h">
       <Filter>Inventory</Filter>
     </ClInclude>
@@ -376,6 +370,12 @@
     </ClInclude>
     <ClInclude Include="Player\CEditorPlayer.h">
       <Filter>Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\WeaponSetBonusInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\WeaponSetBonusTable.h">
+      <Filter>Table</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

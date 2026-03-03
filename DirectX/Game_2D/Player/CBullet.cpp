@@ -91,7 +91,7 @@ void CBullet::OnCollisionBlock(const FVector& HitPoint, CCollider* Other)
 
 		if (auto OtherObj = Other->GetOwner().lock())
 		{
-			OtherObj->TakeDamage(1.f, TODO);
+			OtherObj->TakeDamage(1.f, Instigator);
 		}
 
 		//if (auto AssetMgr = World->GetWorldAssetManager().lock())

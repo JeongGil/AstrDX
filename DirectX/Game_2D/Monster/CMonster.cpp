@@ -136,6 +136,7 @@ void CMonster::AttackNotify()
 			BulletObj->SetCollision("MonsterAttack");
 			BulletObj->SetWorldPosition(BulletPos);
 			BulletObj->SetWorldRotation(GetWorldRotation());
+			BulletObj->SetInstigator(std::dynamic_pointer_cast<CGameObject>(shared_from_this()));
 
 			auto Target = this->FireTarget.lock();
 

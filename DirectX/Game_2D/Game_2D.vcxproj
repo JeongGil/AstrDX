@@ -171,7 +171,6 @@
   <ItemGroup>
     <ClCompile Include="CGlobalSetting.cpp" />
     <ClCompile Include="Character\CCharacter.cpp" />
-    <ClCompile Include="Character\CCharacterData.cpp" />
     <ClCompile Include="Character\CEnemy.cpp" />
     <ClCompile Include="Character\CPlayerCharacter.cpp" />
     <ClCompile Include="Character\CWeapon_Battle.cpp" />
@@ -215,7 +214,6 @@
   <ItemGroup>
     <ClInclude Include="CGlobalSetting.h" />
     <ClInclude Include="Character\CCharacter.h" />
-    <ClInclude Include="Character\CCharacterData.h" />
     <ClInclude Include="Character\CEnemy.h" />
     <ClInclude Include="Character\CPlayerCharacter.h" />
     <ClInclude Include="Character\CWeapon_Battle.h" />
@@ -251,6 +249,8 @@
     <ClInclude Include="Table\MiscTable.h" />
     <ClInclude Include="Table\StringTable.h" />
     <ClInclude Include="Table\WeaponInfo.h" />
+    <ClInclude Include="Table\WeaponSetBonusInfo.h" />
+    <ClInclude Include="Table\WeaponSetBonusTable.h" />
     <ClInclude Include="Table\WeaponTable.h" />
     <ClInclude Include="Thread\CLoadingThread.h" />
     <ClInclude Include="UI\CEditorWidget.h" />

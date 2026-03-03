@@ -12,7 +12,8 @@ struct FWeaponInfo
 	std::string IconPath;
 	std::string SpritePath;
 	
-	EWeaponType::Type Type;
+	bool bIsMeleeWeapon;
+	EWeaponType::Type WeaponType;
 
 	int Tier;
 
@@ -55,8 +56,12 @@ struct FWeaponInfo
 			if (!std::getline(Stream, SpritePath, Delim)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
+			if (!TryParse<int>(Segment, IntVal)) { return false; }
+			bIsMeleeWeapon = IntVal == 1;
+
+			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<uint32_t>(Segment, Uint32Val)) { return false; }
-			Type = static_cast<EWeaponType::Type>(Uint32Val);
+			WeaponType = static_cast<EWeaponType::Type>(Uint32Val);
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<int>(Segment, Tier)) { return false; }

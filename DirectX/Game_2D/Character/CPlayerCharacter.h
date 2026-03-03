@@ -26,7 +26,7 @@ public:
 
 	void AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon);
 
-	int GetStat(EStat::Type StatType);
+	float GetStat(EStat::Type StatType);
 
 	static int GetToolTipDmgReductionPercent(int Armor);
 
@@ -61,6 +61,11 @@ protected:
 
 	int RemainAbsorbAttackStack = 0;
 
+	std::unordered_map<EStat::Type, float> BaseStats;
+	std::unordered_map<EStat::Type, float> UpgradeStats;
+
+	float CurrHP{};
+
 private:
 	inline static std::unordered_map<size_t, std::vector<FVector2>> AnchorPositions =
 	{
@@ -81,5 +86,17 @@ protected:
 
 public:
 	~CPlayerCharacter() override = default;
+
+	[[nodiscard]] float GetCurrHP() const
+	{
+		return CurrHP;
+	}
+
+	void SetCurrHP(float CurrHP)
+	{
+		CurrHP = max(0.f, CurrHP);
+		CurrHP = std::clamp(CurrHP, 0.f, GetStat(EStat::MaxHP));
+		this->CurrHP = CurrHP;
+	}
 };
 

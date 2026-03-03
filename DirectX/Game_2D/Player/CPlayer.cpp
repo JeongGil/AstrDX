@@ -129,6 +129,7 @@ void CPlayer::Skill1Press()
 			Bullet->SetWorldPosition(GetWorldPosition() + GetAxis(EAxis::Y) * 75.f);
 			Bullet->SetWorldRotation(GetWorldRotation());
 			Bullet->SetEnableMove(false);
+			Bullet->SetInstigator(std::dynamic_pointer_cast<CGameObject>(shared_from_this()));
 		}
 	}
 }

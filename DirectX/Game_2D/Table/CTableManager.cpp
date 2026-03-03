@@ -5,6 +5,7 @@
 #include "CharacterVisualTable.h"
 #include "ItemTable.h"
 #include "MiscTable.h"
+#include "WeaponSetBonusTable.h"
 #include "WeaponTable.h"
 #include "../Strings.h"
 #include "../Utility.h"
@@ -22,6 +23,7 @@ void CTableManager::LoadTables()
 	MiscTable::GetInst().Load(GetFilePath(TEXT("Misc")));
 	CharacterVisualTable::GetInst().Load(GetFilePath(TEXT("CharacterVisual")));
 	WeaponTable::GetInst().Load(GetFilePath(TEXT("Weapon")));
+	WeaponSetBonusTable::GetInst().Load(GetFilePath(TEXT("WeaponSetBonus")));
 }
 
 std::string CTableManager::GetFilePath(const TCHAR* FileName, const std::string& PathKey)

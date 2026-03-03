@@ -72,6 +72,10 @@ private:
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
 
+	float ClosestSqrDist = FLT_MAX;
+	std::weak_ptr<CGameObject> ClosestEnemy;
+	void OnSearchCollisionBlock(const FVector& HitPoint, CCollider* Other);
+
 protected:
 	std::weak_ptr<CPlayerCharacter> Owner{};
 	std::weak_ptr<CColliderBox2D> Collider{};
@@ -87,9 +91,11 @@ protected:
 	float MoveSpeed = 200.f;
 
 private:
-	std::weak_ptr<CSceneComponent> Target{};
+	float ElapsedCooldownTime = std::numeric_limits<float>::infinity();
 
-	std::chrono::steady_clock::time_point LastFiredTime{};
-	//float Elapsed{};
+	bool bOnMeleeAttack{};
+	float ElapsedMeleeMovingTime = std::numeric_limits<float>::infinity();
+	float MovedDistance = std::numeric_limits<float>::infinity();
+	FVector MeleeTargetPos = FVector::Zero;
 };
 

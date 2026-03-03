@@ -8,14 +8,26 @@ namespace EWeaponType
 {
 	enum Type : uint32_t
 	{
-		Naval = 1 << 0,
-		Heavy = 1 << 1,
-		Blunt = 1 << 2,
-		Primitive = 1 << 3,
-		Blade = 1 << 4,
-		Tool = 1 << 5,
-		Medical = 1 << 6,
-		Unarmed = 1 << 7,
+		None		= 0,
+		All			= ~None,
+
+		Blade		= 1 << 0,
+		Blunt		= 1 << 1,
+		Elemental	= 1 << 2,
+		Ethereal	= 1 << 3,
+		Explosive	= 1 << 4,
+		Gun			= 1 << 5,
+		Heavy		= 1 << 6,
+		Legendary	= 1 << 7,
+		Medical		= 1 << 8,
+		Medieval	= 1 << 9,
+		Musical		= 1 << 10,
+		Naval		= 1 << 11,
+		Precise		= 1 << 12,
+		Primitive	= 1 << 13,
+		Support		= 1 << 14,
+		Tool		= 1 << 15,
+		Unarmed		= 1 << 16,
 	};
 }
 
@@ -124,6 +136,9 @@ namespace EStat
 		/// Unit: %
 		/// </summary>
 		EnemySpeed,
+
+		// ------ Custom ------
+
 		AbsorbAttack,
 #pragma endregion
 	};

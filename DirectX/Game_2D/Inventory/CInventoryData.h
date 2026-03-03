@@ -10,6 +10,15 @@ class CInventoryItem_Weapon;
 
 class CInventoryData
 {
+private:
+	CInventoryData() = default;
+	~CInventoryData() = default;
+
+private:
+	std::vector<std::shared_ptr<CInventoryItem_Weapon>> Weapons;
+	std::vector<std::shared_ptr<CInventoryItem_Item>> Items;
+
+	std::unordered_map<EWeaponType::Type, int> WeaponTypeCounts;
 public:
 	bool Init();
 
@@ -30,9 +39,24 @@ public:
 		Items.clear();
 	}
 
+	int GetWeaponTypeCount(EWeaponType::Type WeaponType) const
+	{
+		auto It = WeaponTypeCounts.find(WeaponType);
+		if (It == WeaponTypeCounts.end())
+		{
+			return 0;
+		}
+
+		return It->second;
+	}
+
+	const std::unordered_map<EWeaponType::Type, int>& GetWeaponTypeCounts() const
+	{
+		return WeaponTypeCounts;
+	}
+
 private:
-	std::vector<std::shared_ptr<CInventoryItem_Weapon>> Weapons;
-	std::vector<std::shared_ptr<CInventoryItem_Item>> Items;
+	void RefreshWeaponTypeCounts();
 
 public:
 	static CInventoryData& GetInst()
@@ -40,9 +64,5 @@ public:
 		static CInventoryData Inst;
 		return Inst;
 	}
-
-private:
-	CInventoryData() = default;
-	~CInventoryData() = default;
 };
 

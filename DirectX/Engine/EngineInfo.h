@@ -19,6 +19,7 @@
 #include <unordered_map>
 #include <vector>
 #include <Windows.h>
+#include <limits>
 
 // check memory leak
 #include <crtdbg.h>

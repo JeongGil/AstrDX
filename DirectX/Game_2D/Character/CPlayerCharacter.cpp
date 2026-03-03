@@ -15,9 +15,11 @@
 #include "CEnemy.h"
 #include "CWeapon_Battle.h"
 #include "../Strings.h"
+#include "../Inventory/CInventoryData.h"
 #include "../Inventory/CInventoryItem_Weapon.h"
 #include "../Table/CharacterVisualTable.h"
 #include "../Table/MiscTable.h"
+#include "../Table/WeaponSetBonusTable.h"
 
 bool CPlayerCharacter::Init()
 {
@@ -125,7 +127,7 @@ bool CPlayerCharacter::Init()
 		}
 	}
 
-	RemainAbsorbAttackStack = GetStat(EStat::AbsorbAttack);
+	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
 
 	return true;
 }
@@ -188,7 +190,9 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 	// Round enemy damage before apply armor.
 	Damage = round(Damage);
 
-	return Damage * GetArmoredDmgRatio(GetStat(EStat::Armor));
+	SetCurrHP(GetCurrHP() - Damage);
+
+	return Damage * GetArmoredDmgRatio(static_cast<int>(GetStat(EStat::Armor)));
 }
 
 void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
@@ -243,7 +247,7 @@ float CPlayerCharacter::GetArmoredDmgRatio(int Armor)
 	float fArmor = static_cast<float>(Armor);
 
 	if (Armor > 0)
-	{		
+	{
 		return 1.f / (1.f + fArmor / 15.f);
 	}
 
@@ -303,9 +307,43 @@ void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Wea
 	SetAnchorPosition(Weapons.size());
 }
 
-int CPlayerCharacter::GetStat(EStat::Type StatType)
+float CPlayerCharacter::GetStat(EStat::Type StatType)
 {
-	return 0;
+	float Value{};
+
+	if (BaseStats.contains(StatType))
+	{
+		Value += BaseStats[StatType];
+	}
+
+	if (UpgradeStats.contains(StatType))
+	{
+		Value += UpgradeStats[StatType];
+	}
+
+	// Weapon Set Bonus.
+	for (const auto& [WeaponType, TypeCount] : CInventoryData::GetInst().GetWeaponTypeCounts())
+	{
+		FWeaponSetBonusInfo* Info;
+
+		TableID ID(static_cast<int>(WeaponType));
+		if (WeaponSetBonusTable::GetInst().TryGet(ID, Info))
+		{
+			auto Bonus = Info->Bonus1[TypeCount - 1];
+			if (Bonus.StatType == StatType)
+			{
+				Value += Bonus.StatValue;
+			}
+
+			Bonus = Info->Bonus2[TypeCount - 1];
+			if (Bonus.StatType == StatType)
+			{
+				Value += Bonus.StatValue;
+			}
+		}
+	}
+
+	return Value;
 }
 
 int CPlayerCharacter::GetToolTipDmgReductionPercent(int Armor)
