@@ -21,6 +21,21 @@ void CProjectileMovementComponent::PostUpdate(const float DeltaTime)
 {
 	CMovementComponent::PostUpdate(DeltaTime);
 
+	if (LifeTime > 0.f)
+	{
+		LifeTime -= DeltaTime;
+		if (LifeTime <=0.f)
+		{
+			if (RangeFunction)
+			{
+				RangeFunction();
+			}
+
+			Destroy();
+			return;
+		}
+	}
+
 	auto Cmp = UpdateComponent.lock();
 	if (!Cmp)
 	{

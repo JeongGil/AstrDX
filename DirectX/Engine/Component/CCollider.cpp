@@ -22,9 +22,9 @@ void CCollider::SetDrawDebug(bool bDrawDebug)
 	}
 }
 
-void CCollider::SetCollisionProfile(const std::string& Key)
+void CCollider::SetCollisionProfile(const std::string& ProfileKey)
 {
-	Profile = CCollisionInfoManager::GetInst()->FindProfile(Key);
+	Profile = CCollisionInfoManager::GetInst()->FindProfile(ProfileKey);
 }
 
 bool CCollider::CheckCollidingObject(CCollider* Other) const

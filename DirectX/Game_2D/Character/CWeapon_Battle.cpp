@@ -10,6 +10,7 @@
 
 #include "CEnemy.h"
 #include "CPlayerCharacter.h"
+#include "CProjectile.h"
 #include "../Strings.h"
 #include "../Table/MiscTable.h"
 #include "../Table/WeaponTable.h"
@@ -71,7 +72,17 @@ void CWeapon_Battle::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 
+	auto Owner = this->Owner.lock();
+	if (!Owner)
+	{
+		return;
+	}
+
 	const FWeaponInfo* WeaponInfo = WeaponTable::GetInst().Get(GetWeaponInfoID());
+	if (!WeaponInfo)
+	{
+		return;
+	}
 
 	if (auto Anchor = PosAnchor.lock())
 	{
@@ -86,36 +97,51 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	}
 
 	// 근접공격은 공격모션 종료 후 대기시간 감소.
-	// 원거리 무기 or 근접공격의 모션 종료
-	if (!bOnMeleeAttack)
+	// 근접 무기 공격 중
+	if (bOnMeleeAttack)
 	{
-		ElapsedCooldownTime += DeltaTime;
+		ElapsedMeleeMoveTime += DeltaTime;
+	}
+	// 원거리 무기 or 근접공격의 모션 종료
+	else
+	{
+		ElapsedCooldownTime += DeltaTime * Owner->GetStat(EStat::AttackSpeed);
 	}
 
-	if (WeaponInfo != nullptr)
+	float CooldownSec = WeaponInfo->CooldownMS * 0.001f;
+	if (ElapsedCooldownTime >= CooldownSec)
 	{
-		float CooldownSec = WeaponInfo->CooldownMS * 0.001f;
-		if (ElapsedCooldownTime >= CooldownSec)
+		// 시작하고 첫 공격
+		if (ElapsedCooldownTime == std::numeric_limits<float>::infinity())
 		{
-			if (ElapsedCooldownTime == std::numeric_limits<float>::infinity())
-			{
-				ElapsedCooldownTime = 0.f;
-			}
-			else
-			{
-				ElapsedCooldownTime -= CooldownSec;
-			}
+			ElapsedCooldownTime = 0.f;
+		}
+		else
+		{
+			ElapsedCooldownTime -= CooldownSec;
+		}
 
-			// 근접공격은 따로
-			if (WeaponInfo->bIsMeleeWeapon)
+		// 근접공격은 따로
+		if (WeaponInfo->bIsMeleeWeapon)
+		{
+			bOnMeleeAttack = true;
+			ElapsedMeleeMoveTime = 0.f;
+		}
+		// TODO: 원거리 투사체 생성
+		else
+		{
+			if (auto World = this->World.lock())
 			{
-				bOnMeleeAttack = true;
-				ElapsedMeleeMovingTime = 0.f;
-			}
-			// 원거리 투사체
-			else
-			{
-				
+				if (auto Projectile = World->CreateGameObject<CProjectile>("Projectile").lock())
+				{
+					FVector SpawnPos = GetWorldPosition() + TargetDir * BULLET_OFFSET;					
+					Projectile->SetWorldPosition(SpawnPos);
+
+					Projectile->SetWorldRotation(GetWorldRotation());
+					
+					Projectile->SetOwnerWeapon(std::dynamic_pointer_cast<CWeapon_Battle>(shared_from_this()));
+					Projectile->SetMoveDirection(TargetDir);
+				}
 			}
 		}
 	}
@@ -123,45 +149,40 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	// 근접 무기 공격중 무기 이동 처리.
 	if (bOnMeleeAttack)
 	{
-		
+		float TotalMoveTime = GetTotalMoveTime();
+		float TotalDist = WeaponInfo->Range + Owner->GetStat(EStat::Range) * 0.5f;
+
+		float Dist;
+		// 찌르고
+		if (ElapsedMeleeMoveTime < TotalMoveTime)
+		{
+			float Alpha = std::clamp(ElapsedMeleeMoveTime / TotalMoveTime, 0.f, 1.f);
+			Dist = std::lerp(0.f, TotalDist, Alpha);
+		}
+		// 되돌아오기
+		else
+		{
+			float Alpha = std::clamp((ElapsedMeleeMoveTime - TotalMoveTime) / TotalMoveTime, 0.f, 1.f);
+			Dist = std::lerp(TotalDist, 0.f, Alpha);
+		}
+
+		FVector RelativePos = TargetDir * Dist;
+		auto Anchor = PosAnchor.lock();
+
+		SetWorldPosition(Anchor->GetWorldPosition() + RelativePos);
+
+		// 근접 공격 종료
+		if (ElapsedMeleeMoveTime >= 2 * TotalMoveTime)
+		{
+			bOnMeleeAttack = false;
+
+			ElapsedCooldownTime = ElapsedMeleeMoveTime - 2 * TotalMoveTime;
+			ElapsedMeleeMoveTime = 0.f;
+
+			TargetDir = FVector::Zero;
+			MovedDistance = 0.f;
+		}
 	}
-
-
-	//	// Attack
-	//	if (auto InvenWeapon = Origin.lock())
-	//	{
-	//		FWeaponInfo* Info;
-	//		if (WeaponTable::GetInst().TryGet(InvenWeapon->GetWeaponInfoID(), Info))
-	//		{
-	//			using Clock = std::chrono::steady_clock;
-
-	//			auto Now = CTimer::Now();
-	//			auto Elapsed = Now - LastFiredTime;
-	//			auto Cooldown = std::chrono::duration_cast<Clock::duration>(std::chrono::duration<float>(Info->CooldownMS * 0.001f));
-
-	//			if (Elapsed >= Cooldown)
-	//			{
-	//				if ((GetWorldPosition() - Target->GetWorldPosition()).SqrLength() <= Info->Range * Info->Range)
-	//				{
-	//					// Fire
-	//					auto Overflow = Elapsed - Cooldown;
-	//					LastFiredTime = Now - Overflow;
-
-
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
-
-	//if (auto InvenWeapon = Origin.lock())
-	//{
-	//	FWeaponInfo* Info;
-	//	if (WeaponTable::GetInst().TryGet(InvenWeapon->GetWeaponInfoID(), Info))
-	//	{
-	//		//float RTT = Info.ran
-	//	}
-	//}
 }
 
 void CWeapon_Battle::PostUpdate(const float DeltaTime)
@@ -186,6 +207,17 @@ CWeapon_Battle* CWeapon_Battle::Clone()
 	return new CWeapon_Battle(*this);
 }
 
+void CWeapon_Battle::OnProjectileCollideOnMonster(const std::weak_ptr<CEnemy>& WeakMonster)
+{
+	auto Monster = WeakMonster.lock();
+	if (!Monster)
+	{
+		return;
+	}
+
+	Monster->TakeDamage(TODO, Owner);
+}
+
 void CWeapon_Battle::InitWeaponInfo(TableID ID)
 {
 	FWeaponInfo* Info;
@@ -207,9 +239,14 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 				const FTextureInfo* TexInfo = Texture->GetTexture();
 				Mesh->SetWorldScale(TexInfo->Width, TexInfo->Height);
 
-				if (auto Col = Collider.lock())
+				if (Info->bIsMeleeWeapon)
 				{
-					Col->SetBoxExtent(TexInfo->Width, TexInfo->Height);
+					if (auto Col = Collider.lock())
+					{
+						Col->SetBoxExtent(TexInfo->Width, TexInfo->Height);
+
+						Col->SetEnable(true);
+					}
 				}
 #pragma warning(pop)
 			}
@@ -221,20 +258,22 @@ std::weak_ptr<CSceneComponent> CWeapon_Battle::GetClosestEnemy()
 {
 	if (auto World = this->World.lock())
 	{
-		auto NPCs = World->FindObjectsOfType<CEnemy>();
+		auto Enemies = World->FindObjectsOfType<CEnemy>();
 
-		float SqrDist = FLT_MAX;
+		float SqrDist = std::numeric_limits<float>::infinity();
 		std::weak_ptr<CEnemy> Closest;
-		for (const auto& WNPC : NPCs)
+
+		auto EnemyView = Enemies
+			| std::views::transform([](const auto& Weak) { return Weak.lock(); })
+			| std::views::filter([](const auto& Enemy) { return Enemy != nullptr; });
+
+		for (const auto& Enemy : EnemyView)
 		{
-			if (auto NPC = WNPC.lock())
+			float CurrSqrDist = (GetWorldPosition() - Enemy->GetWorldPosition()).SqrLength();
+			if (CurrSqrDist < SqrDist)
 			{
-				float CurrSqrDist = (GetWorldPosition() - NPC->GetWorldPosition()).SqrLength();
-				if (CurrSqrDist < SqrDist)
-				{
-					SqrDist = CurrSqrDist;
-					Closest = WNPC;
-				}
+				SqrDist = CurrSqrDist;
+				Closest = Enemy;
 			}
 		}
 
@@ -341,10 +380,39 @@ void CWeapon_Battle::OnSearchCollisionBlock(const FVector& HitPoint, CCollider* 
 		return;
 	}
 
-	auto SqrDist = (GetWorldPosition() - Other->GetWorldPosition()).SqrLength();
+	FVector Direction = Other->GetWorldPosition() - GetWorldPosition();
+	auto SqrDist = Direction.SqrLength();
 	if (SqrDist < ClosestSqrDist)
 	{
 		ClosestSqrDist = SqrDist;
 		ClosestEnemy = Other->GetOwner();
+		TargetDir = Direction.GetNormalized();
 	}
+}
+
+float CWeapon_Battle::GetTotalMoveTime() const
+{
+	if (MoveSpeed == 0.f)
+	{
+		return {};
+	}
+
+	FWeaponInfo* Info;
+	if (!WeaponTable::GetInst().TryGet(GetWeaponInfoID(), Info))
+	{
+		return {};
+	}
+
+	if (!Info->bIsMeleeWeapon)
+	{
+		return {};
+	}
+
+	auto Owner = this->Owner.lock();
+	if (!Owner)
+	{
+		return {};
+	}
+
+	return Owner->GetStat(EStat::Range) / MoveSpeed;
 }

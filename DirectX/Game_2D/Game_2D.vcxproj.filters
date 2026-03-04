@@ -207,6 +207,9 @@
     <ClCompile Include="Player\CEditorPlayer.cpp">
       <Filter>Player</Filter>
     </ClCompile>
+    <ClCompile Include="Character\CProjectile.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -376,6 +379,9 @@
     </ClInclude>
     <ClInclude Include="Table\WeaponSetBonusTable.h">
       <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CProjectile.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

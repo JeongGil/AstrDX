@@ -4,6 +4,7 @@
 #include "../Inventory/CInventoryItem_Weapon.h"
 #include <chrono>
 
+class CEnemy;
 class CCollider;
 class CColliderSphere2D;
 class CMeshComponent;
@@ -15,6 +16,8 @@ class CColliderBox2D;
 class CWeapon_Battle :
     public CGameObject
 {
+	static constexpr float BULLET_OFFSET = 75.f;
+
 public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
@@ -61,6 +64,8 @@ public:
 		PosAnchor = Anchor;
 	}
 
+	void OnProjectileCollideOnMonster(const std::weak_ptr<CEnemy>& WeakMonster);
+
 protected:
 	void InitWeaponInfo(TableID ID);
 
@@ -72,11 +77,11 @@ private:
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
 
-	float ClosestSqrDist = FLT_MAX;
-	std::weak_ptr<CGameObject> ClosestEnemy;
 	void OnSearchCollisionBlock(const FVector& HitPoint, CCollider* Other);
 
-protected:
+	float GetTotalMoveTime() const;
+
+private:
 	std::weak_ptr<CPlayerCharacter> Owner{};
 	std::weak_ptr<CColliderBox2D> Collider{};
 	std::weak_ptr<CMeshComponent> Mesh{};
@@ -90,12 +95,14 @@ protected:
 
 	float MoveSpeed = 200.f;
 
-private:
+	float ClosestSqrDist = FLT_MAX;
+	std::weak_ptr<CGameObject> ClosestEnemy;
+
 	float ElapsedCooldownTime = std::numeric_limits<float>::infinity();
 
 	bool bOnMeleeAttack{};
-	float ElapsedMeleeMovingTime = std::numeric_limits<float>::infinity();
+	float ElapsedMeleeMoveTime = std::numeric_limits<float>::infinity();
 	float MovedDistance = std::numeric_limits<float>::infinity();
-	FVector MeleeTargetPos = FVector::Zero;
+	FVector TargetDir = FVector::Zero;
 };
 

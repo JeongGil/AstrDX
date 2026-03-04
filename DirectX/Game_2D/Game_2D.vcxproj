@@ -173,6 +173,7 @@
     <ClCompile Include="Character\CCharacter.cpp" />
     <ClCompile Include="Character\CEnemy.cpp" />
     <ClCompile Include="Character\CPlayerCharacter.cpp" />
+    <ClCompile Include="Character\CProjectile.cpp" />
     <ClCompile Include="Character\CWeapon_Battle.cpp" />
     <ClCompile Include="CHitPointComponent.cpp" />
     <ClCompile Include="Component\CStateComponent.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Character\CCharacter.h" />
     <ClInclude Include="Character\CEnemy.h" />
     <ClInclude Include="Character\CPlayerCharacter.h" />
+    <ClInclude Include="Character\CProjectile.h" />
     <ClInclude Include="Character\CWeapon_Battle.h" />
     <ClInclude Include="CHitPointComponent.h" />
     <ClInclude Include="ClientInfo.h" />

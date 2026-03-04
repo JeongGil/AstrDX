@@ -37,7 +37,7 @@ public:
 		return Profile;
 	}
 
-	void SetCollisionProfile(const std::string& Key);
+	void SetCollisionProfile(const std::string& ProfileKey);
 
 	bool GetStatic() const
 	{

@@ -47,6 +47,16 @@ public:
 		this->Range = Range;
 	}
 
+	[[nodiscard]] float GetLifeTime() const
+	{
+		return LifeTime;
+	}
+
+	void SetLifeTime(const float LifeTime)
+	{
+		this->LifeTime = LifeTime;
+	}
+
 	template <typename T>
 	void SetRangeFunction(T* Obj, void (T::* Func)())
 	{
@@ -58,6 +68,7 @@ protected:
 	float Speed = 200.f;
 	FVector Velocity = FVector::Zero;
 	float Range = -1.f;
+	float LifeTime = -1.f;
 
 	std::function<void()> RangeFunction;
 

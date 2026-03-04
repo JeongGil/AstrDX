@@ -343,6 +343,8 @@ float CPlayerCharacter::GetStat(EStat::Type StatType)
 		}
 	}
 
+	// TODO: 오라.
+
 	return Value;
 }
 
