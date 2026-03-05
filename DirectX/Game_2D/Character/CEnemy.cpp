@@ -1,11 +1,14 @@
 #include "CEnemy.h"
 
+#include <CEngine.h>
+#include <Component/CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
-#include <Component/CColliderBox2D.h>
 
 #include "CPlayerCharacter.h"
 #include "../Strings.h"
+#include "../Table/EnemyInfo.h"
+#include "../Table/EnemyTable.h"
 #include "../Table/MiscInfo.h"
 #include "../Table/MiscTable.h"
 
@@ -16,9 +19,12 @@ bool CEnemy::Init()
 		return false;
 	}
 
-	if (auto Col = Collider.lock())
+	auto Collider = this->Collider.lock();
+	if (Collider)
 	{
-		Col->SetCollisionProfile("Monster");
+		Collider->SetCollisionProfile("Monster");
+
+		Collider->SetOnCollisionBegin(this, &CEnemy::OnCollisionBegin);
 	}
 
 	SetTeam(ETeam::Enemy);
@@ -29,9 +35,9 @@ bool CEnemy::Init()
 		Mesh->SetShader("DefaultTexture2D");
 		Mesh->SetMesh("CenterRectTex");
 		Mesh->SetWorldScale(150, 150);
-		if (auto Col = Collider.lock())
+		if (Collider)
 		{
-			Col->SetBoxExtent(Mesh->GetWorldScale().x, Mesh->GetWorldPosition().y);
+			Collider->SetBoxExtent(Mesh->GetWorldScale().x, Mesh->GetWorldPosition().y);
 		}
 
 		Mesh->SetBlendState(0, "AlphaBlend");
@@ -56,18 +62,96 @@ void CEnemy::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
 
-	if (auto World = this->World.lock())
+	if (Player.expired())
 	{
-		Player = World->FindObjectOfType<CPlayerCharacter>();
-		if (auto Player = this->Player.lock())
+		if (auto World = this->World.lock())
 		{
-			auto Dir = (Player->GetWorldPosition() - GetWorldPosition()).GetNormalized();
-
-			constexpr float SPEED = 100.f;
-			auto DelMove = Dir * SPEED * DeltaTime;
-			AddWorldPosition(DelMove);
+			Player = World->FindObjectOfType<CPlayerCharacter>();
 		}
 	}
+
+#pragma region AI
+	auto Player = this->Player.lock();
+	if (!Player)
+	{
+		return;
+	}
+
+	FEnemyInfo* Info;
+	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
+	{
+		return;
+	}
+
+	auto Diff = Player->GetWorldPosition() - GetWorldPosition();
+	float DistToPlayer = Diff.Length();
+	auto ToPlayer = Diff.GetNormalized();
+
+	auto Behaviors = Info->Behavior;
+
+	if (Behaviors & EEnemyBehavior::Charge)
+	{
+		// 돌진 가능 여부 확인
+		if (!bOnCharge)
+		{
+			if (DistToPlayer <= CHARGE_USE_DISTANCE)
+			{
+				if (ElapsedFromCharge >= ChargeCooldownTime)
+				{
+					if (ElapsedFromCharge == std::numeric_limits<float>::infinity())
+					{
+						ElapsedFromCharge = 0.f;
+					}
+					else
+					{
+						ElapsedFromCharge -= ChargeCooldownTime;
+					}
+
+					bOnCharge = true;
+				}
+			}
+		}
+
+		// 돌진 처리
+		if (bOnCharge)
+		{
+			float DelMove = CHARGE_MOVE_SPEED * DeltaTime;
+			DelMove = min(DelMove, CHARGE_MOVE_DISTANCE - ChargeMovedDist);
+
+			auto MoveVec = ToPlayer * DelMove;
+			AddWorldPosition(MoveVec);
+
+			if (ChargeMovedDist >= CHARGE_MOVE_DISTANCE)
+			{
+				bOnCharge = false;
+			}
+
+			return;
+		}
+	}
+
+	if (Behaviors & EEnemyBehavior::Fire)
+	{
+
+	}
+
+	if (Behaviors & EEnemyBehavior::Kiting)
+	{
+		if (DistToPlayer <= CHARGE_USE_DISTANCE)
+		{
+
+		}
+	}
+
+	if (Behaviors & EEnemyBehavior::Chase)
+	{
+		float DelMove = MoveSpeed * DeltaTime;
+		DelMove = min(DelMove, DistToPlayer);
+
+		auto MoveVec = ToPlayer * DelMove;
+		AddWorldPosition(MoveVec);
+	}
+#pragma endregion
 }
 
 float CEnemy::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
@@ -81,7 +165,67 @@ float CEnemy::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instiga
 	return 0.f;
 }
 
+void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
+{
+	this->EnemyInfoID = EnemyInfoID;
+
+	FEnemyInfo* Info;
+	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
+	{
+		return;
+	}
+
+	std::uniform_real_distribution<float> Dist(Info->MinSpeed, Info->MaxSpeed);
+	MoveSpeed = Dist(CEngine::GetInst()->GetMT());
+
+	// TODO: 난이도 영향 적용.
+	//+ Info->HpIncrease * 난이도
+	MaxHP = Info->HP;
+	CurrHP = MaxHP;
+}
+
 CEnemy* CEnemy::Clone()
 {
 	return new CEnemy(*this);
+}
+
+void CEnemy::RunBehavior(const std::weak_ptr<CPlayerCharacter>& WeakPlayer)
+{
+
+}
+
+void CEnemy::SetChargeCooldownTime(float& OutCooldownTime)
+{
+	FEnemyInfo* Info;
+	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
+	{
+		return;
+	}
+
+	if ((Info->Behavior & EEnemyBehavior::Charge) == 0)
+	{
+		return;
+	}
+
+	std::uniform_real_distribution<float> Dist(2.5f, 3.5f);
+	OutCooldownTime = Dist(CEngine::GetInst()->GetMT());
+}
+
+void CEnemy::OnCollisionBegin(const FVector& HitPoint, CCollider* Collider)
+{
+	FEnemyInfo* Info;
+	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
+	{
+		return;
+	}
+
+	if (Info->Behavior & EEnemyBehavior::DamageOnTouch)
+	{
+		if (auto Player = std::dynamic_pointer_cast<CPlayerCharacter>(Collider->GetOwner().lock()))
+		{
+			// TODO: 난이도 영향 적용.
+			//+ Info->DamageIncrease * 난이도
+			Player->TakeDamage(Info->Damage, std::dynamic_pointer_cast<CGameObject>(shared_from_this()));
+		}
+	}
 }

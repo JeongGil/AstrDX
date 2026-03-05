@@ -244,6 +244,8 @@
     <ClInclude Include="Table\CharacterVisualInfo.h" />
     <ClInclude Include="Table\CharacterVisualTable.h" />
     <ClInclude Include="Table\CTableManager.h" />
+    <ClInclude Include="Table\EnemyInfo.h" />
+    <ClInclude Include="Table\EnemyTable.h" />
     <ClInclude Include="Table\FStringInfo.h" />
     <ClInclude Include="Table\ItemInfo.h" />
     <ClInclude Include="Table\ItemTable.h" />

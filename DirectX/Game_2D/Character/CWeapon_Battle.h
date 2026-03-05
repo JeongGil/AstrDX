@@ -13,8 +13,32 @@ class CInventoryItem_Weapon;
 struct FWeaponInfo;
 class CColliderBox2D;
 
+struct FAttackResult
+{
+	float TotalDamage;
+	bool bIsCritical;
+
+	FAttackResult()
+		: TotalDamage(0.0f)
+		, bIsCritical(false)
+	{
+	}
+
+	FAttackResult(float InDamage)
+		: TotalDamage(InDamage)
+		, bIsCritical(false)
+	{
+	}
+
+	FAttackResult(float InDamage, bool InCritical)
+		: TotalDamage(InDamage)
+		, bIsCritical(InCritical)
+	{
+	}
+};
+
 class CWeapon_Battle :
-    public CGameObject
+	public CGameObject
 {
 	static constexpr float BULLET_OFFSET = 75.f;
 
@@ -73,7 +97,8 @@ private:
 	std::weak_ptr<CSceneComponent> GetClosestEnemy();
 
 	static int CalcAttackRange(const FWeaponInfo* WeaponInfo, const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
-	static float CalcAttackDamage(const FWeaponInfo* WeaponInfo, const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
+	[[nodiscard]] static FAttackResult CalcAttackDamage(const FWeaponInfo* WeaponInfo,
+	                                                    const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
 

@@ -56,8 +56,7 @@ struct FWeaponInfo
 			if (!std::getline(Stream, SpritePath, Delim)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			if (!TryParse<int>(Segment, IntVal)) { return false; }
-			bIsMeleeWeapon = IntVal == 1;
+			if (!TryParse<bool>(Segment, bIsMeleeWeapon)) { return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { return false; }
 			if (!TryParse<uint32_t>(Segment, Uint32Val)) { return false; }

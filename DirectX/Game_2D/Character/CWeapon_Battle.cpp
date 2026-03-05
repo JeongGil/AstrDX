@@ -1,12 +1,12 @@
 #include "CWeapon_Battle.h"
 
+#include <CEngine.h>
 #include <CTimer.h>
 #include <Asset/Material/CMaterial.h>
 #include <Component/CColliderBox2D.h>
+#include <Component/CColliderSphere2D.h>
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
-#include <Component/CColliderSphere2D.h>
-#include <CEngine.h>
 
 #include "CEnemy.h"
 #include "CPlayerCharacter.h"
@@ -134,11 +134,11 @@ void CWeapon_Battle::Update(const float DeltaTime)
 			{
 				if (auto Projectile = World->CreateGameObject<CProjectile>("Projectile").lock())
 				{
-					FVector SpawnPos = GetWorldPosition() + TargetDir * BULLET_OFFSET;					
+					FVector SpawnPos = GetWorldPosition() + TargetDir * BULLET_OFFSET;
 					Projectile->SetWorldPosition(SpawnPos);
 
 					Projectile->SetWorldRotation(GetWorldRotation());
-					
+
 					Projectile->SetOwnerWeapon(std::dynamic_pointer_cast<CWeapon_Battle>(shared_from_this()));
 					Projectile->SetMoveDirection(TargetDir);
 				}
@@ -214,6 +214,26 @@ void CWeapon_Battle::OnProjectileCollideOnMonster(const std::weak_ptr<CEnemy>& W
 	{
 		return;
 	}
+
+	FWeaponInfo* Info;
+	if (!WeaponTable::GetInst().TryGet(GetWeaponInfoID(), Info))
+	{
+		return;
+	}
+
+	auto Character = Owner.lock();
+	if (!Character)
+	{
+		return;
+	}
+
+	CalcAttackDamage(Info, Owner);
+	float Damage = Info->BaseDamage;
+
+	float Chance = (Info->CritChancePercent + Character->GetStat(EStat::CritChance)) * 0.01f;
+	auto Dist = std::uniform_real_distribution<float>(0.f, 100.f);
+	float Dice = Dist(CEngine::GetInst()->GetMT());
+
 
 	Monster->TakeDamage(TODO, Owner);
 }
@@ -298,13 +318,13 @@ int CWeapon_Battle::CalcAttackRange(const FWeaponInfo* WeaponInfo,
 	return WeaponInfo->Range + static_cast<int>(PC->GetStat(EStat::Range));
 }
 
-float CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
+FAttackResult CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 	const std::weak_ptr<CPlayerCharacter>& PlayerCharacter)
 {
 	auto PC = PlayerCharacter.lock();
 	if (!WeaponInfo || !PC)
 	{
-		return 0.f;
+		return {};
 	}
 
 	float Damage = WeaponInfo->BaseDamage;
@@ -335,12 +355,15 @@ float CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 	auto MT = CEngine::GetInst()->GetMT();
 	std::uniform_real_distribution<float> Dist(0.f, 100.f);
 	float Dice = Dist(MT);
-	if (Dice < WeaponInfo->CritChancePercent * 0.01f)
+	bool bIsCrit = Dice < (WeaponInfo->CritChancePercent + PC->GetStat(EStat::CritChance)) * 0.01f;
+	if (bIsCrit)
 	{
 		Damage *= WeaponInfo->CritDamagePercent * 0.01f;
 	}
 
-	return Damage;
+	Damage *= (100 + PC->GetStat(EStat::Damage)) * 0.01f;
+
+	return { Damage, bIsCrit };
 }
 
 void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
@@ -357,19 +380,20 @@ void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 		return;
 	}
 
-	int InputDamage{};
-
 	FWeaponInfo* WeaponInfo;
-	if (WeaponTable::GetInst().TryGet(WeaponInfoID, WeaponInfo))
+	if (!WeaponTable::GetInst().TryGet(WeaponInfoID, WeaponInfo))
 	{
-		InputDamage = CalcAttackDamage(WeaponInfo, Owner);
+		return;
 	}
 
-	ColChar->TakeDamage(InputDamage, Owner);
+	auto [Damage, bIsCrit] = CalcAttackDamage(WeaponInfo, Owner);
+
+	ColChar->TakeDamage(Damage, Owner);
 
 	if (ColChar && ColChar->GetAlive() && ColChar->GetEnable())
 	{
 		// TODO: 넉백
+		FVector Dir = (ColChar->GetWorldPosition() - HitPoint).GetNormalized();
 	}
 }
 

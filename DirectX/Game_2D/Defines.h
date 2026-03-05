@@ -3,6 +3,7 @@
 #include <cstdint>
 
 constexpr size_t INVENTORY_MAX_WEAPON = 6;
+constexpr int32_t MAX_DANGER = 5;
 
 namespace EWeaponType
 {
@@ -143,6 +144,29 @@ namespace EStat
 #pragma endregion
 	};
 }
+
+enum class EEnemyType : uint8_t
+{
+	Normal,
+	Elite,
+	Boss
+};
+
+namespace EEnemyBehavior
+{
+	enum Type : uint32_t
+	{
+		None = 0,
+		All = ~None,
+
+		DamageOnTouch	= 1 << 0,
+		Chase			= 1 << 1,
+		Kiting			= 1 << 2,
+		Charge			= 1 << 3,
+		Fire			= 1 << 4,
+	};
+}
+
 namespace ESpecialEffect
 {
 	enum Type : uint8_t
@@ -226,19 +250,4 @@ struct FSpecialEffect
 {
 	ESpecialEffect::Type Type;
 	std::array<int, 10> Params;
-};
-
-struct FStat
-{
-	EStat::Type Type;
-	int InnerValue;
-	int WeightPercent;
-
-	int GetWeightedValue() const
-	{
-#pragma warning(push)
-#pragma warning(disable: 4244)
-		return InnerValue * WeightPercent * 0.01f;
-#pragma warning(pop)
-	}
 };

@@ -383,6 +383,12 @@
     <ClInclude Include="Character\CProjectile.h">
       <Filter>Character</Filter>
     </ClInclude>
+    <ClInclude Include="Table\EnemyInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\EnemyTable.h">
+      <Filter>Table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
