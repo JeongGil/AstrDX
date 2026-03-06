@@ -16,20 +16,19 @@ struct FMiscInfo : FTableInfoBase
 			//int IntVal;
 			//uint8_t Uint8Val;
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			//if (!TryParse<int>(Segment, IntVal)) { return false; }
-			//ID = TableID(IntVal);
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			ID = TableID(1);
 
-			if (!std::getline(Stream, PotatoBodyTexPath, Delim)) { return false; }
+			if (!std::getline(Stream, PotatoBodyTexPath, Delim)) { assert(false); return false; }
 
-			if (!std::getline(Stream, PotatoLegTexPath, Delim)) { return false; }
+			if (!std::getline(Stream, PotatoLegTexPath, Delim)) { assert(false); return false; }
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			if (!TryParse<int>(Segment, WeaponMoveSpeed)) { return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, WeaponMoveSpeed)) { assert(false); return false; }
 		}
 		catch (...)
 		{
+			assert(false);
 			return false;
 		}
 

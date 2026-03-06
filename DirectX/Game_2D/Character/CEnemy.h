@@ -4,6 +4,7 @@
 
 class CCollider;
 class CPlayerCharacter;
+class CAnimation2DComponent;
 
 class CEnemy :
 	public CCharacter
@@ -36,6 +37,7 @@ protected:
 	static constexpr int CHARGE_USE_DISTANCE = 800;	
 
 	std::weak_ptr<CMeshComponent> Mesh;
+	std::weak_ptr<CAnimation2DComponent> Animation;
 
 	TableID EnemyInfoID{ -1 };
 	float MoveSpeed{};

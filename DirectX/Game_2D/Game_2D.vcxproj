@@ -246,11 +246,13 @@
     <ClInclude Include="Table\CTableManager.h" />
     <ClInclude Include="Table\EnemyInfo.h" />
     <ClInclude Include="Table\EnemyTable.h" />
-    <ClInclude Include="Table\FStringInfo.h" />
+    <ClInclude Include="Table\StringInfo.h" />
     <ClInclude Include="Table\ItemInfo.h" />
     <ClInclude Include="Table\ItemTable.h" />
     <ClInclude Include="Table\MiscInfo.h" />
     <ClInclude Include="Table\MiscTable.h" />
+    <ClInclude Include="Table\ProjectileInfo.h" />
+    <ClInclude Include="Table\ProjectileTable.h" />
     <ClInclude Include="Table\StringTable.h" />
     <ClInclude Include="Table\WeaponInfo.h" />
     <ClInclude Include="Table\WeaponSetBonusInfo.h" />

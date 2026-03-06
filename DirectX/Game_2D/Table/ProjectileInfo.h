@@ -1,9 +1,12 @@
 #pragma once
 #include <Table/TableInfoBase.h>
 
-struct FItemInfo : FTableInfoBase
+struct FProjectileInfo : FTableInfoBase
 {
+	static constexpr size_t MAX_PROJECTILE_SPRITE_COUNT = 10;
 	std::string Name;
+
+	std::vector<std::string> SpritePaths;
 
 	bool Load(std::stringstream& Stream) override
 	{
@@ -19,6 +22,17 @@ struct FItemInfo : FTableInfoBase
 			ID = TableID(IntVal);
 
 			if (!std::getline(Stream, Name, Delim)) { assert(false); return false; }
+
+			for (size_t i = 0; i < MAX_PROJECTILE_SPRITE_COUNT; i++)
+			{
+				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+				if (Segment.empty())
+				{
+					break;
+				}
+
+				SpritePaths.push_back(Segment);
+			}
 		}
 		catch (...)
 		{
@@ -29,6 +43,6 @@ struct FItemInfo : FTableInfoBase
 		return true;
 	}
 
-	FItemInfo() = default;
-	~FItemInfo() = default;
+	FProjectileInfo() = default;
+	~FProjectileInfo() = default;
 };

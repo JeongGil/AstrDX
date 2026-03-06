@@ -10,6 +10,7 @@
 #include <Component/CMeshComponent.h>
 #include <Component/CObjectMovementComponent.h>
 #include <Component/CSceneComponent.h>
+#include <Component/CAnimation2DComponent.h>
 #include <World/CWorld.h>
 
 #include "CEnemy.h"
@@ -35,7 +36,9 @@ bool CPlayerCharacter::Init()
 
 	SetTeam(ETeam::Player);
 
+	const auto* Misc = MiscTable::GetInst().Get();
 	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato, Key::Comp::Root);
+	PotatoAnim = CreateComponent<CAnimation2DComponent>(Key::Anim::Potato, Key::Comp::Root);
 	if (auto Body = this->Potato.lock())
 	{
 		Body->SetShader("DefaultTexture2D");
@@ -48,20 +51,22 @@ bool CPlayerCharacter::Init()
 
 		Body->SetBlendState(0, "AlphaBlend");
 
-		FMiscInfo* Misc;
-		if (MiscTable::GetInst().TryGet(TableID(1), Misc))
-		{
-			CA2T FileName(Misc->PotatoBodyTexPath.c_str());
-			Body->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
-		}
+		CA2T FileName(Misc->PotatoBodyTexPath.c_str());
+		Body->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
 
 		Body->SetInheritScale(true);
 		Body->SetInheritRotation(true);
 
-		Body->TrySetRenderLayer(ERenderOrder::CharacterBody);
+		Body->SetRenderLayer(ERenderOrder::CharacterBody);
+
+		if (auto Anim = PotatoAnim.lock())
+		{
+			Anim->SetUpdateComponent(Potato);
+		}
 	}
 
 	Leg = CreateComponent<CMeshComponent>(Key::Comp::Leg, Key::Comp::Potato);
+	LegAnim = CreateComponent<CAnimation2DComponent>(Key::Anim::Leg, Key::Comp::Potato);
 	if (auto Leg = this->Leg.lock())
 	{
 		Leg->SetShader("DefaultTexture2D");
@@ -71,17 +76,18 @@ bool CPlayerCharacter::Init()
 
 		Leg->SetBlendState(0, "AlphaBlend");
 
-		FMiscInfo* Misc;
-		if (MiscTable::GetInst().TryGet(TableID(1), Misc))
-		{
-			CA2T FileName(Misc->PotatoLegTexPath.c_str());
-			Leg->AddTexture(0, Misc->PotatoLegTexPath, FileName, Key::Path::Brotato);
-		}
+		CA2T FileName(Misc->PotatoLegTexPath.c_str());
+		Leg->AddTexture(0, Misc->PotatoLegTexPath, FileName, Key::Path::Brotato);
 
 		Leg->SetInheritScale(true);
 		Leg->SetInheritRotation(true);
 
-		Leg->TrySetRenderLayer(ERenderOrder::CharacterLeg);
+		Leg->SetRenderLayer(ERenderOrder::CharacterLeg);
+
+		if (auto Anim = LegAnim.lock())
+		{
+			Anim->SetUpdateComponent(Leg);
+		}
 	}
 
 	MovementComponent = CreateComponent<CObjectMovementComponent>(Key::Comp::ObjMove);
@@ -138,21 +144,14 @@ void CPlayerCharacter::Update(const float DeltaTime)
 
 	if (auto MoveCmp = MovementComponent.lock())
 	{
-		if (MoveCmp->GetMoveDirection().x > 0.f)
+		auto AnimView = GetComponents<CAnimation2DComponent>()
+			| std::views::transform([](const auto& Weak) { return Weak.lock(); })
+			| std::views::filter([](const auto& Anim) {return Anim != nullptr; });
+
+		bool bSymmetry = MoveCmp->GetMoveDirection().x < 0.f;
+		for (const auto& Anim : AnimView)
 		{
-			auto Meshes = GetComponents<CMeshComponent>();
-			for (const auto& WMesh : Meshes)
-			{
-				if (auto Mesh = WMesh.lock())
-				{
-					// TODO: Add a shader by referring to CShaderTexture2D.Apply Symmetric.
-					//Mesh->
-				}
-			}
-		}
-		else if (MoveCmp->GetMoveDirection().x < 0.f)
-		{
-			// TODO: Refer to the above.
+			//Anim->SetSymmetry(TODO, bSymmetry);
 		}
 	}
 }
@@ -226,7 +225,7 @@ void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
 				}
 			}
 
-			Deco->TrySetRenderLayer(ERenderOrder::CharacterDeco);
+			Deco->SetRenderLayer(ERenderOrder::CharacterDeco);
 		}
 	}
 }

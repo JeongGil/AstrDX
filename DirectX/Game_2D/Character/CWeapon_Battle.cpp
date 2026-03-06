@@ -111,15 +111,7 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	float CooldownSec = WeaponInfo->CooldownMS * 0.001f;
 	if (ElapsedCooldownTime >= CooldownSec)
 	{
-		// 시작하고 첫 공격
-		if (ElapsedCooldownTime == std::numeric_limits<float>::infinity())
-		{
-			ElapsedCooldownTime = 0.f;
-		}
-		else
-		{
-			ElapsedCooldownTime -= CooldownSec;
-		}
+		ElapsedCooldownTime = 0.f;
 
 		// 근접공격은 따로
 		if (WeaponInfo->bIsMeleeWeapon)
@@ -227,15 +219,9 @@ void CWeapon_Battle::OnProjectileCollideOnMonster(const std::weak_ptr<CEnemy>& W
 		return;
 	}
 
-	CalcAttackDamage(Info, Owner);
-	float Damage = Info->BaseDamage;
+	auto [Damage, bIsCrit] = CalcAttackDamage(Info, Owner);
 
-	float Chance = (Info->CritChancePercent + Character->GetStat(EStat::CritChance)) * 0.01f;
-	auto Dist = std::uniform_real_distribution<float>(0.f, 100.f);
-	float Dice = Dist(CEngine::GetInst()->GetMT());
-
-
-	Monster->TakeDamage(TODO, Owner);
+	Monster->TakeDamage(Damage, Owner);
 }
 
 void CWeapon_Battle::InitWeaponInfo(TableID ID)

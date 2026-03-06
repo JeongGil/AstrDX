@@ -8,6 +8,7 @@ class CCameraComponent;
 class CInventoryItem_Weapon;
 class CWeapon_Battle;
 class CObjectMovementComponent;
+class CAnimation2DComponent;
 struct FCharacterVisualInfo;
 
 class CPlayerCharacter :
@@ -53,6 +54,10 @@ protected:
 	std::weak_ptr<CMeshComponent> Potato;
 	std::weak_ptr<CMeshComponent> Leg;
 	std::vector<std::weak_ptr<CMeshComponent>> Decos;
+
+	std::weak_ptr<CAnimation2DComponent> PotatoAnim;
+	std::weak_ptr<CAnimation2DComponent> LegAnim;
+	std::vector<std::weak_ptr<CAnimation2DComponent>> DecoAnims;
 
 	std::vector<std::weak_ptr<CWeapon_Battle>> Weapons;
 	std::array<std::shared_ptr<CSceneComponent>, INVENTORY_MAX_WEAPON> WeaponAnchors;

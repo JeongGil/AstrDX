@@ -40,39 +40,39 @@ struct FEnemyInfo : FTableInfoBase
 			uint8_t UInt8Val;
 			uint32_t UInt32Val;
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			if (!TryParse<int>(Segment, IntVal)) { return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, IntVal)) { assert(false); return false; }
 			ID = TableID(IntVal);
 
-			if (!std::getline(Stream, Name, Delim)) { return false; }
+			if (!std::getline(Stream, Name, Delim)) { assert(false); return false; }
 
-			if (!std::getline(Stream, IconPath, Delim)) { return false; }
-			if (!std::getline(Stream, SpritePath, Delim)) { return false; }
+			if (!std::getline(Stream, IconPath, Delim)) { assert(false); return false; }
+			if (!std::getline(Stream, SpritePath, Delim)) { assert(false); return false; }
 
-			if (!TryParse<uint8_t>(Segment, UInt8Val)) { return false; }
+			if (!TryParse<uint8_t>(Segment, UInt8Val)) { assert(false); return false; }
 			Type = static_cast<EEnemyType>(UInt8Val);
 
-			if (!TryParse<uint32_t>(Segment, UInt32Val)) { return false; }
+			if (!TryParse<uint32_t>(Segment, UInt32Val)) { assert(false); return false; }
 			Behavior = static_cast<EEnemyBehavior::Type>(UInt32Val);
 
-			if (!TryParse<float>(Segment, HP)) { return false; }
-			if (!TryParse<float>(Segment, HpIncrease)) { return false; }
+			if (!TryParse<float>(Segment, HP)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, HpIncrease)) { assert(false); return false; }
 
-			if (!TryParse<int>(Segment, MinSpeed)) { return false; }
-			if (!TryParse<int>(Segment, MaxSpeed)) { return false; }
+			if (!TryParse<int>(Segment, MinSpeed)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, MaxSpeed)) { assert(false); return false; }
 
-			if (!TryParse<float>(Segment, Damage)) { return false; }
-			if (!TryParse<float>(Segment, DamageIncrease)) { return false; }
+			if (!TryParse<float>(Segment, Damage)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, DamageIncrease)) { assert(false); return false; }
 
-			if (!TryParse<float>(Segment, KnockbackResist)) { return false; }
+			if (!TryParse<float>(Segment, KnockbackResist)) { assert(false); return false; }
 
-			if (!TryParse<int>(Segment, Material)) { return false; }
-			if (!TryParse<int>(Segment, ConsumableDropPercent)) { return false; }
+			if (!TryParse<int>(Segment, Material)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, ConsumableDropPercent)) { assert(false); return false; }
 
 			for (size_t i = 0; i < MAX_DANGER; i++)
 			{
 				int& AppearWave = AppearWaves[i];
-				if (!TryParse<int>(Segment, AppearWave)) { return false; }
+				if (!TryParse<int>(Segment, AppearWave)) { assert(false); return false; }
 
 				if (AppearWave == 0)
 				{
@@ -89,6 +89,7 @@ struct FEnemyInfo : FTableInfoBase
 		}
 		catch (...)
 		{
+			assert(false);
 			return false;
 		}
 

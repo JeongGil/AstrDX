@@ -408,6 +408,20 @@ bool CRenderManager::Init()
 
 	CreateDepthStencilState("DepthDisable", false);
 
+	//D3D11_DEPTH_STENCILOP_DESC WriteOp{};
+	//WriteOp.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+	//WriteOp.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	//CreateDepthStencilState("TileMaskWrite", false,
+	//	D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_LESS,
+	//	true, 0xFF, 0xFF, WriteOp, WriteOp);
+
+	//D3D11_DEPTH_STENCILOP_DESC ReadOp{};
+	//ReadOp.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	//ReadOp.StencilFunc = D3D11_COMPARISON_EQUAL;
+	//CreateDepthStencilState("TileMaskApply", false,
+	//	D3D11_DEPTH_WRITE_MASK_ZERO, D3D11_COMPARISON_LESS,
+	//	true, 0xFF, 0xFF, ReadOp, ReadOp);
+
 	CreateLayer("Background", ERenderOrder::Background, ERenderListSort::None);
 	CreateLayer("Map", ERenderOrder::Map, ERenderListSort::None);
 	CreateLayer("Default", ERenderOrder::Default, ERenderListSort::Y);

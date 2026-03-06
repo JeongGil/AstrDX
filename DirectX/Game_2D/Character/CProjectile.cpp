@@ -8,6 +8,7 @@
 #include "CEnemy.h"
 #include "CPlayerCharacter.h"
 #include "CWeapon_Battle.h"
+#include "../Table/EnemyTable.h"
 
 bool CProjectile::Init()
 {
@@ -109,7 +110,14 @@ void CProjectile::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 			return;
 		}
 
-		Player->TakeDamage(TODO, Monster);
+		FEnemyInfo* Info;
+		if (!EnemyTable::GetInst().TryGet(Monster->GetEnemyInfoID(), Info))
+		{
+			return;
+		}
+
+		// TODO: DamageIncrease 적용.
+		Player->TakeDamage(Info->Damage, Monster);
 	}
 
 	if (RemainPenetration == 0)

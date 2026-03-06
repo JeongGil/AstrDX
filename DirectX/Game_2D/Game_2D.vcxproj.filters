@@ -326,7 +326,7 @@
     <ClInclude Include="Table\StringTable.h">
       <Filter>Table</Filter>
     </ClInclude>
-    <ClInclude Include="Table\FStringInfo.h">
+    <ClInclude Include="Table\StringInfo.h">
       <Filter>Table</Filter>
     </ClInclude>
     <ClInclude Include="UI\CWorldHUD.h">
@@ -387,6 +387,12 @@
       <Filter>Table</Filter>
     </ClInclude>
     <ClInclude Include="Table\EnemyTable.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\ProjectileInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\ProjectileTable.h">
       <Filter>Table</Filter>
     </ClInclude>
   </ItemGroup>

@@ -5,19 +5,8 @@ class CBrotatoWorld_Battle :
     public CWorld
 {
 public:
-	bool Init() override;
-	void Update(const float DeltaTime) override;
-
-	void FinishStage(bool bClear);
-
-	int GetStageLevel() const
-	{
-		return StageLevel;
-	}
-	void SetStageLevel(int NewLevel)
-	{
-		this->StageLevel = NewLevel;
-	}
+	CBrotatoWorld_Battle() = default;
+	~CBrotatoWorld_Battle() override = default;
 
 protected:
 	int StageLevel;
@@ -26,6 +15,24 @@ protected:
 	float RemainStageTime;
 
 public:
-	~CBrotatoWorld_Battle() override = default;
+	bool Init() override;
+	void Update(const float DeltaTime) override;
+
+	void FinishStage(bool bClear);
+
+private:
+	void LoadAnimation2D();
+	void LoadSound();
+	void CreateUI();
+
+public:
+	int GetStageLevel() const
+	{
+		return StageLevel;
+	}
+	void SetStageLevel(int NewLevel)
+	{
+		this->StageLevel = NewLevel;
+	}
 };
 

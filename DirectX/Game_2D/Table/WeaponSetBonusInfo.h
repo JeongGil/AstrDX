@@ -29,38 +29,39 @@ struct FWeaponSetBonusInfo : FTableInfoBase
 			uint8_t Uint8Val;
 			uint32_t Uint32Val;
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			if (!TryParse<int>(Segment, IntVal)) { return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, IntVal)) { assert(false); return false; }
 			ID = TableID(IntVal);
 
-			if (!std::getline(Stream, Name, Delim)) { return false; }
+			if (!std::getline(Stream, Name, Delim)) { assert(false); return false; }
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			if (!TryParse<uint32_t>(Segment, Uint32Val)) { return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<uint32_t>(Segment, Uint32Val)) { assert(false); return false; }
 			WeaponType = static_cast<EWeaponType::Type>(Uint32Val);
 
 			for (auto& Bonus : Bonus1)
 			{
-				if (!std::getline(Stream, Segment, Delim)) { return false; }
-				if (!TryParse<uint8_t>(Segment, Uint8Val)) { return false; }
+				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+				if (!TryParse<uint8_t>(Segment, Uint8Val)) { assert(false); return false; }
 				Bonus.StatType = static_cast<EStat::Type>(Uint8Val);
 
-				if (!std::getline(Stream, Segment, Delim)) { return false; }
-				if (!TryParse<int>(Segment, Bonus.StatValue)) { return false; }
+				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+				if (!TryParse<int>(Segment, Bonus.StatValue)) { assert(false); return false; }
 			}
 
 			for (auto& Bonus : Bonus2)
 			{
-				if (!std::getline(Stream, Segment, Delim)) { return false; }
-				if (!TryParse<uint8_t>(Segment, Uint8Val)) { return false; }
+				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+				if (!TryParse<uint8_t>(Segment, Uint8Val)) { assert(false); return false; }
 				Bonus.StatType = static_cast<EStat::Type>(Uint8Val);
 
-				if (!std::getline(Stream, Segment, Delim)) { return false; }
-				if (!TryParse<int>(Segment, Bonus.StatValue)) { return false; }
+				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+				if (!TryParse<int>(Segment, Bonus.StatValue)) { assert(false); return false; }
 			}
 		}
 		catch (...)
 		{
+			assert(false); 
 			return false;
 		}
 

@@ -75,20 +75,9 @@ public:
 		}
 	}
 
-	using MapIterator = std::unordered_map<TableID, T*>::iterator;
-	MapIterator Begin()
+	const std::unordered_map<TableID, T*>& GetItems() const
 	{
-		return Items.begin();
-	}
-
-	MapIterator End()
-	{
-		return Items.end();
-	}
-
-	MapIterator Find(TableID ID)
-	{
-		return Items.find(ID);
+		return Items;
 	}
 
 private:

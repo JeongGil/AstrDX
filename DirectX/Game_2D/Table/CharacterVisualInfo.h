@@ -17,15 +17,15 @@ struct FCharacterVisualInfo : FTableInfoBase
 			int IntVal;
 			//uint8_t Uint8Val;
 
-			if (!std::getline(Stream, Segment, Delim)) { return false; }
-			if (!TryParse<int>(Segment, IntVal)) { return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, IntVal)) { assert(false); return false; }
 			ID = TableID(IntVal);
 
-			if (!std::getline(Stream, Icon, Delim)) { return false; }
+			if (!std::getline(Stream, Icon, Delim)) { assert(false); return false; }
 
-			if (!std::getline(Stream, Eye, Delim)) { return false; }
+			if (!std::getline(Stream, Eye, Delim)) { assert(false); return false; }
 
-			if (!std::getline(Stream, Mouth, Delim)) { return false; }
+			if (!std::getline(Stream, Mouth, Delim)) { assert(false); return false; }
 
 			for (auto& Deco : Decos)
 			{
@@ -37,6 +37,7 @@ struct FCharacterVisualInfo : FTableInfoBase
 		}
 		catch (...)
 		{
+			assert(false);
 			return false;
 		}
 

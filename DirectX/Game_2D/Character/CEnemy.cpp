@@ -1,6 +1,7 @@
 #include "CEnemy.h"
 
 #include <CEngine.h>
+#include <Component/CAnimation2DComponent.h>
 #include <Component/CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
@@ -55,6 +56,12 @@ bool CEnemy::Init()
 		Mesh->TrySetRenderLayer(ERenderOrder::CharacterBody);
 	}
 
+	Animation = CreateComponent<CAnimation2DComponent>(Key::Anim::Enemy);
+	if (auto Anim = Animation.lock())
+	{
+		
+	}
+
 	return true;
 }
 
@@ -98,14 +105,7 @@ void CEnemy::Update(const float DeltaTime)
 			{
 				if (ElapsedFromCharge >= ChargeCooldownTime)
 				{
-					if (ElapsedFromCharge == std::numeric_limits<float>::infinity())
-					{
-						ElapsedFromCharge = 0.f;
-					}
-					else
-					{
-						ElapsedFromCharge -= ChargeCooldownTime;
-					}
+					ElapsedFromCharge = 0.f;
 
 					bOnCharge = true;
 				}
@@ -132,14 +132,22 @@ void CEnemy::Update(const float DeltaTime)
 
 	if (Behaviors & EEnemyBehavior::Fire)
 	{
-
+		if (ElapsedFromFire >= FIRE_COOLDOWN_TIME)
+		{
+			ElapsedFromFire = 0.f;
+		}
 	}
 
 	if (Behaviors & EEnemyBehavior::Kiting)
 	{
 		if (DistToPlayer <= CHARGE_USE_DISTANCE)
 		{
+			float DelMove = MoveSpeed * DeltaTime;
 
+			auto MoveVec = -ToPlayer * DelMove;
+			AddWorldPosition(MoveVec);
+
+			return;
 		}
 	}
 
@@ -150,6 +158,8 @@ void CEnemy::Update(const float DeltaTime)
 
 		auto MoveVec = ToPlayer * DelMove;
 		AddWorldPosition(MoveVec);
+
+		return;
 	}
 #pragma endregion
 }
@@ -182,6 +192,16 @@ void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
 	//+ Info->HpIncrease * 난이도
 	MaxHP = Info->HP;
 	CurrHP = MaxHP;
+
+	if (auto Mesh = this->Mesh.lock())
+	{
+		
+	}
+
+	if (auto Anim = Animation.lock())
+	{
+		
+	}
 }
 
 CEnemy* CEnemy::Clone()

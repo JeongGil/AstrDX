@@ -5,8 +5,11 @@ namespace Key
 {
 	namespace Anim
 	{
-		inline const std::string HitEffect = "HitEffect";
-
+		inline const std::string HitEffect = "HitEffectAnim";
+		inline const std::string Enemy = "Enemy";
+		inline const std::string Potato = "PotatoAnim";
+		inline const std::string Leg = "LegAnim";
+		inline const std::string Deco = "DecoAnim";
 	}
 
 	namespace Tex
