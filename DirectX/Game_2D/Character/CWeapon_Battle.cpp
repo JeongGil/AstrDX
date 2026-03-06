@@ -8,6 +8,11 @@
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
 
+#if defined(_DEBUG) || defined(DEBUG)
+#include <Windows.h>
+#include <cstdio>
+#endif
+
 #include "CEnemy.h"
 #include "CPlayerCharacter.h"
 #include "CProjectile.h"
@@ -86,7 +91,37 @@ void CWeapon_Battle::Update(const float DeltaTime)
 
 	if (auto Anchor = PosAnchor.lock())
 	{
+#if defined(_DEBUG) || defined(DEBUG)
+		char Buf[512]{};
+		const FVector& AnchorPosDbg = Anchor->GetWorldPosition();
+		const FVector& MyPosBeforeDbg = GetWorldPosition();
+		sprintf_s(Buf, sizeof(Buf),
+			"CWeapon_Battle::Update [%p] - Anchor=(%.2f, %.2f, %.2f) WeaponBefore=(%.2f, %.2f, %.2f)\n",
+			static_cast<void*>(this),
+			AnchorPosDbg.x, AnchorPosDbg.y, AnchorPosDbg.z,
+			MyPosBeforeDbg.x, MyPosBeforeDbg.y, MyPosBeforeDbg.z);
+		OutputDebugStringA(Buf);
+#endif
+
 		SetWorldPosition(Anchor->GetWorldPosition());
+
+#if defined(_DEBUG) || defined(DEBUG)
+		{
+			char Buf2[256]{};
+			const FVector& MyPosAfterDbg = GetWorldPosition();
+			sprintf_s(Buf2, sizeof(Buf2),
+				"CWeapon_Battle::Update [%p] - WeaponAfter=(%.2f, %.2f, %.2f)\n",
+				static_cast<void*>(this),
+				MyPosAfterDbg.x, MyPosAfterDbg.y, MyPosAfterDbg.z);
+			OutputDebugStringA(Buf2);
+		}
+#endif
+	}
+	else
+	{
+#if defined(_DEBUG) || defined(DEBUG)
+		OutputDebugStringA("CWeapon_Battle::Update - PosAnchor expired\n");
+#endif
 	}
 
 	// 대상 조준
@@ -161,7 +196,33 @@ void CWeapon_Battle::Update(const float DeltaTime)
 		FVector RelativePos = TargetDir * Dist;
 		auto Anchor = PosAnchor.lock();
 
-		SetWorldPosition(Anchor->GetWorldPosition() + RelativePos);
+		if (Anchor)
+		{
+#if defined(_DEBUG) || defined(DEBUG)
+			char Buf[256]{};
+			const FVector& AnchorPos = Anchor->GetWorldPosition();
+			sprintf_s(Buf, sizeof(Buf),
+				"CWeapon_Battle::Melee [%p] - Anchor=(%.2f, %.2f, %.2f) RelativePos=(%.2f, %.2f, %.2f)\n",
+				static_cast<void*>(this),
+				AnchorPos.x, AnchorPos.y, AnchorPos.z,
+				RelativePos.x, RelativePos.y, RelativePos.z);
+			OutputDebugStringA(Buf);
+#endif
+
+			SetWorldPosition(Anchor->GetWorldPosition() + RelativePos);
+
+#if defined(_DEBUG) || defined(DEBUG)
+			{
+				char Buf2[256]{};
+				const FVector& MyPosAfter = GetWorldPosition();
+				sprintf_s(Buf2, sizeof(Buf2),
+					"CWeapon_Battle::Melee [%p] - WeaponAfter=(%.2f, %.2f, %.2f)\n",
+					static_cast<void*>(this),
+					MyPosAfter.x, MyPosAfter.y, MyPosAfter.z);
+				OutputDebugStringA(Buf2);
+			}
+#endif
+		}
 
 		// 근접 공격 종료
 		if (ElapsedMeleeMoveTime >= 2 * TotalMoveTime)
