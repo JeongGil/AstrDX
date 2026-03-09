@@ -94,15 +94,13 @@ protected:
 	void InitWeaponInfo(TableID ID);
 
 private:
-	std::weak_ptr<CSceneComponent> GetClosestEnemy();
-
 	static int CalcAttackRange(const FWeaponInfo* WeaponInfo, const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
 	[[nodiscard]] static FAttackResult CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 	                                                    const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
 
-	void OnSearchCollisionBlock(const FVector& HitPoint, CCollider* Other);
+	void OnSearchCollisionOverlapped(const FVector& HitPoint, CCollider* Other);
 
 	float GetTotalMoveTime() const;
 

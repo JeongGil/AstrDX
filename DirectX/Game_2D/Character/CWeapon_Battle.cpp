@@ -58,7 +58,7 @@ bool CWeapon_Battle::Init()
 	SearchCollider = CreateComponent<CColliderSphere2D>(Key::Comp::SearchCollider, Key::Comp::Root);
 	if (auto Search = SearchCollider.lock())
 	{
-		Search->SetOnCollisionBlock<CWeapon_Battle>(this, &CWeapon_Battle::OnSearchCollisionBlock);
+		Search->SetOnCollisionBegin<CWeapon_Battle>(this, &CWeapon_Battle::OnSearchCollisionOverlapped);
 		Search->SetCollisionProfile("FindEnemy");
 	}
 
@@ -94,6 +94,11 @@ void CWeapon_Battle::Update(const float DeltaTime)
 		{
 			SetWorldPosition(Anchor->GetWorldPosition());
 		}
+	}
+
+	if (TargetDir.IsZero() || TargetDir.IsNaN())
+	{
+		return;
 	}
 
 	// 대상 조준
@@ -195,6 +200,8 @@ void CWeapon_Battle::PostUpdate(const float DeltaTime)
 	// 그 전에 초기화.
 	ClosestSqrDist = FLT_MAX;
 	ClosestEnemy.reset();
+	TargetDir = FVector::Zero;
+
 	if (const FWeaponInfo* Info = WeaponTable::GetInst().Get(GetWeaponInfoID()))
 	{
 		if (auto Search = SearchCollider.lock())
@@ -268,38 +275,6 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 			}
 		}
 	}
-}
-
-std::weak_ptr<CSceneComponent> CWeapon_Battle::GetClosestEnemy()
-{
-	if (auto World = this->World.lock())
-	{
-		auto Enemies = World->FindObjectsOfType<CEnemy>();
-
-		float SqrDist = std::numeric_limits<float>::infinity();
-		std::weak_ptr<CEnemy> Closest;
-
-		auto EnemyView = Enemies
-			| std::views::transform([](const auto& Weak) { return Weak.lock(); })
-			| std::views::filter([](const auto& Enemy) { return Enemy != nullptr; });
-
-		for (const auto& Enemy : EnemyView)
-		{
-			float CurrSqrDist = (GetWorldPosition() - Enemy->GetWorldPosition()).SqrLength();
-			if (CurrSqrDist < SqrDist)
-			{
-				SqrDist = CurrSqrDist;
-				Closest = Enemy;
-			}
-		}
-
-		if (auto Target = Closest.lock())
-		{
-			return Target->GetRootComponent();
-		}
-	}
-
-	return {};
 }
 
 int CWeapon_Battle::CalcAttackRange(const FWeaponInfo* WeaponInfo,
@@ -393,7 +368,7 @@ void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 	}
 }
 
-void CWeapon_Battle::OnSearchCollisionBlock(const FVector& HitPoint, CCollider* Other)
+void CWeapon_Battle::OnSearchCollisionOverlapped(const FVector& HitPoint, CCollider* Other)
 {
 	if (Other == nullptr)
 	{
