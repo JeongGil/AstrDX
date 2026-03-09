@@ -1,6 +1,12 @@
 #include "FVector3.h"
 #include "FMatrix.h"
 #include "FVector2.h"
+#include <cmath>
+
+bool FVector3::IsNaN() const
+{
+	return std::isnan(x) || std::isnan(y) || std::isnan(z);
+}
 
 FVector3 FVector3::Zero;
 FVector3 FVector3::One = { 1.f, 1.f, 1.f };

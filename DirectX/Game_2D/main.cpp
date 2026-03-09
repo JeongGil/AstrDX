@@ -1,6 +1,10 @@
 #include <CEngine.h>
 
 #include "CGlobalSetting.h"
+#include "Character/CEnemy.h"
+#include "Character/CPlayerCharacter.h"
+#include "Character/CProjectile.h"
+#include "Character/CWeapon_Battle.h"
 #include "Component/CStateComponent.h"
 #include "Monster/CMonster.h"
 #include "Monster/CMonsterSpawnPoint.h"
@@ -44,6 +48,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	CEngine::CreateCDO<CMonster>();
 	CEngine::CreateCDO<CMonsterSpawnPoint>();
 	CEngine::CreateCDO<CStateComponent>();
+
+	CEngine::CreateCDO<CPlayerCharacter>();
+	CEngine::CreateCDO<CEnemy>();
+	CEngine::CreateCDO<CWeapon_Battle>();
+	CEngine::CreateCDO<CProjectile>();
 
 	//CWorldManager::GetInst()->CreateWorld<CStartWorld>(false);
 	//CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);

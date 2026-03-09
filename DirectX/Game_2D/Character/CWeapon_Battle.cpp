@@ -1,17 +1,13 @@
 #include "CWeapon_Battle.h"
 
 #include <CEngine.h>
+#include <cmath>
 #include <CTimer.h>
 #include <Asset/Material/CMaterial.h>
 #include <Component/CColliderBox2D.h>
 #include <Component/CColliderSphere2D.h>
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
-
-#if defined(_DEBUG) || defined(DEBUG)
-#include <Windows.h>
-#include <cstdio>
-#endif
 
 #include "CEnemy.h"
 #include "CPlayerCharacter.h"
@@ -63,6 +59,7 @@ bool CWeapon_Battle::Init()
 	if (auto Search = SearchCollider.lock())
 	{
 		Search->SetOnCollisionBlock<CWeapon_Battle>(this, &CWeapon_Battle::OnSearchCollisionBlock);
+		Search->SetCollisionProfile("FindEnemy");
 	}
 
 	if (const auto* Misc = MiscTable::GetInst().Get())
@@ -88,46 +85,21 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	{
 		return;
 	}
-
+	
+	// Anchor가 설정되어 있으면 항상 Anchor 위치를 따라감
 	if (auto Anchor = PosAnchor.lock())
 	{
-#if defined(_DEBUG) || defined(DEBUG)
-		char Buf[512]{};
-		const FVector& AnchorPosDbg = Anchor->GetWorldPosition();
-		const FVector& MyPosBeforeDbg = GetWorldPosition();
-		sprintf_s(Buf, sizeof(Buf),
-			"CWeapon_Battle::Update [%p] - Anchor=(%.2f, %.2f, %.2f) WeaponBefore=(%.2f, %.2f, %.2f)\n",
-			static_cast<void*>(this),
-			AnchorPosDbg.x, AnchorPosDbg.y, AnchorPosDbg.z,
-			MyPosBeforeDbg.x, MyPosBeforeDbg.y, MyPosBeforeDbg.z);
-		OutputDebugStringA(Buf);
-#endif
-
-		SetWorldPosition(Anchor->GetWorldPosition());
-
-#if defined(_DEBUG) || defined(DEBUG)
+		// 근접 무기 공격중 무기 이동 처리가 아닐 때만 Anchor 위치로 고정
+		if (!bOnMeleeAttack)
 		{
-			char Buf2[256]{};
-			const FVector& MyPosAfterDbg = GetWorldPosition();
-			sprintf_s(Buf2, sizeof(Buf2),
-				"CWeapon_Battle::Update [%p] - WeaponAfter=(%.2f, %.2f, %.2f)\n",
-				static_cast<void*>(this),
-				MyPosAfterDbg.x, MyPosAfterDbg.y, MyPosAfterDbg.z);
-			OutputDebugStringA(Buf2);
+			SetWorldPosition(Anchor->GetWorldPosition());
 		}
-#endif
-	}
-	else
-	{
-#if defined(_DEBUG) || defined(DEBUG)
-		OutputDebugStringA("CWeapon_Battle::Update - PosAnchor expired\n");
-#endif
 	}
 
 	// 대상 조준
 	if (auto Target = ClosestEnemy.lock())
 	{
-		float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldRotation(), EAxis::Y);
+		float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition(), EAxis::Y);
 		SetWorldRotationZ(Degree);
 	}
 
@@ -198,30 +170,7 @@ void CWeapon_Battle::Update(const float DeltaTime)
 
 		if (Anchor)
 		{
-#if defined(_DEBUG) || defined(DEBUG)
-			char Buf[256]{};
-			const FVector& AnchorPos = Anchor->GetWorldPosition();
-			sprintf_s(Buf, sizeof(Buf),
-				"CWeapon_Battle::Melee [%p] - Anchor=(%.2f, %.2f, %.2f) RelativePos=(%.2f, %.2f, %.2f)\n",
-				static_cast<void*>(this),
-				AnchorPos.x, AnchorPos.y, AnchorPos.z,
-				RelativePos.x, RelativePos.y, RelativePos.z);
-			OutputDebugStringA(Buf);
-#endif
-
 			SetWorldPosition(Anchor->GetWorldPosition() + RelativePos);
-
-#if defined(_DEBUG) || defined(DEBUG)
-			{
-				char Buf2[256]{};
-				const FVector& MyPosAfter = GetWorldPosition();
-				sprintf_s(Buf2, sizeof(Buf2),
-					"CWeapon_Battle::Melee [%p] - WeaponAfter=(%.2f, %.2f, %.2f)\n",
-					static_cast<void*>(this),
-					MyPosAfter.x, MyPosAfter.y, MyPosAfter.z);
-				OutputDebugStringA(Buf2);
-			}
-#endif
 		}
 
 		// 근접 공격 종료
@@ -485,5 +434,8 @@ float CWeapon_Battle::GetTotalMoveTime() const
 		return {};
 	}
 
-	return Owner->GetStat(EStat::Range) / MoveSpeed;
+	auto OwnerRange = Owner->GetStat(EStat::Range);
+	auto WeaponRange = Info->Range;
+
+	return (WeaponRange + OwnerRange * 0.5f) / MoveSpeed;
 }

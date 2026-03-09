@@ -142,6 +142,8 @@ struct FVector3
 		return x == 0.f && y == 0.f && z == 0.f;
 	}
 
+	bool IsNaN() const;
+
 	//FVector3 GetRotation(const FVector3& Rot) const;
 	//
 	//float GetAngle(const FVector3& v)	const;
