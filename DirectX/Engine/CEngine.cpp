@@ -177,7 +177,7 @@ void CEngine::InitRegisterClass(const TCHAR* WindowName, const int IconID, const
 bool CEngine::InitCreateWindow(const TCHAR* WindowName, const int Width, const int Height)
 {
 	hWnd = CreateWindowW(WindowName, WindowName,
-		WS_OVERLAPPEDWINDOW, Width, 0, Height, 0,
+		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, Width, Height,
 		nullptr, nullptr, hInst, nullptr);
 
 	if (!hWnd)
