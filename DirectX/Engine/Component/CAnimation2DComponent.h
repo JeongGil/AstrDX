@@ -11,6 +11,7 @@ class CAnimation2DComponent :
     public CObjectComponent
 {
 	friend CGameObject;
+	friend class CObject;
 
 protected:
 	CAnimation2DComponent() = default;

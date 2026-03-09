@@ -5,6 +5,7 @@ class CProjectileMovementComponent :
 	public CMovementComponent
 {
 	friend class CGameObject;
+	friend class CObject;
 
 public:
 	[[nodiscard]] FVector GetVelocity() const

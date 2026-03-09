@@ -7,6 +7,7 @@ class CObjectMovementComponent :
 	public CNavAgent
 {
 	friend class CGameObject;
+	friend class CObject;
 
 public:
 	[[nodiscard]] FVector GetMoveDirection() const
