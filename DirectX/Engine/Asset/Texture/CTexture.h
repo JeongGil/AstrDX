@@ -35,7 +35,7 @@ struct FTextureInfo
 
 	~FTextureInfo()
 	{
-		SAFE_RELEASE(Image);
+		SAFE_DELETE(Image);
 		SAFE_RELEASE(SRV);
 	}
 };
