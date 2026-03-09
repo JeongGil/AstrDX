@@ -127,10 +127,7 @@ bool CPlayerCharacter::Init()
 	for (auto& WeaponAnchor : WeaponAnchors)
 	{
 		auto WAnchor = CreateComponent<CSceneComponent>(Key::Comp::Anchor, Key::Comp::Root);
-		if (auto Anchor = WAnchor.lock())
-		{
-			WeaponAnchor = Anchor;
-		}
+		WeaponAnchor = WAnchor;
 	}
 
 	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
@@ -237,7 +234,18 @@ void CPlayerCharacter::SetAnchorPosition(size_t WeaponCount)
 	const auto& AnchorPoses = AnchorPositions.at(WeaponCount);
 	for (size_t i = 0; i < WeaponCount; i++)
 	{
-		WeaponAnchors[i]->SetRelativePosition(AnchorPoses[i]);
+		if (auto WeaponAnchor = WeaponAnchors[i].lock())
+		{
+			WeaponAnchor->SetRelativePosition(AnchorPoses[i]);
+		}
+#if defined(_DEBUG) || defined(DEBUG)
+		else
+		{
+			char Buf[256]{};
+			sprintf_s(Buf, sizeof(Buf), "CPlayerCharacter::SetAnchorPosition - WeaponAnchor is invalid.\n");
+			OutputDebugStringA(Buf);
+		}
+#endif
 	}
 }
 
@@ -300,6 +308,8 @@ void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Wea
 			WeaponObj->SetPosAnchor(WeaponAnchors[Weapons.size() - 1]);
 
 			WeaponObj->AddRelativeRotationZ(90);
+
+			WeaponObj->SetWeaponInfoID(InvenWeapon->GetWeaponInfoID());
 		}
 	}
 

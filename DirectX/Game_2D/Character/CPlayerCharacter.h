@@ -60,7 +60,7 @@ protected:
 	std::vector<std::weak_ptr<CAnimation2DComponent>> DecoAnims;
 
 	std::vector<std::weak_ptr<CWeapon_Battle>> Weapons;
-	std::array<std::shared_ptr<CSceneComponent>, INVENTORY_MAX_WEAPON> WeaponAnchors;
+	std::array<std::weak_ptr<CSceneComponent>, INVENTORY_MAX_WEAPON> WeaponAnchors;
 
 	std::weak_ptr<CObjectMovementComponent> MovementComponent;
 
