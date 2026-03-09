@@ -2,20 +2,25 @@
 
 #include "CCollisionInfoManager.h"
 #include "CDevice.h"
+#include "CObject.h"
+#include "CThreadManager.h"
 #include "CTimer.h"
 #include "Asset/CAssetManager.h"
 #include "Asset/Mesh/CMesh.h"
 #include "Asset/Mesh/CMeshManager.h"
-#include "Asset/Shader/CShaderManager.h"
-#include "World/CWorldManager.h"
 #include "Asset/Shader/CCBufferTransform.h"
-#include "CObject.h"
-#include "CThreadManager.h"
-#include "Object/CGameObject.h"
-#include "Component/CMeshComponent.h"
+#include "Asset/Shader/CShaderManager.h"
+#include "Component/CAnimation2DComponent.h"
 #include "Component/CCameraComponent.h"
+#include "Component/CColliderBox2D.h"
+#include "Component/CColliderSphere2D.h"
+#include "Component/CMeshComponent.h"
+#include "Component/CObjectMovementComponent.h"
+#include "Component/CProjectileMovementComponent.h"
+#include "Object/CGameObject.h"
 #include "Render/CRenderManager.h"
 #include "UI/CWidget.h"
+#include "World/CWorldManager.h"
 
 void CEngine::InitCDO()
 {
@@ -23,6 +28,11 @@ void CEngine::InitCDO()
 	CObject::CreateCDO<CSceneComponent>();
 	CObject::CreateCDO<CMeshComponent>();
 	CObject::CreateCDO<CCameraComponent>();
+	CObject::CreateCDO<CColliderBox2D>();
+	CObject::CreateCDO<CColliderSphere2D>();
+	CObject::CreateCDO<CAnimation2DComponent>();
+	CObject::CreateCDO<CObjectMovementComponent>();
+	CObject::CreateCDO<CProjectileMovementComponent>();
 }
 
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
@@ -32,6 +42,9 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 	MT = std::mt19937_64(RD());
 
 	hInst = hInstance;
+
+	// Initialize engine CDOs first
+	InitCDO();
 
 	InitRegisterClass(WindowName, IconID, SmallIconID);
 
@@ -228,11 +241,14 @@ LRESULT CEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 CEngine::CEngine()
 {
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-	// put a breakpoint on memory allocation number from _CrtSetDbgFlag.
-	//_crtBreakAlloc(151);
-
-	Setting.reset(new CEngineSetting);
+	int flags = _CrtSetDbgFlag(_CRTDBG_REPORT_FLAG);
+	flags |= _CRTDBG_ALLOC_MEM_DF;        // allocation tracking
+	flags |= _CRTDBG_LEAK_CHECK_DF;      // end-of-program leak report
+	//flags |= _CRTDBG_CHECK_ALWAYS_DF;    // more aggressive heap checking
+	_CrtSetDbgFlag(flags);
+	
+	// 첫 번째 누수 블록에 중단점 설정
+	//_CrtSetBreakAlloc(3181);
 }
 
 CEngine::~CEngine()
