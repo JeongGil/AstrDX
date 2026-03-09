@@ -41,26 +41,26 @@ void CCollider::EraseCollidingObject(CCollider* Other)
 	}
 }
 
-void CCollider::CallOnCollisionBegin(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other)
+void CCollider::CallOnCollisionBeginOverlap(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other)
 {
 	if (auto Dest = Other.lock())
 	{
 		CollidingObjects.emplace(Dest.get(), Other);
 
-		if (OnCollisionBegin)
+		if (OnCollisionBeginOverlap)
 		{
-			OnCollisionBegin(HitPoint, Dest.get());
+			OnCollisionBeginOverlap(HitPoint, Dest.get());
 		}
 	}
 }
 
-void CCollider::CallOnCollisionEnd(CCollider* Other)
+void CCollider::CallOnCollisionEndOverlap(CCollider* Other)
 {
 	CollidingObjects.erase(Other);
 
-	if (OnCollisionEnd)
+	if (OnCollisionEndOverlap)
 	{
-		OnCollisionEnd(Other);
+		OnCollisionEndOverlap(Other);
 	}
 }
 
@@ -206,8 +206,8 @@ CCollider::CCollider(CCollider&& other) noexcept :
 	Mesh(std::move(other.Mesh)),
 	TransformCBuffer(std::move(other.TransformCBuffer)),
 	ColliderCBuffer(std::move(other.ColliderCBuffer)),
-	OnCollisionBegin(std::move(other.OnCollisionBegin)),
-	OnCollisionEnd(std::move(other.OnCollisionEnd)),
+	OnCollisionBeginOverlap(std::move(other.OnCollisionBeginOverlap)),
+	OnCollisionEndOverlap(std::move(other.OnCollisionEndOverlap)),
 	OnCollisionBlock(std::move(other.OnCollisionBlock)),
 	OnCollisionMouseBegin(std::move(other.OnCollisionMouseBegin)),
 	OnCollisionMouseEnd(std::move(other.OnCollisionMouseEnd))

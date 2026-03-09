@@ -52,8 +52,8 @@ public:
 	bool CheckCollidingObject(CCollider* Other) const;
 	void EraseCollidingObject(CCollider* Other);
 
-	void CallOnCollisionBegin(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
-	void CallOnCollisionEnd(CCollider* Other);
+	void CallOnCollisionBeginOverlap(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
+	void CallOnCollisionEndOverlap(CCollider* Other);
 	void CallOnCollisionBlock(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
 	void OnCollisionBlockEnd();
 	void CallOnCollisionMouseBegin(const FVector& MousePos);
@@ -66,13 +66,13 @@ public:
 	template <typename T>
 	void SetOnCollisionBegin(T* Obj, void (T::* Func)(const FVector&, CCollider*))
 	{
-		OnCollisionBegin = std::bind(Func, Obj, std::placeholders::_1, std::placeholders::_2);
+		OnCollisionBeginOverlap = std::bind(Func, Obj, std::placeholders::_1, std::placeholders::_2);
 	}
 
 	template <typename T>
 	void SetOnCollisionEnd(T* Obj, void (T::* Func)(CCollider*))
 	{
-		OnCollisionEnd = std::bind(Func, Obj, std::placeholders::_1);
+		OnCollisionEndOverlap = std::bind(Func, Obj, std::placeholders::_1);
 	}
 
 	template <typename T>
@@ -115,8 +115,8 @@ protected:
 	std::shared_ptr<CCBufferTransform> TransformCBuffer;
 	std::shared_ptr<CCBufferCollider> ColliderCBuffer;
 
-	std::function<void(const FVector&, CCollider*)> OnCollisionBegin;
-	std::function<void(CCollider*)> OnCollisionEnd;
+	std::function<void(const FVector&, CCollider*)> OnCollisionBeginOverlap;
+	std::function<void(CCollider*)> OnCollisionEndOverlap;
 	std::function<void(const FVector&, CCollider*)> OnCollisionBlock;
 
 	std::function<void(const FVector&)> OnCollisionMouseBegin;

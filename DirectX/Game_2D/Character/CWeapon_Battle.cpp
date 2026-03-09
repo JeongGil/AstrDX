@@ -36,7 +36,7 @@ bool CWeapon_Battle::Init()
 		Collider->SetCollisionProfile("PlayerAttack");
 
 		Collider->SetOnCollisionBegin<CWeapon_Battle>(this, &CWeapon_Battle::OnCollisionBegin);
-		//Body->SetOnCollisionBegin<CBullet>(this, &CBullet::OnCollisionBegin);
+		//Body->SetOnCollisionBegin<CBullet>(this, &CBullet::OnCollisionBeginOverlap);
 	}
 
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh, Key::Comp::Root);
@@ -52,13 +52,14 @@ bool CWeapon_Battle::Init()
 		Mesh->SetInheritScale(true);
 		Mesh->SetInheritRotation(true);
 
-		Mesh->TrySetRenderLayer(ERenderOrder::CharacterWeapon);
+		Mesh->SetRenderLayer(ERenderOrder::CharacterWeapon);
 	}
 
 	SearchCollider = CreateComponent<CColliderSphere2D>(Key::Comp::SearchCollider, Key::Comp::Root);
 	if (auto Search = SearchCollider.lock())
 	{
-		Search->SetOnCollisionBegin<CWeapon_Battle>(this, &CWeapon_Battle::OnSearchCollisionOverlapped);
+		Search->SetOnCollisionBegin<CWeapon_Battle>(this, &CWeapon_Battle::OnSearchCollisionBeginOverlap);
+		Search->SetOnCollisionEnd<CWeapon_Battle>(this, &CWeapon_Battle::OnSearchCollisionEndOverlap);
 		Search->SetCollisionProfile("FindEnemy");
 	}
 
@@ -74,6 +75,8 @@ void CWeapon_Battle::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 
+	SortCloseEnemies();
+
 	auto Owner = this->Owner.lock();
 	if (!Owner)
 	{
@@ -85,7 +88,7 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	{
 		return;
 	}
-	
+
 	// Anchor가 설정되어 있으면 항상 Anchor 위치를 따라감
 	if (auto Anchor = PosAnchor.lock())
 	{
@@ -96,16 +99,13 @@ void CWeapon_Battle::Update(const float DeltaTime)
 		}
 	}
 
-	if (TargetDir.IsZero() || TargetDir.IsNaN())
-	{
-		return;
-	}
-
 	// 대상 조준
-	if (auto Target = ClosestEnemy.lock())
+	if (auto Target = GetClosestEnemy().lock())
 	{
 		float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition(), EAxis::Y);
 		SetWorldRotationZ(Degree);
+
+		TargetDir = (Target->GetWorldPosition() - GetWorldPosition()).GetNormalized();
 	}
 
 	// 근접공격은 공격모션 종료 후 대기시간 감소.
@@ -120,8 +120,11 @@ void CWeapon_Battle::Update(const float DeltaTime)
 		ElapsedCooldownTime += DeltaTime * Owner->GetStat(EStat::AttackSpeed);
 	}
 
+	float TotalDist = GetTotalRange();
+
 	float CooldownSec = WeaponInfo->CooldownMS * 0.001f;
-	if (ElapsedCooldownTime >= CooldownSec)
+	if (ElapsedCooldownTime >= CooldownSec
+		&& TotalDist >= GetClosestDistance())
 	{
 		ElapsedCooldownTime = 0.f;
 
@@ -153,8 +156,7 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	// 근접 무기 공격중 무기 이동 처리.
 	if (bOnMeleeAttack)
 	{
-		float TotalMoveTime = GetTotalMoveTime();
-		float TotalDist = WeaponInfo->Range + Owner->GetStat(EStat::Range) * 0.5f;
+		float TotalMoveTime = GetTotalMoveTime(TotalDist);
 
 		float Dist;
 		// 찌르고
@@ -197,10 +199,7 @@ void CWeapon_Battle::PostUpdate(const float DeltaTime)
 	CGameObject::PostUpdate(DeltaTime);
 
 	// 오브젝트의 PostUpdate이후 충돌 처리됨.
-	// 그 전에 초기화.
-	ClosestSqrDist = FLT_MAX;
-	ClosestEnemy.reset();
-	TargetDir = FVector::Zero;
+	// 그 전에 Range변화를 반영.
 
 	if (const FWeaponInfo* Info = WeaponTable::GetInst().Get(GetWeaponInfoID()))
 	{
@@ -368,37 +367,35 @@ void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 	}
 }
 
-void CWeapon_Battle::OnSearchCollisionOverlapped(const FVector& HitPoint, CCollider* Other)
+void CWeapon_Battle::OnSearchCollisionBeginOverlap(const FVector& HitPoint, CCollider* Other)
 {
 	if (Other == nullptr)
 	{
 		return;
 	}
 
-	FVector Direction = Other->GetWorldPosition() - GetWorldPosition();
-	auto SqrDist = Direction.SqrLength();
-	if (SqrDist < ClosestSqrDist)
-	{
-		ClosestSqrDist = SqrDist;
-		ClosestEnemy = Other->GetOwner();
-		TargetDir = Direction.GetNormalized();
-	}
+	CloseEnemies.emplace_back(Other->GetOwner());
 }
 
-float CWeapon_Battle::GetTotalMoveTime() const
+void CWeapon_Battle::OnSearchCollisionEndOverlap(CCollider* Other)
 {
-	if (MoveSpeed == 0.f)
+	if (Other == nullptr)
 	{
-		return {};
+		return;
 	}
 
+	std::erase_if(CloseEnemies, [Target = Other->GetOwner()](const auto& Item)
+		{
+			auto SharedItem = Item.lock();
+			// 1. 이미 파괴되었거나, 2. 찾는 대상인 경우 제거
+			return !SharedItem || IsSameTarget(SharedItem, Target);
+		});
+}
+
+float CWeapon_Battle::GetTotalRange() const
+{
 	FWeaponInfo* Info;
 	if (!WeaponTable::GetInst().TryGet(GetWeaponInfoID(), Info))
-	{
-		return {};
-	}
-
-	if (!Info->bIsMeleeWeapon)
 	{
 		return {};
 	}
@@ -409,8 +406,64 @@ float CWeapon_Battle::GetTotalMoveTime() const
 		return {};
 	}
 
-	auto OwnerRange = Owner->GetStat(EStat::Range);
 	auto WeaponRange = Info->Range;
 
-	return (WeaponRange + OwnerRange * 0.5f) / MoveSpeed;
+	auto OwnerRange = Owner->GetStat(EStat::Range);
+	if (Info->bIsMeleeWeapon)
+	{
+		OwnerRange *= 0.f;
+	}
+
+	return WeaponRange + OwnerRange;
+}
+
+float CWeapon_Battle::GetTotalMoveTime(float Range) const
+{
+	if (MoveSpeed == 0.f)
+	{
+		return {};
+	}
+
+	return Range / MoveSpeed;
+}
+
+void CWeapon_Battle::SortCloseEnemies()
+{
+	std::erase_if(CloseEnemies, [](const std::weak_ptr<CGameObject>& WeakObject)
+		{
+			auto Object = WeakObject.lock();
+			if (!Object || Object->GetAlive() || Object->GetEnable())
+			{
+				return true;
+			}
+
+			return false;
+		});
+
+	const FVector Pos = GetWorldPosition();
+	std::ranges::sort(CloseEnemies, [Pos](const std::weak_ptr<CGameObject>& A, const std::weak_ptr<CGameObject>& B)
+		{
+			return (A.lock()->GetWorldPosition() - Pos).SqrLength() < (B.lock()->GetWorldPosition() - Pos).SqrLength();
+		});
+
+	if (CloseEnemies.empty())
+	{
+		ClosestDistance = std::numeric_limits<float>::infinity();
+		ClosestEnemy.reset();
+	}
+}
+
+float CWeapon_Battle::GetClosestDistance() const
+{
+	return ClosestDistance;
+}
+
+const std::weak_ptr<CGameObject>& CWeapon_Battle::GetClosestEnemy() const
+{
+	if (CloseEnemies.empty())
+	{
+		return {};
+	}
+
+	return *CloseEnemies.begin();
 }

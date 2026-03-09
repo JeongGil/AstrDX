@@ -34,8 +34,8 @@ bool CBrotatoWorld_Battle::Init()
 	CTableManager::GetInst().LoadTables();
 
 	CInventoryData::GetInst().AddWeapon(TableID(1));
-	CInventoryData::GetInst().AddWeapon(TableID(1));
-	CInventoryData::GetInst().AddWeapon(TableID(1));
+	//CInventoryData::GetInst().AddWeapon(TableID(1));
+	//CInventoryData::GetInst().AddWeapon(TableID(1));
 
 	auto WPC = CreateGameObject<CPlayerCharacter>(Key::Obj::PC);
 	if (auto PC = WPC.lock())
@@ -50,12 +50,12 @@ bool CBrotatoWorld_Battle::Init()
 		}
 	}
 
-	/*static int Counter = 0;
+	static int Counter = 0;
 	auto WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
 	if (auto NPC = WNPC.lock())
 	{
 		NPC->SetWorldPosition(300, 300);
-	}*/
+	}
 
 	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
 	//if (auto NPC = WNPC.lock())

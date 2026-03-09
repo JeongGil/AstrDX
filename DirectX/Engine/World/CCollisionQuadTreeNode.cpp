@@ -178,9 +178,9 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 				{
 					if (!SrcCollider->CheckCollidingObject(DestCollider.get()))
 					{
-						SrcCollider->CallOnCollisionBegin(HitPoint, *DestIt);
+						SrcCollider->CallOnCollisionBeginOverlap(HitPoint, *DestIt);
 
-						DestCollider->CallOnCollisionBegin(HitPoint, *SrcIt);
+						DestCollider->CallOnCollisionBeginOverlap(HitPoint, *SrcIt);
 					}
 				}
 			}
@@ -191,8 +191,8 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 			{
 				if (SrcToDest == ECollisionInteraction::Overlap)
 				{
-					SrcCollider->CallOnCollisionEnd(DestCollider.get());
-					DestCollider->CallOnCollisionEnd(SrcCollider.get());
+					SrcCollider->CallOnCollisionEndOverlap(DestCollider.get());
+					DestCollider->CallOnCollisionEndOverlap(SrcCollider.get());
 				}
 				else
 				{

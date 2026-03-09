@@ -100,9 +100,16 @@ private:
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
 
-	void OnSearchCollisionOverlapped(const FVector& HitPoint, CCollider* Other);
+	void OnSearchCollisionBeginOverlap(const FVector& HitPoint, CCollider* Other);
+	void OnSearchCollisionEndOverlap(CCollider* Other);
 
-	float GetTotalMoveTime() const;
+	float GetTotalRange() const;
+	float GetTotalMoveTime(float Range) const;
+
+	void SortCloseEnemies();
+
+	float GetClosestDistance() const;
+	const std::weak_ptr<CGameObject>& GetClosestEnemy() const;
 
 private:
 	std::weak_ptr<CPlayerCharacter> Owner{};
@@ -118,8 +125,9 @@ private:
 
 	float MoveSpeed = 200.f;
 
-	float ClosestSqrDist = FLT_MAX;
-	std::weak_ptr<CGameObject> ClosestEnemy;
+	std::vector<std::weak_ptr<CGameObject>> CloseEnemies;
+	float ClosestDistance = std::numeric_limits<float>::infinity();
+	std::weak_ptr<CGameObject> ClosestEnemy{};
 
 	float ElapsedCooldownTime = std::numeric_limits<float>::infinity();
 

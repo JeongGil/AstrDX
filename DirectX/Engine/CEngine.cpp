@@ -248,7 +248,7 @@ CEngine::CEngine()
 	_CrtSetDbgFlag(flags);
 	
 	// 첫 번째 누수 블록에 중단점 설정
-	//_CrtSetBreakAlloc(3181);
+	//_CrtSetBreakAlloc(3054);
 }
 
 CEngine::~CEngine()
