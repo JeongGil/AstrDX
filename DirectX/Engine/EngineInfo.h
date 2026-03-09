@@ -249,7 +249,7 @@ struct FCollisionProfile
 	std::string Name;
 	FCollisionChannel* Channel;
 	bool bEnable;
-	ECollisionInteraction::Type Interaction[ECollisionInteraction::End] = {};
+	ECollisionInteraction::Type Interaction[ECollisionChannel::End] = {};
 };
 
 struct FSphere2DInfo
