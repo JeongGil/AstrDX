@@ -71,6 +71,8 @@ protected:
 
 	float CurrHP{};
 
+	bool bLastSymmetry = false;
+
 private:
 	inline static std::unordered_map<size_t, std::vector<FVector2>> AnchorPositions =
 	{

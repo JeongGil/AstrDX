@@ -62,6 +62,9 @@ bool CPlayerCharacter::Init()
 		if (auto Anim = PotatoAnim.lock())
 		{
 			Anim->SetUpdateComponent(Potato);
+
+			Anim->AddAnimation(Misc->PotatoBodyTexPath);
+			Anim->SetLoop(Misc->PotatoBodyTexPath, true);
 		}
 	}
 
@@ -87,6 +90,9 @@ bool CPlayerCharacter::Init()
 		if (auto Anim = LegAnim.lock())
 		{
 			Anim->SetUpdateComponent(Leg);
+
+			Anim->AddAnimation(Misc->PotatoLegTexPath);
+			Anim->SetLoop(Misc->PotatoLegTexPath, true);
 		}
 	}
 
@@ -138,23 +144,64 @@ bool CPlayerCharacter::Init()
 void CPlayerCharacter::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
-
-	if (auto MoveCmp = MovementComponent.lock())
-	{
-		auto AnimView = GetComponents<CAnimation2DComponent>()
-			| std::views::transform([](const auto& Weak) { return Weak.lock(); })
-			| std::views::filter([](const auto& Anim) {return Anim != nullptr; });
-
-		bool bSymmetry = MoveCmp->GetMoveDirection().x < 0.f;
-		for (const auto& Anim : AnimView)
-		{
-			//Anim->SetSymmetry(TODO, bSymmetry);
-		}
-	}
 }
 
 void CPlayerCharacter::PostUpdate(const float DeltaTime)
 {
+	if (auto MoveCmp = MovementComponent.lock())
+	{
+		const FVector& MoveDir = MoveCmp->GetMoveDirection();
+
+		if (!MoveDir.IsZero() && MoveDir.x != 0.f)
+		{
+			bool bSymmetry = MoveDir.x < 0.f;
+
+			if (bSymmetry != bLastSymmetry)
+			{
+				bLastSymmetry = bSymmetry;
+
+				auto MiscInfo = MiscTable::GetInst().Get();
+
+				if (auto Anim = PotatoAnim.lock())
+				{
+					Anim->SetSymmetry(MiscInfo->PotatoBodyTexPath, bSymmetry);
+				}
+
+			if (auto Anim = LegAnim.lock())
+			{
+				Anim->SetSymmetry(MiscInfo->PotatoLegTexPath, bSymmetry);
+			}
+
+			auto VisualInfo = CharacterVisualTable::GetInst().Get(CharacterVisualInfoID);
+
+			for (size_t i = 0; i < DecoAnims.size(); i++)
+			{
+				if (auto DecoAnim = DecoAnims[i].lock())
+				{
+					std::string DecoPath;
+					if (i == 0)
+					{
+						DecoPath = VisualInfo->Eye;
+					}
+					else if (i == 1)
+					{
+						DecoPath = VisualInfo->Mouth;
+					}
+					else if (i - 2 < VisualInfo->Decos.size())
+					{
+						DecoPath = VisualInfo->Decos[i - 2];
+					}
+					
+					if (!DecoPath.empty())
+					{
+						DecoAnim->SetSymmetry(DecoPath, bSymmetry);
+					}
+				}
+			}
+			}
+		}
+	}
+
 	CCharacter::PostUpdate(DeltaTime);
 }
 
@@ -223,6 +270,19 @@ void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
 			}
 
 			Deco->SetRenderLayer(ERenderOrder::CharacterDeco);
+
+			Decos.push_back(Deco);
+
+			auto WeakDecoAnim = CreateComponent<CAnimation2DComponent>(Key::Anim::Deco, Key::Comp::Potato);
+			if (auto DecoAnim = WeakDecoAnim.lock())
+			{
+				DecoAnim->SetUpdateComponent(Deco);
+
+				DecoAnim->AddAnimation(DecoPath);
+				DecoAnim->SetLoop(DecoPath, true);
+
+				DecoAnims.push_back(DecoAnim);
+			}
 		}
 	}
 }
@@ -238,14 +298,6 @@ void CPlayerCharacter::SetAnchorPosition(size_t WeaponCount)
 		{
 			WeaponAnchor->SetRelativePosition(AnchorPoses[i]);
 		}
-#if defined(_DEBUG) || defined(DEBUG)
-		else
-		{
-			char Buf[256]{};
-			sprintf_s(Buf, sizeof(Buf), "CPlayerCharacter::SetAnchorPosition - WeaponAnchor is invalid.\n");
-			OutputDebugStringA(Buf);
-		}
-#endif
 	}
 }
 

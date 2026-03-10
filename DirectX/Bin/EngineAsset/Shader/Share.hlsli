@@ -53,14 +53,7 @@ float2 ComputeAnimation2DUV(float2 UV)
 	{
 		if (cbTextureSymmetry == 1)
 		{
-			if (UV.x == 1.f)
-			{
-				UV.x = 0.f;
-			}
-			else
-			{
-				UV.x = 1.f;
-			}
+			UV.x = 1.f - UV.x;
 		}
 
 		return UV;

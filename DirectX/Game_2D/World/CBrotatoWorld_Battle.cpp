@@ -33,6 +33,8 @@ bool CBrotatoWorld_Battle::Init()
 	CTableManager::GetInst().Init();
 	CTableManager::GetInst().LoadTables();
 
+	LoadAnimation2D();
+
 	CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));

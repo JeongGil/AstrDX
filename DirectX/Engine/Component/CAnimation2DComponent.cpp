@@ -59,8 +59,8 @@ void CAnimation2DComponent::Update(const float DeltaTime)
 			//		{
 			//			bUpdateEnable = true;
 			//		}
-			//	}
-			//}
+		//	}
+		//}
 		}
 
 		CurrentAnimation->Update(DeltaTime);
@@ -111,7 +111,7 @@ void CAnimation2DComponent::AddAnimation(const std::weak_ptr<CAnimation2D>& Anim
 		return;
 	}
 
-	if (!Animations.contains(Anim->GetKey()))
+	if (Animations.contains(Anim->GetKey()))
 	{
 		return;
 	}
@@ -396,7 +396,7 @@ FVector2 CAnimation2DComponent::GetAnimRBUV()
 		return {};
 	}
 
-	return {1.f, 1.f};
+	return { 1.f, 1.f };
 }
 
 CAnimation2DComponent* CAnimation2DComponent::Clone() const

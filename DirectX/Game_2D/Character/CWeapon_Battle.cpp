@@ -121,7 +121,7 @@ void CWeapon_Battle::Update(const float DeltaTime)
 	// 원거리 무기 or 근접공격의 모션 종료
 	else
 	{
-		ElapsedCooldownTime += DeltaTime * Owner->GetStat(EStat::AttackSpeed);
+		ElapsedCooldownTime += DeltaTime * (100 + Owner->GetStat(EStat::AttackSpeed)) * 0.01f;
 	}
 
 	float TotalDist = GetTotalRange();
@@ -191,7 +191,7 @@ void CWeapon_Battle::Update(const float DeltaTime)
 		{
 			bOnMeleeAttack = false;
 
-			ElapsedCooldownTime = ElapsedMeleeMoveTime - 2 * TotalMoveTime;
+			ElapsedCooldownTime = 0.f;
 			ElapsedMeleeMoveTime = 0.f;
 
 			TargetDir = FVector::Zero;
