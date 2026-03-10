@@ -48,6 +48,9 @@ bool CGlobalSetting::Init()
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("Monster", "MapBoundary", ECollisionInteraction::Block);
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("MapBoundary", "Monster", ECollisionInteraction::Block);
 
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("PlayerAttack", "Monster", ECollisionInteraction::Overlap);
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("Monster", "PlayerAttack", ECollisionInteraction::Overlap);
+
 	if (auto MouseWidget = CRenderManager::GetInst()->SetMouseWidget<CMouseWidget>(EMouseState::Normal, "MouseNormal").lock())
 	{
 		std::vector<const TCHAR*> TextureFileName;

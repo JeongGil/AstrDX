@@ -3,6 +3,7 @@
 
 #include "../Inventory/CInventoryItem_Weapon.h"
 #include <chrono>
+#include <unordered_set>
 
 class CEnemy;
 class CCollider;
@@ -98,7 +99,7 @@ private:
 	[[nodiscard]] static FAttackResult CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 	                                                    const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
 
-	void OnCollisionBegin(const FVector& HitPoint, CCollider* Other);
+	void OnCollisionBeginOverlap(const FVector& HitPoint, CCollider* Other);
 
 	void OnSearchCollisionBeginOverlap(const FVector& HitPoint, CCollider* Other);
 	void OnSearchCollisionEndOverlap(CCollider* Other);
@@ -123,7 +124,7 @@ private:
 
 	std::weak_ptr<CSceneComponent> PosAnchor{};
 
-	float MoveSpeed = 200.f;
+	float MoveSpeed = 500;
 
 	std::vector<std::weak_ptr<CGameObject>> CloseEnemies;
 	float ClosestDistance = std::numeric_limits<float>::infinity();
@@ -135,5 +136,8 @@ private:
 	float ElapsedMeleeMoveTime = std::numeric_limits<float>::infinity();
 	float MovedDistance = std::numeric_limits<float>::infinity();
 	FVector TargetDir = FVector::Zero;
+
+	// 현재 근접 공격에서 이미 맞은 적들을 추적 (중복 데미지 방지)
+	std::unordered_set<CCollider*> HitEnemiesInCurrentAttack;
 };
 

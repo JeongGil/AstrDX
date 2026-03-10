@@ -3,6 +3,7 @@
 #include <CEngine.h>
 #include <cmath>
 #include <CTimer.h>
+#include <unordered_set>
 #include <Asset/Material/CMaterial.h>
 #include <Component/CColliderBox2D.h>
 #include <Component/CColliderSphere2D.h>
@@ -35,7 +36,7 @@ bool CWeapon_Battle::Init()
 		Collider->SetEnable(false);
 		Collider->SetCollisionProfile("PlayerAttack");
 
-		Collider->SetOnCollisionBegin<CWeapon_Battle>(this, &CWeapon_Battle::OnCollisionBegin);
+		Collider->SetOnCollisionBegin<CWeapon_Battle>(this, &CWeapon_Battle::OnCollisionBeginOverlap);
 		//Body->SetOnCollisionBegin<CBullet>(this, &CBullet::OnCollisionBeginOverlap);
 	}
 
@@ -99,13 +100,16 @@ void CWeapon_Battle::Update(const float DeltaTime)
 		}
 	}
 
-	// 대상 조준
-	if (auto Target = GetClosestEnemy().lock())
+	// 대상 조준 (근접 공격 중이 아닐 때만 방향 업데이트)
+	if (!bOnMeleeAttack)
 	{
-		float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition(), EAxis::Y);
-		SetWorldRotationZ(Degree);
+		if (auto Target = GetClosestEnemy().lock())
+		{
+			float Degree = GetWorldPosition().GetViewTargetAngleDegree2D(Target->GetWorldPosition(), EAxis::Y);
+			SetWorldRotationZ(Degree);
 
-		TargetDir = (Target->GetWorldPosition() - GetWorldPosition()).GetNormalized();
+			TargetDir = (Target->GetWorldPosition() - GetWorldPosition()).GetNormalized();
+		}
 	}
 
 	// 근접공격은 공격모션 종료 후 대기시간 감소.
@@ -133,6 +137,8 @@ void CWeapon_Battle::Update(const float DeltaTime)
 		{
 			bOnMeleeAttack = true;
 			ElapsedMeleeMoveTime = 0.f;
+			// 새로운 공격 시작 시 이전 공격의 히트 기록 초기화
+			HitEnemiesInCurrentAttack.clear();
 		}
 		// TODO: 원거리 투사체 생성
 		else
@@ -190,6 +196,9 @@ void CWeapon_Battle::Update(const float DeltaTime)
 
 			TargetDir = FVector::Zero;
 			MovedDistance = 0.f;
+
+			// 공격 종료 시 히트 기록 초기화
+			HitEnemiesInCurrentAttack.clear();
 		}
 	}
 }
@@ -336,7 +345,7 @@ FAttackResult CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 	return { Damage, bIsCrit };
 }
 
-void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
+void CWeapon_Battle::OnCollisionBeginOverlap(const FVector& HitPoint, CCollider* Other)
 {
 	auto ColObj = Other->GetOwner().lock();
 	if (!ColObj)
@@ -346,6 +355,12 @@ void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 
 	auto ColChar = std::dynamic_pointer_cast<CCharacter>(ColObj);
 	if (!ColChar || ColChar->GetTeam() != ETeam::Enemy)
+	{
+		return;
+	}
+
+	// 현재 공격에서 이미 맞은 적인지 확인 (중복 데미지 방지)
+	if (HitEnemiesInCurrentAttack.contains(Other))
 	{
 		return;
 	}
@@ -360,10 +375,13 @@ void CWeapon_Battle::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 
 	ColChar->TakeDamage(Damage, Owner);
 
+	// 이 적을 현재 공격의 히트 목록에 추가
+	HitEnemiesInCurrentAttack.insert(Other);
+
 	if (ColChar && ColChar->GetAlive() && ColChar->GetEnable())
 	{
 		// TODO: 넉백
-		FVector Dir = (ColChar->GetWorldPosition() - HitPoint).GetNormalized();
+		//FVector Dir = (ColChar->GetWorldPosition() - HitPoint).GetNormalized();
 	}
 }
 
@@ -384,11 +402,10 @@ void CWeapon_Battle::OnSearchCollisionEndOverlap(CCollider* Other)
 		return;
 	}
 
-	std::erase_if(CloseEnemies, [Target = Other->GetOwner()](const auto& Item)
+	std::erase_if(CloseEnemies, [Target = Other->GetOwner()](const std::weak_ptr<CGameObject>& Item)
 		{
-			auto SharedItem = Item.lock();
 			// 1. 이미 파괴되었거나, 2. 찾는 대상인 경우 제거
-			return !SharedItem || IsSameTarget(SharedItem, Target);
+			return Item.expired() || IsSameTarget(Item, Target);
 		});
 }
 
@@ -432,7 +449,7 @@ void CWeapon_Battle::SortCloseEnemies()
 	std::erase_if(CloseEnemies, [](const std::weak_ptr<CGameObject>& WeakObject)
 		{
 			auto Object = WeakObject.lock();
-			if (!Object || Object->GetAlive() || Object->GetEnable())
+			if (!Object || !Object->GetAlive() || !Object->GetEnable())
 			{
 				return true;
 			}
@@ -450,6 +467,11 @@ void CWeapon_Battle::SortCloseEnemies()
 	{
 		ClosestDistance = std::numeric_limits<float>::infinity();
 		ClosestEnemy.reset();
+	}
+	else
+	{
+		ClosestEnemy = CloseEnemies[0];
+		ClosestDistance = (ClosestEnemy.lock()->GetWorldPosition() - GetWorldPosition()).Length();
 	}
 }
 
