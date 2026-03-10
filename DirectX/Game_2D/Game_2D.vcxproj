@@ -171,6 +171,7 @@
   <ItemGroup>
     <ClCompile Include="CGlobalSetting.cpp" />
     <ClCompile Include="Character\CCharacter.cpp" />
+    <ClCompile Include="Character\CDropItem.cpp" />
     <ClCompile Include="Character\CEnemy.cpp" />
     <ClCompile Include="Character\CPlayerCharacter.cpp" />
     <ClCompile Include="Character\CProjectile.cpp" />
@@ -215,6 +216,7 @@
   <ItemGroup>
     <ClInclude Include="CGlobalSetting.h" />
     <ClInclude Include="Character\CCharacter.h" />
+    <ClInclude Include="Character\CDropItem.h" />
     <ClInclude Include="Character\CEnemy.h" />
     <ClInclude Include="Character\CPlayerCharacter.h" />
     <ClInclude Include="Character\CProjectile.h" />

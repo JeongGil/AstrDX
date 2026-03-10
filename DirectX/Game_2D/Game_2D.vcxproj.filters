@@ -210,6 +210,9 @@
     <ClCompile Include="Character\CProjectile.cpp">
       <Filter>Character</Filter>
     </ClCompile>
+    <ClCompile Include="Character\CDropItem.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="Table\ProjectileTable.h">
       <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CDropItem.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

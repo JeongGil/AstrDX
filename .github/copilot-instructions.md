@@ -1,0 +1,2 @@
+- 모든 C++ 코드는 Unreal Engine Coding Standard를 준수해야 합니다.
+- 모든 답변은 한글로로 작성하라.

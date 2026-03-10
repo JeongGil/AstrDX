@@ -21,6 +21,21 @@ public:
 
 	void SetEnemyInfoID(const TableID& EnemyInfoID);
 
+	[[nodiscard]] float GetCurrHP() const
+	{
+		return CurrHP;
+	}
+
+	void SetCurrHP(const float CurrHP)
+	{
+		this->CurrHP = std::clamp(CurrHP, 0.f, MaxHP);
+	}
+
+	void AddCurrHP(float Added)
+	{
+		SetCurrHP(GetCurrHP() + Added);
+	}
+
 protected:
 	CEnemy* Clone() override;
 
@@ -34,7 +49,7 @@ private:
 protected:
 	static constexpr int CHARGE_MOVE_SPEED = 1000;
 	static constexpr int CHARGE_MOVE_DISTANCE = 1000;
-	static constexpr int CHARGE_USE_DISTANCE = 800;	
+	static constexpr int CHARGE_USE_DISTANCE = 800;
 
 	std::weak_ptr<CMeshComponent> Mesh;
 	std::weak_ptr<CAnimation2DComponent> Animation;

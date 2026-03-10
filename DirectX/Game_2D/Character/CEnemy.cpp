@@ -59,7 +59,7 @@ bool CEnemy::Init()
 	Animation = CreateComponent<CAnimation2DComponent>(Key::Anim::Enemy);
 	if (auto Anim = Animation.lock())
 	{
-		
+
 	}
 
 	return true;
@@ -172,7 +172,7 @@ float CEnemy::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instiga
 		return 0.f;
 	}
 
-	return 0.f;
+	return Damage;
 }
 
 void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
@@ -195,12 +195,12 @@ void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
 
 	if (auto Mesh = this->Mesh.lock())
 	{
-		
+
 	}
 
 	if (auto Anim = Animation.lock())
 	{
-		
+
 	}
 }
 
