@@ -14,6 +14,8 @@ protected:
 	int TotalStageTime;
 	float RemainStageTime;
 
+	int ItemBoxDropCount{};
+
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
@@ -26,6 +28,16 @@ private:
 	void CreateUI();
 
 public:
+	[[nodiscard]] int GetItemBoxDropCount() const
+	{
+		return ItemBoxDropCount;
+	}
+
+	void SetItemBoxDropCount(const int ItemBoxDropCount)
+	{
+		this->ItemBoxDropCount = ItemBoxDropCount;
+	}
+
 	int GetStageLevel() const
 	{
 		return StageLevel;

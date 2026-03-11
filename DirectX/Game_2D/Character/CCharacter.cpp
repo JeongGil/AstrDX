@@ -27,7 +27,35 @@ void CCharacter::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
 
-	SquashAndStretch(DeltaTime, SSIntensity, SSPeriod);
+	if (bIsSpiralShrinking)
+	{
+		auto Root = this->Root.lock();
+		if (!Root)
+		{
+			return;
+		}
+
+		SpiralShrinkElapsed += DeltaTime;
+
+		if (SpiralShrinkElapsed >= SpiralShrinkDuration)
+		{
+			Root->SetRelativeScale(0.f, 0.f);
+			Destroy();
+			return;
+		}
+
+		float Progress = SpiralShrinkElapsed / SpiralShrinkDuration;
+		float Scale = 1.f - Progress;
+		Root->SetRelativeScale(Scale, Scale);
+
+		float RotationDelta = SpiralRotationSpeed * DeltaTime;
+		float CurrentRotation = Root->GetRelativeRotation().z;
+		Root->SetRelativeRotationZ(CurrentRotation + RotationDelta);
+	}
+	else
+	{
+		SquashAndStretch(DeltaTime, SSIntensity, SSPeriod);
+	}
 }
 
 void CCharacter::Destroy()
@@ -38,6 +66,19 @@ void CCharacter::Destroy()
 CCharacter* CCharacter::Clone()
 {
 	return new CCharacter(*this);
+}
+
+void CCharacter::OnDead()
+{
+	SpiralShrink();
+}
+
+void CCharacter::SpiralShrink(float Duration, float RotationSpeed)
+{
+	bIsSpiralShrinking = true;
+	SpiralShrinkElapsed = 0.f;
+	SpiralShrinkDuration = Duration;
+	SpiralRotationSpeed = RotationSpeed;
 }
 
 void CCharacter::SquashAndStretch(const float DeltaTime, float Intensity, float Period)

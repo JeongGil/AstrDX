@@ -20,11 +20,15 @@ bool CGlobalSetting::Init()
 	CCollisionInfoManager::GetInst()->CreateChannel("MonsterAttack");
 	CCollisionInfoManager::GetInst()->CreateChannel("FindEnemy");
 	CCollisionInfoManager::GetInst()->CreateChannel("MapBoundary");
+	CCollisionInfoManager::GetInst()->CreateChannel("DropItem");
+	CCollisionInfoManager::GetInst()->CreateChannel("PickupRange");
 
 	CCollisionInfoManager::GetInst()->CreateProfile("PlayerAttack", "PlayerAttack", true);
 	CCollisionInfoManager::GetInst()->CreateProfile("MonsterAttack", "MonsterAttack", true);
 	CCollisionInfoManager::GetInst()->CreateProfile("FindEnemy", "FindEnemy", true, ECollisionInteraction::Ignore);
 	CCollisionInfoManager::GetInst()->CreateProfile("MapBoundary", "MapBoundary", true, ECollisionInteraction::Ignore);
+	CCollisionInfoManager::GetInst()->CreateProfile("DropItem", "DropItem", true, ECollisionInteraction::Ignore);
+	CCollisionInfoManager::GetInst()->CreateProfile("PickupRange", "PickupRange", true, ECollisionInteraction::Ignore);
 
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("PlayerAttack", "PlayerAttack", ECollisionInteraction::Ignore);
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("PlayerAttack", "Player", ECollisionInteraction::Ignore);
@@ -50,6 +54,9 @@ bool CGlobalSetting::Init()
 
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("PlayerAttack", "Monster", ECollisionInteraction::Overlap);
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("Monster", "PlayerAttack", ECollisionInteraction::Overlap);
+
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("PickupRange", "DropItem", ECollisionInteraction::Overlap);
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("DropItem", "PickupRange", ECollisionInteraction::Overlap);
 
 	if (auto MouseWidget = CRenderManager::GetInst()->SetMouseWidget<CMouseWidget>(EMouseState::Normal, "MouseNormal").lock())
 	{

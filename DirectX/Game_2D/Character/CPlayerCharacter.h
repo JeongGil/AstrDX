@@ -104,6 +104,11 @@ public:
 		CurrHP = max(0.f, CurrHP);
 		CurrHP = std::clamp(CurrHP, 0.f, GetStat(EStat::MaxHP));
 		this->CurrHP = CurrHP;
+
+		if (this->CurrHP == 0.f)
+		{
+			SpiralShrink();
+		}
 	}
 };
 

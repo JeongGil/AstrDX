@@ -3,6 +3,7 @@
 #include <Asset/CPathManager.h>
 
 #include "CharacterVisualTable.h"
+#include "EnemyTable.h"
 #include "ItemTable.h"
 #include "MiscTable.h"
 #include "WeaponSetBonusTable.h"
@@ -24,6 +25,8 @@ void CTableManager::LoadTables()
 	CharacterVisualTable::GetInst().Load(GetFilePath(TEXT("CharacterVisual")));
 	WeaponTable::GetInst().Load(GetFilePath(TEXT("Weapon")));
 	WeaponSetBonusTable::GetInst().Load(GetFilePath(TEXT("WeaponSetBonus")));
+	EnemyTable::GetInst().Load(GetFilePath(TEXT("Enemy")));
+	//ItemTable::GetInst().Load(GetFilePath(TEXT("Item")));
 }
 
 std::string CTableManager::GetFilePath(const TCHAR* FileName, const std::string& PathKey)

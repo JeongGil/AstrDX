@@ -26,10 +26,7 @@ public:
 		return CurrHP;
 	}
 
-	void SetCurrHP(const float CurrHP)
-	{
-		this->CurrHP = std::clamp(CurrHP, 0.f, MaxHP);
-	}
+	void SetCurrHP(const float CurrHP);
 
 	void AddCurrHP(float Added)
 	{
@@ -38,6 +35,7 @@ public:
 
 protected:
 	CEnemy* Clone() override;
+	void OnDead() override;
 
 private:
 	void RunBehavior(const std::weak_ptr<CPlayerCharacter>& WeakPlayer);

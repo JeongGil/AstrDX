@@ -110,7 +110,7 @@ private:
 	void SortCloseEnemies();
 
 	float GetClosestDistance() const;
-	const std::weak_ptr<CGameObject>& GetClosestEnemy() const;
+	std::weak_ptr<CGameObject> GetClosestEnemy() const;
 
 private:
 	std::weak_ptr<CPlayerCharacter> Owner{};

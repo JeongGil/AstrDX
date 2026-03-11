@@ -83,5 +83,9 @@ namespace Key
 	{
 		inline const std::string PC = "PC";
 		inline const std::string Weapon = "Weapon";
+		inline const std::string Material = "Material";
+		inline const std::string Fruit = "Fruit";
+		inline const std::string ItemBox = "ItemBox";
+		inline const std::string LegendaryItemBox = "LegendaryItemBox";
 	}
 }

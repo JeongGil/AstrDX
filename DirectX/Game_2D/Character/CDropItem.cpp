@@ -25,6 +25,8 @@ bool CDropItem::Init()
 		Mesh->SetMesh("CenterRectColor");
 
 		Mesh->SetInheritScale(false);
+
+		Mesh->SetRenderLayer(ERenderOrder::Enemy);
 	}
 
 	Collider = CreateComponent<CColliderBox2D>(Key::Comp::Collider);
@@ -57,6 +59,11 @@ void CDropItem::SetItemType(const EDropItemType ItemType)
 			std::uniform_int_distribution<int> Dist(0, MiscInfo->MaterialTexPaths.size() - 1);
 			int Idx = Dist(CEngine::GetInst()->GetMT());
 			TexPath = MiscInfo->MaterialTexPaths[Idx];
+
+			if (auto Mesh = this->Mesh.lock())
+			{
+				Mesh->SetMaterialBaseColor(0, 0.5f, 1.0f, 0.5f, 1.0f);
+			}
 
 			break;
 		}

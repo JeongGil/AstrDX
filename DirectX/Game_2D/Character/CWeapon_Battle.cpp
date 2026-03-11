@@ -480,7 +480,7 @@ float CWeapon_Battle::GetClosestDistance() const
 	return ClosestDistance;
 }
 
-const std::weak_ptr<CGameObject>& CWeapon_Battle::GetClosestEnemy() const
+std::weak_ptr<CGameObject> CWeapon_Battle::GetClosestEnemy() const
 {
 	if (CloseEnemies.empty())
 	{

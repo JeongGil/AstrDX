@@ -6,12 +6,15 @@
 #include <Component/CMeshComponent.h>
 #include <World/CWorld.h>
 
+#include "CDropItem.h"
 #include "CPlayerCharacter.h"
 #include "../Strings.h"
+#include "../Utility.h"
 #include "../Table/EnemyInfo.h"
 #include "../Table/EnemyTable.h"
 #include "../Table/MiscInfo.h"
 #include "../Table/MiscTable.h"
+#include "../World/CBrotatoWorld_Battle.h"
 
 bool CEnemy::Init()
 {
@@ -30,6 +33,8 @@ bool CEnemy::Init()
 
 	SetTeam(ETeam::Enemy);
 
+	auto Misc = MiscTable::GetInst().Get();
+
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh);
 	if (auto Mesh = this->Mesh.lock())
 	{
@@ -43,12 +48,8 @@ bool CEnemy::Init()
 
 		Mesh->SetBlendState(0, "AlphaBlend");
 
-		FMiscInfo* Misc;
-		if (MiscTable::GetInst().TryGet(TableID(1), Misc))
-		{
-			CA2T FileName(Misc->PotatoBodyTexPath.c_str());
-			Mesh->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
-		}
+		CA2T FileName(Misc->PotatoBodyTexPath.c_str());
+		Mesh->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
 
 		Mesh->SetInheritScale(true);
 		Mesh->SetInheritRotation(true);
@@ -59,7 +60,7 @@ bool CEnemy::Init()
 	Animation = CreateComponent<CAnimation2DComponent>(Key::Anim::Enemy);
 	if (auto Anim = Animation.lock())
 	{
-
+		Anim->SetUpdateComponent(Mesh);
 	}
 
 	return true;
@@ -172,6 +173,8 @@ float CEnemy::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instiga
 		return 0.f;
 	}
 
+	AddCurrHP(-Damage);
+
 	return Damage;
 }
 
@@ -195,18 +198,103 @@ void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
 
 	if (auto Mesh = this->Mesh.lock())
 	{
+		CA2T FileName(Info->SpritePath.c_str());
+		auto MatTexInfo = Mesh->AddTexture(0, Info->SpritePath, FileName, Key::Path::Brotato);
+		SetMeshAndColliderSizeFromTexture(MatTexInfo, this->Mesh, Collider);
 
+		if (auto Anim = Animation.lock())
+		{
+			Anim->AddAnimation(Info->SpritePath);
+			Anim->SetLoop(Info->SpritePath, true);
+		}
 	}
+}
 
-	if (auto Anim = Animation.lock())
+void CEnemy::SetCurrHP(const float CurrHP)
+{
+	this->CurrHP = std::clamp(CurrHP, 0.f, MaxHP);
+
+	if (this->CurrHP == 0.f)
 	{
-
+		OnDead();
 	}
 }
 
 CEnemy* CEnemy::Clone()
 {
 	return new CEnemy(*this);
+}
+
+void CEnemy::OnDead()
+{
+	CCharacter::OnDead();
+
+	auto Info = EnemyTable::GetInst().Get(GetEnemyInfoID());
+
+	auto World = std::dynamic_pointer_cast<CBrotatoWorld_Battle>(this->World.lock());
+	if (!World)
+	{
+		return;
+	}
+
+	auto Player = this->Player.lock();
+	if (!Player)
+	{
+		return;
+	}
+
+	if (Info->Material > 0)
+	{
+		if (auto DropMaterial = World->CreateGameObject<CDropItem>(Key::Obj::Material).lock())
+		{
+			DropMaterial->SetItemType(EDropItemType::Material);
+			DropMaterial->SetMaterialCount(Info->Material);
+
+			DropMaterial->SetWorldPosition(GetWorldPosition());
+		}
+	}
+
+	// 확정 전설
+	if (Info->Type != EEnemyType::Normal)
+	{
+		if (auto ItemBox = World->CreateGameObject<CDropItem>(Key::Obj::LegendaryItemBox).lock())
+		{
+			ItemBox->SetItemType(EDropItemType::LegendaryItemBox);
+			ItemBox->SetWorldPosition(GetWorldPosition());
+		}
+	}
+	else
+	{
+		std::uniform_real_distribution<float> Dist(0.f, 100.f);
+
+		float LuckCorrection = (100 + Player->GetStat(EStat::Luck)) * 0.01f;
+
+		auto ConsumableDropChance = Info->ConsumableDropPercent * LuckCorrection;
+		auto Dice1 = Dist(CEngine::GetInst()->GetMT());
+
+		if (ConsumableDropChance > Dice1)
+		{
+			auto ItemBoxDropChance = Info->CrateDropPercent * LuckCorrection / (1 + World->GetItemBoxDropCount());
+			auto Dice2 = Dist(CEngine::GetInst()->GetMT());
+
+			if (ItemBoxDropChance > Dice2)
+			{
+				if (auto ItemBox = World->CreateGameObject<CDropItem>(Key::Obj::ItemBox).lock())
+				{
+					ItemBox->SetItemType(EDropItemType::ItemBox);
+					ItemBox->SetWorldPosition(GetWorldPosition());
+				}
+			}
+			else
+			{
+				if (auto Fruit = World->CreateGameObject<CDropItem>(Key::Obj::Fruit).lock())
+				{
+					Fruit->SetItemType(EDropItemType::Fruit);
+					Fruit->SetWorldPosition(GetWorldPosition());
+				}
+			}
+		}
+	}
 }
 
 void CEnemy::RunBehavior(const std::weak_ptr<CPlayerCharacter>& WeakPlayer)

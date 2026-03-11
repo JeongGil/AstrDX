@@ -18,7 +18,7 @@ enum class ETargetState
 };
 
 class CCharacter :
-    public CGameObject
+	public CGameObject
 {
 	friend class CWorld;
 	friend CObject;
@@ -48,11 +48,19 @@ protected:
 		SSPeriod = Period;
 	}
 
+	virtual void OnDead();
+	void SpiralShrink(float Duration = 0.5f, float RotationSpeed = 720.f);
+
 private:
 	void SquashAndStretch(const float DeltaTime, float Intensity, float Period);
 	float SSElapsed = 0.f;
 	float SSIntensity = 0.05f;
 	float SSPeriod = 1.f;
+
+	bool bIsSpiralShrinking = false;
+	float SpiralShrinkElapsed = 0.f;
+	float SpiralShrinkDuration = 0.5f;
+	float SpiralRotationSpeed = 720.f;
 
 protected:
 	ETeam Team{};

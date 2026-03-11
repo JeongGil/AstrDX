@@ -29,6 +29,8 @@ namespace ERenderOrder
 		Map = 0,
 		Default = 1,
 
+		Enemy = 90,
+
 		CharacterLeg = 99,
 		CharacterBody = 100,
 		CharacterDeco = 101,

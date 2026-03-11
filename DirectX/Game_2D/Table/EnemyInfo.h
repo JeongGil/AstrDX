@@ -27,6 +27,7 @@ struct FEnemyInfo : FTableInfoBase
 
 	int Material;
 	int ConsumableDropPercent;
+	int CrateDropPercent;
 
 	std::array<int, MAX_DANGER + 1> AppearWaves;
 
@@ -68,6 +69,7 @@ struct FEnemyInfo : FTableInfoBase
 
 			if (!TryParse<int>(Segment, Material)) { assert(false); return false; }
 			if (!TryParse<int>(Segment, ConsumableDropPercent)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, CrateDropPercent)) { assert(false); return false; }
 
 			for (size_t i = 0; i < MAX_DANGER; i++)
 			{
