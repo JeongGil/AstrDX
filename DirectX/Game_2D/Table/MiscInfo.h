@@ -16,6 +16,7 @@ struct FMiscInfo : FTableInfoBase
 	std::vector<std::string> MaterialTexPaths;
 
 	float BasePickupRange;
+	float PickupMoveSpeed;
 
 	bool Load(std::stringstream& Stream) override
 	{
@@ -50,6 +51,8 @@ struct FMiscInfo : FTableInfoBase
 
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<float>(Segment, BasePickupRange)) { assert(false); return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, PickupMoveSpeed)) { assert(false); return false; }
 		}
 		catch (...)
 		{

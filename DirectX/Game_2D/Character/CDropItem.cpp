@@ -6,10 +6,12 @@
 #include <Component/CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 
+#include "CPlayerCharacter.h"
 #include "../Strings.h"
 #include "../Table/MiscInfo.h"
 #include "../Table/MiscTable.h"
 #include "../Utility.h"
+#include "../Inventory/CInventoryData.h"
 
 bool CDropItem::Init()
 {
@@ -36,18 +38,68 @@ bool CDropItem::Init()
 	{
 		Col->SetCollisionProfile("DropItem");
 
-		Col->SetDrawDebug(true);
+		//Col->SetDrawDebug(true);
 		Col->SetInheritScale(false);
 
-		Col->SetBoxHalfExtent(100, 100);
+		Col->SetBoxHalfExtent(1, 1);
 	}
 
 	return true;
 }
 
+void CDropItem::Update(float DeltaTime)
+{
+	CGameObject::Update(DeltaTime);
+
+	if (!bIsCollecting)
+	{
+		return;
+	}
+
+	auto PC = Player.lock();
+	if (!PC)
+	{
+		return;
+	}
+
+	auto Misc = MiscTable::GetInst().Get();
+	auto MoveSize = DeltaTime * Misc->PickupMoveSpeed;
+
+	auto Diff = PC->GetWorldPosition() - GetWorldPosition();
+	if (Diff.SqrLength() <= MoveSize * MoveSize)
+	{
+		OnPickedUp();
+
+		return;
+	}
+
+	auto Dir = Diff.GetNormalized();
+	AddWorldPosition(Dir * MoveSize);
+}
+
 CDropItem* CDropItem::Clone()
 {
 	return new CDropItem(*this);
+}
+
+void CDropItem::OnPickedUp()
+{
+	CInventoryData::GetInst().AddMaterialCount(MaterialCount);
+
+	Destroy();
+}
+
+void CDropItem::SetIsCollecting(const bool bIsCollecting)
+{
+	this->bIsCollecting = bIsCollecting;
+
+	if (bIsCollecting)
+	{
+		if (auto Col = Collider.lock())
+		{
+			Col->SetEnable(false);
+		}
+	}
 }
 
 void CDropItem::SetItemType(const EDropItemType ItemType)

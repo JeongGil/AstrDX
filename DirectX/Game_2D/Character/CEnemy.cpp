@@ -258,6 +258,7 @@ void CEnemy::OnDead()
 		{
 			DropMaterial->SetItemType(EDropItemType::Material);
 			DropMaterial->SetMaterialCount(Info->Material);
+			DropMaterial->SetPlayer(this->Player);
 
 			DropMaterial->SetWorldPosition(GetWorldPosition());
 		}
@@ -270,6 +271,7 @@ void CEnemy::OnDead()
 		{
 			ItemBox->SetItemType(EDropItemType::LegendaryItemBox);
 			ItemBox->SetWorldPosition(GetWorldPosition());
+			ItemBox->SetPlayer(this->Player);
 		}
 	}
 	else
@@ -292,6 +294,7 @@ void CEnemy::OnDead()
 				{
 					ItemBox->SetItemType(EDropItemType::ItemBox);
 					ItemBox->SetWorldPosition(GetWorldPosition());
+					ItemBox->SetPlayer(this->Player);
 				}
 			}
 			else
@@ -300,6 +303,7 @@ void CEnemy::OnDead()
 				{
 					Fruit->SetItemType(EDropItemType::Fruit);
 					Fruit->SetWorldPosition(GetWorldPosition());
+					Fruit->SetPlayer(this->Player);
 				}
 			}
 		}

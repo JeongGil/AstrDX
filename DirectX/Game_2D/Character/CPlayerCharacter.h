@@ -4,6 +4,7 @@
 
 #include "../Table/CharacterVisualInfo.h"
 
+class CCollider;
 class CColliderSphere2D;
 class CCameraComponent;
 class CInventoryItem_Weapon;
@@ -46,6 +47,8 @@ private:
 	void SetAnchorPosition(size_t WeaponCount);
 
 	static float GetArmoredDmgRatio(int Armor);
+
+	void OnPickupColliderBeginOverlap(const FVector& HitPoint, CCollider* Other);
 
 protected:
 	TableID CharacterVisualInfoID = TableID(-1);

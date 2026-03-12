@@ -14,6 +14,7 @@
 #include <Component/CSceneComponent.h>
 #include <World/CWorld.h>
 
+#include "CDropItem.h"
 #include "CEnemy.h"
 #include "CWeapon_Battle.h"
 #include "../Strings.h"
@@ -141,6 +142,7 @@ bool CPlayerCharacter::Init()
 	if (auto Col = PickupCollider.lock())
 	{
 		Col->SetCollisionProfile("PickupRange");
+		Col->SetOnCollisionBegin<CPlayerCharacter>(this, &CPlayerCharacter::OnPickupColliderBeginOverlap);
 
 		Col->SetDrawDebug(true);
 	}
@@ -158,7 +160,7 @@ void CPlayerCharacter::Update(const float DeltaTime)
 	if (auto Col = PickupCollider.lock())
 	{
 		float RangeRatio = 1 + GetStat(EStat::PickupRange) * 0.01f;
-		Col->SetRadius(RangeRatio);
+		Col->SetRadius(Misc->BasePickupRange * RangeRatio);
 	}
 }
 
@@ -332,6 +334,22 @@ float CPlayerCharacter::GetArmoredDmgRatio(int Armor)
 	}
 
 	return 1.f;
+}
+
+void CPlayerCharacter::OnPickupColliderBeginOverlap(const FVector& HitPoint, CCollider* Other)
+{
+	if (Other == nullptr)
+	{
+		return;
+	}
+
+	auto DropItem = std::dynamic_pointer_cast<CDropItem>(Other->GetOwner().lock());
+	if (!DropItem)
+	{
+		return;
+	}
+
+	DropItem->SetIsCollecting(true);
 }
 
 void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)

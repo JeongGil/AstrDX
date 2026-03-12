@@ -19,6 +19,9 @@ private:
 	std::vector<std::shared_ptr<CInventoryItem_Item>> Items;
 
 	std::unordered_map<EWeaponType::Type, int> WeaponTypeCounts;
+
+	int MaterialCount{};
+
 public:
 	bool Init();
 
@@ -53,6 +56,21 @@ public:
 	const std::unordered_map<EWeaponType::Type, int>& GetWeaponTypeCounts() const
 	{
 		return WeaponTypeCounts;
+	}
+
+	[[nodiscard]] int GetMaterialCount() const
+	{
+		return MaterialCount;
+	}
+
+	void SetMaterialCount(const int MaterialCount)
+	{
+		this->MaterialCount = MaterialCount;
+	}
+
+	void AddMaterialCount(const int Added)
+	{
+		SetMaterialCount(MaterialCount + Added);
 	}
 
 private:
