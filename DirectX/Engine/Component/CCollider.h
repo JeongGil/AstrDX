@@ -51,6 +51,7 @@ public:
 
 	bool CheckCollidingObject(CCollider* Other) const;
 	void EraseCollidingObject(CCollider* Other);
+	void ClearCollidingObjects();
 
 	void CallOnCollisionBeginOverlap(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other);
 	void CallOnCollisionEndOverlap(CCollider* Other);
@@ -131,6 +132,7 @@ public:
 
 protected:
 	CCollider* Clone() const override = 0;
+	void OnDisabled() override;
 
 	CCollider() = default;
 	CCollider(const CCollider& other) = default;

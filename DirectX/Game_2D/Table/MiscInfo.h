@@ -15,6 +15,8 @@ struct FMiscInfo : FTableInfoBase
 	std::string LegendaryItemBoxTexPath;
 	std::vector<std::string> MaterialTexPaths;
 
+	float BasePickupRange;
+
 	bool Load(std::stringstream& Stream) override
 	{
 		try
@@ -33,6 +35,10 @@ struct FMiscInfo : FTableInfoBase
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<int>(Segment, WeaponMoveSpeed)) { assert(false); return false; }
 
+			if (!std::getline(Stream, FruitTexPath, Delim)) { assert(false); return false; }
+			if (!std::getline(Stream, ItemBoxTexPath, Delim)) { assert(false); return false; }
+			if (!std::getline(Stream, LegendaryItemBoxTexPath, Delim)) { assert(false); return false; }
+
 			for (size_t i = 0; i < MATERIAL_TEX_COUNT; i++)
 			{
 				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
@@ -41,6 +47,9 @@ struct FMiscInfo : FTableInfoBase
 					MaterialTexPaths.push_back(Segment);
 				}
 			}
+
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, BasePickupRange)) { assert(false); return false; }
 		}
 		catch (...)
 		{

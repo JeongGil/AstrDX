@@ -41,6 +41,18 @@ void CCollider::EraseCollidingObject(CCollider* Other)
 	}
 }
 
+void CCollider::ClearCollidingObjects()
+{
+	for (const auto& WeakOther : CollidingObjects | std::views::values)
+	{
+		if (auto Other = WeakOther.lock())
+		{
+			Other->EraseCollidingObject(this);
+		}
+	}
+	CollidingObjects.clear();
+}
+
 void CCollider::CallOnCollisionBeginOverlap(const FVector& HitPoint, const std::weak_ptr<CCollider>& Other)
 {
 	if (auto Dest = Other.lock())
@@ -191,6 +203,13 @@ void CCollider::Render()
 
 		Mesh->Render();
 	}
+}
+
+void CCollider::OnDisabled()
+{
+	CSceneComponent::OnDisabled();
+
+	ClearCollidingObjects();
 }
 
 CCollider::CCollider(CCollider&& other) noexcept :

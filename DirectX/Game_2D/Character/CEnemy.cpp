@@ -29,6 +29,7 @@ bool CEnemy::Init()
 		Collider->SetCollisionProfile("Monster");
 
 		Collider->SetOnCollisionBegin(this, &CEnemy::OnCollisionBegin);
+		Collider->SetDrawDebug(true);
 	}
 
 	SetTeam(ETeam::Enemy);
@@ -48,8 +49,9 @@ bool CEnemy::Init()
 
 		Mesh->SetBlendState(0, "AlphaBlend");
 
-		CA2T FileName(Misc->PotatoBodyTexPath.c_str());
-		Mesh->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
+		// Init에서는 텍스처를 추가하지 않음 - SetEnemyInfoID에서 설정됨
+		// CA2T FileName(Misc->PotatoBodyTexPath.c_str());
+		// Mesh->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
 
 		Mesh->SetInheritScale(true);
 		Mesh->SetInheritRotation(true);
@@ -198,15 +200,22 @@ void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
 
 	if (auto Mesh = this->Mesh.lock())
 	{
+		Mesh->ClearTextures(0);
+		
 		CA2T FileName(Info->SpritePath.c_str());
 		auto MatTexInfo = Mesh->AddTexture(0, Info->SpritePath, FileName, Key::Path::Brotato);
-		SetMeshAndColliderSizeFromTexture(MatTexInfo, this->Mesh, Collider);
+		SetMeshSizeFromTexture(MatTexInfo, this->Mesh);
 
 		if (auto Anim = Animation.lock())
 		{
 			Anim->AddAnimation(Info->SpritePath);
 			Anim->SetLoop(Info->SpritePath, true);
 		}
+	}
+
+	if (auto Col = Collider.lock())
+	{
+		Col->SetBoxExtent(Info->ColliderSize);
 	}
 }
 
@@ -271,7 +280,7 @@ void CEnemy::OnDead()
 
 		auto ConsumableDropChance = Info->ConsumableDropPercent * LuckCorrection;
 		auto Dice1 = Dist(CEngine::GetInst()->GetMT());
-
+		
 		if (ConsumableDropChance > Dice1)
 		{
 			auto ItemBoxDropChance = Info->CrateDropPercent * LuckCorrection / (1 + World->GetItemBoxDropCount());

@@ -12,6 +12,8 @@ struct FWeaponInfo
 	std::string IconPath;
 	std::string SpritePath;
 
+	FVector2 ColliderSize;
+
 	bool bIsMeleeWeapon;
 	EWeaponType::Type WeaponType;
 
@@ -54,6 +56,11 @@ struct FWeaponInfo
 			if (!std::getline(Stream, IconPath, Delim)) { assert(false); return false; }
 
 			if (!std::getline(Stream, SpritePath, Delim)) { assert(false); return false; }
+
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, ColliderSize.x)) { assert(false); return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, ColliderSize.y)) { assert(false); return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<int>(Segment, IntVal)) { assert(false); return false; }

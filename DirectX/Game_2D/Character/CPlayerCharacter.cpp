@@ -5,12 +5,13 @@
 #include <CDevice.h>
 #include <CEngine.h>
 #include <Asset/Material/CMaterial.h>
+#include <Component/CAnimation2DComponent.h>
 #include <Component/CCameraComponent.h>
 #include <Component/CColliderBox2D.h>
+#include <Component/CColliderSphere2D.h>
 #include <Component/CMeshComponent.h>
 #include <Component/CObjectMovementComponent.h>
 #include <Component/CSceneComponent.h>
-#include <Component/CAnimation2DComponent.h>
 #include <World/CWorld.h>
 
 #include "CEnemy.h"
@@ -136,6 +137,14 @@ bool CPlayerCharacter::Init()
 		WeaponAnchor = WAnchor;
 	}
 
+	PickupCollider = CreateComponent<CColliderSphere2D>("PickupRange");
+	if (auto Col = PickupCollider.lock())
+	{
+		Col->SetCollisionProfile("PickupRange");
+
+		Col->SetDrawDebug(true);
+	}
+
 	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
 
 	return true;
@@ -144,6 +153,13 @@ bool CPlayerCharacter::Init()
 void CPlayerCharacter::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
+
+	auto Misc = MiscTable::GetInst().Get();
+	if (auto Col = PickupCollider.lock())
+	{
+		float RangeRatio = 1 + GetStat(EStat::PickupRange) * 0.01f;
+		Col->SetRadius(RangeRatio);
+	}
 }
 
 void CPlayerCharacter::PostUpdate(const float DeltaTime)
@@ -167,37 +183,37 @@ void CPlayerCharacter::PostUpdate(const float DeltaTime)
 					Anim->SetSymmetry(MiscInfo->PotatoBodyTexPath, bSymmetry);
 				}
 
-			if (auto Anim = LegAnim.lock())
-			{
-				Anim->SetSymmetry(MiscInfo->PotatoLegTexPath, bSymmetry);
-			}
-
-			auto VisualInfo = CharacterVisualTable::GetInst().Get(CharacterVisualInfoID);
-
-			for (size_t i = 0; i < DecoAnims.size(); i++)
-			{
-				if (auto DecoAnim = DecoAnims[i].lock())
+				if (auto Anim = LegAnim.lock())
 				{
-					std::string DecoPath;
-					if (i == 0)
+					Anim->SetSymmetry(MiscInfo->PotatoLegTexPath, bSymmetry);
+				}
+
+				auto VisualInfo = CharacterVisualTable::GetInst().Get(CharacterVisualInfoID);
+
+				for (size_t i = 0; i < DecoAnims.size(); i++)
+				{
+					if (auto DecoAnim = DecoAnims[i].lock())
 					{
-						DecoPath = VisualInfo->Eye;
-					}
-					else if (i == 1)
-					{
-						DecoPath = VisualInfo->Mouth;
-					}
-					else if (i - 2 < VisualInfo->Decos.size())
-					{
-						DecoPath = VisualInfo->Decos[i - 2];
-					}
-					
-					if (!DecoPath.empty())
-					{
-						DecoAnim->SetSymmetry(DecoPath, bSymmetry);
+						std::string DecoPath;
+						if (i == 0)
+						{
+							DecoPath = VisualInfo->Eye;
+						}
+						else if (i == 1)
+						{
+							DecoPath = VisualInfo->Mouth;
+						}
+						else if (i - 2 < VisualInfo->Decos.size())
+						{
+							DecoPath = VisualInfo->Decos[i - 2];
+						}
+
+						if (!DecoPath.empty())
+						{
+							DecoAnim->SetSymmetry(DecoPath, bSymmetry);
+						}
 					}
 				}
-			}
 			}
 		}
 	}

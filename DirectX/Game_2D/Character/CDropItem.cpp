@@ -21,12 +21,14 @@ bool CDropItem::Init()
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh);
 	if (auto Mesh = this->Mesh.lock())
 	{
-		Mesh->SetShader("MaterialColor2D");
-		Mesh->SetMesh("CenterRectColor");
+		Mesh->SetShader("DefaultTexture2D");
+		Mesh->SetMesh("CenterRectTex");
 
 		Mesh->SetInheritScale(false);
 
-		Mesh->SetRenderLayer(ERenderOrder::Enemy);
+		Mesh->SetBlendState(0, "AlphaBlend");
+
+		Mesh->SetRenderLayer(ERenderOrder::CharacterBody);
 	}
 
 	Collider = CreateComponent<CColliderBox2D>(Key::Comp::Collider);
@@ -36,6 +38,8 @@ bool CDropItem::Init()
 
 		Col->SetDrawDebug(true);
 		Col->SetInheritScale(false);
+
+		Col->SetBoxHalfExtent(100, 100);
 	}
 
 	return true;
@@ -88,6 +92,6 @@ void CDropItem::SetItemType(const EDropItemType ItemType)
 	{
 		CA2T FileName(TexPath.c_str());
 		auto MatTexInfo = Mesh->AddTexture(0, TexPath, FileName, Key::Path::Brotato);
-		SetMeshAndColliderSizeFromTexture(MatTexInfo, this->Mesh, Collider);
+		SetMeshSizeFromTexture(MatTexInfo, this->Mesh);
 	}
 }

@@ -37,7 +37,6 @@ bool CWeapon_Battle::Init()
 		Collider->SetCollisionProfile("PlayerAttack");
 
 		Collider->SetOnCollisionBegin<CWeapon_Battle>(this, &CWeapon_Battle::OnCollisionBeginOverlap);
-		//Body->SetOnCollisionBegin<CBullet>(this, &CBullet::OnCollisionBeginOverlap);
 	}
 
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh, Key::Comp::Root);
@@ -139,8 +138,18 @@ void CWeapon_Battle::Update(const float DeltaTime)
 			ElapsedMeleeMoveTime = 0.f;
 			// 새로운 공격 시작 시 이전 공격의 히트 기록 초기화
 			HitEnemiesInCurrentAttack.clear();
+
+			if (auto Col = Collider.lock())
+			{
+				Col->SetEnable(true);
+			}
+
+#if defined(_DEBUG) || defined(DEBUG)
+			char Buf[256];
+			sprintf_s(Buf, "[CWeapon_Battle::Update]| Start Attack. Weapon: %p\n", this);
+			OutputDebugStringA(Buf);
+#endif
 		}
-		// TODO: 원거리 투사체 생성
 		else
 		{
 			if (auto World = this->World.lock())
@@ -199,6 +208,11 @@ void CWeapon_Battle::Update(const float DeltaTime)
 
 			// 공격 종료 시 히트 기록 초기화
 			HitEnemiesInCurrentAttack.clear();
+
+			if (auto Col = Collider.lock())
+			{
+				Col->SetEnable(false);
+			}
 		}
 	}
 }
@@ -210,12 +224,9 @@ void CWeapon_Battle::PostUpdate(const float DeltaTime)
 	// 오브젝트의 PostUpdate이후 충돌 처리됨.
 	// 그 전에 Range변화를 반영.
 
-	if (const FWeaponInfo* Info = WeaponTable::GetInst().Get(GetWeaponInfoID()))
+	if (auto Search = SearchCollider.lock())
 	{
-		if (auto Search = SearchCollider.lock())
-		{
-			Search->SetRadius(CalcAttackRange(Info, Owner));
-		}
+		Search->SetRadius(GetTotalRange());
 	}
 }
 
@@ -269,32 +280,15 @@ void CWeapon_Battle::InitWeaponInfo(TableID ID)
 #pragma warning(disable: 4244)
 				const FTextureInfo* TexInfo = Texture->GetTexture();
 				Mesh->SetWorldScale(TexInfo->Width, TexInfo->Height);
-
-				if (Info->bIsMeleeWeapon)
-				{
-					if (auto Col = Collider.lock())
-					{
-						Col->SetBoxExtent(TexInfo->Width, TexInfo->Height);
-
-						Col->SetEnable(true);
-					}
-				}
 #pragma warning(pop)
 			}
 		}
 	}
-}
 
-int CWeapon_Battle::CalcAttackRange(const FWeaponInfo* WeaponInfo,
-	const std::weak_ptr<CPlayerCharacter>& PlayerCharacter)
-{
-	auto PC = PlayerCharacter.lock();
-	if (!WeaponInfo || !PC)
+	if (auto Col = Collider.lock())
 	{
-		return 0.f;
+		Col->SetBoxExtent(Info->ColliderSize);
 	}
-
-	return WeaponInfo->Range + static_cast<int>(PC->GetStat(EStat::Range));
 }
 
 FAttackResult CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
@@ -353,6 +347,12 @@ void CWeapon_Battle::OnCollisionBeginOverlap(const FVector& HitPoint, CCollider*
 		return;
 	}
 
+#if defined(_DEBUG) || defined(DEBUG)
+	char Buf[256];
+	sprintf_s(Buf, "[CWeapon_Battle::OnCollisionBeginOverlap]| Weapon: %p, Other: %p\n", this, ColObj.get());
+	OutputDebugStringA(Buf);
+#endif
+
 	auto ColChar = std::dynamic_pointer_cast<CCharacter>(ColObj);
 	if (!ColChar || ColChar->GetTeam() != ETeam::Enemy)
 	{
@@ -391,6 +391,11 @@ void CWeapon_Battle::OnSearchCollisionBeginOverlap(const FVector& HitPoint, CCol
 	{
 		return;
 	}
+
+#if defined(_DEBUG) || defined(DEBUG)
+	char Buf[256];
+	sprintf_s(Buf, "[CWeapon_Battle::OnSearchCollisionBeginOverlap]| Weapon: %p, Other: %p\n", this, Other->GetOwner().lock().get());
+#endif
 
 	CloseEnemies.emplace_back(Other->GetOwner());
 }
@@ -448,8 +453,8 @@ void CWeapon_Battle::SortCloseEnemies()
 {
 	std::erase_if(CloseEnemies, [](const std::weak_ptr<CGameObject>& WeakObject)
 		{
-			auto Object = WeakObject.lock();
-			if (!Object || !Object->GetAlive() || !Object->GetEnable())
+			auto Enemy = std::dynamic_pointer_cast<CEnemy>(WeakObject.lock());
+			if (!Enemy || !Enemy->GetAlive() || !Enemy->GetEnable() || Enemy->GetCurrHP() <= 0.f)
 			{
 				return true;
 			}

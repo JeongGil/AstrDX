@@ -95,7 +95,6 @@ protected:
 	void InitWeaponInfo(TableID ID);
 
 private:
-	static int CalcAttackRange(const FWeaponInfo* WeaponInfo, const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
 	[[nodiscard]] static FAttackResult CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 	                                                    const std::weak_ptr<CPlayerCharacter>& PlayerCharacter);
 

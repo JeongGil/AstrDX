@@ -63,6 +63,15 @@ public:
 	void SetEnable(bool bEnable)
 	{
 		this->bEnable = bEnable;
+
+		if (bEnable)
+		{
+			OnEnabled();
+		}
+		else
+		{
+			OnDisabled();
+		}
 	}
 
 protected:
@@ -83,6 +92,9 @@ public:
 
 protected:
 	virtual CComponent* Clone() const = 0;
+
+	virtual void OnEnabled();
+	virtual void OnDisabled();
 
 protected:
 	CComponent() = default;

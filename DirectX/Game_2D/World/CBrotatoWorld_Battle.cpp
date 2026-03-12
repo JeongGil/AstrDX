@@ -63,6 +63,13 @@ bool CBrotatoWorld_Battle::Init()
 	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
 	//if (auto NPC = WNPC.lock())
 	//{
+	//	NPC->SetWorldPosition(0, 300);
+	//	NPC->SetEnemyInfoID(TableID(2));
+	//}
+
+	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
+	//if (auto NPC = WNPC.lock())
+	//{
 	//	NPC->SetWorldPosition(-300, 300);
 	//}
 

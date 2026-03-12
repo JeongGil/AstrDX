@@ -40,7 +40,7 @@ float CTimer::Update(HWND hWnd)
 		sprintf_s(FPSText, "FPS : %.5f\n", FPS);
 
 #ifdef _DEBUG
-		OutputDebugStringA(FPSText);
+		//OutputDebugStringA(FPSText);
 #else
 		SetWindowTextA(hWnd, FPSText);
 #endif

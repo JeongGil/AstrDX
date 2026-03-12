@@ -70,6 +70,11 @@ CCharacter* CCharacter::Clone()
 
 void CCharacter::OnDead()
 {
+	if (auto Col = Collider.lock())
+	{
+		Col->SetEnable(false);
+	}
+
 	SpiralShrink();
 }
 

@@ -21,10 +21,9 @@ inline std::string TCharToStdString(const TCHAR* tcharStr)
 #endif
 }
 
-inline void SetMeshAndColliderSizeFromTexture(
+inline void SetMeshSizeFromTexture(
 	const std::weak_ptr<FMaterialTextureInfo>& MatTexInfo,
-	const std::weak_ptr<CMeshComponent>& Mesh,
-	const std::weak_ptr<CColliderBox2D>& Collider)
+	const std::weak_ptr<CMeshComponent>& Mesh)
 {
 	if (auto MatTexInfoPtr = MatTexInfo.lock())
 	{
@@ -34,10 +33,6 @@ inline void SetMeshAndColliderSizeFromTexture(
 			if (auto MeshPtr = Mesh.lock())
 			{
 				MeshPtr->SetWorldScale(TexInfo->Width, TexInfo->Height);
-			}
-			if (auto ColliderPtr = Collider.lock())
-			{
-				ColliderPtr->SetBoxExtent(TexInfo->Width, TexInfo->Height);
 			}
 		}
 	}

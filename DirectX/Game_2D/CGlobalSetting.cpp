@@ -39,6 +39,8 @@ bool CGlobalSetting::Init()
 
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("Player", "Player", ECollisionInteraction::Ignore);
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("Monster", "Monster", ECollisionInteraction::Ignore);
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("Player", "Monster", ECollisionInteraction::Overlap);
+	CCollisionInfoManager::GetInst()->SetProfileInteraction("Monster", "Player", ECollisionInteraction::Overlap);
 
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("Player", "MonsterAttack", ECollisionInteraction::Block);
 	CCollisionInfoManager::GetInst()->SetProfileInteraction("MonsterAttack", "Player", ECollisionInteraction::Block);

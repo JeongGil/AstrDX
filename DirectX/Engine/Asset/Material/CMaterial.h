@@ -77,6 +77,11 @@ public:
 
 	bool SetTexture(int TextureIndex, const std::weak_ptr<CTexture>& Texture);
 
+	void ClearTextures()
+	{
+		TextureInfos.clear();
+	}
+
 protected:
 	FColor BaseColor = FColor::White;
 	float Opacity = 1.f;

@@ -79,6 +79,8 @@ public:
 	bool SetTexture(int SlotIndex, int TextureIndex, const std::weak_ptr<CTexture>& Texture);
 	bool SetTextureIndex(int SlotIndex, int TextureIndex);
 
+	void ClearTextures(int SlotIndex);
+
 	std::weak_ptr<CAnimation2DComponent> GetAnimComponent() const override
 	{
 		return AnimComponent;

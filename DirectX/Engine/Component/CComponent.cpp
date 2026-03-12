@@ -26,6 +26,14 @@ void CComponent::Destroy()
 	bAlive = false;
 }
 
+void CComponent::OnEnabled()
+{
+}
+
+void CComponent::OnDisabled()
+{
+}
+
 CComponent::CComponent(const CComponent& other): CObject(other),
                                                  //World(other.World),
                                                  //Owner(other.Owner),

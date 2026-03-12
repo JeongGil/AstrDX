@@ -324,6 +324,14 @@ bool CMeshComponent::SetTextureIndex(int SlotIndex, int TextureIndex)
 	//return MaterialSlot[SlotIndex]->SetTextureIndex(TextureIndex);
 }
 
+void CMeshComponent::ClearTextures(int SlotIndex)
+{
+	if (SlotIndex < MaterialSlot.size())
+	{
+		MaterialSlot[SlotIndex]->ClearTextures();
+	}
+}
+
 void CMeshComponent::CreateEmptyAnimationCBuffer()
 {
 	EmptyAnimationCBuffer.reset(new CCBufferAnimation2D);

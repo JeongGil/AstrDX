@@ -4,6 +4,7 @@
 
 #include "../Table/CharacterVisualInfo.h"
 
+class CColliderSphere2D;
 class CCameraComponent;
 class CInventoryItem_Weapon;
 class CWeapon_Battle;
@@ -63,6 +64,8 @@ protected:
 	std::array<std::weak_ptr<CSceneComponent>, INVENTORY_MAX_WEAPON> WeaponAnchors;
 
 	std::weak_ptr<CObjectMovementComponent> MovementComponent;
+
+	std::weak_ptr<CColliderSphere2D> PickupCollider;
 
 	int RemainAbsorbAttackStack = 0;
 
