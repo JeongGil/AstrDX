@@ -2,6 +2,7 @@
 
 #include <Asset/CPathManager.h>
 
+#include "CharacterBaseTable.h"
 #include "CharacterVisualTable.h"
 #include "EnemyTable.h"
 #include "ItemTable.h"
@@ -20,12 +21,12 @@ bool CTableManager::Init()
 
 void CTableManager::LoadTables()
 {
-	//ItemTable::GetInst().Load(GetFilePath(TEXT("ItemInfo")));
 	MiscTable::GetInst().Load(GetFilePath(TEXT("Misc")));
 	CharacterVisualTable::GetInst().Load(GetFilePath(TEXT("CharacterVisual")));
 	WeaponTable::GetInst().Load(GetFilePath(TEXT("Weapon")));
 	WeaponSetBonusTable::GetInst().Load(GetFilePath(TEXT("WeaponSetBonus")));
 	EnemyTable::GetInst().Load(GetFilePath(TEXT("Enemy")));
+	//CharacterBaseTable::GetInst().Load(GetFilePath(TEXT("CharacterBase")));
 	//ItemTable::GetInst().Load(GetFilePath(TEXT("Item")));
 }
 

@@ -401,6 +401,12 @@
     <ClInclude Include="Character\CDropItem.h">
       <Filter>Character</Filter>
     </ClInclude>
+    <ClInclude Include="Table\CharacterBaseInfo.h">
+      <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Table\CharacterBaseTable.h">
+      <Filter>Table</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">

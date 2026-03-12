@@ -243,6 +243,8 @@
     <ClInclude Include="Player\CBulletEffect.h" />
     <ClInclude Include="Player\CMissile.h" />
     <ClInclude Include="Player\CPlayer.h" />
+    <ClInclude Include="Table\CharacterBaseInfo.h" />
+    <ClInclude Include="Table\CharacterBaseTable.h" />
     <ClInclude Include="Table\CharacterVisualInfo.h" />
     <ClInclude Include="Table\CharacterVisualTable.h" />
     <ClInclude Include="Table\CTableManager.h" />

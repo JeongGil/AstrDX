@@ -43,7 +43,7 @@ bool CBrotatoWorld_Battle::Init()
 	if (auto PC = WPC.lock())
 	{
 		PC->SetWorldPosition(0, 0);
-		PC->SetCharacterVisual(TableID(2));
+		PC->SetCharacterVisual(TableID(1));
 
 		for (size_t i = 0; i < CInventoryData::GetInst().GetWeaponCount(); i++)
 		{
@@ -57,7 +57,7 @@ bool CBrotatoWorld_Battle::Init()
 	if (auto NPC = WNPC.lock())
 	{
 		NPC->SetWorldPosition(300, 300);
-		NPC->SetEnemyInfoID(TableID(1));
+		NPC->SetEnemyInfoID(TableID(2));
 	}
 
 	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
