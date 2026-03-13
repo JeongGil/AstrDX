@@ -170,6 +170,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CGlobalSetting.cpp" />
+    <ClCompile Include="Character\CCameraObject.cpp" />
     <ClCompile Include="Character\CCharacter.cpp" />
     <ClCompile Include="Character\CDropItem.cpp" />
     <ClCompile Include="Character\CEnemy.cpp" />
@@ -215,6 +216,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGlobalSetting.h" />
+    <ClInclude Include="Character\CCameraObject.h" />
     <ClInclude Include="Character\CCharacter.h" />
     <ClInclude Include="Character\CDropItem.h" />
     <ClInclude Include="Character\CEnemy.h" />

@@ -35,6 +35,7 @@ public:
 
 protected:
 	CPlayerCharacter* Clone() override;
+	void OnDead() override;
 
 private:
 	void MoveUp();
@@ -113,7 +114,7 @@ public:
 
 		if (this->CurrHP == 0.f)
 		{
-			SpiralShrink();
+			OnDead();
 		}
 	}
 };

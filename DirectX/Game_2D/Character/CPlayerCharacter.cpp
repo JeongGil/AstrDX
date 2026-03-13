@@ -14,6 +14,7 @@
 #include <Component/CSceneComponent.h>
 #include <World/CWorld.h>
 
+#include "CCameraObject.h"
 #include "CDropItem.h"
 #include "CEnemy.h"
 #include "CWeapon_Battle.h"
@@ -23,6 +24,7 @@
 #include "../Table/CharacterBaseTable.h"
 #include "../Table/CharacterVisualTable.h"
 #include "../Table/WeaponSetBonusTable.h"
+#include "../World/CBrotatoWorld_Battle.h"
 
 bool CPlayerCharacter::Init()
 {
@@ -129,7 +131,18 @@ bool CPlayerCharacter::Init()
 		Cam->SetProjection(ECameraProjectionType::Orthogonal,
 			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
-		Cam->SetInheritRotation(false);
+		Cam->SetInheritRotation(false);		
+		if (auto World = this->World.lock())
+		{
+			World->GetCameraManager().lock()->SetMainCamera(Cam);
+			if (auto BrotatoWorld = std::dynamic_pointer_cast<CBrotatoWorld_Battle>(World))
+			{
+				if (auto SubCam = BrotatoWorld->GetSubCameraObj().lock())
+				{
+					SubCam->SetAnchor(Cam);
+				}
+			}
+		}
 	}
 
 	for (auto& WeaponAnchor : WeaponAnchors)
@@ -482,5 +495,21 @@ void CPlayerCharacter::MoveRight()
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->AddMove(FVector::Axis[EAxis::X]);
+	}
+}
+
+void CPlayerCharacter::OnDead()
+{
+	CCharacter::OnDead();
+
+	if (auto BrotatoWorld = std::dynamic_pointer_cast<CBrotatoWorld_Battle>(World.lock()))
+	{
+		if (auto CamMgr =  BrotatoWorld->GetCameraManager().lock())
+		{
+			if (auto SubCam = BrotatoWorld->GetSubCameraObj().lock())
+			{
+				CamMgr->SetMainCamera(SubCam->GetCameraComponent());
+			}
+		}
 	}
 }

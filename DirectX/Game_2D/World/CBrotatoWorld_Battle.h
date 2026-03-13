@@ -1,6 +1,8 @@
 #pragma once
 #include <World/CWorld.h>
 
+class CCameraObject;
+
 class CBrotatoWorld_Battle :
     public CWorld
 {
@@ -15,6 +17,8 @@ protected:
 	float RemainStageTime;
 
 	int ItemBoxDropCount{};
+
+	std::weak_ptr<CCameraObject> SubCameraObj;
 
 public:
 	bool Init() override;
@@ -45,6 +49,11 @@ public:
 	void SetStageLevel(int NewLevel)
 	{
 		this->StageLevel = NewLevel;
+	}
+
+	[[nodiscard]] std::weak_ptr<CCameraObject> GetSubCameraObj() const
+	{
+		return SubCameraObj;
 	}
 };
 

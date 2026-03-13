@@ -1,10 +1,12 @@
 #include "CBrotatoWorld_Battle.h"
 
+
 #include <Asset/CPathManager.h>
 #include <Component/CMeshComponent.h>
 #include <Render/CRenderManager.h>
 
 #include "../Strings.h"
+#include "../Character/CCameraObject.h"
 #include "../Character/CEnemy.h"
 #include "../Character/CPlayerCharacter.h"
 #include "../Inventory/CInventoryData.h"
@@ -36,7 +38,7 @@ bool CBrotatoWorld_Battle::Init()
 
 	LoadAnimation2D();
 
-	CInventoryData::GetInst().AddWeapon(TableID(1));
+	//CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
 
@@ -97,6 +99,8 @@ bool CBrotatoWorld_Battle::Init()
 			Mesh->SetRenderLayer(ERenderOrder::Background);
 		}
 	}
+
+	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 
 	return true;
 }

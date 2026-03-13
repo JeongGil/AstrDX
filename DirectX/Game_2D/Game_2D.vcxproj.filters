@@ -213,6 +213,9 @@
     <ClCompile Include="Character\CDropItem.cpp">
       <Filter>Character</Filter>
     </ClCompile>
+    <ClCompile Include="Character\CCameraObject.cpp">
+      <Filter>Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -406,6 +409,9 @@
     </ClInclude>
     <ClInclude Include="Table\CharacterBaseTable.h">
       <Filter>Table</Filter>
+    </ClInclude>
+    <ClInclude Include="Character\CCameraObject.h">
+      <Filter>Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
