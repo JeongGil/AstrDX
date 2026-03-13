@@ -11,4 +11,12 @@ private:
 
 protected:
 	~CharacterBaseTable() override = default;
+
+public:
+	const FCharacterBaseInfo* Get() const
+	{
+		assert(!Items.empty());
+
+		return Items.begin()->second;
+	}
 };

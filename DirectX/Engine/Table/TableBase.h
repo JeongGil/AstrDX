@@ -102,6 +102,12 @@ private:
 				continue;
 			}
 
+			// Remove carriage return if present (for Windows-style line endings)
+			if (!Line.empty() && Line.back() == '\r')
+			{
+				Line.pop_back();
+			}
+
 			std::stringstream SS(Line);
 			auto Info = new T;
 

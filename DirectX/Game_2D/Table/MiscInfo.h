@@ -5,9 +5,6 @@ struct FMiscInfo : FTableInfoBase
 {
 	constexpr static size_t MATERIAL_TEX_COUNT = 11;
 
-	std::string PotatoBodyTexPath;
-	std::string PotatoLegTexPath;
-
 	int WeaponMoveSpeed;
 
 	std::string FruitTexPath;
@@ -15,7 +12,6 @@ struct FMiscInfo : FTableInfoBase
 	std::string LegendaryItemBoxTexPath;
 	std::vector<std::string> MaterialTexPaths;
 
-	float BasePickupRange;
 	float PickupMoveSpeed;
 
 	bool Load(std::stringstream& Stream) override
@@ -29,9 +25,6 @@ struct FMiscInfo : FTableInfoBase
 
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			ID = TableID(1);
-
-			if (!std::getline(Stream, PotatoBodyTexPath, Delim)) { assert(false); return false; }
-			if (!std::getline(Stream, PotatoLegTexPath, Delim)) { assert(false); return false; }
 
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<int>(Segment, WeaponMoveSpeed)) { assert(false); return false; }
@@ -49,8 +42,6 @@ struct FMiscInfo : FTableInfoBase
 				}
 			}
 
-			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
-			if (!TryParse<float>(Segment, BasePickupRange)) { assert(false); return false; }
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<float>(Segment, PickupMoveSpeed)) { assert(false); return false; }
 		}

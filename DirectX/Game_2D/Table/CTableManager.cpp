@@ -26,7 +26,7 @@ void CTableManager::LoadTables()
 	WeaponTable::GetInst().Load(GetFilePath(TEXT("Weapon")));
 	WeaponSetBonusTable::GetInst().Load(GetFilePath(TEXT("WeaponSetBonus")));
 	EnemyTable::GetInst().Load(GetFilePath(TEXT("Enemy")));
-	//CharacterBaseTable::GetInst().Load(GetFilePath(TEXT("CharacterBase")));
+	CharacterBaseTable::GetInst().Load(GetFilePath(TEXT("CharacterBase")));
 	//ItemTable::GetInst().Load(GetFilePath(TEXT("Item")));
 }
 

@@ -8,6 +8,7 @@
 #include "../Character/CEnemy.h"
 #include "../Character/CPlayerCharacter.h"
 #include "../Inventory/CInventoryData.h"
+#include "../Table/CharacterBaseTable.h"
 #include "../Table/CharacterVisualTable.h"
 #include "../Table/CTableManager.h"
 #include "../Table/EnemyTable.h"
@@ -125,37 +126,39 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 	FVector2 TexSize{};
 	std::vector<const TCHAR*> TexFileNames;
 
+	auto CharacterBase = CharacterBaseTable::GetInst().Get();
+
 	// 캐릭터 기본
 	{
-		auto Info = MiscTable::GetInst().Get();
-
+		const auto& PotatoBodyTexPath = CharacterBase->PotatoBodyTexPath;
 		// 몸통
-		WorldAssetManager->CreateAnimation(Info->PotatoBodyTexPath);
-		WorldAssetManager->SetAnimation2DTextureType(Info->PotatoBodyTexPath, EAnimation2DTextureType::Frame);
+		WorldAssetManager->CreateAnimation(PotatoBodyTexPath);
+		WorldAssetManager->SetAnimation2DTextureType(PotatoBodyTexPath, EAnimation2DTextureType::Frame);
 
-		CA2T BodyName(Info->PotatoBodyTexPath.c_str());
-		WorldAssetManager->SetTexture(Info->PotatoBodyTexPath, Info->PotatoBodyTexPath, BodyName, Key::Path::Brotato);
-		if (auto Tex = WorldAssetManager->FindTexture(Info->PotatoBodyTexPath).lock())
+		CA2T BodyName(PotatoBodyTexPath.c_str());
+		WorldAssetManager->SetTexture(PotatoBodyTexPath, PotatoBodyTexPath, BodyName, Key::Path::Brotato);
+		if (auto Tex = WorldAssetManager->FindTexture(PotatoBodyTexPath).lock())
 		{
 			TexSize.x = Tex->GetTexture()->Width;
 			TexSize.y = Tex->GetTexture()->Height;
 		}
 
-		WorldAssetManager->AddFrame(Info->PotatoBodyTexPath, Zero, TexSize);
+		WorldAssetManager->AddFrame(PotatoBodyTexPath, Zero, TexSize);
 
+		const auto& PotatoLegTexPath = CharacterBase->PotatoLegTexPath;
 		// 다리
-		WorldAssetManager->CreateAnimation(Info->PotatoLegTexPath);
-		WorldAssetManager->SetAnimation2DTextureType(Info->PotatoLegTexPath, EAnimation2DTextureType::Frame);
+		WorldAssetManager->CreateAnimation(PotatoLegTexPath);
+		WorldAssetManager->SetAnimation2DTextureType(PotatoLegTexPath, EAnimation2DTextureType::Frame);
 
-		CA2T LegName(Info->PotatoLegTexPath.c_str());
-		WorldAssetManager->SetTexture(Info->PotatoLegTexPath, Info->PotatoLegTexPath, LegName, Key::Path::Brotato);
-		if (auto Tex = WorldAssetManager->FindTexture(Info->PotatoLegTexPath).lock())
+		CA2T LegName(PotatoLegTexPath.c_str());
+		WorldAssetManager->SetTexture(PotatoLegTexPath, PotatoLegTexPath, LegName, Key::Path::Brotato);
+		if (auto Tex = WorldAssetManager->FindTexture(PotatoLegTexPath).lock())
 		{
 			TexSize.x = Tex->GetTexture()->Width;
 			TexSize.y = Tex->GetTexture()->Height;
 		}
 
-		WorldAssetManager->AddFrame(Info->PotatoLegTexPath, Zero, TexSize);
+		WorldAssetManager->AddFrame(PotatoLegTexPath, Zero, TexSize);
 	}
 
 

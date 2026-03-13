@@ -20,8 +20,8 @@
 #include "../Strings.h"
 #include "../Inventory/CInventoryData.h"
 #include "../Inventory/CInventoryItem_Weapon.h"
+#include "../Table/CharacterBaseTable.h"
 #include "../Table/CharacterVisualTable.h"
-#include "../Table/MiscTable.h"
 #include "../Table/WeaponSetBonusTable.h"
 
 bool CPlayerCharacter::Init()
@@ -38,7 +38,7 @@ bool CPlayerCharacter::Init()
 
 	SetTeam(ETeam::Player);
 
-	const auto* Misc = MiscTable::GetInst().Get();
+	const auto* CharacterBase = CharacterBaseTable::GetInst().Get();
 	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato, Key::Comp::Root);
 	PotatoAnim = CreateComponent<CAnimation2DComponent>(Key::Anim::Potato, Key::Comp::Root);
 	if (auto Body = this->Potato.lock())
@@ -53,8 +53,8 @@ bool CPlayerCharacter::Init()
 
 		Body->SetBlendState(0, "AlphaBlend");
 
-		CA2T FileName(Misc->PotatoBodyTexPath.c_str());
-		Body->AddTexture(0, Misc->PotatoBodyTexPath, FileName, Key::Path::Brotato);
+		CA2T FileName(CharacterBase->PotatoBodyTexPath.c_str());
+		Body->AddTexture(0, CharacterBase->PotatoBodyTexPath, FileName, Key::Path::Brotato);
 
 		Body->SetInheritScale(true);
 		Body->SetInheritRotation(true);
@@ -65,8 +65,8 @@ bool CPlayerCharacter::Init()
 		{
 			Anim->SetUpdateComponent(Potato);
 
-			Anim->AddAnimation(Misc->PotatoBodyTexPath);
-			Anim->SetLoop(Misc->PotatoBodyTexPath, true);
+			Anim->AddAnimation(CharacterBase->PotatoBodyTexPath);
+			Anim->SetLoop(CharacterBase->PotatoBodyTexPath, true);
 		}
 	}
 
@@ -81,8 +81,8 @@ bool CPlayerCharacter::Init()
 
 		Leg->SetBlendState(0, "AlphaBlend");
 
-		CA2T FileName(Misc->PotatoLegTexPath.c_str());
-		Leg->AddTexture(0, Misc->PotatoLegTexPath, FileName, Key::Path::Brotato);
+		CA2T FileName(CharacterBase->PotatoLegTexPath.c_str());
+		Leg->AddTexture(0, CharacterBase->PotatoLegTexPath, FileName, Key::Path::Brotato);
 
 		Leg->SetInheritScale(true);
 		Leg->SetInheritRotation(true);
@@ -93,8 +93,8 @@ bool CPlayerCharacter::Init()
 		{
 			Anim->SetUpdateComponent(Leg);
 
-			Anim->AddAnimation(Misc->PotatoLegTexPath);
-			Anim->SetLoop(Misc->PotatoLegTexPath, true);
+			Anim->AddAnimation(CharacterBase->PotatoLegTexPath);
+			Anim->SetLoop(CharacterBase->PotatoLegTexPath, true);
 		}
 	}
 
@@ -156,11 +156,11 @@ void CPlayerCharacter::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
 
-	auto Misc = MiscTable::GetInst().Get();
+	auto CharacterBase = CharacterBaseTable::GetInst().Get();
 	if (auto Col = PickupCollider.lock())
 	{
 		float RangeRatio = 1 + GetStat(EStat::PickupRange) * 0.01f;
-		Col->SetRadius(Misc->BasePickupRange * RangeRatio);
+		Col->SetRadius(CharacterBase->BasePickupRange * RangeRatio);
 	}
 }
 
@@ -178,16 +178,16 @@ void CPlayerCharacter::PostUpdate(const float DeltaTime)
 			{
 				bLastSymmetry = bSymmetry;
 
-				auto MiscInfo = MiscTable::GetInst().Get();
+				auto CharacterBase = CharacterBaseTable::GetInst().Get();
 
 				if (auto Anim = PotatoAnim.lock())
 				{
-					Anim->SetSymmetry(MiscInfo->PotatoBodyTexPath, bSymmetry);
+					Anim->SetSymmetry(CharacterBase->PotatoBodyTexPath, bSymmetry);
 				}
 
 				if (auto Anim = LegAnim.lock())
 				{
-					Anim->SetSymmetry(MiscInfo->PotatoLegTexPath, bSymmetry);
+					Anim->SetSymmetry(CharacterBase->PotatoLegTexPath, bSymmetry);
 				}
 
 				auto VisualInfo = CharacterVisualTable::GetInst().Get(CharacterVisualInfoID);
