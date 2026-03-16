@@ -7,6 +7,7 @@
 #include <Render/CRenderManager.h>
 #include <UI/CMouseWidget.h>
 
+#include "Shader/CShaderBrotatoTile.h"
 #include "Shader/CShaderPostProcessHit.h"
 
 bool CGlobalSetting::Init()
@@ -89,6 +90,7 @@ bool CGlobalSetting::Init()
 	if (auto ShaderMgr = CAssetManager::GetInst()->GetShaderManager().lock())
 	{
 		ShaderMgr->CreateShader<CShaderPostProcessHit>("Hit");
+		ShaderMgr->CreateShader<CShaderBrotatoTile>("BrotatoTile");
 	}
 
 	return true;

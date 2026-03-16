@@ -186,6 +186,7 @@
     <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp" />
     <ClCompile Include="Inventory\CShop.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map\CBrotatoTile.cpp" />
     <ClCompile Include="Map\CTileMapMain.cpp" />
     <ClCompile Include="Monster\CMonster.cpp" />
     <ClCompile Include="Monster\CMonsterSpawnPoint.cpp" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Player\CPlayer.cpp" />
     <ClCompile Include="PostProcess\CPostProcessHit.cpp" />
     <ClCompile Include="Shader\CCBufferHit.cpp" />
+    <ClCompile Include="Shader\CShaderBrotatoTile.cpp" />
     <ClCompile Include="Shader\CShaderPostProcessHit.cpp" />
     <ClCompile Include="Table\CTableManager.cpp" />
     <ClCompile Include="Thread\CLoadingThread.cpp" />
@@ -208,8 +210,8 @@
     <ClCompile Include="UI\CSlotIcon.cpp" />
     <ClCompile Include="UI\CStartWidget.cpp" />
     <ClCompile Include="UI\CWorldHUD.cpp" />
-    <ClCompile Include="World\CBrotatoWorld_Battle.cpp" />
     <ClCompile Include="World\CEditorWorld.cpp" />
+    <ClCompile Include="World\CBrotatoWorld_Battle.cpp" />
     <ClCompile Include="World\CLoadingWorld.cpp" />
     <ClCompile Include="World\CMainWorld.cpp" />
     <ClCompile Include="World\CStartWorld.cpp" />
@@ -233,10 +235,12 @@
     <ClInclude Include="Inventory\CInventoryItem_Item.h" />
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />
     <ClInclude Include="Inventory\CShop.h" />
+    <ClInclude Include="Map\CBrotatoTile.h" />
     <ClInclude Include="Map\CTileMapMain.h" />
     <ClInclude Include="Player\CEditorPlayer.h" />
     <ClInclude Include="PostProcess\CPostProcessHit.h" />
     <ClInclude Include="Shader\CCBufferHit.h" />
+    <ClInclude Include="Shader\CShaderBrotatoTile.h" />
     <ClInclude Include="Shader\CShaderPostProcessHit.h" />
     <ClInclude Include="Strings.h" />
     <ClInclude Include="Monster\CMonster.h" />
@@ -285,6 +289,20 @@
     <None Include="Copy.bat" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\Bin\Asset\Shader\BrotatoTile.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">BrotatoTileVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">BrotatoTileVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BrotatoTileVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BrotatoTileVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="..\Bin\Asset\Shader\PostProcess.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">HitVS</EntryPointName>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>

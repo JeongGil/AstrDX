@@ -20,6 +20,10 @@ protected:
 
 	std::weak_ptr<CCameraObject> SubCameraObj;
 
+	int TileTheme{ 1 };
+	int TileCountX{ 16 };
+	int TileCountY{ 16 };
+
 public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
@@ -27,9 +31,10 @@ public:
 	void FinishStage(bool bClear);
 
 private:
-	void LoadAnimation2D();
-	void LoadSound();
-	void CreateUI();
+void LoadAnimation2D();
+void LoadSound();
+void CreateUI();
+void CreateTileMap();
 
 public:
 	[[nodiscard]] int GetItemBoxDropCount() const
@@ -55,5 +60,20 @@ public:
 	{
 		return SubCameraObj;
 	}
+
+	void SetTileTheme(const int InTheme)
+	{
+		TileTheme = InTheme;
+	}
+
+	void SetTileCount(int InCountX, int InCountY)
+	{
+		TileCountX = InCountX;
+		TileCountY = InCountY;
+	}
+
+	[[nodiscard]] int GetTileCountX() const { return TileCountX; }
+	[[nodiscard]] int GetTileCountY() const { return TileCountY; }
+	[[nodiscard]] int GetTileTheme() const { return TileTheme; }
 };
 

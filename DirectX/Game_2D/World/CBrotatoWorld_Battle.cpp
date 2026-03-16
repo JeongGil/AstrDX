@@ -1,10 +1,13 @@
 #include "CBrotatoWorld_Battle.h"
 
+#include <array>
+#include <CEngine.h>
 
 #include <Asset/CPathManager.h>
 #include <Component/CMeshComponent.h>
 #include <Render/CRenderManager.h>
 
+#include "../Map/CBrotatoTile.h"
 #include "../Strings.h"
 #include "../Character/CCameraObject.h"
 #include "../Character/CEnemy.h"
@@ -37,6 +40,7 @@ bool CBrotatoWorld_Battle::Init()
 	CTableManager::GetInst().LoadTables();
 
 	LoadAnimation2D();
+	CreateTileMap();
 
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
@@ -61,43 +65,6 @@ bool CBrotatoWorld_Battle::Init()
 	{
 		NPC->SetWorldPosition(300, 300);
 		NPC->SetEnemyInfoID(TableID(2));
-	}
-
-	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
-	//if (auto NPC = WNPC.lock())
-	//{
-	//	NPC->SetWorldPosition(0, 300);
-	//	NPC->SetEnemyInfoID(TableID(2));
-	//}
-
-	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
-	//if (auto NPC = WNPC.lock())
-	//{
-	//	NPC->SetWorldPosition(-300, 300);
-	//}
-
-	//WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
-	//if (auto NPC = WNPC.lock())
-	//{
-	//	NPC->SetWorldPosition(300, -300);
-	//}
-
-	auto WBG = CreateGameObject<CGameObject>("BG");
-	if (auto BG = WBG.lock())
-	{
-		auto WMesh = BG->CreateComponent<CMeshComponent>("BG");
-		if (auto Mesh = WMesh.lock())
-		{
-			Mesh->SetShader("DefaultTexture2D");
-			Mesh->SetMesh("CenterRectTex");
-			Mesh->SetWorldScale(1024, 1024);
-
-			Mesh->SetBlendState(0, "AlphaBlend");
-
-			Mesh->AddTexture(0, "BG", TEXT("TestMap.png"), Key::Path::Brotato);
-
-			Mesh->SetRenderLayer(ERenderOrder::Background);
-		}
 	}
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
@@ -318,4 +285,54 @@ void CBrotatoWorld_Battle::LoadSound()
 
 void CBrotatoWorld_Battle::CreateUI()
 {
+}
+
+void CBrotatoWorld_Battle::CreateTileMap()
+{
+	if (TileCountX <= 0 || TileCountY <= 0)
+	{
+		return;
+	}
+
+	constexpr float TileSize = 64.f;
+	static constexpr std::array MaskFiles =
+	{
+		"mask_b0.png", "mask_b1.png", "mask_b2.png", "mask_b3.png", "mask_b4.png", "mask_b5.png",
+		"mask_bl.png", "mask_br.png", "mask_center.png",
+		"mask_l0.png", "mask_l1.png", "mask_l2.png", "mask_l3.png", "mask_l4.png", "mask_l5.png",
+		"mask_r0.png", "mask_r1.png", "mask_r2.png", "mask_r3.png", "mask_r4.png", "mask_r5.png",
+		"mask_t0.png", "mask_t1.png", "mask_t2.png", "mask_t3.png", "mask_t4.png", "mask_t5.png",
+		"mask_tl.png", "mask_tr.png"
+	};
+
+	const int Theme = std::clamp(TileTheme, 1, 6);
+	const float StartX = -TileCountX * TileSize * 0.5f + TileSize * 0.5f;
+	const float StartY = -TileCountY * TileSize * 0.5f + TileSize * 0.5f;
+
+	std::uniform_int_distribution<int> MaskDist(0, static_cast<int>(MaskFiles.size() - 1));
+	std::uniform_int_distribution<int> TileDist(0, 11);
+
+	for (int y = 0; y < TileCountY; ++y)
+	{
+		for (int x = 0; x < TileCountX; ++x)
+		{
+			auto WeakTile = CreateGameObject<CBrotatoTile>("BrotatoTile_" + std::to_string(x) + "_" + std::to_string(y));
+			auto Tile = WeakTile.lock();
+			if (!Tile)
+			{
+				continue;
+			}
+
+			Tile->SetWorldPosition(StartX + TileSize * x, StartY + TileSize * y);
+
+			//char TileFileName[64]{};
+			//sprintf_s(TileFileName, "resources/tiles/SingleTiles/%d/tile%03d.png", Theme, TileDist(CEngine::GetInst()->GetMT()));
+			std::string TileFileName = std::format("resources/tiles/SingleTiles/{}/tile{:03}.png", Theme, TileDist(CEngine::GetInst()->GetMT()));
+
+			std::string MaskPath = "resources/tiles/SingleTiles/mask/";
+			MaskPath += MaskFiles[MaskDist(CEngine::GetInst()->GetMT())];
+
+			Tile->SetTileTextures(MaskPath, TileFileName, Key::Path::Brotato);
+		}
+	}
 }

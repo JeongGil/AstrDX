@@ -138,9 +138,6 @@
     <ClCompile Include="Inventory\CInventoryData.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
     <ClCompile Include="Table\CTableManager.cpp">
       <Filter>Table</Filter>
     </ClCompile>
@@ -215,6 +212,15 @@
     </ClCompile>
     <ClCompile Include="Character\CCameraObject.cpp">
       <Filter>Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\CShaderBrotatoTile.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\CBrotatoTile.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -413,6 +419,12 @@
     <ClInclude Include="Character\CCameraObject.h">
       <Filter>Character</Filter>
     </ClInclude>
+    <ClInclude Include="Shader\CShaderBrotatoTile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\CBrotatoTile.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Copy.bat">
@@ -421,6 +433,9 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Bin\Asset\Shader\PostProcess.hlsl">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Bin\Asset\Shader\BrotatoTile.hlsl">
       <Filter>Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
