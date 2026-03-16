@@ -295,22 +295,33 @@ void CBrotatoWorld_Battle::CreateTileMap()
 	}
 
 	constexpr float TileSize = 64.f;
-	static constexpr std::array MaskFiles =
+	static constexpr std::array<const char*, 6> TopMaskFiles =
 	{
-		"mask_b0.png", "mask_b1.png", "mask_b2.png", "mask_b3.png", "mask_b4.png", "mask_b5.png",
-		"mask_bl.png", "mask_br.png", "mask_center.png",
-		"mask_l0.png", "mask_l1.png", "mask_l2.png", "mask_l3.png", "mask_l4.png", "mask_l5.png",
-		"mask_r0.png", "mask_r1.png", "mask_r2.png", "mask_r3.png", "mask_r4.png", "mask_r5.png",
-		"mask_t0.png", "mask_t1.png", "mask_t2.png", "mask_t3.png", "mask_t4.png", "mask_t5.png",
-		"mask_tl.png", "mask_tr.png"
+		"mask_t0.png", "mask_t1.png", "mask_t2.png", "mask_t3.png", "mask_t4.png", "mask_t5.png"
+	};
+	static constexpr std::array<const char*, 6> BottomMaskFiles =
+	{
+		"mask_b0.png", "mask_b1.png", "mask_b2.png", "mask_b3.png", "mask_b4.png", "mask_b5.png"
+	};
+	static constexpr std::array<const char*, 6> LeftMaskFiles =
+	{
+		"mask_l0.png", "mask_l1.png", "mask_l2.png", "mask_l3.png", "mask_l4.png", "mask_l5.png"
+	};
+	static constexpr std::array<const char*, 6> RightMaskFiles =
+	{
+		"mask_r0.png", "mask_r1.png", "mask_r2.png", "mask_r3.png", "mask_r4.png", "mask_r5.png"
 	};
 
 	const int Theme = std::clamp(TileTheme, 1, 6);
 	const float StartX = -TileCountX * TileSize * 0.5f + TileSize * 0.5f;
 	const float StartY = -TileCountY * TileSize * 0.5f + TileSize * 0.5f;
 
-	std::uniform_int_distribution<int> MaskDist(0, static_cast<int>(MaskFiles.size() - 1));
+	std::uniform_int_distribution<int> EdgeMaskDist(0, 5);
 	std::uniform_int_distribution<int> TileDist(0, 11);
+
+	const int MaxX = TileCountX - 1;
+	const int MaxY = TileCountY - 1;
+	auto& RandEngine = CEngine::GetInst()->GetMT();
 
 	for (int y = 0; y < TileCountY; ++y)
 	{
@@ -325,12 +336,45 @@ void CBrotatoWorld_Battle::CreateTileMap()
 
 			Tile->SetWorldPosition(StartX + TileSize * x, StartY + TileSize * y);
 
-			//char TileFileName[64]{};
-			//sprintf_s(TileFileName, "resources/tiles/SingleTiles/%d/tile%03d.png", Theme, TileDist(CEngine::GetInst()->GetMT()));
-			std::string TileFileName = std::format("resources/tiles/SingleTiles/{}/tile{:03}.png", Theme, TileDist(CEngine::GetInst()->GetMT()));
+			std::string TileFileName = std::format("resources/tiles/SingleTiles/{}/tile{:03}.png", Theme, TileDist(RandEngine));
 
 			std::string MaskPath = "resources/tiles/SingleTiles/mask/";
-			MaskPath += MaskFiles[MaskDist(CEngine::GetInst()->GetMT())];
+			if (x == 0 && y == 0)
+			{
+				MaskPath += "mask_bl.png";
+			}
+			else if (x == MaxX && y == 0)
+			{
+				MaskPath += "mask_br.png";
+			}
+			else if (x == 0 && y == MaxY)
+			{
+				MaskPath += "mask_tl.png";
+			}
+			else if (x == MaxX && y == MaxY)
+			{
+				MaskPath += "mask_tr.png";
+			}
+			else if (y == 0)
+			{
+				MaskPath += BottomMaskFiles[EdgeMaskDist(RandEngine)];
+			}
+			else if (y == MaxY)
+			{
+				MaskPath += TopMaskFiles[EdgeMaskDist(RandEngine)];
+			}
+			else if (x == 0)
+			{
+				MaskPath += LeftMaskFiles[EdgeMaskDist(RandEngine)];
+			}
+			else if (x == MaxX)
+			{
+				MaskPath += RightMaskFiles[EdgeMaskDist(RandEngine)];
+			}
+			else
+			{
+				MaskPath += "mask_center.png";
+			}
 
 			Tile->SetTileTextures(MaskPath, TileFileName, Key::Path::Brotato);
 		}
