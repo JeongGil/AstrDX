@@ -533,12 +533,8 @@ bool CCollision::ResolveSlideStop2D(FVector3& SrcPos,
 	FVector3    Normal = Manifold.Normal;
 	Normal.Normalize();
 
-	// Fix direction
-	if ((DestPos - SrcPos).Dot(Normal) < 0.f)
-		Normal *= -1.f;
 	const float Slop = 0.02f;  // Prevent jittering
-	const float Percent = 0.4f; // Correction strength
-	const float MaxCor = 0.5f;
+	const float Percent = 1.0f; // Correction strength: 침투량 전체를 한 프레임에 보정하여 관통 방지
 	// Velocity threshold. Prevents jittering near zero.
 	const float VelEps = 0.001f;
 
@@ -554,8 +550,6 @@ bool CCollision::ResolveSlideStop2D(FVector3& SrcPos,
 		Pen = Manifold.Penetration - Slop;
 
 	float   CorMag = (Pen * Percent) / InvMass;
-
-	CorMag = min(CorMag, MaxCor);
 
 	FVector3    Correction = Normal * CorMag;
 
