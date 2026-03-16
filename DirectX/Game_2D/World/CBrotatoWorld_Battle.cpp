@@ -1,6 +1,9 @@
 #include "CBrotatoWorld_Battle.h"
 
 #include <array>
+#include <algorithm>
+#include <cmath>
+#include <numbers>
 #include <CEngine.h>
 
 #include <Asset/CPathManager.h>
@@ -60,14 +63,16 @@ bool CBrotatoWorld_Battle::Init()
 		}
 	}
 
-	static int Counter = 0;
-	auto WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
-	if (auto NPC = WNPC.lock())
-	{
-		NPC->SetWorldPosition(300, 300);
-		NPC->SetEnemyInfoID(TableID(1));
-		//NPC->SetEnemyInfoID(TableID(2));
-	}
+	//static int Counter = 0;
+	//auto WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
+	//if (auto NPC = WNPC.lock())
+	//{
+	//	NPC->SetWorldPosition(300, 300);
+	//	NPC->SetEnemyInfoID(TableID(1));
+	//	//NPC->SetEnemyInfoID(TableID(2));
+	//}
+
+	EnemyTableIDs.emplace_back(1);
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 
@@ -104,11 +109,89 @@ void CBrotatoWorld_Battle::Update(const float DeltaTime)
 	if (RemainStageTime <= 0.f)
 	{
 		FinishStage(true);
+		return;
 	}
+
+	UpdateEnemySpawn(DeltaTime);
 }
 
 void CBrotatoWorld_Battle::FinishStage(bool bClear)
 {
+}
+
+void CBrotatoWorld_Battle::UpdateEnemySpawn(float DeltaTime)
+{
+	if (EnemyTableIDs.empty() || EnemySpawnIntervalSec <= 0.f)
+	{
+		return;
+	}
+
+	auto Player = FindObjectOfType<CPlayerCharacter>().lock();
+	if (!Player)
+	{
+		return;
+	}
+
+	ElapsedEnemySpawnTime += DeltaTime;
+	while (ElapsedEnemySpawnTime >= EnemySpawnIntervalSec)
+	{
+		ElapsedEnemySpawnTime -= EnemySpawnIntervalSec;
+
+		FVector SpawnPos;
+		if (!TryGetEnemySpawnPosition(Player->GetWorldPosition(), EnemySpawnRadius, SpawnPos))
+		{
+			continue;
+		}
+
+		auto Enemy = CreateGameObject<CEnemy>("Monster_" + std::to_string(SpawnedEnemyCount++)).lock();
+		if (!Enemy)
+		{
+			continue;
+		}
+
+		std::uniform_int_distribution<size_t> EnemyIDDist(0, EnemyTableIDs.size() - 1);
+		const TableID EnemyID = EnemyTableIDs[EnemyIDDist(CEngine::GetInst()->GetMT())];
+
+		Enemy->SetWorldPosition(SpawnPos);
+		Enemy->SetEnemyInfoID(EnemyID);
+	}
+}
+
+bool CBrotatoWorld_Battle::TryGetEnemySpawnPosition(const FVector& Origin, float Radius, FVector& OutSpawnPos) const
+{
+	if (TileCountX <= 0 || TileCountY <= 0 || Radius <= 0.f)
+	{
+		return false;
+	}
+
+	constexpr float TileSize = 64.f;
+	const float MinX = -TileCountX * TileSize * 0.5f + TileSize * 0.5f;
+	const float MaxX = MinX + TileSize * (TileCountX - 1);
+	const float MinY = -TileCountY * TileSize * 0.5f + TileSize * 0.5f;
+	const float MaxY = MinY + TileSize * (TileCountY - 1);
+
+	std::uniform_real_distribution<float> AngleDist(0.f, std::numbers::pi_v<float> * 2.f);
+	std::uniform_real_distribution<float> RadiusDist(0.f, 1.f);
+	auto& RandEngine = CEngine::GetInst()->GetMT();
+
+	constexpr int MaxTryCount = 24;
+	for (int Try = 0; Try < MaxTryCount; ++Try)
+	{
+		const float Angle = AngleDist(RandEngine);
+		const float Dist = std::sqrt(RadiusDist(RandEngine)) * Radius;
+
+		const float SpawnX = Origin.x + std::cos(Angle) * Dist;
+		const float SpawnY = Origin.y + std::sin(Angle) * Dist;
+
+		if (SpawnX >= MinX && SpawnX <= MaxX && SpawnY >= MinY && SpawnY <= MaxY)
+		{
+			OutSpawnPos = FVector(SpawnX, SpawnY, Origin.z);
+			return true;
+		}
+	}
+
+	OutSpawnPos = FVector(std::clamp(Origin.x, MinX, MaxX), std::clamp(Origin.y, MinY, MaxY), Origin.z);
+	return true;
 }
 
 void CBrotatoWorld_Battle::LoadAnimation2D()

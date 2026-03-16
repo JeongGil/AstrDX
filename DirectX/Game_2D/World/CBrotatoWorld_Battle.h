@@ -15,7 +15,7 @@ protected:
 	int StageLevel;
 
 	int TotalStageTime;
-	float RemainStageTime;
+	float RemainStageTime = 30.f;
 
 	int ItemBoxDropCount{};
 
@@ -26,6 +26,12 @@ protected:
 	int TileCountY{ 16 };
 
 	std::array<std::weak_ptr<CColliderBox2D>, 4> EdgeColliders;
+
+	std::vector<TableID> EnemyTableIDs;
+	float EnemySpawnIntervalSec{ 2.f };
+	float ElapsedEnemySpawnTime{};
+	float EnemySpawnRadius{ 600.f };
+	int SpawnedEnemyCount{};
 
 public:
 	bool Init() override;
@@ -38,6 +44,8 @@ private:
 	void LoadSound();
 	void CreateUI();
 	void CreateTileMap();
+	void UpdateEnemySpawn(float DeltaTime);
+	bool TryGetEnemySpawnPosition(const FVector& Origin, float Radius, FVector& OutSpawnPos) const;
 
 public:
 	[[nodiscard]] int GetItemBoxDropCount() const
