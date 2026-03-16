@@ -70,6 +70,8 @@ CCharacter* CCharacter::Clone()
 
 void CCharacter::OnDead()
 {
+	bIsPendingDead = true;
+
 	if (auto Col = Collider.lock())
 	{
 		Col->SetEnable(false);

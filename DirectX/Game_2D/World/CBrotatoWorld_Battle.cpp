@@ -6,6 +6,7 @@
 #include <Asset/CPathManager.h>
 #include <Component/CMeshComponent.h>
 #include <Render/CRenderManager.h>
+#include <Component/CColliderBox2D.h>
 
 #include "../Map/CBrotatoTile.h"
 #include "../Strings.h"
@@ -40,7 +41,6 @@ bool CBrotatoWorld_Battle::Init()
 	CTableManager::GetInst().LoadTables();
 
 	LoadAnimation2D();
-	CreateTileMap();
 
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
@@ -64,10 +64,27 @@ bool CBrotatoWorld_Battle::Init()
 	if (auto NPC = WNPC.lock())
 	{
 		NPC->SetWorldPosition(300, 300);
-		NPC->SetEnemyInfoID(TableID(2));
+		NPC->SetEnemyInfoID(TableID(1));
+		//NPC->SetEnemyInfoID(TableID(2));
 	}
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
+
+	if (auto ColObj = CreateGameObject<CGameObject>("EdgeCollider").lock())
+	{
+		for (int i = 0; i < EdgeColliders.size(); i++)
+		{
+			EdgeColliders[i] = ColObj->CreateComponent<CColliderBox2D>("Collider_" + std::to_string(i));
+			if (auto Collider = EdgeColliders[i].lock())
+			{
+				Collider->SetCollisionProfile("MapBoundary");
+				Collider->SetStatic(true);
+				Collider->SetDrawDebug(true);
+			}
+		}
+	}
+
+	CreateTileMap();
 
 	return true;
 }
@@ -316,8 +333,45 @@ void CBrotatoWorld_Battle::CreateTileMap()
 	const float StartX = -TileCountX * TileSize * 0.5f + TileSize * 0.5f;
 	const float StartY = -TileCountY * TileSize * 0.5f + TileSize * 0.5f;
 
+	// 가장자리 충돌체
+	{
+		const float LeftEdgeX = StartX - TileSize;
+		const float BotEdgeY = StartY - TileSize;
+		const float Width = (TileCountX + 1) * TileSize;
+		const float Height = (TileCountY + 1) * TileSize;
+
+		// Top
+		if (auto Col = EdgeColliders[0].lock())
+		{
+			Col->SetBoxExtent(Width, TileSize);
+			Col->SetWorldPosition(TileSize * 0.5f, -BotEdgeY);
+		}
+
+		// Right
+		if (auto Col = EdgeColliders[1].lock())
+		{
+			Col->SetBoxExtent(TileSize, Height);
+			Col->SetWorldPosition(-LeftEdgeX, -TileSize * 0.5f);
+		}
+
+		// Bot
+		if (auto Col = EdgeColliders[2].lock())
+		{
+			Col->SetBoxExtent(Width, TileSize);
+			Col->SetWorldPosition(-TileSize * 0.5f, BotEdgeY);
+		}
+
+		// Left
+		if (auto Col = EdgeColliders[3].lock())
+		{
+			Col->SetBoxExtent(TileSize, Height);
+			Col->SetWorldPosition(LeftEdgeX, TileSize * 0.5f);
+		}
+	}
+
 	std::uniform_int_distribution<int> EdgeMaskDist(0, 5);
-	std::uniform_int_distribution<int> TileDist(0, 11);
+	std::uniform_int_distribution<int> TileWeightDist(0, 99);
+	std::uniform_int_distribution<int> NormalTileDist(0, 10);
 
 	const int MaxX = TileCountX - 1;
 	const int MaxY = TileCountY - 1;
@@ -336,7 +390,8 @@ void CBrotatoWorld_Battle::CreateTileMap()
 
 			Tile->SetWorldPosition(StartX + TileSize * x, StartY + TileSize * y);
 
-			std::string TileFileName = std::format("resources/tiles/SingleTiles/{}/tile{:03}.png", Theme, TileDist(RandEngine));
+			const int TileIndex = TileWeightDist(RandEngine) < 50 ? 11 : NormalTileDist(RandEngine);
+			std::string TileFileName = std::format("resources/tiles/SingleTiles/{}/tile{:03}.png", Theme, TileIndex);
 
 			std::string MaskPath = "resources/tiles/SingleTiles/mask/";
 			if (x == 0 && y == 0)

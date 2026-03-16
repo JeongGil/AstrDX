@@ -41,6 +41,11 @@ public:
 		Team = InTeam;
 	}
 
+	[[nodiscard]] bool IsPendingDead() const
+	{
+		return bIsPendingDead;
+	}
+
 protected:
 	void SetSquashAndStretchParams(float Intensity, float Period)
 	{
@@ -61,6 +66,8 @@ private:
 	float SpiralShrinkElapsed = 0.f;
 	float SpiralShrinkDuration = 0.5f;
 	float SpiralRotationSpeed = 720.f;
+
+	bool bIsPendingDead = false;
 
 protected:
 	ETeam Team{};

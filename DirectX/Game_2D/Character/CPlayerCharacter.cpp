@@ -468,6 +468,11 @@ CPlayerCharacter* CPlayerCharacter::Clone()
 
 void CPlayerCharacter::MoveUp()
 {
+	if (IsPendingDead())
+	{
+		return;
+	}
+
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->AddMove(FVector::Axis[EAxis::Y]);
@@ -476,6 +481,11 @@ void CPlayerCharacter::MoveUp()
 
 void CPlayerCharacter::MoveDown()
 {
+	if (IsPendingDead())
+	{
+		return;
+	}
+
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->AddMove(-FVector::Axis[EAxis::Y]);
@@ -484,6 +494,11 @@ void CPlayerCharacter::MoveDown()
 
 void CPlayerCharacter::MoveLeft()
 {
+	if (IsPendingDead())
+	{
+		return;
+	}
+
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->AddMove(-FVector::Axis[EAxis::X]);
@@ -492,6 +507,11 @@ void CPlayerCharacter::MoveLeft()
 
 void CPlayerCharacter::MoveRight()
 {
+	if (IsPendingDead())
+	{
+		return;
+	}
+
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->AddMove(FVector::Axis[EAxis::X]);

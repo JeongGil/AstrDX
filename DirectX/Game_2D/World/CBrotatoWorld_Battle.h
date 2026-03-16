@@ -1,6 +1,7 @@
 #pragma once
 #include <World/CWorld.h>
 
+class CColliderBox2D;
 class CCameraObject;
 
 class CBrotatoWorld_Battle :
@@ -23,6 +24,8 @@ protected:
 	int TileTheme{ 1 };
 	int TileCountX{ 16 };
 	int TileCountY{ 16 };
+
+	std::array<std::weak_ptr<CColliderBox2D>, 4> EdgeColliders;
 
 public:
 	bool Init() override;
