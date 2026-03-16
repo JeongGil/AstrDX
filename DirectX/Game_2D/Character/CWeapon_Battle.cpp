@@ -356,7 +356,7 @@ void CWeapon_Battle::OnCollisionBeginOverlap(const FVector& HitPoint, CCollider*
 #endif
 
 	auto ColChar = std::dynamic_pointer_cast<CCharacter>(ColObj);
-	if (!ColChar || ColChar->GetTeam() != ETeam::Enemy)
+	if (!ColChar || ColChar->GetTeam() == ETeam::Player)
 	{
 		return;
 	}

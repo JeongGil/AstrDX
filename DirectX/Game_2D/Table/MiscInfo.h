@@ -17,6 +17,11 @@ struct FMiscInfo : FTableInfoBase
 	int MapSizeX;
 	int MapSizeY;
 
+	std::string EnemySpawnMarkerTexPath;
+	std::string TurretSpawnMarkerTexPath;
+
+	float EnemySpawningTimeSec;
+
 	bool Load(std::stringstream& Stream) override
 	{
 		try
@@ -52,6 +57,12 @@ struct FMiscInfo : FTableInfoBase
 			if (!TryParse<int>(Segment, MapSizeX)) { assert(false); return false; }
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<int>(Segment, MapSizeY)) { assert(false); return false; }
+
+			if (!std::getline(Stream, EnemySpawnMarkerTexPath, Delim)) { assert(false); return false; }
+			if (!std::getline(Stream, TurretSpawnMarkerTexPath, Delim)) { assert(false); return false; }
+
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, EnemySpawningTimeSec)) { assert(false); return false; }
 		}
 		catch (...)
 		{

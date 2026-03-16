@@ -23,6 +23,8 @@ bool CEnemy::Init()
 		return false;
 	}
 
+	auto Misc = MiscTable::GetInst().Get();
+
 	auto Collider = this->Collider.lock();
 	if (Collider)
 	{
@@ -33,11 +35,12 @@ bool CEnemy::Init()
 #if defined(_DEBUG) || defined(DEBUG)
 		Collider->SetDrawDebug(true);
 #endif
+
+		SleepOnSpawnComponents.push_back(this->Collider);
+		Collider->SetEnable(false);
 	}
 
 	SetTeam(ETeam::Enemy);
-
-	auto Misc = MiscTable::GetInst().Get();
 
 	Mesh = CreateComponent<CMeshComponent>(Key::Comp::Mesh);
 	if (auto Mesh = this->Mesh.lock())
@@ -59,14 +62,52 @@ bool CEnemy::Init()
 		Mesh->SetInheritScale(true);
 		Mesh->SetInheritRotation(true);
 
-		Mesh->TrySetRenderLayer(ERenderOrder::CharacterBody);
+		Mesh->SetRenderLayer(ERenderOrder::Enemy);
+
+		SleepOnSpawnComponents.push_back(this->Mesh);
+		Mesh->SetEnable(false);
 	}
 
 	Animation = CreateComponent<CAnimation2DComponent>(Key::Anim::Enemy);
 	if (auto Anim = Animation.lock())
 	{
 		Anim->SetUpdateComponent(Mesh);
+
+		SleepOnSpawnComponents.push_back(Animation);
+		Anim->SetEnable(false);
 	}
+
+	BirthMarker = CreateComponent<CMeshComponent>("BirthMarker");
+	if (auto Marker = BirthMarker.lock())
+	{
+		Marker->SetShader("DefaultTexture2D");
+		Marker->SetMesh("CenterRectTex");
+		
+		switch (GetTeam())
+		{
+		case ETeam::Player:
+			Marker->SetMaterialBaseColor(0, FColor::Blue);
+			break;
+		case ETeam::Enemy:
+			Marker->SetMaterialBaseColor(0, FColor::Red);
+			break;
+		case ETeam::Neutral:
+			Marker->SetMaterialBaseColor(0, FColor::Green);
+			break;
+		}
+
+		Marker->SetBlendState(0, "AlphaBlend");
+
+		CA2T FileName(Misc->EnemySpawnMarkerTexPath.c_str());
+		Marker->AddTexture(0, Misc->EnemySpawnMarkerTexPath, FileName, Key::Path::Brotato);
+		Marker->SetWorldScale(64, 64);
+
+		Marker->SetRenderLayer(ERenderOrder::Enemy);
+
+		Marker->SetEnable(true);
+	}
+
+	TimeToSpawn = Misc->EnemySpawningTimeSec;
 
 	return true;
 }
@@ -313,9 +354,33 @@ void CEnemy::OnDead()
 	}
 }
 
-void CEnemy::RunBehavior(const std::weak_ptr<CPlayerCharacter>& WeakPlayer)
+void CEnemy::UpdateSpawnSequence(const float DeltaTime)
 {
+	CCharacter::UpdateSpawnSequence(DeltaTime);
 
+	ElapsedBirthFlickeringTime += DeltaTime;
+	if (ElapsedBirthFlickeringTime < SPAWN_FLICKER_INTERVAL)
+	{
+		return;
+	}
+
+	ElapsedBirthFlickeringTime -= SPAWN_FLICKER_INTERVAL;
+	
+	if (auto Marker = BirthMarker.lock())
+	{
+		bool bCurrent = Marker->GetEnable();
+		Marker->SetEnable(!bCurrent);
+	}
+}
+
+void CEnemy::OnSpawnFinished()
+{
+	CCharacter::OnSpawnFinished();
+
+	if (auto Marker = BirthMarker.lock())
+	{
+		Marker->SetEnable(false);
+	}
 }
 
 void CEnemy::SetChargeCooldownTime(float& OutCooldownTime)

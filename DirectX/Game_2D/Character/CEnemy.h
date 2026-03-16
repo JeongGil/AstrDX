@@ -36,10 +36,10 @@ public:
 protected:
 	CEnemy* Clone() override;
 	void OnDead() override;
+	void UpdateSpawnSequence(float DeltaTime) override;
+	void OnSpawnFinished() override;
 
 private:
-	void RunBehavior(const std::weak_ptr<CPlayerCharacter>& WeakPlayer);
-
 	void SetChargeCooldownTime(float& OutCooldownTime);
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Collider);
@@ -72,5 +72,8 @@ protected:
 	static constexpr int FIRE_COOLDOWN_TIME = 5.f;
 	float ElapsedFromFire = std::numeric_limits<float>::infinity();
 
+	static constexpr float SPAWN_FLICKER_INTERVAL = 0.4f;
+	float ElapsedBirthFlickeringTime{};
+	std::weak_ptr<CMeshComponent> BirthMarker;
 };
 

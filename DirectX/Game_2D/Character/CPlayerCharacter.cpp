@@ -68,12 +68,18 @@ bool CPlayerCharacter::Init()
 
 		Body->SetRenderLayer(ERenderOrder::CharacterBody);
 
+		SleepOnSpawnComponents.push_back(Potato);
+		Body->SetEnable(false);
+
 		if (auto Anim = PotatoAnim.lock())
 		{
 			Anim->SetUpdateComponent(Potato);
 
 			Anim->AddAnimation(CharacterBase->PotatoBodyTexPath);
 			Anim->SetLoop(CharacterBase->PotatoBodyTexPath, true);
+
+			SleepOnSpawnComponents.push_back(PotatoAnim);
+			Anim->SetEnable(false);
 		}
 	}
 
@@ -96,12 +102,18 @@ bool CPlayerCharacter::Init()
 
 		Leg->SetRenderLayer(ERenderOrder::CharacterLeg);
 
+		SleepOnSpawnComponents.push_back(this->Leg);
+		Leg->SetEnable(false);
+
 		if (auto Anim = LegAnim.lock())
 		{
 			Anim->SetUpdateComponent(Leg);
 
 			Anim->AddAnimation(CharacterBase->PotatoLegTexPath);
 			Anim->SetLoop(CharacterBase->PotatoLegTexPath, true);
+
+			SleepOnSpawnComponents.push_back(LegAnim);
+			Anim->SetEnable(false);
 		}
 	}
 
@@ -109,6 +121,9 @@ bool CPlayerCharacter::Init()
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->SetUpdateComponent(Root);
+
+		SleepOnSpawnComponents.push_back(Move);
+		Move->SetEnable(false);
 	}
 
 	if (auto World = this->World.lock())
@@ -137,6 +152,10 @@ bool CPlayerCharacter::Init()
 			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
 		Cam->SetInheritRotation(false);		
+
+		SleepOnSpawnComponents.push_back(Camera);
+		Cam->SetEnable(false);
+
 		if (auto World = this->World.lock())
 		{
 			World->GetCameraManager().lock()->SetMainCamera(Cam);
@@ -163,6 +182,9 @@ bool CPlayerCharacter::Init()
 		Col->SetOnCollisionBegin<CPlayerCharacter>(this, &CPlayerCharacter::OnPickupColliderBeginOverlap);
 
 		Col->SetDrawDebug(true);
+
+		SleepOnSpawnComponents.push_back(PickupCollider);
+		Col->SetEnable(false);
 	}
 
 	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
@@ -537,4 +559,9 @@ void CPlayerCharacter::OnDead()
 			}
 		}
 	}
+}
+
+void CPlayerCharacter::UpdateSpawnSequence(const float DeltaTime)
+{
+	CCharacter::UpdateSpawnSequence(DeltaTime);
 }

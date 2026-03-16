@@ -34,6 +34,7 @@ bool CBrotatoWorld_Battle::Init()
 	CRenderManager::GetInst()->CreateLayer("CharacterDeco", ERenderOrder::CharacterDeco, ERenderListSort::Y);
 	CRenderManager::GetInst()->CreateLayer("CharacterItem", ERenderOrder::CharacterItem, ERenderListSort::Y);
 	CRenderManager::GetInst()->CreateLayer("CharacterWeapon", ERenderOrder::CharacterWeapon, ERenderListSort::Y);
+	CRenderManager::GetInst()->CreateLayer("Enemy", ERenderOrder::Enemy, ERenderListSort::Y);
 
 	CPathManager::CreatePath(Key::Path::Brotato, TEXT("Brotato\\"), Key::Path::Asset);
 

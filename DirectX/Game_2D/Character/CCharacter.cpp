@@ -18,6 +18,9 @@ bool CCharacter::Init()
 	{
 		Collider->SetDrawDebug(false);
 		Collider->SetInheritScale(false);
+
+		SleepOnSpawnComponents.push_back(Collider);
+		Collider->SetEnable(false);
 	}
 
 	return true;
@@ -26,6 +29,16 @@ bool CCharacter::Init()
 void CCharacter::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
+
+	switch (SpawnState)
+	{
+	case ESpawnState::Spawning:
+		UpdateSpawnSequence(DeltaTime);
+		break;
+	case ESpawnState::PendingNotify:
+		OnSpawnFinished();
+		break;
+	}
 
 	if (bIsSpiralShrinking)
 	{
@@ -86,6 +99,30 @@ void CCharacter::SpiralShrink(float Duration, float RotationSpeed)
 	SpiralShrinkElapsed = 0.f;
 	SpiralShrinkDuration = Duration;
 	SpiralRotationSpeed = RotationSpeed;
+}
+
+void CCharacter::UpdateSpawnSequence(const float DeltaTime)
+{
+	ElapsedSpawnTime += DeltaTime;
+
+	if (ElapsedSpawnTime >= TimeToSpawn)
+	{
+		SpawnState = ESpawnState::PendingNotify;
+	}
+}
+
+void CCharacter::OnSpawnFinished()
+{
+	SpawnState = ESpawnState::Complete;
+
+	auto SleepCompView = SleepOnSpawnComponents
+		| std::views::transform([](const auto& Weak) { return Weak.lock(); })
+		| std::views::filter([](const auto& Comp) { return Comp != nullptr && Comp->GetAlive(); });
+
+	for (const auto& Comp : SleepCompView)
+	{
+		Comp->SetEnable(true);
+	}
 }
 
 void CCharacter::SquashAndStretch(const float DeltaTime, float Intensity, float Period)

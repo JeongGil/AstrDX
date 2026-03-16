@@ -36,6 +36,7 @@ public:
 protected:
 	CPlayerCharacter* Clone() override;
 	void OnDead() override;
+	void UpdateSpawnSequence(float DeltaTime) override;
 
 private:
 	void MoveUp();
