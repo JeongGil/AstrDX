@@ -50,7 +50,8 @@ bool CPlayerCharacter::Init()
 		Body->SetWorldScale(150, 150);
 		if (auto Col = Collider.lock())
 		{
-			Col->SetBoxExtent(Body->GetWorldScale().x, Body->GetWorldPosition().y);
+			Col->SetBoxExtent(60, 70);
+			Col->SetDrawDebug(true);
 		}
 
 		Body->SetBlendState(0, "AlphaBlend");
