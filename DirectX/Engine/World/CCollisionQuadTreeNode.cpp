@@ -163,8 +163,13 @@ void CCollisionQuadTreeNode::Collide(const float DeltaTime)
 							DestObj->ClearPhysics();
 						}
 
+						// SetWorldPosition은 내부적으로 Velocity에 이동 델타를 누적하므로,
+						// ResolveSlideStop2D가 계산한 Velocity를 SetWorldPosition 후 복원한다.
 						SrcObj->SetWorldPosition(SrcPos);
 						DestObj->SetWorldPosition(DestPos);
+
+						SrcObj->SetVelocity(SrcVelocity);
+						DestObj->SetVelocity(DestVelocity);
 					}
 
 					//HitPoint = Manifold.ContactPoint;

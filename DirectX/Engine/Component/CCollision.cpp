@@ -533,57 +533,43 @@ bool CCollision::ResolveSlideStop2D(FVector3& SrcPos,
 	FVector3    Normal = Manifold.Normal;
 	Normal.Normalize();
 
-	const float Slop = 0.02f;  // Prevent jittering
-	const float Percent = 1.0f; // Correction strength: 침투량 전체를 한 프레임에 보정하여 관통 방지
-	// Velocity threshold. Prevents jittering near zero.
-	const float VelEps = 0.001f;
-
 	float   InvMass = SrcInvMass + DestInvMass;
 
 	if (InvMass <= 0.f)
 		return false;
 
-	// Position correction (overlap removal)
-	float   Pen = 0.f;
+	// Velocity threshold. Prevents jittering near zero.
+	const float VelEps = 0.001f;
 
-	if (Manifold.Penetration - Slop > 0.f)
-		Pen = Manifold.Penetration - Slop;
-
-	float   CorMag = (Pen * Percent) / InvMass;
-
-	FVector3    Correction = Normal * CorMag;
-
-	SrcPos -= Correction * SrcInvMass;
-	DestPos += Correction * DestInvMass;
-
-	// Velocity correction (allows sliding)
-	FVector3    Velocity = SrcVelocity - DestVelocity;
-	float   vn = Velocity.Dot(Normal);
-
-	if (vn > VelEps)
+	// 위치 보정: 이동량(Velocity)에서 Normal 방향 성분을 제거해 재적용.
+	// 이전 위치 = SrcPos - SrcVelocity 이므로, Normal 성분을 뺀 이동량으로 재계산한다.
+	// 이 방식은 매 프레임 이동량과 보정량이 정확히 일치해 진동이 발생하지 않는다.
+	if (SrcInvMass > 0.f)
 	{
-		FVector3    dv = Normal * (vn / InvMass);
+		float vn = SrcVelocity.Dot(Normal);
+		if (vn > VelEps)
+		{
+			FVector3 PrevPos = SrcPos - SrcVelocity;
+			SrcVelocity -= Normal * vn;
+			SrcPos = PrevPos + SrcVelocity;
+		}
+	}
 
-		SrcVelocity -= dv * SrcInvMass;
-		DestVelocity += dv * DestInvMass;
+	if (DestInvMass > 0.f)
+	{
+		FVector3 DestNormal = -Normal;
+		float vn = DestVelocity.Dot(DestNormal);
+		if (vn > VelEps)
+		{
+			FVector3 PrevPos = DestPos - DestVelocity;
+			DestVelocity -= DestNormal * vn;
+			DestPos = PrevPos + DestVelocity;
+		}
 	}
 
 	// Prevent floor jittering
-	FVector3    PushDir = Normal * -1.f;
-	PushDir.Normalize();
-
 	FVector3    Up = FVector3(0.f, 1.f, 0.f);
 
-	// To determine if it's the floor, calculate the push direction with the upward vector.
-	// If it exceeds a certain magnitude, it is considered the floor.
-	/*bool    Grounded = (PushDir.Dot(Up) > 0.8f);
-
-	if (Grounded)
-	{
-		float   vInto = SrcVelocity.Dot(PushDir);
-		if (vInto < 0.f)
-			SrcVelocity -= PushDir * vInto;
-	}*/
 	bool    Grounded = false;
 
 	Grounded |= GroundClamp(SrcVelocity, SrcInvMass, -Normal, Up);

@@ -60,6 +60,7 @@ public:
 public:
 	const FVector& GetPivot() const;
 	const FVector& GetVelocity() const;
+	void SetVelocity(const FVector& InVelocity);
 	float GetSpeed() const;
 
 	const FVector& GetAxis(EAxis::Type Axis) const;
@@ -84,68 +85,68 @@ public:
 	void AddRelativeScale(float X, float Y) const;
 
 	void SetRelativeRotation(const FVector3& Rotation) const;
-	void SetRelativeRotation(const FVector2& Rotation) const;
-	void SetRelativeRotation(float X, float Y, float Z) const;
-	void SetRelativeRotation(float X, float Y) const;
-	void SetRelativeRotationX(float X) const;
-	void SetRelativeRotationY(float Y) const;
-	void SetRelativeRotationZ(float Z) const;
+		void SetRelativeRotation(const FVector2& Rotation) const;
+		void SetRelativeRotation(float X, float Y, float Z) const;
+		void SetRelativeRotation(float X, float Y) const;
+		void SetRelativeRotationX(float X) const;
+		void SetRelativeRotationY(float Y) const;
+		void SetRelativeRotationZ(float Z) const;
 
-	void AddRelativeRotation(const FVector3& Rotation) const;
-	void AddRelativeRotation(const FVector2& Rotation) const;
-	void AddRelativeRotation(float X, float Y, float Z) const;
-	void AddRelativeRotation(float X, float Y) const;
-	void AddRelativeRotationX(float X) const;
-	void AddRelativeRotationY(float Y) const;
-	void AddRelativeRotationZ(float Z) const;
+		void AddRelativeRotation(const FVector3& Rotation) const;
+		void AddRelativeRotation(const FVector2& Rotation) const;
+		void AddRelativeRotation(float X, float Y, float Z) const;
+		void AddRelativeRotation(float X, float Y) const;
+		void AddRelativeRotationX(float X) const;
+		void AddRelativeRotationY(float Y) const;
+		void AddRelativeRotationZ(float Z) const;
 
-	void SetRelativePosition(const FVector3& Position) const;
-	void SetRelativePosition(const FVector2& Position) const;
-	void SetRelativePosition(float X, float Y, float Z) const;
-	void SetRelativePosition(float X, float Y) const;
+		void SetRelativePosition(const FVector3& Position) const;
+		void SetRelativePosition(const FVector2& Position) const;
+		void SetRelativePosition(float X, float Y, float Z) const;
+		void SetRelativePosition(float X, float Y) const;
 
-	void AddRelativePosition(const FVector3& Position) const;
-	void AddRelativePosition(const FVector2& Position) const;
-	void AddRelativePosition(float X, float Y, float Z) const;
-	void AddRelativePosition(float X, float Y) const;
+		void AddRelativePosition(const FVector3& Position) const;
+		void AddRelativePosition(const FVector2& Position) const;
+		void AddRelativePosition(float X, float Y, float Z) const;
+		void AddRelativePosition(float X, float Y) const;
 
-	void SetWorldScale(const FVector3& Scale) const;
-	void SetWorldScale(const FVector2& Scale) const;
-	void SetWorldScale(float X, float Y, float Z) const;
-	void SetWorldScale(float X, float Y) const;
+		void SetWorldScale(const FVector3& Scale) const;
+		void SetWorldScale(const FVector2& Scale) const;
+		void SetWorldScale(float X, float Y, float Z) const;
+		void SetWorldScale(float X, float Y) const;
 
-	void AddWorldScale(const FVector3& Scale) const;
-	void AddWorldScale(const FVector2& Scale) const;
-	void AddWorldScale(float X, float Y, float Z) const;
-	void AddWorldScale(float X, float Y) const;
+		void AddWorldScale(const FVector3& Scale) const;
+		void AddWorldScale(const FVector2& Scale) const;
+		void AddWorldScale(float X, float Y, float Z) const;
+		void AddWorldScale(float X, float Y) const;
 
-	void SetWorldRotation(const FVector3& Rotation) const;
-	void SetWorldRotation(const FVector2& Rotation) const;
-	void SetWorldRotation(float X, float Y, float Z) const;
-	void SetWorldRotation(float X, float Y) const;
-	void SetWorldRotationX(float X) const;
-	void SetWorldRotationY(float Y) const;
-	void SetWorldRotationZ(float Z) const;
+		void SetWorldRotation(const FVector3& Rotation) const;
+		void SetWorldRotation(const FVector2& Rotation) const;
+		void SetWorldRotation(float X, float Y, float Z) const;
+		void SetWorldRotation(float X, float Y) const;
+		void SetWorldRotationX(float X) const;
+		void SetWorldRotationY(float Y) const;
+		void SetWorldRotationZ(float Z) const;
 
-	void AddWorldRotation(const FVector3& Rotation) const;
-	void AddWorldRotation(const FVector2& Rotation) const;
-	void AddWorldRotation(float X, float Y, float Z) const;
-	void AddWorldRotation(float X, float Y) const;
-	void AddWorldRotationX(float X) const;
-	void AddWorldRotationY(float Y) const;
-	void AddWorldRotationZ(float Z) const;
+		void AddWorldRotation(const FVector3& Rotation) const;
+		void AddWorldRotation(const FVector2& Rotation) const;
+		void AddWorldRotation(float X, float Y, float Z) const;
+		void AddWorldRotation(float X, float Y) const;
+		void AddWorldRotationX(float X) const;
+		void AddWorldRotationY(float Y) const;
+		void AddWorldRotationZ(float Z) const;
 
-	void SetWorldPosition(const FVector3& Position) const;
-	void SetWorldPosition(const FVector2& Position) const;
-	void SetWorldPosition(float X, float Y, float Z) const;
-	void SetWorldPosition(float X, float Y) const;
+		void SetWorldPosition(const FVector3& Position) const;
+		void SetWorldPosition(const FVector2& Position) const;
+		void SetWorldPosition(float X, float Y, float Z) const;
+		void SetWorldPosition(float X, float Y) const;
 
-	void AddWorldPosition(const FVector3& Position) const;
-	void AddWorldPosition(const FVector2& Position) const;
-	void AddWorldPosition(float X, float Y, float Z) const;
-	void AddWorldPosition(float X, float Y) const;
+		void AddWorldPosition(const FVector3& Position) const;
+		void AddWorldPosition(const FVector2& Position) const;
+		void AddWorldPosition(float X, float Y, float Z) const;
+		void AddWorldPosition(float X, float Y) const;
 
-protected:
+	protected:
 	std::weak_ptr<CWorld> World;
 	std::vector<std::shared_ptr<CSceneComponent>> SceneComponents;
 	std::vector<std::shared_ptr<CObjectComponent>> ObjectComponents;
@@ -154,7 +155,7 @@ protected:
 	bool bEnable = true;
 	bool bAlive = true;
 
-public:
+	public:
 	virtual void Begin();
 	virtual bool Init();
 	virtual void Update(float DeltaTime);
@@ -165,10 +166,10 @@ public:
 	virtual void Destroy();
 	virtual float TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator);
 
-protected:
+	protected:
 	virtual CGameObject* Clone();
 
-public:
+	public:
 	/**
 	 * @brief Creates a new component of the specified type and attaches it to the game object.
 	 *
@@ -340,7 +341,7 @@ public:
 		return Result;
 	}
 
-protected:
+	protected:
 	/**
 	 * @brief Clones the hierarchy of scene components from another game object and sets them for the current object.
 	 *
@@ -398,7 +399,7 @@ protected:
 	CGameObject(const CGameObject& other);
 	CGameObject(CGameObject&& other) noexcept;
 
-public:
+	public:
 	~CGameObject() override = default;
 };
 

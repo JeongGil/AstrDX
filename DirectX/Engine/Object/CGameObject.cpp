@@ -82,6 +82,14 @@ const FVector& CGameObject::GetVelocity() const
 	return FVector::Zero;
 }
 
+void CGameObject::SetVelocity(const FVector& InVelocity)
+{
+	if (auto Root = this->Root.lock())
+	{
+		Root->SetVelocity(InVelocity);
+	}
+}
+
 float CGameObject::GetSpeed() const
 {
 	if (auto Root = this->Root.lock())

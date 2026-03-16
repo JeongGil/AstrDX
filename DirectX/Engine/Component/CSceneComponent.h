@@ -122,6 +122,10 @@ public:
 	{
 		return Velocity;
 	}
+	void SetVelocity(const FVector& InVelocity)
+	{
+		Velocity = InVelocity;
+	}
 	[[nodiscard]] float GetSpeed() const
 	{
 		return Velocity.Length();
