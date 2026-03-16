@@ -122,7 +122,7 @@ private:
 					OutputDebugStringA(Test);
 				}
 #else
-				Items.emplace(Info->ID, Info)
+				Items.emplace(Info->ID, Info);
 #endif
 			}
 			else

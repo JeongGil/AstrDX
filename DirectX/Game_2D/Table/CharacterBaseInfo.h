@@ -12,6 +12,9 @@ struct FCharacterBaseInfo
 
 	float BasePickupRange;
 
+	int HitColliderSizeX;
+	int HitColliderSizeY;
+
 	bool Load(std::stringstream& Stream) override
 	{
 		try
@@ -32,6 +35,11 @@ struct FCharacterBaseInfo
 
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<float>(Segment, BasePickupRange)) { assert(false); return false; }
+
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, HitColliderSizeX)) { assert(false); return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, HitColliderSizeY)) { assert(false); return false; }
 		}
 		catch (...)
 		{

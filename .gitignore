@@ -440,3 +440,5 @@ FodyWeavers.xsd
 DirectX/Obj
 DirectX/Core
 !DirectX/Bin
+/DirectX/Bin/BrotatoTile.cso
+/DirectX/Bin/PostProcess.cso

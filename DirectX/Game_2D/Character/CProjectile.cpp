@@ -38,7 +38,9 @@ bool CProjectile::Init()
 		Collider->SetInheritScale(false);
 		Collider->SetEnable(true);
 
+#if defined(_DEBUG) || defined(DEBUG)
 		Collider->SetDrawDebug(true);
+#endif
 	}
 
 	Movement = CreateComponent<CProjectileMovementComponent>("Movement");

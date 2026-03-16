@@ -29,7 +29,10 @@ bool CEnemy::Init()
 		Collider->SetCollisionProfile("Monster");
 
 		Collider->SetOnCollisionBegin(this, &CEnemy::OnCollisionBegin);
+
+#if defined(_DEBUG) || defined(DEBUG)
 		Collider->SetDrawDebug(true);
+#endif
 	}
 
 	SetTeam(ETeam::Enemy);
@@ -201,7 +204,7 @@ void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
 	if (auto Mesh = this->Mesh.lock())
 	{
 		Mesh->ClearTextures(0);
-		
+
 		CA2T FileName(Info->SpritePath.c_str());
 		auto MatTexInfo = Mesh->AddTexture(0, Info->SpritePath, FileName, Key::Path::Brotato);
 		SetMeshSizeFromTexture(MatTexInfo, this->Mesh);
@@ -282,7 +285,7 @@ void CEnemy::OnDead()
 
 		auto ConsumableDropChance = Info->ConsumableDropPercent * LuckCorrection;
 		auto Dice1 = Dist(CEngine::GetInst()->GetMT());
-		
+
 		if (ConsumableDropChance > Dice1)
 		{
 			auto ItemBoxDropChance = Info->CrateDropPercent * LuckCorrection / (1 + World->GetItemBoxDropCount());

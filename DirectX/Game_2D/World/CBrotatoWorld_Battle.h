@@ -5,7 +5,7 @@ class CColliderBox2D;
 class CCameraObject;
 
 class CBrotatoWorld_Battle :
-    public CWorld
+	public CWorld
 {
 public:
 	CBrotatoWorld_Battle() = default;
@@ -34,10 +34,10 @@ public:
 	void FinishStage(bool bClear);
 
 private:
-void LoadAnimation2D();
-void LoadSound();
-void CreateUI();
-void CreateTileMap();
+	void LoadAnimation2D();
+	void LoadSound();
+	void CreateUI();
+	void CreateTileMap();
 
 public:
 	[[nodiscard]] int GetItemBoxDropCount() const

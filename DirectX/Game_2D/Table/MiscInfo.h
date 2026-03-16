@@ -14,6 +14,9 @@ struct FMiscInfo : FTableInfoBase
 
 	float PickupMoveSpeed;
 
+	int MapSizeX;
+	int MapSizeY;
+
 	bool Load(std::stringstream& Stream) override
 	{
 		try
@@ -44,6 +47,11 @@ struct FMiscInfo : FTableInfoBase
 
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<float>(Segment, PickupMoveSpeed)) { assert(false); return false; }
+
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, MapSizeX)) { assert(false); return false; }
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<int>(Segment, MapSizeY)) { assert(false); return false; }
 		}
 		catch (...)
 		{

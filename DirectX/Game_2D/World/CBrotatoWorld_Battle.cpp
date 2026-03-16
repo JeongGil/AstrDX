@@ -79,11 +79,16 @@ bool CBrotatoWorld_Battle::Init()
 			{
 				Collider->SetCollisionProfile("MapBoundary");
 				Collider->SetStatic(true);
+
+#if defined(_DEBUG) || defined(DEBUG)
 				Collider->SetDrawDebug(true);
+#endif
 			}
 		}
 	}
 
+	auto Misc = MiscTable::GetInst().Get();
+	SetTileCount(Misc->MapSizeX, Misc->MapSizeY);
 	CreateTileMap();
 
 	return true;

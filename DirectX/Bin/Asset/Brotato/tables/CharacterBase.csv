@@ -1,2 +1,2 @@
-ID,PotatoBodyTexPath,PoratoLegTexPath,BasePickupRange,
-1,entities/units/player/potato.png,entities/units/player/legs.png,100,
+ID,PotatoBodyTexPath,PoratoLegTexPath,BasePickupRange,HitColliderSizeX,HitColliderSizeY,
+1,entities/units/player/potato.png,entities/units/player/legs.png,100,60,70,

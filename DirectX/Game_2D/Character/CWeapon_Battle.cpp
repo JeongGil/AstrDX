@@ -31,7 +31,9 @@ bool CWeapon_Battle::Init()
 	if (auto Collider = this->Collider.lock())
 	{
 		Collider->SetRelativeRotationZ(90);
+#if defined(_DEBUG) || defined(DEBUG)
 		Collider->SetDrawDebug(true);
+#endif
 
 		Collider->SetEnable(false);
 		Collider->SetCollisionProfile("PlayerAttack");

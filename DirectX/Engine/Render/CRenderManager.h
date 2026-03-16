@@ -174,7 +174,7 @@ private:
 	std::shared_ptr<CCBufferUIDefault> TargetCBuffer;
 	std::shared_ptr<CCBufferTransform> TargetTR;
 
-	bool bDebugTarget{ true };
+	bool bDebugTarget = false;
 
 	CRITICAL_SECTION Crt;
 
