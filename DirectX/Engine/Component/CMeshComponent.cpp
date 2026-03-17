@@ -356,13 +356,13 @@ bool CMeshComponent::Init()
 
 void CMeshComponent::Render()
 {
-	if (Shader.expired() || Mesh.expired())
+	auto Shader = this->Shader.lock();
+	auto Mesh = this->Mesh.lock();
+
+	if (!Shader || !Mesh)
 	{
 		return;
 	}
-
-	auto Shader = this->Shader.lock();
-	auto Mesh = this->Mesh.lock();
 
 	FMatrix ViewMat;
 	FMatrix ProjMat;
