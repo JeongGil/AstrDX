@@ -187,6 +187,37 @@ bool CPlayerCharacter::Init()
 		Col->SetEnable(false);
 	}
 
+	HitEffectMesh = CreateComponent<CMeshComponent>("HitMesh");
+	HitEffectAnim = CreateComponent<CAnimation2DComponent>("HitAnim");
+	if (auto Mesh = HitEffectMesh.lock())
+	{
+		Mesh->SetShader("DefaultTexture2D");
+		Mesh->SetMesh("CenterRectTex");
+		Mesh->SetWorldScale(100, 50);
+		//Mesh->SetRelativePosition(FVector(0, -25, 0));
+
+		Mesh->SetBlendState(0, "AlphaBlend");
+
+		CA2T FileName(CharacterBase->PotatoLegTexPath.c_str());
+		Mesh->AddTexture(0, CharacterBase->PotatoLegTexPath, FileName, Key::Path::Brotato);
+
+		Mesh->SetInheritScale(false);
+		Mesh->SetInheritRotation(false);
+
+		Mesh->SetRenderLayer(ERenderOrder::Effect);
+
+		if (auto Anim = HitEffectAnim.lock())
+		{
+			Anim->SetUpdateComponent(Mesh);
+
+			Anim->AddAnimation(CharacterBase->PotatoLegTexPath);
+			Anim->SetLoop(CharacterBase->PotatoLegTexPath, true);
+
+			SleepOnSpawnComponents.push_back(LegAnim);
+			Anim->SetEnable(false);
+		}
+	}
+
 	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
 
 	SetBaseStatus();
@@ -198,11 +229,25 @@ void CPlayerCharacter::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
 
-	if (ElapsedFromDamaged < INVINCIBLE_TIME)
+	if (ElapsedFromDamaged < INVINCIBLE_DURATION)
 	{
-		ElapsedFromDamaged = min(ElapsedFromDamaged + DeltaTime, INVINCIBLE_TIME);
-
-		// TODO: 무적시간동안 깜빡임 처리.
+		ElapsedFromDamaged = min(ElapsedFromDamaged + DeltaTime, INVINCIBLE_DURATION);
+		if (ElapsedFromDamaged == INVINCIBLE_DURATION)
+		{
+			SetBodyColor(FVector4::White);
+		}
+		else
+		{
+			const int FlickerStep = static_cast<int>(ElapsedFromDamaged / INVINCIBLE_FLICKER_INTERVAL);
+			if (FlickerStep % 2 == 0)
+			{
+				SetBodyColor(FColor(0.6, 0.6, 0.6, 0.6));
+			}
+			else
+			{
+				SetBodyColor(FColor::White);
+			}
+		}
 	}
 
 	auto CharacterBase = CharacterBaseTable::GetInst().Get();
@@ -274,7 +319,7 @@ void CPlayerCharacter::PostUpdate(const float DeltaTime)
 
 float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
-	if (ElapsedFromDamaged < INVINCIBLE_TIME)
+	if (ElapsedFromDamaged < INVINCIBLE_DURATION)
 	{
 		return 0.f;
 	}
@@ -304,6 +349,8 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 
 	// Round enemy damage before apply armor.
 	Damage = round(Damage);
+
+	// TODO:
 
 	SetCurrHP(GetCurrHP() - Damage);
 	ElapsedFromDamaged = 0.f;
@@ -587,4 +634,25 @@ void CPlayerCharacter::OnDead()
 void CPlayerCharacter::UpdateSpawnSequence(const float DeltaTime)
 {
 	CCharacter::UpdateSpawnSequence(DeltaTime);
+}
+
+void CPlayerCharacter::SetBodyColor(const FVector4& Color)
+{
+	if (auto Body = Potato.lock())
+	{
+		Body->SetMaterialBaseColor(0, Color);
+	}
+
+	if (auto LegMesh = Leg.lock())
+	{
+		LegMesh->SetMaterialBaseColor(0, Color);
+	}
+
+	for (const auto& WeakDeco : Decos)
+	{
+		if (auto Deco = WeakDeco.lock())
+		{
+			Deco->SetMaterialBaseColor(0, Color);
+		}
+	}
 }

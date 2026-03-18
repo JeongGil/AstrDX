@@ -19,7 +19,8 @@ class CPlayerCharacter :
 	friend class CWorld;
 	friend CObject;
 
-	constexpr static float INVINCIBLE_TIME = 0.5f;
+	constexpr static float INVINCIBLE_DURATION = 0.5f;
+	constexpr static float INVINCIBLE_FLICKER_INTERVAL = 0.2f;
 
 public:
 	bool Init() override;
@@ -56,6 +57,8 @@ private:
 
 	void SetBaseStatus();
 
+	void SetBodyColor(const FVector4& Color);
+
 protected:
 	TableID CharacterVisualInfoID = TableID(-1);
 
@@ -76,6 +79,9 @@ protected:
 
 	std::weak_ptr<CColliderSphere2D> PickupCollider;
 
+	std::weak_ptr<CMeshComponent> HitEffectMesh;
+	std::weak_ptr<CAnimation2DComponent> HitEffectAnim;
+
 	int RemainAbsorbAttackStack = 0;
 
 	std::unordered_map<EStat::Type, float> BaseStats;
@@ -85,8 +91,8 @@ protected:
 
 	bool bLastSymmetry = false;
 
+	float ElapsedFromDamaged = INVINCIBLE_DURATION;
 
-	float ElapsedFromDamaged = INVINCIBLE_TIME;
 private:
 	inline static std::unordered_map<size_t, std::vector<FVector2>> AnchorPositions =
 	{

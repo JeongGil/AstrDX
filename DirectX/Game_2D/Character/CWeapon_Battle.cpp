@@ -145,12 +145,6 @@ void CWeapon_Battle::Update(const float DeltaTime)
 			{
 				Col->SetEnable(true);
 			}
-
-#if defined(_DEBUG) || defined(DEBUG)
-			char Buf[256];
-			sprintf_s(Buf, "[CWeapon_Battle::Update]| Start Attack. Weapon: %p\n", this);
-			OutputDebugStringA(Buf);
-#endif
 		}
 		else
 		{
@@ -349,12 +343,6 @@ void CWeapon_Battle::OnCollisionBeginOverlap(const FVector& HitPoint, CCollider*
 		return;
 	}
 
-#if defined(_DEBUG) || defined(DEBUG)
-	char Buf[256];
-	sprintf_s(Buf, "[CWeapon_Battle::OnCollisionBeginOverlap]| Weapon: %p, Other: %p\n", this, ColObj.get());
-	OutputDebugStringA(Buf);
-#endif
-
 	auto ColChar = std::dynamic_pointer_cast<CCharacter>(ColObj);
 	if (!ColChar || ColChar->GetTeam() == ETeam::Player)
 	{
@@ -393,11 +381,6 @@ void CWeapon_Battle::OnSearchCollisionBeginOverlap(const FVector& HitPoint, CCol
 	{
 		return;
 	}
-
-#if defined(_DEBUG) || defined(DEBUG)
-	char Buf[256];
-	sprintf_s(Buf, "[CWeapon_Battle::OnSearchCollisionBeginOverlap]| Weapon: %p, Other: %p\n", this, Other->GetOwner().lock().get());
-#endif
 
 	CloseEnemies.emplace_back(Other->GetOwner());
 }

@@ -4,6 +4,7 @@
 struct FMiscInfo : FTableInfoBase
 {
 	constexpr static size_t MATERIAL_TEX_COUNT = 11;
+	constexpr static size_t HIT_EFFECT_TEX_COUNT = 3;
 
 	int WeaponMoveSpeed;
 
@@ -21,6 +22,8 @@ struct FMiscInfo : FTableInfoBase
 	std::string TurretSpawnMarkerTexPath;
 
 	float EnemySpawningTimeSec;
+
+	std::vector<std::string> HitEffectTexPaths;
 
 	bool Load(std::stringstream& Stream) override
 	{
@@ -41,6 +44,7 @@ struct FMiscInfo : FTableInfoBase
 			if (!std::getline(Stream, ItemBoxTexPath, Delim)) { assert(false); return false; }
 			if (!std::getline(Stream, LegendaryItemBoxTexPath, Delim)) { assert(false); return false; }
 
+			MaterialTexPaths.reserve(MATERIAL_TEX_COUNT);
 			for (size_t i = 0; i < MATERIAL_TEX_COUNT; i++)
 			{
 				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
@@ -63,6 +67,16 @@ struct FMiscInfo : FTableInfoBase
 
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<float>(Segment, EnemySpawningTimeSec)) { assert(false); return false; }
+
+			HitEffectTexPaths.reserve(HIT_EFFECT_TEX_COUNT);
+			for (size_t i = 0; i < HIT_EFFECT_TEX_COUNT; i++)
+			{
+				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+				if (!Segment.empty())
+				{
+					HitEffectTexPaths.push_back(Segment);
+				}
+			}
 		}
 		catch (...)
 		{

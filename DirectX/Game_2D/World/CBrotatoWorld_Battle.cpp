@@ -212,6 +212,7 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 	std::vector<const TCHAR*> TexFileNames;
 
 	auto CharacterBase = CharacterBaseTable::GetInst().Get();
+	auto Misc = MiscTable::GetInst().Get();
 
 	// 캐릭터 기본
 	{
@@ -349,19 +350,23 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 	// TODO: 아이템
 
 	// 캐릭터 피격 이펙트
-	for (int i = 0; i < 3; i++)
+	for (const auto& Path : Misc->HitEffectTexPaths)
 	{
-		auto FileName = new TCHAR[MAX_PATH];
-		wsprintf(FileName, TEXT("visual_effects/hit_effect/sprites/frame000%d.png"), i);
+		CA2T FileName(Path.c_str());
 		TexFileNames.push_back(FileName);
 	}
 
-	WorldAssetManager->SetTextures(Key::Anim::HitEffect, Key::Anim::HitEffect, TexFileNames);
+	WorldAssetManager->SetTextures(Key::Anim::HitEffect, Key::Anim::HitEffect, TexFileNames, Key::Path::Brotato);
+	TexFileNames.clear();
 
-	for (auto& FileName : TexFileNames)
+	if (auto Tex = WorldAssetManager->FindTexture(Key::Anim::HitEffect).lock())
 	{
-		delete[] FileName;
+		TexSize.x = Tex->GetTexture()->Width;
+		TexSize.y = Tex->GetTexture()->Height;
 	}
+
+	WorldAssetManager->AddFrame(Key::Anim::HitEffect, Misc->HitEffectTexPaths.size(), Zero, TexSize);
+
 	TexFileNames.clear();
 
 	// 투사체
