@@ -24,6 +24,7 @@
 #include "../Table/MiscTable.h"
 #include "../Table/ProjectileTable.h"
 #include "../Table/WeaponTable.h"
+#include "../UI/CBattleWidget.h"
 
 bool CBrotatoWorld_Battle::Init()
 {
@@ -72,7 +73,7 @@ bool CBrotatoWorld_Battle::Init()
 	//	//NPC->SetEnemyInfoID(TableID(2));
 	//}
 
-	EnemyTableIDs.emplace_back(1);
+	EnemyTableIDs.emplace_back(2);
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 
@@ -96,6 +97,8 @@ bool CBrotatoWorld_Battle::Init()
 	auto Misc = MiscTable::GetInst().Get();
 	SetTileCount(Misc->MapSizeX, Misc->MapSizeY);
 	CreateTileMap();
+
+	CreateUI(WPC);
 
 	return true;
 }
@@ -394,8 +397,12 @@ void CBrotatoWorld_Battle::LoadSound()
 {
 }
 
-void CBrotatoWorld_Battle::CreateUI()
+void CBrotatoWorld_Battle::CreateUI(const std::weak_ptr<CPlayerCharacter>& PC)
 {
+	if (auto Widget = UIManager->CreateWidget<CBattleWidget>("BattleWidget").lock())
+	{
+		Widget->SetPlayerCharacter(PC);
+	}
 }
 
 void CBrotatoWorld_Battle::CreateTileMap()

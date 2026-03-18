@@ -15,6 +15,8 @@ struct FCharacterBaseInfo
 	int HitColliderSizeX;
 	int HitColliderSizeY;
 
+	float BaseHP;
+
 	bool Load(std::stringstream& Stream) override
 	{
 		try
@@ -40,6 +42,9 @@ struct FCharacterBaseInfo
 			if (!TryParse<int>(Segment, HitColliderSizeX)) { assert(false); return false; }
 			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 			if (!TryParse<int>(Segment, HitColliderSizeY)) { assert(false); return false; }
+
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			if (!TryParse<float>(Segment, BaseHP)) { assert(false); return false; }
 		}
 		catch (...)
 		{

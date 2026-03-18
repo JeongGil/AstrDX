@@ -52,6 +52,8 @@ private:
 
 	void OnPickupColliderBeginOverlap(const FVector& HitPoint, CCollider* Other);
 
+	void SetBaseStatus();
+
 protected:
 	TableID CharacterVisualInfoID = TableID(-1);
 
@@ -107,13 +109,13 @@ public:
 		return CurrHP;
 	}
 
-	void SetCurrHP(float CurrHP)
+	void SetCurrHP(float InCurrHP)
 	{
-		CurrHP = max(0.f, CurrHP);
-		CurrHP = std::clamp(CurrHP, 0.f, GetStat(EStat::MaxHP));
-		this->CurrHP = CurrHP;
+		InCurrHP = max(0.f, InCurrHP);
+		InCurrHP = std::clamp(InCurrHP, 0.f, GetStat(EStat::MaxHP));
+		CurrHP = InCurrHP;
 
-		if (this->CurrHP == 0.f)
+		if (CurrHP == 0.f)
 		{
 			OnDead();
 		}

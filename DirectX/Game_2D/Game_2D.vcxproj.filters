@@ -82,6 +82,18 @@
     <Filter Include="UI\Editor">
       <UniqueIdentifier>{9b2376f7-a3cb-4cb4-ab8a-0f933dc2f47a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Main\Battle">
+      <UniqueIdentifier>{58d64592-5d29-4a32-a250-70ab9edb11e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Main\Shop">
+      <UniqueIdentifier>{097136cb-e4f5-4cf1-a6f9-0d2230ce872d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Main\Battle\Component">
+      <UniqueIdentifier>{c6f4a8ca-6e57-472f-9b20-6f2f6f37b308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Main\Battle\Group">
+      <UniqueIdentifier>{d81f9220-8189-43d8-8c2b-57a8d6c836ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -214,13 +226,28 @@
       <Filter>Character</Filter>
     </ClCompile>
     <ClCompile Include="Shader\CShaderBrotatoTile.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Shader</Filter>
     </ClCompile>
     <ClCompile Include="Map\CBrotatoTile.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
+      <Filter>World</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CBattleWidget.cpp">
+      <Filter>UI\Main\Battle</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CBrotatoProgressBar.cpp">
+      <Filter>UI\Main\Battle\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CPCStateWidget.cpp">
+      <Filter>UI\Main\Battle\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CLootStateWidget.cpp">
+      <Filter>UI\Main\Battle\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CStageStateWidget.cpp">
+      <Filter>UI\Main\Battle\Group</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -420,10 +447,25 @@
       <Filter>Character</Filter>
     </ClInclude>
     <ClInclude Include="Shader\CShaderBrotatoTile.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Shader</Filter>
     </ClInclude>
     <ClInclude Include="Map\CBrotatoTile.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>World</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CBattleWidget.h">
+      <Filter>UI\Main\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CBrotatoProgressBar.h">
+      <Filter>UI\Main\Battle\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CPCStateWidget.h">
+      <Filter>UI\Main\Battle\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CLootStateWidget.h">
+      <Filter>UI\Main\Battle\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CStageStateWidget.h">
+      <Filter>UI\Main\Battle\Group</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 #pragma once
 #include <World/CWorld.h>
 
+class CPlayerCharacter;
 class CColliderBox2D;
 class CCameraObject;
 
@@ -42,7 +43,7 @@ public:
 private:
 	void LoadAnimation2D();
 	void LoadSound();
-	void CreateUI();
+	void CreateUI(const std::weak_ptr<CPlayerCharacter>& PC);
 	void CreateTileMap();
 	void UpdateEnemySpawn(float DeltaTime);
 	bool TryGetEnemySpawnPosition(const FVector& Origin, float Radius, FVector& OutSpawnPos) const;

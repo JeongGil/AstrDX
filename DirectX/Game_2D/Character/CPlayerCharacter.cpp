@@ -189,6 +189,8 @@ bool CPlayerCharacter::Init()
 
 	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
 
+	SetBaseStatus();
+
 	return true;
 }
 
@@ -390,6 +392,14 @@ void CPlayerCharacter::OnPickupColliderBeginOverlap(const FVector& HitPoint, CCo
 	}
 
 	DropItem->SetIsCollecting(true);
+}
+
+void CPlayerCharacter::SetBaseStatus()
+{
+	auto CharBaseInfo = CharacterBaseTable::GetInst().Get();
+
+	BaseStats.emplace(EStat::MaxHP, CharBaseInfo->BaseHP);
+	CurrHP = GetStat(EStat::MaxHP);
 }
 
 void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
