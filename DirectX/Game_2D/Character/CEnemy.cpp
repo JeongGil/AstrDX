@@ -125,6 +125,11 @@ void CEnemy::Update(const float DeltaTime)
 	}
 
 #pragma region AI
+	if (GetSpawnState() != ESpawnState::Complete)
+	{
+		return;
+	}
+
 	auto Player = this->Player.lock();
 	if (!Player)
 	{

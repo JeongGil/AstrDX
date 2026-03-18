@@ -98,9 +98,9 @@ protected:
 
 	virtual void UpdateSpawnSequence(const float DeltaTime);
 	virtual void OnSpawnFinished();
-	bool IsSpawning() const
+	[[nodiscard]] ESpawnState GetSpawnState() const
 	{
-		return ElapsedSpawnTime < TimeToSpawn;
+		return SpawnState;
 	}
 
 private:
