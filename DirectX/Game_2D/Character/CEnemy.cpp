@@ -31,6 +31,7 @@ bool CEnemy::Init()
 		Collider->SetCollisionProfile("Monster");
 
 		Collider->SetOnCollisionBegin(this, &CEnemy::OnCollisionBegin);
+		Collider->SetOnCollisionEnd(this, &CEnemy::OnCollisionEnd);
 
 #if defined(_DEBUG) || defined(DEBUG)
 		Collider->SetDrawDebug(true);
@@ -122,6 +123,11 @@ void CEnemy::Update(const float DeltaTime)
 		{
 			Player = World->FindObjectOfType<CPlayerCharacter>();
 		}
+	}
+
+	if (bIsCollidingToPC)
+	{
+		CollidingWithPC(Player);
 	}
 
 #pragma region AI
@@ -407,6 +413,22 @@ void CEnemy::SetChargeCooldownTime(float& OutCooldownTime)
 
 void CEnemy::OnCollisionBegin(const FVector& HitPoint, CCollider* Collider)
 {
+	if (auto PC = std::dynamic_pointer_cast<CPlayerCharacter>(Collider->GetOwner().lock()))
+	{
+		bIsCollidingToPC = true;
+	}
+}
+
+void CEnemy::OnCollisionEnd(CCollider* Collider)
+{
+	if (auto PC = std::dynamic_pointer_cast<CPlayerCharacter>(Collider->GetOwner().lock()))
+	{
+		bIsCollidingToPC = false;
+	}
+}
+
+void CEnemy::CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC)
+{
 	FEnemyInfo* Info;
 	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
 	{
@@ -415,7 +437,7 @@ void CEnemy::OnCollisionBegin(const FVector& HitPoint, CCollider* Collider)
 
 	if (Info->Behavior & EEnemyBehavior::DamageOnTouch)
 	{
-		if (auto Player = std::dynamic_pointer_cast<CPlayerCharacter>(Collider->GetOwner().lock()))
+		if (auto Player = WeakPC.lock())
 		{
 			// TODO: 난이도 영향 적용.
 			//+ Info->DamageIncrease * 난이도

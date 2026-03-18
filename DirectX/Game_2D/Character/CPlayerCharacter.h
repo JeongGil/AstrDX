@@ -19,6 +19,8 @@ class CPlayerCharacter :
 	friend class CWorld;
 	friend CObject;
 
+	constexpr static float INVINCIBLE_TIME = 0.5f;
+
 public:
 	bool Init() override;
 	void Update(float DeltaTime) override;
@@ -83,6 +85,8 @@ protected:
 
 	bool bLastSymmetry = false;
 
+
+	float ElapsedFromDamaged = INVINCIBLE_TIME;
 private:
 	inline static std::unordered_map<size_t, std::vector<FVector2>> AnchorPositions =
 	{

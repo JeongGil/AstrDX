@@ -43,6 +43,8 @@ private:
 	void SetChargeCooldownTime(float& OutCooldownTime);
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Collider);
+	void OnCollisionEnd(CCollider* Collider);
+	void CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC);
 
 protected:
 	static constexpr int CHARGE_MOVE_SPEED = 1000;
@@ -59,6 +61,7 @@ protected:
 	float CurrHP{};
 
 	std::weak_ptr<CPlayerCharacter> Player;
+	bool bIsCollidingToPC{};
 
 	EEnemyBehavior::Type CurrentBehavior{};
 

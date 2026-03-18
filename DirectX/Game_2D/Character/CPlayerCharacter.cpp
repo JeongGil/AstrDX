@@ -198,6 +198,13 @@ void CPlayerCharacter::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
 
+	if (ElapsedFromDamaged < INVINCIBLE_TIME)
+	{
+		ElapsedFromDamaged = min(ElapsedFromDamaged + DeltaTime, INVINCIBLE_TIME);
+
+		// TODO: 무적시간동안 깜빡임 처리.
+	}
+
 	auto CharacterBase = CharacterBaseTable::GetInst().Get();
 	if (auto Col = PickupCollider.lock())
 	{
@@ -267,6 +274,11 @@ void CPlayerCharacter::PostUpdate(const float DeltaTime)
 
 float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
+	if (ElapsedFromDamaged < INVINCIBLE_TIME)
+	{
+		return 0.f;
+	}
+
 	auto Enemy = std::dynamic_pointer_cast<CEnemy>(Instigator.lock());
 	if (!Enemy)
 	{
@@ -294,6 +306,7 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 	Damage = round(Damage);
 
 	SetCurrHP(GetCurrHP() - Damage);
+	ElapsedFromDamaged = 0.f;
 
 	return Damage * GetArmoredDmgRatio(static_cast<int>(GetStat(EStat::Armor)));
 }
