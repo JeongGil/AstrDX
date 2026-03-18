@@ -170,28 +170,33 @@ bool CBrotatoWorld_Battle::TryGetEnemySpawnPosition(const FVector& Origin, float
 	const float MinY = -TileCountY * TileSize * 0.5f + TileSize * 0.5f;
 	const float MaxY = MinY + TileSize * (TileCountY - 1);
 
-	std::uniform_real_distribution<float> AngleDist(0.f, std::numbers::pi_v<float> * 2.f);
-	std::uniform_real_distribution<float> RadiusDist(0.f, 1.f);
+	std::uniform_real_distribution<float> XDist(Origin.x - Radius, Origin.x + Radius);
+	std::uniform_real_distribution<float> YDist(Origin.y - Radius, Origin.y + Radius);
 	auto& RandEngine = CEngine::GetInst()->GetMT();
 
-	constexpr int MaxTryCount = 24;
+	const float RadiusSq = Radius * Radius;
+
+	constexpr int MaxTryCount = 48;
 	for (int Try = 0; Try < MaxTryCount; ++Try)
 	{
-		const float Angle = AngleDist(RandEngine);
-		const float Dist = std::sqrt(RadiusDist(RandEngine)) * Radius;
+		const float SpawnX = XDist(RandEngine);
+		const float SpawnY = YDist(RandEngine);
 
-		const float SpawnX = Origin.x + std::cos(Angle) * Dist;
-		const float SpawnY = Origin.y + std::sin(Angle) * Dist;
+		const float DiffX = SpawnX - Origin.x;
+		const float DiffY = SpawnY - Origin.y;
+		const float DistSq = DiffX * DiffX + DiffY * DiffY;
 
-		if (SpawnX >= MinX && SpawnX <= MaxX && SpawnY >= MinY && SpawnY <= MaxY)
+		const bool bInsideCircle = DistSq <= RadiusSq;
+		const bool bInsideTileArea = SpawnX >= MinX && SpawnX <= MaxX && SpawnY >= MinY && SpawnY <= MaxY;
+
+		if (bInsideCircle && bInsideTileArea)
 		{
 			OutSpawnPos = FVector(SpawnX, SpawnY, Origin.z);
 			return true;
 		}
 	}
 
-	OutSpawnPos = FVector(std::clamp(Origin.x, MinX, MaxX), std::clamp(Origin.y, MinY, MaxY), Origin.z);
-	return true;
+	return false;
 }
 
 void CBrotatoWorld_Battle::LoadAnimation2D()
