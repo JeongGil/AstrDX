@@ -94,6 +94,12 @@
     <Filter Include="UI\Main\Battle\Group">
       <UniqueIdentifier>{d81f9220-8189-43d8-8c2b-57a8d6c836ee}</UniqueIdentifier>
     </Filter>
+    <Filter Include="World\Brotato">
+      <UniqueIdentifier>{6ea306bc-d420-4a3f-b10d-d607ab1fb9bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Main\Title">
+      <UniqueIdentifier>{68d9ce42-ebc1-4f56-bb59-ee07f62bb5e9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -228,12 +234,6 @@
     <ClCompile Include="Shader\CShaderBrotatoTile.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Map\CBrotatoTile.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
-    <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
-      <Filter>World</Filter>
-    </ClCompile>
     <ClCompile Include="UI\CBattleWidget.cpp">
       <Filter>UI\Main\Battle</Filter>
     </ClCompile>
@@ -248,6 +248,18 @@
     </ClCompile>
     <ClCompile Include="UI\CStageStateWidget.cpp">
       <Filter>UI\Main\Battle\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CBrotatoWorld_Battle.cpp">
+      <Filter>World\Brotato</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CBrotatoWorld_Title.cpp">
+      <Filter>World\Brotato</Filter>
+    </ClCompile>
+    <ClCompile Include="Map\CBrotatoTile.cpp">
+      <Filter>Map</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CTitleWidget.cpp">
+      <Filter>UI\Main\Title</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -331,9 +343,6 @@
     </ClInclude>
     <ClInclude Include="Inventory\CInventoryData.h">
       <Filter>Inventory</Filter>
-    </ClInclude>
-    <ClInclude Include="World\CBrotatoWorld_Battle.h">
-      <Filter>World</Filter>
     </ClInclude>
     <ClInclude Include="Table\CTableManager.h">
       <Filter>Table</Filter>
@@ -449,9 +458,6 @@
     <ClInclude Include="Shader\CShaderBrotatoTile.h">
       <Filter>Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Map\CBrotatoTile.h">
-      <Filter>World</Filter>
-    </ClInclude>
     <ClInclude Include="UI\CBattleWidget.h">
       <Filter>UI\Main\Battle</Filter>
     </ClInclude>
@@ -466,6 +472,18 @@
     </ClInclude>
     <ClInclude Include="UI\CStageStateWidget.h">
       <Filter>UI\Main\Battle\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CBrotatoWorld_Battle.h">
+      <Filter>World\Brotato</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CBrotatoWorld_Title.h">
+      <Filter>World\Brotato</Filter>
+    </ClInclude>
+    <ClInclude Include="Map\CBrotatoTile.h">
+      <Filter>Map</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CTitleWidget.h">
+      <Filter>UI\Main\Title</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

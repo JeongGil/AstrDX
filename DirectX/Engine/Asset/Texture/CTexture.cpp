@@ -79,7 +79,7 @@ bool CTexture::LoadTextureFullPath(const TCHAR* FullPath)
 	}
 	else
 	{
-		if (FAILED(DirectX::LoadFromWICFile(FullPath, DirectX::WIC_FLAGS_IGNORE_SRGB | DirectX::WIC_FLAGS_FORCE_RGB, nullptr, *Image)))
+		if (FAILED(DirectX::LoadFromWICFile(FullPath, DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, *Image)))
 		{
 			SAFE_DELETE(Texture);
 			SAFE_DELETE(Image);
@@ -202,7 +202,7 @@ bool CTexture::LoadTextureArrayFullPath(const std::vector<const TCHAR*>& FullPat
 		}
 		else
 		{
-			if (FAILED(DirectX::LoadFromWICFile(FullPath, DirectX::WIC_FLAGS_IGNORE_SRGB | DirectX::WIC_FLAGS_FORCE_RGB, nullptr, *Image)))
+			if (FAILED(DirectX::LoadFromWICFile(FullPath, DirectX::WIC_FLAGS_IGNORE_SRGB, nullptr, *Image)))
 			{
 				SAFE_DELETE(Texture);
 				SAFE_DELETE(Image);

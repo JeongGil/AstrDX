@@ -74,7 +74,7 @@ bool CBrotatoWorld_Battle::Init()
 	//	//NPC->SetEnemyInfoID(TableID(2));
 	//}
 
-	EnemyTableIDs.emplace_back(2);
+	EnemyTableIDs.emplace_back(1);
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 

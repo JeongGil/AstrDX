@@ -12,6 +12,7 @@
 #include "Player/CMissile.h"
 #include "Player/CPlayer.h"
 #include "World/CBrotatoWorld_Battle.h"
+#include "World/CBrotatoWorld_Title.h"
 #include "World/CMainWorld.h"
 #include "World/CStartWorld.h"
 #include "World/CWorldManager.h"
@@ -56,7 +57,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	//CWorldManager::GetInst()->CreateWorld<CStartWorld>(false);
 	//CWorldManager::GetInst()->CreateWorld<CMainWorld>(false);
-	CWorldManager::GetInst()->CreateWorld<CBrotatoWorld_Battle>(false);
+	//CWorldManager::GetInst()->CreateWorld<CBrotatoWorld_Battle>(false);
+	CWorldManager::GetInst()->CreateWorld<CBrotatoWorld_Title>(false);
 
 	int ret = CEngine::GetInst()->Run();
 
