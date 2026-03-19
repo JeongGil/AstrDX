@@ -232,7 +232,7 @@ float CEnemy::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instiga
 
 	AddCurrHP(-Damage);
 
-	return Damage;
+	return CCharacter::TakeDamage(Damage, Instigator);
 }
 
 void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)

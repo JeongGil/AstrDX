@@ -1,5 +1,6 @@
 #include "CCharacter.h"
 
+#include <CEngine.h>
 #include <numbers>
 #include <Component/CColliderBox2D.h>
 #include "../Strings.h"
@@ -32,12 +33,12 @@ void CCharacter::Update(const float DeltaTime)
 
 	switch (SpawnState)
 	{
-	case ESpawnState::Spawning:
-		UpdateSpawnSequence(DeltaTime);
-		break;
-	case ESpawnState::PendingNotify:
-		OnSpawnFinished();
-		break;
+		case ESpawnState::Spawning:
+			UpdateSpawnSequence(DeltaTime);
+			break;
+		case ESpawnState::PendingNotify:
+			OnSpawnFinished();
+			break;
 	}
 
 	if (bIsSpiralShrinking)
@@ -79,6 +80,24 @@ void CCharacter::Destroy()
 CCharacter* CCharacter::Clone()
 {
 	return new CCharacter(*this);
+}
+
+float CCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
+{
+	// TODO: Damage Floating Text.
+	//const FVector Offset = { 0,20,0 };
+	//const int RangeX = 100;
+	//const int RangeY = 50;	
+
+	//std::uniform_int_distribution<int> DistX(-RangeX, RangeX);
+	//std::uniform_int_distribution<int> DistY(-RangeY, RangeY);
+	//auto& RandEngine = CEngine::GetInst()->GetMT();
+
+	//int X = DistX(RandEngine);
+	//int Y = DistY(RandEngine);
+	//const FVector SpawnPos = { Offset.x + X, Offset.y + Y,Offset.z };
+
+	return CGameObject::TakeDamage(Damage, Instigator);
 }
 
 void CCharacter::OnDead()

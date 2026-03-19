@@ -869,5 +869,5 @@ void CGameObject::Destroy()
 
 float CGameObject::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
-	return 0.f;
+	return Damage;
 }

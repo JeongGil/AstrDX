@@ -72,6 +72,8 @@ protected:
 	CCharacter* Clone() override;
 
 public:
+	float TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator) override;
+
 	ETeam GetTeam() const
 	{
 		return Team;

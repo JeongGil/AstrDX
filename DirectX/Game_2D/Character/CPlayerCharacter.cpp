@@ -378,7 +378,8 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 	SetCurrHP(GetCurrHP() - Damage);
 	ElapsedFromDamaged = 0.f;
 
-	return Damage * GetArmoredDmgRatio(static_cast<int>(GetStat(EStat::Armor)));
+	float FinalDmg = Damage * GetArmoredDmgRatio(static_cast<int>(GetStat(EStat::Armor)));
+	return CCharacter::TakeDamage(FinalDmg, Instigator);
 }
 
 void CPlayerCharacter::CreateDeco(const std::string& DecoPath)
