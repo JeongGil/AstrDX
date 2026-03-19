@@ -1,7 +1,9 @@
 #include "CPCStateWidget.h"
 
-#include "CBrotatoProgressBar.h"
+#include <CDevice.h>
 #include <UI/CWidgetContainer.h>
+
+#include "CBrotatoProgressBar.h"
 #include "../Character/CPlayerCharacter.h"
 
 CPCStateWidget::CPCStateWidget()
@@ -41,8 +43,9 @@ bool CPCStateWidget::Init()
 	HPBar = CreateWidget<CBrotatoProgressBar>("HPBar");
 	if (auto Bar = HPBar.lock())
 	{
-		Bar->SetPos(0.f, 0.f);
-		Bar->SetSize(320.f, 48.f);
+		const FVector2 Size = FVector2(320, 48) * CDevice::GetInst()->GetRatioFHD();
+		Bar->SetPos(0, 0);
+		Bar->SetSize(Size);
 		Bar->SetBarType(EBrotatoProgressBarType::HP);
 		Bar->SetTextColor(255, 255, 255, 255);
 		Bar->SetRatio(1.f);
@@ -59,7 +62,7 @@ void CPCStateWidget::Update(const float DeltaTime)
 	{
 		const float CurrentHP = PC->GetCurrHP();
 		const float MaxHP = PC->GetStat(EStat::MaxHP);
-		
+
 		if (auto Bar = HPBar.lock())
 		{
 			Bar->SetHPValue(CurrentHP, MaxHP);

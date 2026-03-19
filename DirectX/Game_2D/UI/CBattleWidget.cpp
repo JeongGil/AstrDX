@@ -18,7 +18,7 @@ bool CBattleWidget::Init()
 	PCStateWidget = CreateWidget<CPCStateWidget>("PCState");
 	if (auto Widget = PCStateWidget.lock())
 	{
-		Widget->SetPos(0.f, 0.f);
+		Widget->SetPos(10, 10);
 	}
 
 	StageStateWidget = CreateWidget<CStageStateWidget>("StageState");
@@ -26,14 +26,14 @@ bool CBattleWidget::Init()
 	{
 		const float HalfWidth = Resolution.Width * 0.5f;
 		Widget->SetPivot(0.5f, 0.f);
-		Widget->SetPos(HalfWidth, 0.f);
+		Widget->SetPos(HalfWidth, 10);
 	}
 
 	LootStateWidget = CreateWidget<CLootStateWidget>("LootState");
 	if (auto Widget = LootStateWidget.lock())
 	{
 		Widget->SetPivot(1.f, 0.f);
-		Widget->SetPos(Resolution.Width, 0.f);
+		Widget->SetPos(Resolution.Width - 10, 10);
 	}
 
 	return true;
