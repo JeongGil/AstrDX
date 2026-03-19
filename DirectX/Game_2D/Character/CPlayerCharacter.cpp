@@ -34,7 +34,10 @@ bool CPlayerCharacter::Init()
 		return false;
 	}
 
-	auto Misc = MiscTable::GetInst().Get();
+	const auto* Misc = MiscTable::GetInst().Get();
+	const auto* CharacterBase = CharacterBaseTable::GetInst().Get();
+
+	SetBaseStatus();
 
 	if (auto Col = Collider.lock())
 	{
@@ -42,8 +45,7 @@ bool CPlayerCharacter::Init()
 	}
 
 	SetTeam(ETeam::Player);
-
-	const auto* CharacterBase = CharacterBaseTable::GetInst().Get();
+	
 	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato, Key::Comp::Root);
 	PotatoAnim = CreateComponent<CAnimation2DComponent>(Key::Anim::Potato, Key::Comp::Root);
 	if (auto Body = this->Potato.lock())
@@ -124,9 +126,10 @@ bool CPlayerCharacter::Init()
 	if (auto Move = MovementComponent.lock())
 	{
 		Move->SetUpdateComponent(Root);
+		Move->SetSpeed(CharacterBase->BaseSpeed);
 
 		SleepOnSpawnComponents.push_back(Move);
-		Move->SetEnable(false);
+		Move->SetEnable(false);		
 	}
 
 	if (auto World = this->World.lock())
@@ -214,7 +217,7 @@ bool CPlayerCharacter::Init()
 		{
 			Anim->SetUpdateComponent(Mesh);
 
-			Anim->AddAnimation(Key::Anim::HitEffect);
+			Anim->AddAnimation(Key::Anim::HitEffect, INVINCIBLE_FLICKER_INTERVAL);
 			Anim->SetLoop(Key::Anim::HitEffect, false);
 			Anim->SetFinishNotify<CPlayerCharacter>(Key::Anim::HitEffect, this, &CPlayerCharacter::OnHitEffectAnimFinished);
 
@@ -224,7 +227,7 @@ bool CPlayerCharacter::Init()
 
 	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
 
-	SetBaseStatus();
+	
 
 	return true;
 }
@@ -259,6 +262,12 @@ void CPlayerCharacter::Update(const float DeltaTime)
 	{
 		float RangeRatio = 1 + GetStat(EStat::PickupRange) * 0.01f;
 		Col->SetRadius(CharacterBase->BasePickupRange * RangeRatio);
+	}
+
+	if (auto Move = MovementComponent.lock())
+	{
+		float SpeedRatio = 1 + GetStat(EStat::Speed) * 0.01f;
+		Move->SetSpeed(CharacterBase->BaseSpeed * SpeedRatio);
 	}
 }
 
@@ -363,6 +372,7 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 	{
 		FxAnim->SetEnable(true);
 		FxAnim->ReplayAnimation(Key::Anim::HitEffect);
+		FxAnim->SetLoop(Key::Anim::HitEffect, false);
 	}
 
 	SetCurrHP(GetCurrHP() - Damage);
