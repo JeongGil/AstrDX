@@ -23,6 +23,7 @@
 #include "../Inventory/CInventoryItem_Weapon.h"
 #include "../Table/CharacterBaseTable.h"
 #include "../Table/CharacterVisualTable.h"
+#include "../Table/MiscTable.h"
 #include "../Table/WeaponSetBonusTable.h"
 #include "../World/CBrotatoWorld_Battle.h"
 
@@ -32,6 +33,8 @@ bool CPlayerCharacter::Init()
 	{
 		return false;
 	}
+
+	auto Misc = MiscTable::GetInst().Get();
 
 	if (auto Col = Collider.lock())
 	{
@@ -187,33 +190,34 @@ bool CPlayerCharacter::Init()
 		Col->SetEnable(false);
 	}
 
-	HitEffectMesh = CreateComponent<CMeshComponent>("HitMesh");
+	HitEffectMesh = CreateComponent<CMeshComponent>("HitMesh", Key::Comp::Root);
 	HitEffectAnim = CreateComponent<CAnimation2DComponent>("HitAnim");
 	if (auto Mesh = HitEffectMesh.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");
 		Mesh->SetMesh("CenterRectTex");
-		Mesh->SetWorldScale(100, 50);
-		//Mesh->SetRelativePosition(FVector(0, -25, 0));
+		Mesh->SetRelativeScale(256, 256);
+		Mesh->SetRelativePosition(0.f, 0.f);
+
+		Mesh->SetMaterialBaseColor(0, 1.f, 1.f, 1.f, 0.6f);
 
 		Mesh->SetBlendState(0, "AlphaBlend");
-
-		CA2T FileName(CharacterBase->PotatoLegTexPath.c_str());
-		Mesh->AddTexture(0, CharacterBase->PotatoLegTexPath, FileName, Key::Path::Brotato);
 
 		Mesh->SetInheritScale(false);
 		Mesh->SetInheritRotation(false);
 
 		Mesh->SetRenderLayer(ERenderOrder::Effect);
 
+		Mesh->SetEnable(false);
+
 		if (auto Anim = HitEffectAnim.lock())
 		{
 			Anim->SetUpdateComponent(Mesh);
 
-			Anim->AddAnimation(CharacterBase->PotatoLegTexPath);
-			Anim->SetLoop(CharacterBase->PotatoLegTexPath, true);
+			Anim->AddAnimation(Key::Anim::HitEffect);
+			Anim->SetLoop(Key::Anim::HitEffect, false);
+			Anim->SetFinishNotify<CPlayerCharacter>(Key::Anim::HitEffect, this, &CPlayerCharacter::OnHitEffectAnimFinished);
 
-			SleepOnSpawnComponents.push_back(LegAnim);
 			Anim->SetEnable(false);
 		}
 	}
@@ -350,7 +354,16 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 	// Round enemy damage before apply armor.
 	Damage = round(Damage);
 
-	// TODO:
+	if (auto FxMesh = HitEffectMesh.lock())
+	{
+		FxMesh->SetEnable(true);
+	}
+
+	if (auto FxAnim = HitEffectAnim.lock())
+	{
+		FxAnim->SetEnable(true);
+		FxAnim->ReplayAnimation(Key::Anim::HitEffect);
+	}
 
 	SetCurrHP(GetCurrHP() - Damage);
 	ElapsedFromDamaged = 0.f;
@@ -654,5 +667,18 @@ void CPlayerCharacter::SetBodyColor(const FVector4& Color)
 		{
 			Deco->SetMaterialBaseColor(0, Color);
 		}
+	}
+}
+
+void CPlayerCharacter::OnHitEffectAnimFinished()
+{
+	if (auto FxAnim = HitEffectAnim.lock())
+	{
+		FxAnim->SetEnable(false);
+	}
+
+	if (auto FxMesh = HitEffectMesh.lock())
+	{
+		FxMesh->SetEnable(false);
 	}
 }

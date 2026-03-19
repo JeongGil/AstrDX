@@ -58,6 +58,7 @@ private:
 	void SetBaseStatus();
 
 	void SetBodyColor(const FVector4& Color);
+	void OnHitEffectAnimFinished();
 
 protected:
 	TableID CharacterVisualInfoID = TableID(-1);

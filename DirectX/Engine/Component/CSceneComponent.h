@@ -37,6 +37,8 @@ namespace ERenderOrder
 		CharacterItem = 102,
 		CharacterWeapon = 103,
 
+		Effect = 110,
+
 		DebugDraw = 1000,
 	};
 }

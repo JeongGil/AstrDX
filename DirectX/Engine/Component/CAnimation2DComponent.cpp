@@ -299,6 +299,41 @@ void CAnimation2DComponent::ChangeAnimation(const std::string& AnimKey)
 	}
 }
 
+void CAnimation2DComponent::ReplayAnimation(const std::string& AnimKey)
+{
+	auto InnerKey = "Animation2D_" + AnimKey;
+
+	auto MeshComponent = UpdateComponent.lock();
+	if (!MeshComponent)
+	{
+		return;
+	}
+
+	auto It = Animations.find(InnerKey);
+	if (It == Animations.end())
+	{
+		return;
+	}
+
+	if (!CurrentAnimation || CurrentAnimation != It->second)
+	{
+		if (CurrentAnimation)
+		{
+			CurrentAnimation->Clear();
+		}
+
+		CurrentAnimation = It->second;
+
+		if (auto Asset = CurrentAnimation->GetAsset().lock())
+		{
+			AnimationCBuffer->SetTextureType(Asset->GetTextureType());
+			MeshComponent->SetTexture(0, 0, Asset->GetTexture());
+		}
+	}
+
+	CurrentAnimation->Clear();
+}
+
 void CAnimation2DComponent::SetShader()
 {
 	AnimationCBuffer->SetTextureSymmetry(CurrentAnimation->GetSymmetry());

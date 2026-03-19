@@ -39,6 +39,7 @@ bool CBrotatoWorld_Battle::Init()
 	CRenderManager::GetInst()->CreateLayer("CharacterItem", ERenderOrder::CharacterItem, ERenderListSort::Y);
 	CRenderManager::GetInst()->CreateLayer("CharacterWeapon", ERenderOrder::CharacterWeapon, ERenderListSort::Y);
 	CRenderManager::GetInst()->CreateLayer("Enemy", ERenderOrder::Enemy, ERenderListSort::Y);
+	CRenderManager::GetInst()->CreateLayer("Effect", ERenderOrder::Effect, ERenderListSort::Y);
 
 	CPathManager::CreatePath(Key::Path::Brotato, TEXT("Brotato\\"), Key::Path::Asset);
 
@@ -350,10 +351,20 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 	// TODO: 아이템
 
 	// 캐릭터 피격 이펙트
+	WorldAssetManager->CreateAnimation(Key::Anim::HitEffect);
+	WorldAssetManager->SetAnimation2DTextureType(Key::Anim::HitEffect, EAnimation2DTextureType::Frame);
+
+	std::vector<std::wstring> HitEffectWidePaths;
+	HitEffectWidePaths.reserve(Misc->HitEffectTexPaths.size());
+
 	for (const auto& Path : Misc->HitEffectTexPaths)
 	{
-		CA2T FileName(Path.c_str());
-		TexFileNames.push_back(FileName);
+		HitEffectWidePaths.emplace_back(Path.begin(), Path.end());
+	}
+
+	for (const auto& WidePath : HitEffectWidePaths)
+	{
+		TexFileNames.push_back(WidePath.c_str());
 	}
 
 	WorldAssetManager->SetTextures(Key::Anim::HitEffect, Key::Anim::HitEffect, TexFileNames, Key::Path::Brotato);
@@ -365,7 +376,7 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 		TexSize.y = Tex->GetTexture()->Height;
 	}
 
-	WorldAssetManager->AddFrame(Key::Anim::HitEffect, Misc->HitEffectTexPaths.size(), Zero, TexSize);
+	WorldAssetManager->AddFrame(Key::Anim::HitEffect, static_cast<int>(Misc->HitEffectTexPaths.size()), Zero, TexSize);
 
 	TexFileNames.clear();
 

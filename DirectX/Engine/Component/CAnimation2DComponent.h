@@ -37,6 +37,7 @@ public:
 	void SetReverse(const std::string& AnimKey, bool bReverse);
 	void SetSymmetry(const std::string& AnimKey, bool bSymmetry);
 	void ChangeAnimation(const std::string& AnimKey);
+	void ReplayAnimation(const std::string& AnimKey);
 	void SetShader();
 	EAnimation2DTextureType GetTextureType() const;
 	int GetCurrentFrame() const;
