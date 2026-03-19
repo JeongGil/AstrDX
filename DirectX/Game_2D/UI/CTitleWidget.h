@@ -15,5 +15,9 @@ public:
 	~CTitleWidget() override = default;
 
 	bool Init() override;
+
+private:
+	void OnClickStart();
+	void OnClickExit();
 };
 
