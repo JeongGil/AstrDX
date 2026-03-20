@@ -8,11 +8,11 @@ struct FShopGoods;
 class CInventoryItem_Item;
 class CInventoryItem_Weapon;
 
-class CInventoryData
+class CCharacterData
 {
 private:
-	CInventoryData() = default;
-	~CInventoryData() = default;
+	CCharacterData() = default;
+	~CCharacterData() = default;
 
 private:
 	std::vector<std::shared_ptr<CInventoryItem_Weapon>> Weapons;
@@ -21,6 +21,9 @@ private:
 	std::unordered_map<EWeaponType::Type, int> WeaponTypeCounts;
 
 	int MaterialCount{};
+
+	int Level{};
+	int CurrentExp{};
 
 public:
 	bool Init();
@@ -73,13 +76,19 @@ public:
 		SetMaterialCount(MaterialCount + Added);
 	}
 
+	static int GetLevelUpEXP(int CurrentLevel)
+	{
+		assert(CurrentLevel >= 1);
+		return (1 + CurrentLevel) * (1 + CurrentLevel);
+	}
+
 private:
 	void RefreshWeaponTypeCounts();
 
 public:
-	static CInventoryData& GetInst()
+	static CCharacterData& GetInst()
 	{
-		static CInventoryData Inst;
+		static CCharacterData Inst;
 		return Inst;
 	}
 };

@@ -16,7 +16,7 @@
 #include "../Character/CCameraObject.h"
 #include "../Character/CEnemy.h"
 #include "../Character/CPlayerCharacter.h"
-#include "../Inventory/CInventoryData.h"
+#include "../Inventory/CCharacterData.h"
 #include "../Table/CharacterBaseTable.h"
 #include "../Table/CharacterVisualTable.h"
 #include "../Table/CTableManager.h"
@@ -48,9 +48,9 @@ bool CBrotatoWorld_Battle::Init()
 
 	LoadAnimation2D();
 
-	CInventoryData::GetInst().AddWeapon(TableID(1));
-	//CInventoryData::GetInst().AddWeapon(TableID(1));
-	//CInventoryData::GetInst().AddWeapon(TableID(1));
+	CCharacterData::GetInst().AddWeapon(TableID(1));
+	//CCharacterData::GetInst().AddWeapon(TableID(1));
+	//CCharacterData::GetInst().AddWeapon(TableID(1));
 
 	auto WPC = CreateGameObject<CPlayerCharacter>(Key::Obj::PC);
 	if (auto PC = WPC.lock())
@@ -58,9 +58,9 @@ bool CBrotatoWorld_Battle::Init()
 		PC->SetWorldPosition(0, 0);
 		PC->SetCharacterVisual(TableID(1));
 
-		for (size_t i = 0; i < CInventoryData::GetInst().GetWeaponCount(); i++)
+		for (size_t i = 0; i < CCharacterData::GetInst().GetWeaponCount(); i++)
 		{
-			auto Weapon = CInventoryData::GetInst().GetWeapon(i);
+			auto Weapon = CCharacterData::GetInst().GetWeapon(i);
 			PC->AddWeapon(Weapon);
 		}
 	}

@@ -1,6 +1,8 @@
 #pragma once
 #include <UI/CWidgetContainer.h>
 
+class CTextBlock;
+class CImage;
 class CBrotatoProgressBar;
 class CPlayerCharacter;
 class CWorldUIManager;
@@ -9,7 +11,7 @@ class CPCStateWidget :
     public CWidgetContainer
 {
     friend CWorldUIManager;
-    friend CWidgetContainer;
+	friend CWidgetContainer;
 
 protected:
     CPCStateWidget();
@@ -18,7 +20,12 @@ public:
     ~CPCStateWidget() override;
 
 private:
-    std::weak_ptr<CBrotatoProgressBar> HPBar;
+    std::weak_ptr<CBrotatoProgressBar> HpBar;
+	std::weak_ptr<CBrotatoProgressBar> ExpBar;
+
+	std::weak_ptr<CImage> MaterialIcon;
+	std::weak_ptr<CTextBlock> MaterialCount;
+
     std::weak_ptr<CPlayerCharacter> PlayerCharacter;
 
 private:

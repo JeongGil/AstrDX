@@ -180,7 +180,7 @@
     <ClCompile Include="CHitPointComponent.cpp" />
     <ClCompile Include="Component\CStateComponent.cpp" />
     <ClCompile Include="Interface\CStateInterface.cpp" />
-    <ClCompile Include="Inventory\CInventoryData.cpp" />
+    <ClCompile Include="Inventory\CCharacterData.cpp" />
     <ClCompile Include="Inventory\CInventoryItem.cpp" />
     <ClCompile Include="Inventory\CInventoryItem_Item.cpp" />
     <ClCompile Include="Inventory\CInventoryItem_Weapon.cpp" />
@@ -238,7 +238,7 @@
     <ClInclude Include="Component\CStateComponent.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="Interface\CStateInterface.h" />
-    <ClInclude Include="Inventory\CInventoryData.h" />
+    <ClInclude Include="Inventory\CCharacterData.h" />
     <ClInclude Include="Inventory\CInventoryItem.h" />
     <ClInclude Include="Inventory\CInventoryItem_Item.h" />
     <ClInclude Include="Inventory\CInventoryItem_Weapon.h" />

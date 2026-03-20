@@ -11,7 +11,7 @@
 #include "../Table/MiscInfo.h"
 #include "../Table/MiscTable.h"
 #include "../Utility.h"
-#include "../Inventory/CInventoryData.h"
+#include "../Inventory/CCharacterData.h"
 
 bool CDropItem::Init()
 {
@@ -84,7 +84,7 @@ CDropItem* CDropItem::Clone()
 
 void CDropItem::OnPickedUp()
 {
-	CInventoryData::GetInst().AddMaterialCount(MaterialCount);
+	CCharacterData::GetInst().AddMaterialCount(MaterialCount);
 
 	Destroy();
 }

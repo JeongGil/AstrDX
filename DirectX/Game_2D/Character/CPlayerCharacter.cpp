@@ -19,7 +19,7 @@
 #include "CEnemy.h"
 #include "CWeapon_Battle.h"
 #include "../Strings.h"
-#include "../Inventory/CInventoryData.h"
+#include "../Inventory/CCharacterData.h"
 #include "../Inventory/CInventoryItem_Weapon.h"
 #include "../Table/CharacterBaseTable.h"
 #include "../Table/CharacterVisualTable.h"
@@ -551,7 +551,7 @@ float CPlayerCharacter::GetStat(EStat::Type StatType)
 	}
 
 	// Weapon Set Bonus.
-	for (const auto& [WeaponType, TypeCount] : CInventoryData::GetInst().GetWeaponTypeCounts())
+	for (const auto& [WeaponType, TypeCount] : CCharacterData::GetInst().GetWeaponTypeCounts())
 	{
 		FWeaponSetBonusInfo* Info;
 

@@ -47,7 +47,8 @@ void CBrotatoProgressBar::UpdateText()
 	}
 	else
 	{
-		Text->SetText(CurrentLevel);
+		Text->SetText(TEXT("LV."));
+		Text->AddText(CurrentLevel);
 	}
 }
 

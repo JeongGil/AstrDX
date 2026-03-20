@@ -153,7 +153,7 @@
     <ClCompile Include="Inventory\CShop.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="Inventory\CInventoryData.cpp">
+    <ClCompile Include="Inventory\CCharacterData.cpp">
       <Filter>Inventory</Filter>
     </ClCompile>
     <ClCompile Include="Table\CTableManager.cpp">
@@ -344,7 +344,7 @@
     <ClInclude Include="Inventory\CShop.h">
       <Filter>Inventory</Filter>
     </ClInclude>
-    <ClInclude Include="Inventory\CInventoryData.h">
+    <ClInclude Include="Inventory\CCharacterData.h">
       <Filter>Inventory</Filter>
     </ClInclude>
     <ClInclude Include="Table\CTableManager.h">

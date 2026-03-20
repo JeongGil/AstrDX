@@ -1,18 +1,18 @@
-#include "CInventoryData.h"
+#include "CCharacterData.h"
 
 #include "CInventoryItem_Weapon.h"
 #include "CShop.h"
 #include "../Table/WeaponInfo.h"
 #include "../Table/WeaponTable.h"
 
-bool CInventoryData::Init()
+bool CCharacterData::Init()
 {
 	Weapons.reserve(INVENTORY_MAX_WEAPON);
 
 	return true;
 }
 
-std::weak_ptr<CInventoryItem_Weapon> CInventoryData::GetWeapon(size_t SlotIdx)
+std::weak_ptr<CInventoryItem_Weapon> CCharacterData::GetWeapon(size_t SlotIdx)
 {
 	assert(SlotIdx < INVENTORY_MAX_WEAPON);
 
@@ -24,7 +24,7 @@ std::weak_ptr<CInventoryItem_Weapon> CInventoryData::GetWeapon(size_t SlotIdx)
 	return Weapons[SlotIdx];
 }
 
-void CInventoryData::AddWeapon(const FShopGoods& WeaponGoods)
+void CCharacterData::AddWeapon(const FShopGoods& WeaponGoods)
 {
 	assert(WeaponGoods.bIsWeapon);
 
@@ -39,7 +39,7 @@ void CInventoryData::AddWeapon(const FShopGoods& WeaponGoods)
 	RefreshWeaponTypeCounts();
 }
 
-void CInventoryData::AddWeapon(TableID WeaponID)
+void CCharacterData::AddWeapon(TableID WeaponID)
 {
 	if (Weapons.size() >= INVENTORY_MAX_WEAPON)
 	{
@@ -58,7 +58,7 @@ void CInventoryData::AddWeapon(TableID WeaponID)
 	RefreshWeaponTypeCounts();
 }
 
-void CInventoryData::RemoveWeapon(size_t SlotIdx)
+void CCharacterData::RemoveWeapon(size_t SlotIdx)
 {
 	assert(SlotIdx < INVENTORY_MAX_WEAPON);
 
@@ -70,7 +70,7 @@ void CInventoryData::RemoveWeapon(size_t SlotIdx)
 	}
 }
 
-void CInventoryData::RemoveWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon)
+void CCharacterData::RemoveWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon)
 {
 	auto InvenWeapon = Weapon.lock();
 	if (!InvenWeapon)
@@ -92,7 +92,7 @@ void CInventoryData::RemoveWeapon(const std::weak_ptr<CInventoryItem_Weapon>& We
 	}
 }
 
-void CInventoryData::RefreshWeaponTypeCounts()
+void CCharacterData::RefreshWeaponTypeCounts()
 {
 	WeaponTypeCounts.clear();
 
