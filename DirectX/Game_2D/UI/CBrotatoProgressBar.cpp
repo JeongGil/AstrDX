@@ -108,7 +108,7 @@ void CBrotatoProgressBar::SetHPValue(float InCurrentHP, float InMaxHP)
 	UpdateText();
 }
 
-void CBrotatoProgressBar::SetEXPValue(float InCurrentEXP, float InNeedEXP, int InCurrentLevel)
+void CBrotatoProgressBar::SetExpValue(float InCurrentEXP, float InNeedEXP, int InCurrentLevel)
 {
 	BarType = EBrotatoProgressBarType::EXP;
 	CurrentLevel = (std::max)(1, InCurrentLevel);

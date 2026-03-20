@@ -10,6 +10,7 @@
 #include "CPlayerCharacter.h"
 #include "../Strings.h"
 #include "../Utility.h"
+#include "../Inventory/CCharacterData.h"
 #include "../Table/EnemyInfo.h"
 #include "../Table/EnemyTable.h"
 #include "../Table/MiscInfo.h"
@@ -363,6 +364,7 @@ void CEnemy::OnDead()
 			}
 		}
 	}
+	
 }
 
 void CEnemy::UpdateSpawnSequence(const float DeltaTime)

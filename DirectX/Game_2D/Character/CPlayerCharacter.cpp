@@ -24,7 +24,6 @@
 #include "../Table/CharacterBaseTable.h"
 #include "../Table/CharacterVisualTable.h"
 #include "../Table/MiscTable.h"
-#include "../Table/WeaponSetBonusTable.h"
 #include "../World/CBrotatoWorld_Battle.h"
 
 bool CPlayerCharacter::Init()
@@ -37,7 +36,7 @@ bool CPlayerCharacter::Init()
 	const auto* Misc = MiscTable::GetInst().Get();
 	const auto* CharacterBase = CharacterBaseTable::GetInst().Get();
 
-	SetBaseStatus();
+	CurrHP = GetStat(EStat::MaxHP);
 
 	if (auto Col = Collider.lock())
 	{
@@ -478,14 +477,6 @@ void CPlayerCharacter::OnPickupColliderBeginOverlap(const FVector& HitPoint, CCo
 	DropItem->SetIsCollecting(true);
 }
 
-void CPlayerCharacter::SetBaseStatus()
-{
-	auto CharBaseInfo = CharacterBaseTable::GetInst().Get();
-
-	BaseStats.emplace(EStat::MaxHP, CharBaseInfo->BaseHP);
-	CurrHP = GetStat(EStat::MaxHP);
-}
-
 void CPlayerCharacter::SetCharacterVisual(TableID VisualInfoID)
 {
 	CharacterVisualInfoID = VisualInfoID;
@@ -538,43 +529,7 @@ void CPlayerCharacter::AddWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Wea
 
 float CPlayerCharacter::GetStat(EStat::Type StatType)
 {
-	float Value{};
-
-	if (BaseStats.contains(StatType))
-	{
-		Value += BaseStats[StatType];
-	}
-
-	if (UpgradeStats.contains(StatType))
-	{
-		Value += UpgradeStats[StatType];
-	}
-
-	// Weapon Set Bonus.
-	for (const auto& [WeaponType, TypeCount] : CCharacterData::GetInst().GetWeaponTypeCounts())
-	{
-		FWeaponSetBonusInfo* Info;
-
-		TableID ID(static_cast<int>(WeaponType));
-		if (WeaponSetBonusTable::GetInst().TryGet(ID, Info))
-		{
-			auto Bonus = Info->Bonus1[TypeCount - 1];
-			if (Bonus.StatType == StatType)
-			{
-				Value += Bonus.StatValue;
-			}
-
-			Bonus = Info->Bonus2[TypeCount - 1];
-			if (Bonus.StatType == StatType)
-			{
-				Value += Bonus.StatValue;
-			}
-		}
-	}
-
-	// TODO: 오라.
-
-	return Value;
+	return CCharacterData::GetInst().GetStat(StatType);
 }
 
 int CPlayerCharacter::GetToolTipDmgReductionPercent(int Armor)

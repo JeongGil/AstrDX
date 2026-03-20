@@ -2,14 +2,72 @@
 
 #include "CInventoryItem_Weapon.h"
 #include "CShop.h"
+#include "../Table/CharacterBaseTable.h"
 #include "../Table/WeaponInfo.h"
+#include "../Table/WeaponSetBonusTable.h"
 #include "../Table/WeaponTable.h"
 
 bool CCharacterData::Init()
 {
+	Clear();
+
 	Weapons.reserve(INVENTORY_MAX_WEAPON);
 
+	MaterialCount = 0;
+	Level = 1;
+	Exp = 0;
+
+	SetBaseStatus();
+
 	return true;
+}
+
+float CCharacterData::GetStat(EStat::Type StatType) const
+{
+	float Value{};
+
+	if (auto It = BaseStats.find(StatType); It != BaseStats.end())
+	{
+		Value += It->second;
+	}
+
+	if (auto It = UpgradeStats.find(StatType); It != UpgradeStats.end())
+	{
+		Value += It->second;
+	}
+
+	for (const auto& [WeaponType, TypeCount] : WeaponTypeCounts)
+	{
+		FWeaponSetBonusInfo* Info;
+
+		TableID ID(static_cast<int>(WeaponType));
+		if (WeaponSetBonusTable::GetInst().TryGet(ID, Info))
+		{
+			auto Bonus = Info->Bonus1[TypeCount - 1];
+			if (Bonus.StatType == StatType)
+			{
+				Value += Bonus.StatValue;
+			}
+
+			Bonus = Info->Bonus2[TypeCount - 1];
+			if (Bonus.StatType == StatType)
+			{
+				Value += Bonus.StatValue;
+			}
+		}
+	}
+
+	return Value;
+}
+
+void CCharacterData::SetBaseStatus()
+{
+	BaseStats.clear();
+
+	if (auto CharBaseInfo = CharacterBaseTable::GetInst().Get())
+	{
+		BaseStats.emplace(EStat::MaxHP, CharBaseInfo->BaseHP);
+	}
 }
 
 std::weak_ptr<CInventoryItem_Weapon> CCharacterData::GetWeapon(size_t SlotIdx)

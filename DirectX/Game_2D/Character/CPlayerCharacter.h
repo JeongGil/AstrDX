@@ -55,8 +55,6 @@ private:
 
 	void OnPickupColliderBeginOverlap(const FVector& HitPoint, CCollider* Other);
 
-	void SetBaseStatus();
-
 	void SetBodyColor(const FVector4& Color);
 	void OnHitEffectAnimFinished();
 
@@ -84,9 +82,6 @@ protected:
 	std::weak_ptr<CAnimation2DComponent> HitEffectAnim;
 
 	int RemainAbsorbAttackStack = 0;
-
-	std::unordered_map<EStat::Type, float> BaseStats;
-	std::unordered_map<EStat::Type, float> UpgradeStats;
 
 	float CurrHP{};
 

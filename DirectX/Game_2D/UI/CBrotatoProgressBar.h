@@ -61,7 +61,7 @@ public:
 	void SetBarType(EBrotatoProgressBarType Type);
 	void SetRatio(float InRatio);
 	void SetHPValue(float InCurrentHP, float InMaxHP);
-	void SetEXPValue(float InCurrentEXP, float InNeedEXP, int InCurrentLevel);
+	void SetExpValue(float InCurrentEXP, float InNeedEXP, int InCurrentLevel);
 	void SetTextColor(const FColor& Color);
 	void SetTextColor(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 	void SetTextPaddingX(float InPaddingX);

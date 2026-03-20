@@ -19,14 +19,28 @@ private:
 	std::vector<std::shared_ptr<CInventoryItem_Item>> Items;
 
 	std::unordered_map<EWeaponType::Type, int> WeaponTypeCounts;
+	std::unordered_map<EStat::Type, float> BaseStats;
+	std::unordered_map<EStat::Type, float> UpgradeStats;
 
 	int MaterialCount{};
 
 	int Level{};
-	int CurrentExp{};
+	int Exp{};
 
 public:
 	bool Init();
+	float GetStat(EStat::Type StatType) const;
+	void SetBaseStatus();
+
+	void AddUpgradeStat(EStat::Type StatType, float AddedValue)
+	{
+		UpgradeStats[StatType] += AddedValue;
+	}
+
+	void SetUpgradeStat(EStat::Type StatType, float Value)
+	{
+		UpgradeStats[StatType] = Value;
+	}
 
 	std::weak_ptr<CInventoryItem_Weapon> GetWeapon(size_t SlotIdx);
 	size_t GetWeaponCount() const
@@ -43,6 +57,9 @@ public:
 	{
 		Weapons.clear();
 		Items.clear();
+		WeaponTypeCounts.clear();
+		BaseStats.clear();
+		UpgradeStats.clear();
 	}
 
 	int GetWeaponTypeCount(EWeaponType::Type WeaponType) const
@@ -79,7 +96,34 @@ public:
 	static int GetLevelUpEXP(int CurrentLevel)
 	{
 		assert(CurrentLevel >= 1);
-		return (1 + CurrentLevel) * (1 + CurrentLevel);
+		return (3 + CurrentLevel) * (3 + CurrentLevel);
+	}
+
+	[[nodiscard]] int GetExp() const
+	{
+		return Exp;
+	}
+
+	[[nodiscard]] int GetLevel() const
+	{
+		return Level;
+	}
+
+	void SetExp(const int NewExp)
+	{
+		Exp = NewExp;
+
+		int NeedExp = GetLevelUpEXP(Level);
+		if (Exp >= NeedExp)
+		{
+			Exp -= NeedExp;
+			++Level;
+		}
+	}
+
+	void AddExp(int Added)
+	{
+		SetExp(GetExp() + Added);
 	}
 
 private:

@@ -110,7 +110,10 @@ void CPCStateWidget::Update(const float DeltaTime)
 
 	if (auto Bar = ExpBar.lock())
 	{
-		//Bar->SetEXPValue()
+		int Level = CCharacterData::GetInst().GetLevel();
+		int NeedExp = CCharacterData::GetLevelUpEXP(Level);
+		int CurrExp = CCharacterData::GetInst().GetExp();
+		Bar->SetExpValue(CurrExp, NeedExp, Level);
 	}
 
 	if (auto Text = MaterialCount.lock())

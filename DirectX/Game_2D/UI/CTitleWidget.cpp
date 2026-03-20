@@ -8,6 +8,7 @@
 #include <World/CWorldManager.h>
 
 #include "../Strings.h"
+#include "../Inventory/CCharacterData.h"
 #include "../World/CLoadingWorld.h"
 
 bool CTitleWidget::Init()
@@ -132,6 +133,8 @@ bool CTitleWidget::Init()
 
 void CTitleWidget::OnClickStart()
 {
+	CCharacterData::GetInst().Init();
+
 	if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
 	{
 		World->Load(EWorldType::Main);

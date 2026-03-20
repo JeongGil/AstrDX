@@ -85,6 +85,7 @@ CDropItem* CDropItem::Clone()
 void CDropItem::OnPickedUp()
 {
 	CCharacterData::GetInst().AddMaterialCount(MaterialCount);
+	CCharacterData::GetInst().AddExp(MaterialCount);
 
 	Destroy();
 }
