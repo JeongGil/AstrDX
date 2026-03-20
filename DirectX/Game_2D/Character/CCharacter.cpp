@@ -1,9 +1,13 @@
 #include "CCharacter.h"
 
 #include <CEngine.h>
+#include <CDevice.h>
 #include <numbers>
 #include <Component/CColliderBox2D.h>
+#include <World/CWorld.h>
+
 #include "../Strings.h"
+#include "../UI/CDamageFloatingText.h"
 
 bool CCharacter::Init()
 {
@@ -84,18 +88,33 @@ CCharacter* CCharacter::Clone()
 
 float CCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
-	// TODO: Damage Floating Text.
-	//const FVector Offset = { 0,20,0 };
-	//const int RangeX = 100;
-	//const int RangeY = 50;	
+	const auto World = this->World.lock();
+	const auto UIManager = World->GetUIManager().lock();
+	const auto DamageWidget = UIManager->CreateWidget<CDamageFloatingText>("DamageFloating").lock();
 
-	//std::uniform_int_distribution<int> DistX(-RangeX, RangeX);
-	//std::uniform_int_distribution<int> DistY(-RangeY, RangeY);
-	//auto& RandEngine = CEngine::GetInst()->GetMT();
+	if (DamageWidget)
+	{
+		constexpr int RandomRangeX = 30;
+		constexpr int RandomRangeY = 10;
+		constexpr float VerticalScreenOffset = -10.f;
 
-	//int X = DistX(RandEngine);
-	//int Y = DistY(RandEngine);
-	//const FVector SpawnPos = { Offset.x + X, Offset.y + Y,Offset.z };
+		auto& RandomEngine = CEngine::GetInst()->GetMT();
+		std::uniform_int_distribution<int> RandomXDist(-RandomRangeX, RandomRangeX);
+		std::uniform_int_distribution<int> RandomYDist(-RandomRangeY, RandomRangeY);
+
+		const float RandomOffsetX = static_cast<float>(RandomXDist(RandomEngine));
+		const float RandomOffsetY = static_cast<float>(RandomYDist(RandomEngine));
+
+		FVector AnchorWorldPos = GetWorldPosition();
+		AnchorWorldPos.y += GetWorldScale().y * 0.5f;
+
+		DamageWidget->SetAnchorWorldPos(
+			AnchorWorldPos,
+			RandomOffsetX,
+			RandomOffsetY + VerticalScreenOffset);
+		DamageWidget->SetEnable(true);
+		DamageWidget->SetDamage(Damage);
+	}
 
 	return CGameObject::TakeDamage(Damage, Instigator);
 }

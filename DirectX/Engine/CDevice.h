@@ -126,6 +126,11 @@ public:
 		return Ratio;
 	}
 
+	[[nodiscard]] float GetRatioFHD() const
+	{
+		return Resolution.Height / 1080.f;
+	}
+
 private:
 	// It is mainly used when creating resources.
 	ID3D11Device* Device = nullptr;

@@ -202,6 +202,7 @@
     <ClCompile Include="Table\CTableManager.cpp" />
     <ClCompile Include="Thread\CLoadingThread.cpp" />
     <ClCompile Include="UI\CBattleWidget.cpp" />
+    <ClCompile Include="UI\CDamageFloatingText.cpp" />
     <ClCompile Include="UI\CPCStateWidget.cpp" />
     <ClCompile Include="UI\CBrotatoProgressBar.cpp" />
     <ClCompile Include="UI\CEditorWidget.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Table\WeaponTable.h" />
     <ClInclude Include="Thread\CLoadingThread.h" />
     <ClInclude Include="UI\CBattleWidget.h" />
+    <ClInclude Include="UI\CDamageFloatingText.h" />
     <ClInclude Include="UI\CPCStateWidget.h" />
     <ClInclude Include="UI\CBrotatoProgressBar.h" />
     <ClInclude Include="UI\CEditorWidget.h" />

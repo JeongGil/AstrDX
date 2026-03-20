@@ -261,6 +261,9 @@
     <ClCompile Include="UI\CTitleWidget.cpp">
       <Filter>UI\Main\Title</Filter>
     </ClCompile>
+    <ClCompile Include="UI\CDamageFloatingText.cpp">
+      <Filter>UI\Main\Battle\Group</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -484,6 +487,9 @@
     </ClInclude>
     <ClInclude Include="UI\CTitleWidget.h">
       <Filter>UI\Main\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CDamageFloatingText.h">
+      <Filter>UI\Main\Battle\Group</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

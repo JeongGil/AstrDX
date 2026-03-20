@@ -48,7 +48,7 @@ bool CBrotatoWorld_Battle::Init()
 
 	LoadAnimation2D();
 
-	//CInventoryData::GetInst().AddWeapon(TableID(1));
+	CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
 	//CInventoryData::GetInst().AddWeapon(TableID(1));
 
@@ -74,7 +74,7 @@ bool CBrotatoWorld_Battle::Init()
 	//	//NPC->SetEnemyInfoID(TableID(2));
 	//}
 
-	EnemyTableIDs.emplace_back(1);
+	EnemyTableIDs.emplace_back(2);
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 
