@@ -10,14 +10,6 @@
 #include "../Character/CPlayerCharacter.h"
 #include "../Inventory/CCharacterData.h"
 
-CPCStateWidget::CPCStateWidget()
-{
-}
-
-CPCStateWidget::~CPCStateWidget()
-{
-}
-
 void CPCStateWidget::OnPlayerHPChanged(float CurrentHP, float MaxHP)
 {
 	if (auto Bar = HpBar.lock())
@@ -120,9 +112,4 @@ void CPCStateWidget::Update(const float DeltaTime)
 	{
 		Text->SetText(CCharacterData::GetInst().GetMaterialCount());
 	}
-}
-
-void CPCStateWidget::Render()
-{
-	CWidgetContainer::Render();
 }

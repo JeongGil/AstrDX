@@ -14,10 +14,10 @@ class CPCStateWidget :
 	friend CWidgetContainer;
 
 protected:
-    CPCStateWidget();
+    CPCStateWidget() = default;
 
 public:
-    ~CPCStateWidget() override;
+    ~CPCStateWidget() override = default;
 
 private:
     std::weak_ptr<CBrotatoProgressBar> HpBar;
@@ -36,6 +36,5 @@ public:
 
     bool Init() override;
     void Update(const float DeltaTime) override;
-    void Render() override;
 };
 

@@ -84,6 +84,11 @@ public:
 		TileCountY = InCountY;
 	}
 
+	[[nodiscard]] float GetRemainStageTime() const
+	{
+		return RemainStageTime;
+	}
+
 	[[nodiscard]] int GetTileCountX() const { return TileCountX; }
 	[[nodiscard]] int GetTileCountY() const { return TileCountY; }
 	[[nodiscard]] int GetTileTheme() const { return TileTheme; }
