@@ -3,6 +3,7 @@
 #include <World/CWorldManager.h>
 
 #include "../World/CBrotatoWorld_Battle.h"
+#include "../World/CBrotatoWorld_Shop.h"
 #include "../World/CBrotatoWorld_Title.h"
 #include "../World/CMainWorld.h"
 #include "../World/CStartWorld.h"
@@ -39,6 +40,9 @@ void CLoadingThread::Run()
 		break;
 	case EWorldType::Editor:
 		//CWorldManager::GetInst()->CreateAsyncWorld<CEditorWorld>();
+		break;
+	case EWorldType::Shop:
+		CWorldManager::GetInst()->CreateAsyncWorld<CBrotatoWorld_Shop>();
 		break;
 	}
 }

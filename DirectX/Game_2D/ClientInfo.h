@@ -7,6 +7,7 @@ enum class EWorldType
 	Loading,
 	Main,
 	Editor,
+	Shop,
 };
 
 enum class EEditorMode

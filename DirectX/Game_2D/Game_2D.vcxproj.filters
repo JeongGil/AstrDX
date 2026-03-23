@@ -100,6 +100,9 @@
     <Filter Include="UI\Main\Title">
       <UniqueIdentifier>{68d9ce42-ebc1-4f56-bb59-ee07f62bb5e9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Main\Shop\Group">
+      <UniqueIdentifier>{f4f5c8c7-ed19-41c3-adf8-43e085268d71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -263,6 +266,24 @@
     </ClCompile>
     <ClCompile Include="UI\CDamageFloatingText.cpp">
       <Filter>UI\Main\Battle\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CShopWidget.cpp">
+      <Filter>UI\Main\Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CGoodsWidget.cpp">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CStatWidget.cpp">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CWeaponInvenWidget.cpp">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\CItemInvenWidget.cpp">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClCompile>
+    <ClCompile Include="World\CBrotatoWorld_Shop.cpp">
+      <Filter>World\Brotato</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -490,6 +511,24 @@
     </ClInclude>
     <ClInclude Include="UI\CDamageFloatingText.h">
       <Filter>UI\Main\Battle\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="World\CBrotatoWorld_Shop.h">
+      <Filter>World\Brotato</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CShopWidget.h">
+      <Filter>UI\Main\Shop</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CGoodsWidget.h">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CStatWidget.h">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CItemInvenWidget.h">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CWeaponInvenWidget.h">
+      <Filter>UI\Main\Shop\Group</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

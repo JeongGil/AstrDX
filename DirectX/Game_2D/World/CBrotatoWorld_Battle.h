@@ -12,6 +12,13 @@ public:
 	CBrotatoWorld_Battle() = default;
 	~CBrotatoWorld_Battle() override = default;
 
+	struct FEnemySpawnEntry
+	{
+		TableID EnemyID{ TableID(1) };
+		float SpawnIntervalSec{ 2.f };
+		float ElapsedTime{};
+	};
+
 protected:
 	int StageLevel;
 
@@ -28,9 +35,7 @@ protected:
 
 	std::array<std::weak_ptr<CColliderBox2D>, 4> EdgeColliders;
 
-	std::vector<TableID> EnemyTableIDs;
-	float EnemySpawnIntervalSec{ 2.f };
-	float ElapsedEnemySpawnTime{};
+	std::vector<FEnemySpawnEntry> EnemySpawnEntries;
 	float EnemySpawnRadius{ 600.f };
 	int SpawnedEnemyCount{};
 

@@ -8,7 +8,9 @@
 
 #include <Component/CMeshComponent.h>
 #include <Component/CColliderBox2D.h>
+#include <World/CWorldManager.h>
 
+#include "CLoadingWorld.h"
 #include "../Map/CBrotatoTile.h"
 #include "../Strings.h"
 #include "../Character/CCameraObject.h"
@@ -58,7 +60,8 @@ bool CBrotatoWorld_Battle::Init()
 	//	//NPC->SetEnemyInfoID(TableID(2));
 	//}
 
-	EnemyTableIDs.emplace_back(2);
+	EnemySpawnEntries.push_back({ TableID(1), 8.f, 4.f });
+	EnemySpawnEntries.push_back({ TableID(2), 2.f, 0.f });
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 
@@ -105,11 +108,25 @@ void CBrotatoWorld_Battle::Update(const float DeltaTime)
 
 void CBrotatoWorld_Battle::FinishStage(bool bClear)
 {
+	if (bClear)
+	{
+		if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
+		{
+			World->Load(EWorldType::Shop);
+		}
+	}
+	else
+	{
+		//if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
+		//{
+		//	World->Load(EWorldType::Result);
+		//}
+	}
 }
 
 void CBrotatoWorld_Battle::UpdateEnemySpawn(float DeltaTime)
 {
-	if (EnemyTableIDs.empty() || EnemySpawnIntervalSec <= 0.f)
+	if (EnemySpawnEntries.empty())
 	{
 		return;
 	}
@@ -120,28 +137,35 @@ void CBrotatoWorld_Battle::UpdateEnemySpawn(float DeltaTime)
 		return;
 	}
 
-	ElapsedEnemySpawnTime += DeltaTime;
-	while (ElapsedEnemySpawnTime >= EnemySpawnIntervalSec)
+	const FVector PlayerPos = Player->GetWorldPosition();
+
+	for (FEnemySpawnEntry& Entry : EnemySpawnEntries)
 	{
-		ElapsedEnemySpawnTime -= EnemySpawnIntervalSec;
-
-		FVector SpawnPos;
-		if (!TryGetEnemySpawnPosition(Player->GetWorldPosition(), EnemySpawnRadius, SpawnPos))
+		if (Entry.SpawnIntervalSec <= 0.f)
 		{
 			continue;
 		}
 
-		auto Enemy = CreateGameObject<CEnemy>("Monster_" + std::to_string(SpawnedEnemyCount++)).lock();
-		if (!Enemy)
+		Entry.ElapsedTime += DeltaTime;
+		while (Entry.ElapsedTime >= Entry.SpawnIntervalSec)
 		{
-			continue;
+			Entry.ElapsedTime -= Entry.SpawnIntervalSec;
+
+			FVector SpawnPos;
+			if (!TryGetEnemySpawnPosition(PlayerPos, EnemySpawnRadius, SpawnPos))
+			{
+				continue;
+			}
+
+			auto Enemy = CreateGameObject<CEnemy>("Monster_" + std::to_string(SpawnedEnemyCount++)).lock();
+			if (!Enemy)
+			{
+				continue;
+			}
+
+			Enemy->SetWorldPosition(SpawnPos);
+			Enemy->SetEnemyInfoID(Entry.EnemyID);
 		}
-
-		std::uniform_int_distribution<size_t> EnemyIDDist(0, EnemyTableIDs.size() - 1);
-		const TableID EnemyID = EnemyTableIDs[EnemyIDDist(CEngine::GetInst()->GetMT())];
-
-		Enemy->SetWorldPosition(SpawnPos);
-		Enemy->SetEnemyInfoID(EnemyID);
 	}
 }
 
