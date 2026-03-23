@@ -110,13 +110,12 @@ void CBrotatoProgressBar::SetHPValue(float InCurrentHP, float InMaxHP)
 
 void CBrotatoProgressBar::SetExpValue(float InCurrentEXP, float InNeedEXP, int InCurrentLevel)
 {
+	assert(InNeedEXP != 0);
+
 	BarType = EBrotatoProgressBarType::EXP;
-	CurrentLevel = (std::max)(1, InCurrentLevel);
+	CurrentLevel = (std::max)(0, InCurrentLevel);
 
-	const float NeedEXP = (std::max)(1.f, InNeedEXP);
-	const float CurrentEXP = std::clamp(InCurrentEXP, 0.f, NeedEXP);
-
-	SetRatio(CurrentEXP / NeedEXP);
+	SetRatio(InCurrentEXP / InNeedEXP);
 	UpdateTextLayout();
 	UpdateText();
 }

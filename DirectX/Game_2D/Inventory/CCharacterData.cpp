@@ -14,7 +14,7 @@ bool CCharacterData::Init()
 	Weapons.reserve(INVENTORY_MAX_WEAPON);
 
 	MaterialCount = 0;
-	Level = 1;
+	Level = 0;
 	Exp = 0;
 
 	SetBaseStatus();

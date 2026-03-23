@@ -93,10 +93,10 @@ public:
 		SetMaterialCount(MaterialCount + Added);
 	}
 
-	static int GetLevelUpEXP(int CurrentLevel)
+	static int GetLevelUpEXP(int TargetLevel)
 	{
-		assert(CurrentLevel >= 1);
-		return (3 + CurrentLevel) * (3 + CurrentLevel);
+		assert(TargetLevel >= 1);
+		return (3 + TargetLevel) * (3 + TargetLevel);
 	}
 
 	[[nodiscard]] int GetExp() const
@@ -113,7 +113,7 @@ public:
 	{
 		Exp = NewExp;
 
-		int NeedExp = GetLevelUpEXP(Level);
+		int NeedExp = GetLevelUpEXP(Level + 1);
 		if (Exp >= NeedExp)
 		{
 			Exp -= NeedExp;
