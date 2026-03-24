@@ -213,6 +213,7 @@
     <ClCompile Include="UI\CLootStateWidget.cpp" />
     <ClCompile Include="UI\CMainWidget.cpp" />
     <ClCompile Include="UI\CPlayerStateWidget.cpp" />
+    <ClCompile Include="UI\CResultWidget.cpp" />
     <ClCompile Include="UI\CShopWidget.cpp" />
     <ClCompile Include="UI\CSlot.cpp" />
     <ClCompile Include="UI\CSlotIcon.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="UI\CLootStateWidget.h" />
     <ClInclude Include="UI\CMainWidget.h" />
     <ClInclude Include="UI\CPlayerStateWidget.h" />
+    <ClInclude Include="UI\CResultWidget.h" />
     <ClInclude Include="UI\CShopWidget.h" />
     <ClInclude Include="UI\CSlot.h" />
     <ClInclude Include="UI\CSlotIcon.h" />

@@ -608,6 +608,8 @@ void CPlayerCharacter::OnDead()
 			}
 		}
 	}
+
+	CCharacterData::GetInst().SetStageState(EStageState::Defeat);
 }
 
 void CPlayerCharacter::UpdateSpawnSequence(const float DeltaTime)

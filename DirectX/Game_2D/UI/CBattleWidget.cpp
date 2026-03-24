@@ -4,6 +4,7 @@
 
 #include "CLootStateWidget.h"
 #include "CPCStateWidget.h"
+#include "CResultWidget.h"
 #include "CStageStateWidget.h"
 
 bool CBattleWidget::Init()
@@ -34,6 +35,12 @@ bool CBattleWidget::Init()
 	{
 		Widget->SetPivot(1.f, 0.f);
 		Widget->SetPos(Resolution.Width - 10, 10);
+	}
+
+	BattleResultWidget = CreateWidget<CResultWidget>("ResultWidget");
+	if (auto Widget = BattleResultWidget.lock())
+	{
+		Widget->SetEnable(false);
 	}
 
 	return true;

@@ -5,6 +5,14 @@
 constexpr size_t INVENTORY_MAX_WEAPON = 6;
 constexpr int32_t MAX_DANGER = 5;
 
+enum class EStageState
+{
+	None,
+	Playing,
+	Clear,
+	Defeat,
+};
+
 namespace EWeaponType
 {
 	enum Type : uint32_t

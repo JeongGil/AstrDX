@@ -27,6 +27,9 @@ private:
 	int Level{};
 	int Exp{};
 
+	int StageLevel = 1;
+	EStageState StageState{};
+
 public:
 	bool Init();
 	float GetStat(EStat::Type StatType) const;
@@ -76,6 +79,26 @@ public:
 	const std::unordered_map<EWeaponType::Type, int>& GetWeaponTypeCounts() const
 	{
 		return WeaponTypeCounts;
+	}
+
+	[[nodiscard]] int GetStageLevel() const
+	{
+		return StageLevel;
+	}
+
+	void SetStageLevel(const int NewStage)
+	{
+		StageLevel = NewStage;
+	}
+
+	[[nodiscard]] EStageState GetStageState() const
+	{
+		return StageState;
+	}
+
+	void SetStageState(const EStageState NewStageState)
+	{
+		StageState = NewStageState;
 	}
 
 	[[nodiscard]] int GetMaterialCount() const

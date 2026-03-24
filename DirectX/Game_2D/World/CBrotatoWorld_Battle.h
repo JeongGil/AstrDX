@@ -1,6 +1,7 @@
 #pragma once
 #include <World/CWorld.h>
 
+class CBattleWidget;
 class CPlayerCharacter;
 class CColliderBox2D;
 class CCameraObject;
@@ -20,10 +21,14 @@ public:
 	};
 
 protected:
+	std::weak_ptr<CPlayerCharacter> PlayerCharacter;
+
+	std::weak_ptr<CBattleWidget> BattleWidget;
 	int StageLevel;
 
 	int TotalStageTime;
 	float RemainStageTime = 30.f;
+	float RemainFinishTime = 3.f;
 
 	int ItemBoxDropCount{};
 
@@ -43,6 +48,7 @@ public:
 	bool Init() override;
 	void Update(const float DeltaTime) override;
 
+	void EnableResultWidget(bool bClear) const;
 	void FinishStage(bool bClear);
 
 private:

@@ -439,7 +439,7 @@ void CWeapon_Battle::SortCloseEnemies()
 	std::erase_if(CloseEnemies, [](const std::weak_ptr<CGameObject>& WeakObject)
 		{
 			auto Enemy = std::dynamic_pointer_cast<CEnemy>(WeakObject.lock());
-			if (!Enemy || !Enemy->GetAlive() || !Enemy->GetEnable() || Enemy->GetCurrHP() <= 0.f)
+			if (!Enemy || !Enemy->GetAlive() || !Enemy->GetEnable() || Enemy->GetCurrHP() <= 0.f || Enemy->IsPendingDead())
 			{
 				return true;
 			}

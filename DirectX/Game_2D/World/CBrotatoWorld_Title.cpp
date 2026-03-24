@@ -22,8 +22,6 @@ bool CBrotatoWorld_Title::Init()
 	CRenderManager::GetInst()->CreateLayer("Enemy", ERenderOrder::Enemy, ERenderListSort::Y);
 	CRenderManager::GetInst()->CreateLayer("Effect", ERenderOrder::Effect, ERenderListSort::Y);
 
-	CPathManager::CreatePath(Key::Path::Brotato, TEXT("Brotato\\"), Key::Path::Asset);
-
 	CTableManager::GetInst().Init();
 	CTableManager::GetInst().LoadTables();
 

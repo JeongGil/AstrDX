@@ -285,6 +285,9 @@
     <ClCompile Include="World\CBrotatoWorld_Shop.cpp">
       <Filter>World\Brotato</Filter>
     </ClCompile>
+    <ClCompile Include="UI\CResultWidget.cpp">
+      <Filter>UI\Main\Battle</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -529,6 +532,9 @@
     </ClInclude>
     <ClInclude Include="UI\CWeaponInvenWidget.h">
       <Filter>UI\Main\Shop\Group</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CResultWidget.h">
+      <Filter>UI\Main\Battle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

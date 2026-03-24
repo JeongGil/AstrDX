@@ -24,6 +24,8 @@
 #include "../Table/ProjectileTable.h"
 #include "../Table/WeaponTable.h"
 #include "../UI/CBattleWidget.h"
+#include "../UI/CResultWidget.h"
+#include "../UI/CStageStateWidget.h"
 
 bool CBrotatoWorld_Battle::Init()
 {
@@ -34,19 +36,17 @@ bool CBrotatoWorld_Battle::Init()
 
 	LoadAnimation2D();
 
-	CCharacterData::GetInst().AddWeapon(TableID(1));
-	//CCharacterData::GetInst().AddWeapon(TableID(1));
-	//CCharacterData::GetInst().AddWeapon(TableID(1));
+	auto& CharacterData = CCharacterData::GetInst();
 
-	auto WPC = CreateGameObject<CPlayerCharacter>(Key::Obj::PC);
-	if (auto PC = WPC.lock())
+	PlayerCharacter = CreateGameObject<CPlayerCharacter>(Key::Obj::PC);
+	if (auto PC = PlayerCharacter.lock())
 	{
-		PC->SetWorldPosition(0, 0);
+		PC->SetWorldPosition(FVector::Zero);
 		PC->SetCharacterVisual(TableID(1));
 
-		for (size_t i = 0; i < CCharacterData::GetInst().GetWeaponCount(); i++)
+		for (size_t i = 0; i < CharacterData.GetWeaponCount(); i++)
 		{
-			auto Weapon = CCharacterData::GetInst().GetWeapon(i);
+			auto Weapon = CharacterData.GetWeapon(i);
 			PC->AddWeapon(Weapon);
 		}
 	}
@@ -86,7 +86,9 @@ bool CBrotatoWorld_Battle::Init()
 	SetTileCount(Misc->MapSizeX, Misc->MapSizeY);
 	CreateTileMap();
 
-	CreateUI(WPC);
+	CreateUI(PlayerCharacter);
+
+	CharacterData.SetStageState(EStageState::Playing);
 
 	return true;
 }
@@ -95,15 +97,62 @@ void CBrotatoWorld_Battle::Update(const float DeltaTime)
 {
 	CWorld::Update(DeltaTime);
 
-	RemainStageTime -= DeltaTime;
+	auto StageState = CCharacterData::GetInst().GetStageState();
+	switch (StageState)
+	{
+	case EStageState::None:
+		break;
+	case EStageState::Playing:
+		RemainStageTime -= DeltaTime;
+		break;
+	case EStageState::Clear:
+	case EStageState::Defeat:
+		RemainFinishTime -= DeltaTime;
+		break;
+	}
+
+	if (RemainFinishTime <= 0.f)
+	{
+		FinishStage(StageState == EStageState::Clear);
+	}
 
 	if (RemainStageTime <= 0.f)
 	{
-		FinishStage(true);
+		EnableResultWidget(true);
 		return;
 	}
 
+	if (auto PC = this->PlayerCharacter.lock())
+	{
+		if (PC->IsPendingDead())
+		{
+			EnableResultWidget(false);
+			return;
+		}
+	}
+
 	UpdateEnemySpawn(DeltaTime);
+}
+
+void CBrotatoWorld_Battle::EnableResultWidget(bool bClear) const
+{
+	auto& CharacterData = CCharacterData::GetInst();
+	if (CharacterData.GetStageState() != EStageState::Clear
+		&& CharacterData.GetStageState() != EStageState::Defeat)
+	{
+		return;
+	}
+
+	if (auto BattleWidget = this->BattleWidget.lock())
+	{
+		if (auto Widget = BattleWidget->GetStageStateWidget().lock())
+		{
+			Widget->SetEnableStageResult(true);
+			Widget->SetStageResultText(bClear);
+		}
+	}
+
+	CharacterData.SetStageState(bClear? EStageState::Clear : EStageState::Defeat);
 }
 
 void CBrotatoWorld_Battle::FinishStage(bool bClear)
@@ -117,10 +166,13 @@ void CBrotatoWorld_Battle::FinishStage(bool bClear)
 	}
 	else
 	{
-		//if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
-		//{
-		//	World->Load(EWorldType::Result);
-		//}
+		if (auto BattleWidget = this->BattleWidget.lock())
+		{
+			if (auto Widget = BattleWidget->GetBattleResultWidget().lock())
+			{
+				Widget->SetEnable(true);
+			}
+		}
 	}
 }
 
@@ -423,7 +475,8 @@ void CBrotatoWorld_Battle::LoadSound()
 
 void CBrotatoWorld_Battle::CreateUI(const std::weak_ptr<CPlayerCharacter>& PC)
 {
-	if (auto Widget = UIManager->CreateWidget<CBattleWidget>("BattleWidget").lock())
+	BattleWidget = UIManager->CreateWidget<CBattleWidget>("BattleWidget");
+	if (auto Widget = BattleWidget.lock())
 	{
 		Widget->SetPlayerCharacter(PC);
 	}
