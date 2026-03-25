@@ -363,22 +363,26 @@ void CRenderManager::CheckInstancing(const std::shared_ptr<CSceneComponent>& Com
 
 	std::shared_ptr<CRenderInstancing> Instancing;
 
-	for (auto It = Begin; It != End; ++It)
-	{
-		auto& Inst = It->second;
-		if (Inst->CheckMesh(Comp->GetMesh())
-			&& Inst->CheckTexture(Comp->GetTexture()))
-		{
-			Instancing = Inst;
-			break;
-		}
-	}
-
-	if (!Instancing)
+	if (Begin == End)
 	{
 		Instancing.reset(new CRenderInstancing);
 		Instancing->SetMesh(Comp->GetMesh());
 		Instancing->SetTexture(Comp->GetTexture());
+		
+		Layer.InstancingMap.emplace(Key, Instancing);
+	}
+	else
+	{
+		for (auto It = Begin; It != End; ++It)
+		{
+			auto& Inst = It->second;
+			if (Inst->CheckMesh(Comp->GetMesh())
+				&& Inst->CheckTexture(Comp->GetTexture()))
+			{
+				Instancing = Inst;
+				break;
+			}
+		}
 	}
 
 	Instancing->AddRenderComponent(Comp);
