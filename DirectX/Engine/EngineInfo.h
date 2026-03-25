@@ -52,6 +52,13 @@ struct FResolution
 	int Height = 0;
 };
 
+enum class EWindowMode
+{
+	Windowed,
+	BorderlessFullscreen,
+	Fullscreen,
+};
+
 struct FVertexBuffer
 {
 	ID3D11Buffer* Buffer = nullptr;

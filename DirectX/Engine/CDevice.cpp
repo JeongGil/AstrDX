@@ -1,11 +1,11 @@
 #include "CDevice.h"
 
-bool CDevice::Init(const HWND window, const int width, const int height, const bool windowMode)
+bool CDevice::Init(const HWND window, const int width, const int height, const EWindowMode windowMode)
 {
 	this->window = window;
 	Resolution.Width = width;
 	Resolution.Height = height;
-	bWindowMode = windowMode;
+	bWindowMode = (windowMode != EWindowMode::Fullscreen);
 
 	TexelSize.x = 1.f / static_cast<float>(width);
 	TexelSize.y = 1.f / static_cast<float>(height);
@@ -76,7 +76,7 @@ bool CDevice::Init(const HWND window, const int width, const int height, const b
 		// more than 2 buffers for DXGI_SWAP_EFFECT_FLIP_DISCARD
 		.BufferCount = 2u,
 		.OutputWindow = window,
-		.Windowed = windowMode,
+		.Windowed = bWindowMode,
 		.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD,
 		.Flags = 0u,
 	};

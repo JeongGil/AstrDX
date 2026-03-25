@@ -47,9 +47,9 @@ private:
 	void CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC);
 
 protected:
-	static constexpr int CHARGE_MOVE_SPEED = 1000;
-	static constexpr int CHARGE_MOVE_DISTANCE = 1000;
-	static constexpr int CHARGE_USE_DISTANCE = 800;
+	static constexpr int CHARGE_MOVE_SPEED = 800;
+	static constexpr int CHARGE_MOVE_DISTANCE = 800;
+	static constexpr int CHARGE_USE_DISTANCE = 600;
 
 	std::weak_ptr<CMeshComponent> Mesh;
 	std::weak_ptr<CAnimation2DComponent> Animation;

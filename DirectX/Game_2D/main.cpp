@@ -36,7 +36,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	if (!CEngine::GetInst()->Init(hInstance, TEXT("GameClient"),
 		IDI_ICON1, IDI_ICON1,
-		1280, 720, true))
+		//1280, 720, EWindowMode::Windowed))
+		1920, 1080, EWindowMode::BorderlessFullscreen))
 	{
 		CEngine::DestroyInst();
 

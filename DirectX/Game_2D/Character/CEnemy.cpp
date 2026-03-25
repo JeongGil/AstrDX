@@ -224,7 +224,7 @@ void CEnemy::Update(const float DeltaTime)
 	if (Behaviors & EEnemyBehavior::Kiting)
 	{
 		constexpr float KITING_NEAR_DISTANCE = static_cast<float>(CHARGE_USE_DISTANCE);
-		constexpr float KITING_FAR_DISTANCE = KITING_NEAR_DISTANCE * 1.5f;
+		constexpr float KITING_FAR_DISTANCE = KITING_NEAR_DISTANCE * 1.2f;
 
 		if (DistToPlayer <= KITING_NEAR_DISTANCE)
 		{

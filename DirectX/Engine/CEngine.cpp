@@ -36,7 +36,7 @@ void CEngine::InitCDO()
 }
 
 bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int IconID, const int SmallIconID,
-                   const int Width, const int Height, const bool WindowMode)
+                   const int Width, const int Height, const EWindowMode WindowMode)
 {
 	std::random_device RD;
 	MT = std::mt19937_64(RD());
@@ -48,7 +48,10 @@ bool CEngine::Init(const HINSTANCE hInstance, const TCHAR* WindowName, const int
 
 	InitRegisterClass(WindowName, IconID, SmallIconID);
 
-	InitCreateWindow(WindowName, Width, Height);
+	if (!InitCreateWindow(WindowName, Width, Height, WindowMode))
+	{
+		return false;
+	}
 
 	if (!CDevice::GetInst()->Init(hWnd, Width, Height, WindowMode))
 	{
@@ -174,10 +177,44 @@ void CEngine::InitRegisterClass(const TCHAR* WindowName, const int IconID, const
 	RegisterClassExW(&wc);
 }
 
-bool CEngine::InitCreateWindow(const TCHAR* WindowName, const int Width, const int Height)
+bool CEngine::InitCreateWindow(const TCHAR* WindowName, const int Width, const int Height, const EWindowMode WindowMode)
 {
+	DWORD WindowStyle = WS_OVERLAPPEDWINDOW;
+	int WindowPosX = CW_USEDEFAULT;
+	int WindowPosY = 0;
+	int WindowWidth = Width;
+	int WindowHeight = Height;
+
+	if (WindowMode == EWindowMode::Windowed)
+	{
+		RECT WindowRC{ 0, 0, Width, Height };
+		AdjustWindowRect(&WindowRC, WindowStyle, FALSE);
+		WindowWidth = WindowRC.right - WindowRC.left;
+		WindowHeight = WindowRC.bottom - WindowRC.top;
+	}
+	else
+	{
+		WindowStyle = WS_POPUP;
+
+		MONITORINFO MonitorInfo{};
+		MonitorInfo.cbSize = sizeof(MONITORINFO);
+
+		if (GetMonitorInfo(MonitorFromPoint(POINT{ 0, 0 }, MONITOR_DEFAULTTOPRIMARY), &MonitorInfo))
+		{
+			WindowPosX = MonitorInfo.rcMonitor.left;
+			WindowPosY = MonitorInfo.rcMonitor.top;
+			WindowWidth = MonitorInfo.rcMonitor.right - MonitorInfo.rcMonitor.left;
+			WindowHeight = MonitorInfo.rcMonitor.bottom - MonitorInfo.rcMonitor.top;
+		}
+		else
+		{
+			WindowPosX = 0;
+			WindowPosY = 0;
+		}
+	}
+
 	hWnd = CreateWindowW(WindowName, WindowName,
-		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, Width, Height,
+		WindowStyle, WindowPosX, WindowPosY, WindowWidth, WindowHeight,
 		nullptr, nullptr, hInst, nullptr);
 
 	if (!hWnd)
@@ -185,12 +222,12 @@ bool CEngine::InitCreateWindow(const TCHAR* WindowName, const int Width, const i
 		return false;
 	}
 
-	RECT WindowRC{ 0, 0, Width, Height };
-	AdjustWindowRect(&WindowRC, WS_OVERLAPPEDWINDOW, FALSE);
-
-	SetWindowPos(hWnd, HWND_TOPMOST,
-		0, 0, WindowRC.right - WindowRC.left, WindowRC.bottom - WindowRC.top,
-		SWP_NOMOVE | SWP_NOZORDER);
+	if (WindowMode != EWindowMode::Windowed)
+	{
+		SetWindowPos(hWnd, HWND_TOPMOST,
+			WindowPosX, WindowPosY, WindowWidth, WindowHeight,
+			SWP_NOZORDER | SWP_FRAMECHANGED);
+	}
 
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);

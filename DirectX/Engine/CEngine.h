@@ -52,10 +52,10 @@ public:
 	 * @param SmallIconID The resource ID of the small application icon.
 	 * @param Width The width of the application window.
 	 * @param Height The height of the application window.
-	 * @param WindowMode Specifies whether the application runs in windowed mode (true) or fullscreen mode (false).
+	 * @param WindowMode Specifies the window display mode (windowed, borderless fullscreen, or fullscreen).
 	 * @return true if the initialization is successful; otherwise, false.
 	 */
-	bool Init(HINSTANCE hInstance, const TCHAR* WindowName, int IconID, int SmallIconID, int Width, int Height, bool WindowMode);
+	bool Init(HINSTANCE hInstance, const TCHAR* WindowName, int IconID, int SmallIconID, int Width, int Height, EWindowMode WindowMode);
 
 	/**
 	 * @brief Executes the main loop of the engine.
@@ -125,9 +125,10 @@ private:
 	 * @param WindowName The name of the application window.
 	 * @param Width The desired width of the application window.
 	 * @param Height The desired height of the application window.
+	 * @param WindowMode The window display mode.
 	 * @return true if the window is successfully created and initialized; otherwise, false.
 	 */
-	bool InitCreateWindow(const TCHAR* WindowName, int Width, int Height);
+	bool InitCreateWindow(const TCHAR* WindowName, int Width, int Height, EWindowMode WindowMode);
 
 
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

@@ -15,11 +15,10 @@ public:
 	 * @param window The handle to the application window.
 	 * @param width The width of the rendering area.
 	 * @param height The height of the rendering area.
-	 * @param windowMode Specifies whether the application runs in windowed mode
-	 *                   (true) or fullscreen mode (false).
+	 * @param windowMode The window display mode.
 	 * @return Returns true if initialization is successful; otherwise, false.
 	 */
-	bool Init(HWND window, const int width, const int height, const bool windowMode);
+	bool Init(HWND window, const int width, const int height, EWindowMode windowMode);
 
 	/**
 	 * @brief Clears the back buffer to a default color.
