@@ -253,6 +253,16 @@ LRESULT CEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				CWorldManager::GetInst()->InputDeactive();
 			}
 			break;
+		case WM_SYSKEYDOWN:
+		{
+			const bool bAltPressed = (lParam & (1 << 29)) != 0;
+			if (bAltPressed && wParam == VK_F4)
+			{
+				DestroyWindow(hWnd);
+				return 0;
+			}
+			break;
+		}
 		case WM_PAINT:
 		{
 			PAINTSTRUCT ps;
