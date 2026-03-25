@@ -129,12 +129,7 @@ void CBrotatoWorld_Battle::Update(const float DeltaTime)
 
 void CBrotatoWorld_Battle::EnableResultWidget(bool bClear) const
 {
-	auto& CharacterData = CCharacterData::GetInst();
-	if (CharacterData.GetStageState() != EStageState::Clear
-		&& CharacterData.GetStageState() != EStageState::Defeat)
-	{
-		return;
-	}
+	CCharacterData::GetInst().SetStageState(bClear ? EStageState::Clear : EStageState::Defeat);
 
 	if (auto BattleWidget = this->BattleWidget.lock())
 	{
@@ -144,8 +139,6 @@ void CBrotatoWorld_Battle::EnableResultWidget(bool bClear) const
 			Widget->SetStageResultText(bClear);
 		}
 	}
-
-	CharacterData.SetStageState(bClear? EStageState::Clear : EStageState::Defeat);
 }
 
 void CBrotatoWorld_Battle::FinishStage(bool bClear)

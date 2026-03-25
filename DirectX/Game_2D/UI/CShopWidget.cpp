@@ -4,12 +4,14 @@
 #include <UI/CButton.h>
 #include <UI/CImage.h>
 #include <UI/CTextBlock.h>
+#include <World/CWorldManager.h>
 
 #include "CGoodsWidget.h"
 #include "CItemInvenWidget.h"
 #include "CStatWidget.h"
 #include "CWeaponInvenWidget.h"
 #include "../Inventory/CCharacterData.h"
+#include "../World/CLoadingWorld.h"
 
 bool CShopWidget::Init()
 {
@@ -44,7 +46,11 @@ bool CShopWidget::Init()
 		TitleText->SetPos(TitlePos);
 		TitleText->SetPivot(0, 0);
 		TitleText->SetSize(500.f * Ratio, 80.f * Ratio);
-		TitleText->SetText(TEXT("상점 (웨이브 1)"));
+
+		TitleText->SetText(TEXT("상점 (웨이브 "));
+		TitleText->AddText(CCharacterData::GetInst().GetStageLevel());
+		TitleText->AddText(TEXT(")"));
+
 		TitleText->SetAlignH(ETextAlignH::Left);
 		TitleText->SetAlignV(ETextAlignV::Top);
 		TitleText->SetFontSize(54 * Ratio);
@@ -64,14 +70,18 @@ bool CShopWidget::Init()
 		Button->SetTint(EButtonState::Normal, 0, 0, 0, 0.6f);
 		Button->SetTint(EButtonState::Hovered, 0.3f, 0.3f, 0.3f, 0.75f);
 
+		Button->SetEventCallback<CShopWidget>(EButtonEventState::Click, this, &CShopWidget::OnClickPlay);
+
 		if (auto Text = CWidget::CreateStaticWidget<CTextBlock>("PlayText", World, 2))
 		{
 			Playtext = Text;
 			Text->SetPos(-ButtonSize.x, -ButtonSize.y);
 			Text->SetSize(ButtonSize);
+
 			Text->SetText(TEXT("이동 (웨이브 "));
 			Text->AddText(CCharacterData::GetInst().GetStageLevel() + 1);
 			Text->AddText(TEXT(")"));
+
 			Text->SetAlignH(ETextAlignH::Center);
 			Text->SetAlignV(ETextAlignV::Middle);
 			Text->SetFontSize(45 * Ratio);
@@ -81,6 +91,17 @@ bool CShopWidget::Init()
 	}
 
 	return true;
+}
+
+void CShopWidget::OnClickPlay()
+{
+	auto& CharacterData = CCharacterData::GetInst();
+	CharacterData.SetStageLevel(CharacterData.GetStageLevel() +1);
+
+	if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
+	{
+		World->Load(EWorldType::Main);
+	}
 }
 
 void CShopWidget::SetCurrentLevel(const int NewLevel)

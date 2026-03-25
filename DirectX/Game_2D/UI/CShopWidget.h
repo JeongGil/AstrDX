@@ -39,6 +39,10 @@ private:
 public:
 	bool Init() override;
 
+private:
+	void OnClickPlay();
+
+public:
 	[[nodiscard]] int GetCurrentLevel() const
 	{
 		return CurrentLevel;

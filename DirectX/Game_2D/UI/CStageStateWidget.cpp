@@ -23,7 +23,7 @@ bool CStageStateWidget::Init()
 
 		Text->SetSize(Size);
 		Text->SetPos(-Size.x * 0.5f, 0.f);
-				
+
 		Text->SetFontSize(72 * RatioFhd);
 		Text->SetTextColor(FColor::White);
 		Text->SetAlignH(ETextAlignH::Center);
@@ -100,6 +100,23 @@ void CStageStateWidget::Update(const float DeltaTime)
 		}
 
 		case EStageState::Clear:
+		{
+			if (auto Text = RemainTime.lock())
+			{
+				if (auto World = std::dynamic_pointer_cast<CBrotatoWorld_Battle>(this->World.lock()))
+				{
+					auto Time = max(0, static_cast<int>(std::ceil(World->GetRemainStageTime())));
+					Text->SetText(Time);
+
+					if (Time == 0)
+					{
+						Text->SetTextColor(FColor::Red);
+					}
+				}
+			}
+
+			[[fallthrough]];
+		}
 		case EStageState::Defeat:
 		{
 			if (auto Image = ResultBG.lock())
@@ -110,9 +127,9 @@ void CStageStateWidget::Update(const float DeltaTime)
 			break;
 		}
 
-	case EStageState::None:
-	default:
-		break;
+		case EStageState::None:
+		default:
+			break;
 	}
 }
 
