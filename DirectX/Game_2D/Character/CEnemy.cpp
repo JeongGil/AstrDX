@@ -8,6 +8,7 @@
 
 #include "CDropItem.h"
 #include "CPlayerCharacter.h"
+#include "CProjectile.h"
 #include "../Strings.h"
 #include "../Utility.h"
 #include "../Inventory/CCharacterData.h"
@@ -149,6 +150,9 @@ void CEnemy::Update(const float DeltaTime)
 		return;
 	}
 
+	ElapsedFromCharge += DeltaTime;
+	ElapsedFromFire += DeltaTime;
+
 	auto Diff = Player->GetWorldPosition() - GetWorldPosition();
 	float DistToPlayer = Diff.Length();
 	auto ToPlayer = Diff.GetNormalized();
@@ -160,12 +164,17 @@ void CEnemy::Update(const float DeltaTime)
 		// 돌진 가능 여부 확인
 		if (!bOnCharge)
 		{
+			if (ChargeCooldownTime < 0.f)
+			{
+				SetChargeCooldownTime(ChargeCooldownTime);
+			}
+
 			if (DistToPlayer <= CHARGE_USE_DISTANCE)
 			{
 				if (ElapsedFromCharge >= ChargeCooldownTime)
 				{
 					ElapsedFromCharge = 0.f;
-
+					ChargeMovedDist = 0.f;
 					bOnCharge = true;
 				}
 			}
@@ -179,10 +188,12 @@ void CEnemy::Update(const float DeltaTime)
 
 			auto MoveVec = ToPlayer * DelMove;
 			AddWorldPosition(MoveVec);
+			ChargeMovedDist += DelMove;
 
 			if (ChargeMovedDist >= CHARGE_MOVE_DISTANCE)
 			{
 				bOnCharge = false;
+				SetChargeCooldownTime(ChargeCooldownTime);
 			}
 
 			return;
@@ -194,20 +205,52 @@ void CEnemy::Update(const float DeltaTime)
 		if (ElapsedFromFire >= FIRE_COOLDOWN_TIME)
 		{
 			ElapsedFromFire = 0.f;
+
+			if (auto World = this->World.lock())
+			{
+				if (auto Projectile = World->CreateGameObject<CProjectile>("EnemyProjectile").lock())
+				{
+					constexpr float FIRE_SPAWN_OFFSET = 80.f;
+					FVector SpawnPos = GetWorldPosition() + ToPlayer * FIRE_SPAWN_OFFSET;
+					Projectile->SetWorldPosition(SpawnPos);
+					Projectile->SetMoveDirection(ToPlayer);
+					Projectile->SetOwnerCharacter(std::dynamic_pointer_cast<CCharacter>(shared_from_this()));
+					Projectile->SetCollisionProfile("MonsterAttack");
+				}
+			}
 		}
 	}
 
 	if (Behaviors & EEnemyBehavior::Kiting)
 	{
-		if (DistToPlayer <= CHARGE_USE_DISTANCE)
-		{
-			float DelMove = MoveSpeed * DeltaTime;
+		constexpr float KITING_NEAR_DISTANCE = static_cast<float>(CHARGE_USE_DISTANCE);
+		constexpr float KITING_FAR_DISTANCE = KITING_NEAR_DISTANCE * 1.5f;
 
+		if (DistToPlayer <= KITING_NEAR_DISTANCE)
+		{
+			bOnKiting = true;
+		}
+		else if (DistToPlayer >= KITING_FAR_DISTANCE)
+		{
+			bOnKiting = false;
+		}
+
+		float DelMove = MoveSpeed * DeltaTime;
+
+		if (bOnKiting)
+		{
 			auto MoveVec = -ToPlayer * DelMove;
 			AddWorldPosition(MoveVec);
-
-			return;
 		}
+		else if (DistToPlayer >= KITING_FAR_DISTANCE)
+		{
+			DelMove = min(DelMove, DistToPlayer - KITING_FAR_DISTANCE);
+
+			auto MoveVec = ToPlayer * DelMove;
+			AddWorldPosition(MoveVec);
+		}
+
+		return;
 	}
 
 	if (Behaviors & EEnemyBehavior::Chase)
@@ -253,6 +296,11 @@ void CEnemy::SetEnemyInfoID(const TableID& EnemyInfoID)
 	//+ Info->HpIncrease * 난이도
 	MaxHP = Info->HP;
 	CurrHP = MaxHP;
+
+	ChargeMovedDist = 0.f;
+	bOnCharge = false;
+	bOnKiting = false;
+	SetChargeCooldownTime(ChargeCooldownTime);
 
 	if (auto Mesh = this->Mesh.lock())
 	{

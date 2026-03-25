@@ -51,17 +51,10 @@ bool CBrotatoWorld_Battle::Init()
 		}
 	}
 
-	//static int Counter = 0;
-	//auto WNPC = CreateGameObject<CEnemy>("Monster_" + std::to_string(Counter));
-	//if (auto NPC = WNPC.lock())
-	//{
-	//	NPC->SetWorldPosition(300, 300);
-	//	NPC->SetEnemyInfoID(TableID(1));
-	//	//NPC->SetEnemyInfoID(TableID(2));
-	//}
-
-	EnemySpawnEntries.push_back({ TableID(1), 8.f, 4.f });
-	EnemySpawnEntries.push_back({ TableID(2), 2.f, 0.f });
+	// 임시
+	//EnemySpawnEntries.push_back({ TableID(1), 8.f, 0.f });
+	//EnemySpawnEntries.push_back({ TableID(2), 2.f, 2.f });
+	EnemySpawnEntries.push_back({ TableID(3), 4.f, 4.f });
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 

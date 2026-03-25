@@ -20,9 +20,10 @@ bool CTitleWidget::Init()
 
 	auto RS = CDevice::GetInst()->GetResolution();
 	const auto Center = FVector2(RS.Width * 0.5f, RS.Height * 0.5f);
+	float RatioFhd = CDevice::GetInst()->GetRatioFHD();
 
-#pragma region Background
-	FVector2 BgSize = FVector2(2070, 1080) * CDevice::GetInst()->GetRatioFHD();
+#pragma region Background	
+	FVector2 BgSize = FVector2(2070, 1080) * RatioFhd;
 
 	if (auto BG = CreateWidget<CImage>("BG", 0).lock())
 	{
@@ -74,10 +75,11 @@ bool CTitleWidget::Init()
 #pragma endregion
 
 #pragma region Button
-	FVector2 ButtonSize = FVector2(260, 90) * CDevice::GetInst()->GetRatioFHD();
+	FVector2 ButtonSize = FVector2(260, 90) * RatioFhd;
+	float FontSize = 54 * RatioFhd;
 	if (auto Button = CreateWidget<CButton>("StartButton", 10).lock())
 	{
-		FVector2 Pos = FVector2(36, 660) * CDevice::GetInst()->GetRatioFHD();
+		FVector2 Pos = FVector2(36, 660) * RatioFhd;
 
 		Button->SetPivot(0, 0.5f);
 		Button->SetPos(Pos);
@@ -89,8 +91,8 @@ bool CTitleWidget::Init()
 			Text->SetText(TEXT("시작"));
 			Text->SetAlignH(ETextAlignH::Center);
 			Text->SetAlignV(ETextAlignV::Middle);
-			Text->SetFontSize(36.f);
-			Text->SetTextColor(255, 255, 255, 255);
+			Text->SetFontSize(FontSize);
+			Text->SetTextColor(FColor::White);
 
 			Button->SetChild(Text);
 		}
@@ -103,7 +105,7 @@ bool CTitleWidget::Init()
 
 	if (auto Button = CreateWidget<CButton>("ExitButton", 10).lock())
 	{
-		FVector2 Pos = FVector2(36, 770) * CDevice::GetInst()->GetRatioFHD();
+		FVector2 Pos = FVector2(36, 770) * RatioFhd;
 
 		Button->SetPivot(0, 0.5f);
 		Button->SetPos(Pos);
@@ -115,8 +117,8 @@ bool CTitleWidget::Init()
 			Text->SetText(TEXT("종료"));
 			Text->SetAlignH(ETextAlignH::Center);
 			Text->SetAlignV(ETextAlignV::Middle);
-			Text->SetFontSize(36.f);
-			Text->SetTextColor(255, 255, 255, 255);
+			Text->SetFontSize(FontSize);
+			Text->SetTextColor(FColor::White);
 
 			Button->SetChild(Text);
 		}

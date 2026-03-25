@@ -14,15 +14,17 @@ bool CStageStateWidget::Init()
 		return false;
 	}
 
+	const float RatioFhd = CDevice::GetInst()->GetRatioFHD();
+
 	StageLevel = CreateWidget<CTextBlock>("Level");
 	if (auto Text = StageLevel.lock())
 	{
-		const FVector2 Size = FVector2(320, 60);
+		const FVector2 Size = FVector2(480, 90) * RatioFhd;
+
 		Text->SetSize(Size);
-
 		Text->SetPos(-Size.x * 0.5f, 0.f);
-
-		Text->SetFontSize(48);
+				
+		Text->SetFontSize(72 * RatioFhd);
 		Text->SetTextColor(FColor::White);
 		Text->SetAlignH(ETextAlignH::Center);
 		Text->SetAlignV(ETextAlignV::Top);
@@ -34,12 +36,12 @@ bool CStageStateWidget::Init()
 	RemainTime = CreateWidget<CTextBlock>("Time");
 	if (auto Text = RemainTime.lock())
 	{
-		const FVector2 Size = FVector2(320, 60);
+		const FVector2 Size = FVector2(480, 90) * RatioFhd;
 		Text->SetSize(Size);
 
-		Text->SetPos(-Size.x * 0.5f, 60.f);
+		Text->SetPos(-Size.x * 0.5f, 90 * RatioFhd);
 
-		Text->SetFontSize(36);
+		Text->SetFontSize(54 * RatioFhd);
 		Text->SetTextColor(FColor::White);
 		Text->SetAlignH(ETextAlignH::Center);
 		Text->SetAlignV(ETextAlignV::Top);
@@ -48,12 +50,12 @@ bool CStageStateWidget::Init()
 	StageResult = CreateWidget<CTextBlock>("StageResult");
 	if (auto Text = StageResult.lock())
 	{
-		const FVector2 Size = FVector2(420.f, 90.f);
+		const FVector2 Size = FVector2(630, 135) * RatioFhd;
 		Text->SetSize(Size);
 
-		Text->SetPos(-Size.x * 0.5f, 120.f);
+		Text->SetPos(-Size.x * 0.5f, 180 * RatioFhd);
 
-		Text->SetFontSize(60.f);
+		Text->SetFontSize(90 * RatioFhd);
 		Text->SetTextColor(FColor::White);
 		Text->SetAlignH(ETextAlignH::Center);
 		Text->SetAlignV(ETextAlignV::Top);

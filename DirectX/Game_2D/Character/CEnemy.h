@@ -72,7 +72,7 @@ protected:
 
 	bool bOnKiting{};
 
-	static constexpr int FIRE_COOLDOWN_TIME = 5.f;
+	static constexpr float FIRE_COOLDOWN_TIME = 5.f;
 	float ElapsedFromFire = std::numeric_limits<float>::infinity();
 
 	static constexpr float SPAWN_FLICKER_INTERVAL = 0.4f;

@@ -15,11 +15,13 @@ bool CBattleWidget::Init()
 	}
 
 	const auto& Resolution = CDevice::GetInst()->GetResolution();
+	const auto& RatioFHD = CDevice::GetInst()->GetRatioFHD();
+	const float Pad = 15 * RatioFHD;
 
 	PCStateWidget = CreateWidget<CPCStateWidget>("PCState");
 	if (auto Widget = PCStateWidget.lock())
 	{
-		Widget->SetPos(10, 10);
+		Widget->SetPos(Pad, Pad);
 	}
 
 	StageStateWidget = CreateWidget<CStageStateWidget>("StageState");
@@ -27,14 +29,14 @@ bool CBattleWidget::Init()
 	{
 		const float HalfWidth = Resolution.Width * 0.5f;
 		Widget->SetPivot(0.5f, 0.f);
-		Widget->SetPos(HalfWidth, 10);
+		Widget->SetPos(HalfWidth, Pad);
 	}
 
 	LootStateWidget = CreateWidget<CLootStateWidget>("LootState");
 	if (auto Widget = LootStateWidget.lock())
 	{
 		Widget->SetPivot(1.f, 0.f);
-		Widget->SetPos(Resolution.Width - 10, 10);
+		Widget->SetPos(Resolution.Width - Pad, Pad);
 	}
 
 	BattleResultWidget = CreateWidget<CResultWidget>("ResultWidget");

@@ -47,8 +47,8 @@ bool CShopWidget::Init()
 		TitleText->SetText(TEXT("상점 (웨이브 1)"));
 		TitleText->SetAlignH(ETextAlignH::Left);
 		TitleText->SetAlignV(ETextAlignV::Top);
-		TitleText->SetFontSize(36.f);
-		TitleText->SetTextColor(255, 255, 255, 255);
+		TitleText->SetFontSize(54 * Ratio);
+		TitleText->SetTextColor(FColor::White);
 	}
 
 	// PlayButton: 우측 하단
@@ -74,8 +74,8 @@ bool CShopWidget::Init()
 			Text->AddText(TEXT(")"));
 			Text->SetAlignH(ETextAlignH::Center);
 			Text->SetAlignV(ETextAlignV::Middle);
-			Text->SetFontSize(30.f);
-			Text->SetTextColor(255, 255, 255, 255);
+			Text->SetFontSize(45 * Ratio);
+			Text->SetTextColor(FColor::White);
 			Button->SetChild(Text);
 		}
 	}

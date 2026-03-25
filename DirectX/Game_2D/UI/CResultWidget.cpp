@@ -49,8 +49,8 @@ bool CResultWidget::Init()
 			Text->SetText(TEXT("재시작"));
 			Text->SetAlignH(ETextAlignH::Center);
 			Text->SetAlignV(ETextAlignV::Middle);
-			Text->SetFontSize(36.f);
-			Text->SetTextColor(255, 255, 255, 255);
+			Text->SetFontSize(54 * RatioFHD);
+			Text->SetTextColor(FColor::White);
 
 			Button->SetChild(Text);
 		}
@@ -75,8 +75,8 @@ bool CResultWidget::Init()
 			Text->SetText(TEXT("메인 메뉴로 돌아가기"));
 			Text->SetAlignH(ETextAlignH::Center);
 			Text->SetAlignV(ETextAlignV::Middle);
-			Text->SetFontSize(36.f);
-			Text->SetTextColor(255, 255, 255, 255);
+			Text->SetFontSize(54 * RatioFHD);
+			Text->SetTextColor(FColor::White);
 
 			Button->SetChild(Text);
 		}
