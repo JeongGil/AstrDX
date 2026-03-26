@@ -257,6 +257,7 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 
 	FVector2 TexSize{};
 	std::vector<const TCHAR*> TexFileNames;
+	std::vector<std::wstring> ProjectileWidePaths;
 
 	auto CharacterBase = CharacterBaseTable::GetInst().Get();
 	auto Misc = MiscTable::GetInst().Get();
@@ -436,10 +437,16 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 		WorldAssetManager->CreateAnimation(Info->Name);
 		WorldAssetManager->SetAnimation2DTextureType(Info->Name, EAnimation2DTextureType::Array);
 
+		ProjectileWidePaths.clear();
+		ProjectileWidePaths.reserve(Info->SpritePaths.size());
 		for (const auto& Path : Info->SpritePaths)
 		{
-			CA2T FileName(Path.c_str());
-			TexFileNames.push_back(FileName);
+			ProjectileWidePaths.emplace_back(Path.begin(), Path.end());
+		}
+
+		for (const auto& WidePath : ProjectileWidePaths)
+		{
+			TexFileNames.push_back(WidePath.c_str());
 		}
 
 		WorldAssetManager->SetTextures(Info->Name, Info->Name, TexFileNames, Key::Path::Brotato);

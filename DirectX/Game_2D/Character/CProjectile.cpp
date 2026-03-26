@@ -4,11 +4,13 @@
 #include <Component/CColliderBox2D.h>
 #include <Component/CMeshComponent.h>
 #include <Component/CProjectileMovementComponent.h>
+#include <World/CWorld.h>
 
 #include "CEnemy.h"
 #include "CPlayerCharacter.h"
 #include "CWeapon_Battle.h"
 #include "../Table/EnemyTable.h"
+#include "../Table/ProjectileTable.h"
 
 bool CProjectile::Init()
 {
@@ -21,7 +23,8 @@ bool CProjectile::Init()
 	if (auto Mesh = this->Mesh.lock())
 	{
 		Mesh->SetShader("DefaultTexture2D");
-		Mesh->SetMesh("RectTex");
+		Mesh->SetMesh("CenterRectTex");
+		Mesh->SetBlendState(0, "AlphaBlend");
 	}
 
 	Animation = CreateComponent<CAnimation2DComponent>("Animation");
@@ -135,6 +138,53 @@ void CProjectile::OnCollisionMapBoundary(const FVector& HitPoint, CCollider* Oth
 	if (auto Move = Movement.lock())
 	{
 		Move->SetLifeTime(3.f);
+	}
+}
+
+void CProjectile::SetProjectileID(const TableID& NewID)
+{
+	ProjectileID = NewID;
+
+	FProjectileInfo* Info{};
+	if (!ProjectileTable::GetInst().TryGet(ProjectileID, Info) || !Info || Info->Name.empty())
+	{
+		return;
+	}
+
+	if (auto Anim = Animation.lock())
+	{
+		if (auto Mesh = this->Mesh.lock())
+		{
+			Anim->SetUpdateComponent(Mesh);
+		}
+
+		Anim->AddAnimation(Info->Name);
+		Anim->SetLoop(Info->Name, true);
+		Anim->ReplayAnimation(Info->Name);
+	}
+
+	if (auto World = this->World.lock())
+	{
+		if (auto WorldAssetMgr = World->GetWorldAssetManager().lock())
+		{
+			if (auto Texture = WorldAssetMgr->FindTexture(Info->Name).lock())
+			{
+				if (auto Mesh = this->Mesh.lock())
+				{
+					const FTextureInfo* TexInfo = Texture->GetTexture();
+					const float MeshSizeX = static_cast<float>(TexInfo->Width) * 0.5f;
+					const float MeshSizeY = static_cast<float>(TexInfo->Height) * 0.5f;
+
+					Mesh->SetWorldScale(MeshSizeX, MeshSizeY);
+
+					if (auto Col = Collider.lock())
+					{
+						Col->SetBoxExtent(MeshSizeX, MeshSizeY);
+						Col->SetWorldPosition(Mesh->GetWorldPosition());
+					}
+				}
+			}
+		}
 	}
 }
 

@@ -7,6 +7,7 @@
 #include "EnemyTable.h"
 #include "ItemTable.h"
 #include "MiscTable.h"
+#include "ProjectileTable.h"
 #include "WeaponSetBonusTable.h"
 #include "WeaponTable.h"
 #include "../Strings.h"
@@ -27,6 +28,7 @@ void CTableManager::LoadTables()
 	WeaponSetBonusTable::GetInst().Load(GetFilePath(TEXT("WeaponSetBonus")));
 	EnemyTable::GetInst().Load(GetFilePath(TEXT("Enemy")));
 	CharacterBaseTable::GetInst().Load(GetFilePath(TEXT("CharacterBase")));
+	ProjectileTable::GetInst().Load(GetFilePath(TEXT("Projectile")));
 	//ItemTable::GetInst().Load(GetFilePath(TEXT("Item")));
 }
 

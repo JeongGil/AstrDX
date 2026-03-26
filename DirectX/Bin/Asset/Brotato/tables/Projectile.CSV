@@ -1,7 +1,7 @@
 ID,Name,Sprite_0,Sprite_1,Sprite_2,Sprite_3,Sprite_4,Sprite_5,Sprite_6,Sprite_7,Sprite_8,Sprite_9,Sprite_10,
 1,blue_flames,projectiles/blue_flames/sprites/bullet_flame_0000.png,projectiles/blue_flames/sprites/bullet_flame_0001.png,projectiles/blue_flames/sprites/bullet_flame_0002.png,projectiles/blue_flames/sprites/bullet_flame_0003.png,projectiles/blue_flames/sprites/bullet_flame_0004.png,projectiles/blue_flames/sprites/bullet_flame_0005.png,projectiles/blue_flames/sprites/bullet_flame_0006.png,projectiles/blue_flames/sprites/bullet_flame_0007.png,,,,
 2,bullet,projectiles/bullet/flame0000.png,projectiles/bullet/flame0001.png,,,,,,,,,,
-3,bullet_enemy,projectiles/bullet_enemy/flame0000.png,projectiles/bullet_enemy/flame0001.png,,,,,,,,,,
+3,bullet_enemy,projectiles/bullet_enemy/bullet_enemy.png,,,,,,,,,,,
 4,bullet_ghost_scepter,projectiles/bullet_ghost_scepter/bullet_scepter_0000.png,projectiles/bullet_ghost_scepter/bullet_scepter_0001.png,,,,,,,,,,
 5,bullet_laser,projectiles/bullet_laser/bullet_laser_0000.png,projectiles/bullet_laser/bullet_laser_0001.png,,,,,,,,,,
 6,bullet_lightning,projectiles/bullet_lightning/sprites/bullet_lightning_0000.png,projectiles/bullet_lightning/sprites/bullet_lightning_0001.png,projectiles/bullet_lightning/sprites/bullet_lightning_0002.png,projectiles/bullet_lightning/sprites/bullet_lightning_0003.png,projectiles/bullet_lightning/sprites/bullet_lightning_0004.png,projectiles/bullet_lightning/sprites/bullet_lightning_0005.png,projectiles/bullet_lightning/sprites/bullet_lightning_0006.png,projectiles/bullet_lightning/sprites/bullet_lightning_0007.png,,,,

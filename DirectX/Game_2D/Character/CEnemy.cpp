@@ -216,6 +216,7 @@ void CEnemy::Update(const float DeltaTime)
 					Projectile->SetMoveDirection(ToPlayer);
 					Projectile->SetOwnerCharacter(std::dynamic_pointer_cast<CCharacter>(shared_from_this()));
 					Projectile->SetCollisionProfile("MonsterAttack");
+					Projectile->SetProjectileID(TableID(3));
 				}
 			}
 		}

@@ -34,6 +34,8 @@ private:
 
 	int RemainPenetration = 0;
 
+	TableID ProjectileID{ -1 };
+
 public:
 	bool Init() override;
 
@@ -57,6 +59,13 @@ private:
 	void OnCollisionMapBoundary(const FVector& HitPoint, CCollider* Other);
 
 public:
+	[[nodiscard]] TableID GetProjectileID() const
+	{
+		return ProjectileID;
+	}
+
+	void SetProjectileID(const TableID& NewID);
+
 	[[nodiscard]] std::weak_ptr<CWeapon_Battle> GetOwnerWeapon() const
 	{
 		return OwnerWeapon;
