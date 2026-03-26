@@ -3,6 +3,7 @@
 CShaderBrotatoTile::CShaderBrotatoTile()
 {
 	AssetType = EAssetType::Shader;
+	bUseRenderInstancing = false;
 }
 
 CShaderBrotatoTile::~CShaderBrotatoTile()

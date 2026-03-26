@@ -557,6 +557,13 @@ void CBrotatoWorld_Battle::CreateTileMap()
 			const int TileIndex = TileWeightDist(RandEngine) < 50 ? 11 : NormalTileDist(RandEngine);
 			std::string TileFileName = std::format("resources/tiles/SingleTiles/{}/tile{:03}.png", Theme, TileIndex);
 
+			const bool bIsEdgeTile = x == 0 || x == MaxX || y == 0 || y == MaxY;
+			if (!bIsEdgeTile)
+			{
+				Tile->SetTileTexture(TileFileName, Key::Path::Brotato);
+				continue;
+			}
+
 			std::string MaskPath = "resources/tiles/SingleTiles/mask/";
 			if (x == 0 && y == 0)
 			{
@@ -586,16 +593,12 @@ void CBrotatoWorld_Battle::CreateTileMap()
 			{
 				MaskPath += LeftMaskFiles[EdgeMaskDist(RandEngine)];
 			}
-			else if (x == MaxX)
+			else
 			{
 				MaskPath += RightMaskFiles[EdgeMaskDist(RandEngine)];
 			}
-			else
-			{
-				MaskPath += "mask_center.png";
-			}
 
-			Tile->SetTileTextures(MaskPath, TileFileName, Key::Path::Brotato);
+			Tile->SetMaskAndTileTextures(MaskPath, TileFileName, Key::Path::Brotato);
 		}
 	}
 }

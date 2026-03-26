@@ -24,8 +24,10 @@ private:
 public:
 	bool Init() override;
 
-	void SetTileTextures(const std::string& MaskTexturePath, const std::string& TileTexturePath,
+	void SetMaskAndTileTextures(const std::string& MaskTexturePath, const std::string& TileTexturePath,
 		const std::string& PathName = "Brotato");
+
+	void SetTileTexture(const std::string& TileTexturePath, const std::string& PathName);
 
 protected:
 	CBrotatoTile* Clone() override;

@@ -346,7 +346,7 @@ void CRenderManager::CheckInstancing(const std::shared_ptr<CSceneComponent>& Com
 	auto Tex = Comp->GetTexture().lock();
 	auto Shader = Comp->GetShader().lock();
 
-	if (!Mesh || !Shader)
+	if (!Mesh || !Shader || !Shader->IsUseRenderInstancing())
 	{
 		return;
 	}

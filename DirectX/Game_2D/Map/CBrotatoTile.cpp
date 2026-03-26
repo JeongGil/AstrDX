@@ -22,7 +22,7 @@ bool CBrotatoTile::Init()
 	return true;
 }
 
-void CBrotatoTile::SetTileTextures(const std::string& MaskTexturePath, const std::string& TileTexturePath,
+void CBrotatoTile::SetMaskAndTileTextures(const std::string& MaskTexturePath, const std::string& TileTexturePath,
 	const std::string& PathName)
 {
 	auto TileMesh = Mesh.lock();
@@ -31,6 +31,7 @@ void CBrotatoTile::SetTileTextures(const std::string& MaskTexturePath, const std
 		return;
 	}
 
+	TileMesh->SetShader("BrotatoTile");
 	TileMesh->ClearTextures(0);
 
 	const std::string MaskTextureKey = "Mask_" + MaskTexturePath;
@@ -41,6 +42,23 @@ void CBrotatoTile::SetTileTextures(const std::string& MaskTexturePath, const std
 
 	CA2T TileFileName(TileTexturePath.c_str());
 	TileMesh->AddTexture(0, TileTextureKey, TileFileName, PathName, 1);
+}
+
+void CBrotatoTile::SetTileTexture(const std::string& TileTexturePath, const std::string& PathName)
+{
+	auto TileMesh = Mesh.lock();
+	if (!TileMesh)
+	{
+		return;
+	}
+
+	TileMesh->SetShader("DefaultTexture2D");
+	TileMesh->ClearTextures(0);
+
+	const std::string TileTextureKey = "InnerTile_" + TileTexturePath;
+
+	CA2T TileFileName(TileTexturePath.c_str());
+	TileMesh->AddTexture(0, TileTextureKey, TileFileName, PathName, 0);
 }
 
 CBrotatoTile* CBrotatoTile::Clone()
