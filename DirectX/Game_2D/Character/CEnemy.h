@@ -67,13 +67,13 @@ protected:
 
 	bool bOnCharge{};
 	float ChargeCooldownTime = -1.f;
-	float ElapsedFromCharge = std::numeric_limits<float>::infinity();
+	float ElapsedFromCharge = 0.f;
 	float ChargeMovedDist{};
 
 	bool bOnKiting{};
 
 	static constexpr float FIRE_COOLDOWN_TIME = 5.f;
-	float ElapsedFromFire = std::numeric_limits<float>::infinity();
+	float ElapsedFromFire = 0.f;
 
 	static constexpr float SPAWN_FLICKER_INTERVAL = 0.4f;
 	float ElapsedBirthFlickeringTime{};

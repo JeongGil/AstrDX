@@ -186,7 +186,7 @@ PS_OUTPUT_COLOR MaterialTexInstancingPS(VS_OUTPUT_TEX_INSTANCING input)
 	}
 	else
 	{
-		TextureColor = tbBaseArrayTexture.Sample(sbLinear, float3(input.UV, input.AnimFrame));
+		TextureColor = tbBaseArrayTexture.Sample(sbPoint, float3(input.UV, input.AnimFrame));
 	}
     
 	output.Color.rgb = TextureColor.rgb * input.Color.rgb;

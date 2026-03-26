@@ -87,6 +87,14 @@ void CRenderInstancing::AddRenderComponent(const std::weak_ptr<CSceneComponent>&
 		}
 	}
 
+	if (this->Texture.expired())
+	{
+		if (auto CompTexture = Comp->GetTexture().lock())
+		{
+			this->Texture = CompTexture;
+		}
+	}
+
 	RenderComponents.push_back(Component);
 
 	std::erase_if(RenderComponents, [](const std::weak_ptr<CSceneComponent>& Weak)
@@ -150,6 +158,22 @@ void CRenderInstancing::Update(const float DeltaTime)
 	if (RenderComponents.size() > 1)
 	{
 		RenderComponents.sort(CRenderManager::SortYRenderList);
+	}
+
+	if (this->Texture.expired())
+	{
+		auto RenderCompsView = RenderComponents
+			| std::views::transform([](const auto& Weak) { return Weak.lock(); })
+			| std::views::filter([](const auto& Comp) {return Comp != nullptr; });
+
+		for (const auto& Comp : RenderCompsView)
+		{
+			if (auto CompTexture = Comp->GetTexture().lock())
+			{
+				this->Texture = CompTexture;
+				break;
+			}
+		}
 	}
 
 	InstancingData.resize(RenderComponents.size());
@@ -316,6 +340,11 @@ void CRenderInstancing::Render()
 	{
 		Comp->SetRenderOption(EComponentRenderOption::Normal);
 	}
+
+	ID3D11ShaderResourceView* NullSRV = nullptr;
+	auto Context = CDevice::GetInst()->GetContext();
+	Context->PSSetShaderResources(0, 1, &NullSRV);
+	Context->PSSetShaderResources(1, 1, &NullSRV);
 
 	if (Texture)
 	{

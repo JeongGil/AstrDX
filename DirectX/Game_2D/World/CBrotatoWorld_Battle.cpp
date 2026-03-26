@@ -449,7 +449,7 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 			TexFileNames.push_back(WidePath.c_str());
 		}
 
-		WorldAssetManager->SetTextures(Info->Name, Info->Name, TexFileNames, Key::Path::Brotato);
+		WorldAssetManager->SetTextureArray(Info->Name, Info->Name, TexFileNames, Key::Path::Brotato);
 		TexFileNames.clear();
 
 		if (auto Tex = WorldAssetManager->FindTexture(Info->Name).lock())
