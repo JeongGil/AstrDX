@@ -28,10 +28,6 @@ bool CProjectile::Init()
 	}
 
 	Animation = CreateComponent<CAnimation2DComponent>("Animation");
-	if (auto Anim = Animation.lock())
-	{
-
-	}
 
 	Collider = CreateComponent<CColliderBox2D>("Collider");
 	if (auto Collider = this->Collider.lock())
@@ -172,14 +168,14 @@ void CProjectile::SetProjectileID(const TableID& NewID)
 				if (auto Mesh = this->Mesh.lock())
 				{
 					const FTextureInfo* TexInfo = Texture->GetTexture();
-					const float MeshSizeX = static_cast<float>(TexInfo->Width) * 0.5f;
-					const float MeshSizeY = static_cast<float>(TexInfo->Height) * 0.5f;
+					const float MeshSizeX = static_cast<float>(TexInfo->Width) * 0.7f;
+					const float MeshSizeY = static_cast<float>(TexInfo->Height) * 0.7f;
 
 					Mesh->SetWorldScale(MeshSizeX, MeshSizeY);
 
 					if (auto Col = Collider.lock())
 					{
-						Col->SetBoxExtent(MeshSizeX, MeshSizeY);
+						Col->SetBoxExtent(MeshSizeX * 0.7f, MeshSizeY * 0.7f);
 						Col->SetWorldPosition(Mesh->GetWorldPosition());
 					}
 				}

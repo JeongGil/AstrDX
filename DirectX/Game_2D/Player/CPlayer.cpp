@@ -192,7 +192,10 @@ bool CPlayer::Init()
 	{
 		Body->SetCollisionProfile("Player");
 		Body->SetBoxExtent(100.f, 100.f);
+#if defined(_DEBUG) || defined(DEBUG)
 		Body->SetDrawDebug(true);
+#endif
+
 		Body->SetInheritScale(false);
 		Body->SetRelativePosition(0.f, 50.f, 0.f);
 	}

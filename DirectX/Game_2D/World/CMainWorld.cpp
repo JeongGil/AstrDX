@@ -52,7 +52,10 @@ bool CMainWorld::Init()
 	auto WallBox = WallObj->CreateComponent<CColliderBox2D>("Wall").lock();
 	WallBox->SetCollisionProfile("Static");
 	WallBox->SetBoxExtent(500.f, 50.f);
+#if defined(_DEBUG) || defined(DEBUG)
 	WallBox->SetDrawDebug(true);
+#endif
+
 	WallBox->SetInheritScale(false);
 	WallBox->SetWorldPosition(0.f, -200.f);
 	WallBox->SetStatic(true);

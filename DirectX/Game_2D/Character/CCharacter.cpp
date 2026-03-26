@@ -21,7 +21,10 @@ bool CCharacter::Init()
 	Collider = CreateComponent<CColliderBox2D>(Key::Comp::Collider, Key::Comp::Root);
 	if (auto Collider = this->Collider.lock())
 	{
-		Collider->SetDrawDebug(false);
+#if defined(_DEBUG) || defined(DEBUG)
+		Collider->SetDrawDebug(true);
+#endif
+
 		Collider->SetInheritScale(false);
 
 		SleepOnSpawnComponents.push_back(Collider);

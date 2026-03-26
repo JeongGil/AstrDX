@@ -136,7 +136,10 @@ bool CBullet::Init()
 
 		Body->SetCollisionProfile("PlayerAttack");
 		Body->SetBoxExtent(50.f, 50.f);
+#if defined(_DEBUG) || defined(DEBUG)
 		Body->SetDrawDebug(true);
+#endif
+
 		Body->SetInheritScale(false);
 	}
 
