@@ -57,6 +57,8 @@ bool CStatWidget::Init()
 
 		Button->SetTint(EButtonState::Normal, 0.f, 0.f, 0.f, 0.6f);
 		Button->SetTint(EButtonState::Hovered, 0.3f, 0.3f, 0.3f, 0.75f);
+
+		Button->SetEventCallback<CStatWidget>(EButtonEventState::Click, this, &CStatWidget::PrintPrimary);
 	}
 
 	PrimaryText = CreateWidget<CTextBlock>("PrimaryButtonText", 3);
@@ -92,6 +94,8 @@ bool CStatWidget::Init()
 
 		Button->SetTint(EButtonState::Normal, 0.f, 0.f, 0.f, 0.6f);
 		Button->SetTint(EButtonState::Hovered, 0.3f, 0.3f, 0.3f, 0.75f);
+
+		Button->SetEventCallback<CStatWidget>(EButtonEventState::Click, this, &CStatWidget::PrintSecondary);
 	}
 
 	SecondaryText = CreateWidget<CTextBlock>("SecondaryButtonText", 3);
@@ -122,12 +126,13 @@ bool CStatWidget::Init()
 	{
 		if (auto Item = CreateWidget<CStatValueWidget>("StatItem", 2).lock())
 		{
-			Item->SetPos(0, OffsetY + i * Item->GetSize().y);
-			Item->SetEnable(false);
+			Item->SetPos(20, OffsetY + (i - EStat::ConsumableHeal) * Item->GetSize().y);
 
 			Stats.push_back(Item);
 		}
 	}
+
+	PrintPrimary();
 
 	return true;
 }
@@ -142,7 +147,7 @@ void CStatWidget::PrintPrimary()
 
 	auto StatCount = EStat::Harvesting - EStat::Level + 1;
 	int i = 0;
-	for (; i <= StatCount; i++)
+	for (; i < StatCount; i++)
 	{
 		auto Item = Stats[i].lock();
 		auto Stat = static_cast<EStat::Type>(i + EStat::Level);
@@ -171,7 +176,7 @@ void CStatWidget::PrintSecondary()
 
 	auto StatCount = EStat::EnemySpeed - EStat::ConsumableHeal + 1;
 	int i = 0;
-	for (; i <= StatCount; i++)
+	for (; i < StatCount; i++)
 	{
 		auto Item = Stats[i].lock();
 		auto Stat = static_cast<EStat::Type>(i + EStat::ConsumableHeal);

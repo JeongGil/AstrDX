@@ -24,9 +24,12 @@ bool CStatValueWidget::Init()
 	TooltipButton = CreateWidget<CButton>("Button", 3);
 	if (auto Button = TooltipButton.lock())
 	{
-		auto Size = FVector(375, 34, 0) * RatioFHD;
+		auto Size = FVector(335, 34, 0) * RatioFHD;
 		Button->SetSize(Size);
-		Button->SetPivot(0.5f, 0.5f);
+
+		Button->SetTint(EButtonState::Normal, FColor::HalfTransparent);
+		Button->SetTint(EButtonState::Hovered, FColor::HalfTransparent);
+
 		Button->SetEventCallback<CStatValueWidget>(EButtonEventState::Click, this, &CStatValueWidget::OnClickButton);
 	}
 
@@ -125,7 +128,7 @@ void CStatValueWidget::SetStatType(const EStat::Type StatType)
 		if (It != Misc->PrimaryStatIconPaths.end())
 		{
 			std::wstring WideIconPath(It->second.begin(), It->second.end());
-			Icon->SetTexture("harvesting_icon", WideIconPath.c_str(), Key::Path::Brotato);
+			Icon->SetTexture(It->second, WideIconPath.c_str(), Key::Path::Brotato);
 		}
 	}
 
