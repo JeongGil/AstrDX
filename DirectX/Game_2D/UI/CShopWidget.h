@@ -29,6 +29,9 @@ private:
 
 	std::weak_ptr<CTextBlock> Title;
 
+	std::weak_ptr<CImage> MaterialIcon;
+	std::weak_ptr<CTextBlock> MaterialCount;
+
 	std::weak_ptr<CButton> PlayButton;
 	std::weak_ptr<CTextBlock> Playtext;
 

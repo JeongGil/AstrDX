@@ -4,6 +4,7 @@
 #include <Component/CColliderBox2D.h>
 #include <Asset/Material/CMaterial.h>
 #include <Asset/Texture/CTexture.h>
+#include "Defines.h"
 
 inline std::string TCharToStdString(const TCHAR* tcharStr)
 {
@@ -18,6 +19,23 @@ inline std::string TCharToStdString(const TCHAR* tcharStr)
 	return result;
 #else
 	return std::string(tcharStr);
+#endif
+}
+
+inline const TCHAR* GetTextureFileNameTChar(const std::string& IconPath)
+{
+#ifdef UNICODE
+	thread_local std::wstring Converted;
+	Converted.clear();
+	Converted.reserve(IconPath.size());
+	for (const unsigned char Ch : IconPath)
+	{
+		Converted.push_back(static_cast<wchar_t>(Ch));
+	}
+
+	return Converted.c_str();
+#else
+	return IconPath.c_str();
 #endif
 }
 

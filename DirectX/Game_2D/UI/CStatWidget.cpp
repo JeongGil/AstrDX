@@ -18,13 +18,12 @@ bool CStatWidget::Init()
 
 	auto RatioFHD = CDevice::GetInst()->GetRatioFHD();
 
-	SetSize(FVector(400, 900, 0) * RatioFHD);
+	SetSize(FVector(400, 920, 0) * RatioFHD);
 
 	Background = CreateWidget<CImage>("BG", 1);
 	if (auto Image = Background.lock())
 	{
-		auto Size = FVector(400, 900, 0) * RatioFHD;
-		Image->SetSize(Size);
+		Image->SetSize(GetSize());
 		Image->SetPos(FVector::Zero);
 
 		Image->SetTint(FColor::HalfTransparent);

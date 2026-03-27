@@ -4,15 +4,32 @@
 #include <EngineInfo.h>
 
 class CInventoryItem_Item :
-    public CInventoryItem
+	public CInventoryItem
 {
+private:
+	TableID ItemInfoID{ -1 };
+
+	int Count = 0;
+
 public:
-	TableID GetItemInfoID()const
+	[[nodiscard]] TableID GetItemInfoID() const
 	{
 		return ItemInfoID;
 	}
 
-private:
-	TableID ItemInfoID;
+	void SetItemInfoID(TableID ID)
+	{
+		ItemInfoID = ID;
+	}
+
+	[[nodiscard]] int GetItemCount() const
+	{
+		return Count;
+	}
+
+	void SetItemCount(int NewCount)
+	{
+		Count = NewCount;
+	}
 };
 

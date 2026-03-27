@@ -50,29 +50,41 @@ bool CStatValueWidget::Init()
 		Icon->SetEnable(false);
 	}
 
-	const float Padding = 8.f * RatioFHD;
-	const float CenterY = WidgetSize.y * 0.5f;
-	const float ValueX = WidgetSize.x - Padding;
-
 	StatName = CreateWidget<CTextBlock>("Name", 4);
 	if (auto Text = StatName.lock())
 	{
+		if (auto Button = TooltipButton.lock())
+		{
+			Button->SetChild(Text);
+		}
+
 		Text->SetFontSize(FontSize);
 		Text->SetAlignH(ETextAlignH::Left);
 		Text->SetAlignV(ETextAlignV::Middle);
-
-		Text->SetPos(ValueX, CenterY);
 	}
 
 	StatValue = CreateWidget<CTextBlock>("Value", 4);
 	if (auto Text = StatValue.lock())
 	{
-		auto Size = FVector(100, 40, 0) * RatioFHD;
+		if (auto Button = TooltipButton.lock())
+		{
+			Button->SetChild(Text);
+		}
+
+		auto Size = FVector(100, 34, 0) * RatioFHD;
 		Text->SetSize(Size);
 		Text->SetFontSize(FontSize);
 		Text->SetAlignH(ETextAlignH::Right);
 		Text->SetAlignV(ETextAlignV::Middle);
-		Text->SetPos(ValueX, CenterY);
+
+		const float TotalWidth = TooltipButton.lock()->GetSize().x;
+
+		const float IconLeft = StatIcon.lock()->GetPos().x;
+
+		const float ValueRight = TotalWidth - 2 * IconLeft;
+		const float ValueLeft = ValueRight - Size.x;
+
+		Text->SetPos(ValueLeft, 0);
 	}
 
 	SetPrimary(true);
@@ -98,23 +110,16 @@ void CStatValueWidget::SetPrimary(const bool bIsPrimary)
 		return;
 	}
 
-	float IconLeft = 0.f;
-	if (auto Button = TooltipButton.lock())
-	{
-		IconLeft += Button->GetPos().x;
-	}
-
-	IconLeft += Icon->GetPos().x - Icon->GetSize().x * Icon->GetPivot().x;
+	const float IconLeft = Icon->GetPos().x;
 	const float IconRight = IconLeft + Icon->GetSize().x;
 
-	const float ValueLeft = TextValue->GetPos().x - TextValue->GetSize().x * TextValue->GetPivot().x;
-	const float NameLeft = bIsPrimary ? IconRight : IconLeft;
-	const float NameWidth = ValueLeft > NameLeft ? (ValueLeft - NameLeft) : 0.f;
+	const float ValueLeft = TextValue->GetPos().x;
 
-	auto NameSize = TextName->GetSize();
-	NameSize.x = NameWidth;
-	TextName->SetSize(NameSize);
-	TextName->SetPos(ValueLeft, TextValue->GetPos().y);
+	const float NameLeft = bIsPrimary ? IconRight : IconLeft;
+	const float NameWidth = ValueLeft - NameLeft;
+
+	TextName->SetSize(NameWidth, TextValue->GetSize().y);
+	TextName->SetPos(NameLeft, 0);
 }
 
 void CStatValueWidget::SetStatType(const EStat::Type StatType)
@@ -135,8 +140,6 @@ void CStatValueWidget::SetStatType(const EStat::Type StatType)
 	if (auto Text = StatName.lock())
 	{
 		Text->SetText(GetStatName(StatType));
-
-		// TODO: 
 	}
 }
 
@@ -147,6 +150,37 @@ void CStatValueWidget::SetStatValue(const int NewValue)
 	if (auto Text = StatValue.lock())
 	{
 		Text->SetText(NewValue);
+	}
+}
+
+void CStatValueWidget::SetStat(EStat::Type Type, int Value, bool bIsPrimary)
+{
+	SetPrimary(bIsPrimary);
+	SetStatType(Type);
+	SetStatValue(Value);
+
+	FColor TextColor;
+	if (Value == 0 || Type == EStat::Level)
+	{
+		TextColor = FColor::White;
+	}
+	else if (Value > 0)
+	{
+		TextColor = FColor::Green;
+	}
+	else
+	{
+		TextColor = FColor::Red;
+	}
+
+	if (auto Text = StatName.lock())
+	{
+		Text->SetTextColor(TextColor);
+	}
+
+	if (auto Text = StatValue.lock())
+	{
+		Text->SetTextColor(TextColor);
 	}
 }
 

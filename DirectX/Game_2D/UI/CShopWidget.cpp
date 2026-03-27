@@ -10,6 +10,7 @@
 #include "CItemInvenWidget.h"
 #include "CStatWidget.h"
 #include "CWeaponInvenWidget.h"
+#include "../Strings.h"
 #include "../Inventory/CCharacterData.h"
 #include "../World/CLoadingWorld.h"
 
@@ -45,7 +46,6 @@ bool CShopWidget::Init()
 
 	Weapons = CreateWidget<CWeaponInvenWidget>("Weapons", 1);
 
-	
 
 	// Title: 좌측 상단
 	Title = CreateWidget<CTextBlock>("Title", 2);
@@ -61,7 +61,10 @@ bool CShopWidget::Init()
 
 		TitleText->SetAlignH(ETextAlignH::Left);
 		TitleText->SetAlignV(ETextAlignV::Top);
-		TitleText->SetFontSize(54 * Ratio);
+
+		auto FontSize = 36 * Ratio;
+		TitleText->SetFontSize(FontSize);
+		
 		TitleText->SetTextColor(FColor::White);
 	}
 
@@ -98,13 +101,47 @@ bool CShopWidget::Init()
 		}
 	}
 
+	MaterialIcon = CreateWidget<CImage>("MaterialIcon", 1);
+	if (auto Image = MaterialIcon.lock())
+	{
+		Image->SetTexture("harvesting_icon", TEXT("items/materials/harvesting_icon.png"), Key::Path::Brotato);
+
+		auto Size = FVector(54, 54, 0) * Ratio;
+		Image->SetSize(Size);
+
+		auto Pos = FVector(RS.Width * 0.5f, 36, 0) * Ratio;
+		Image->SetPos(Pos);
+	}
+
+	MaterialCount = CreateWidget<CTextBlock>("MaterialCount", 1);
+	if (auto Text = MaterialCount.lock())
+	{
+		auto Size = FVector(500, 80, 0) * Ratio;
+		Text->SetSize(Size);
+
+		if (auto Image = MaterialIcon.lock())
+		{
+			auto Pos = Image->GetPos();
+			Pos.x += Image->GetSize().x;
+			Pos.y += (Image->GetSize().y - Text->GetSize().y) * 0.5f;
+
+			Text->SetPos(Pos);
+		}
+
+		Text->SetTextColor(FColor::White);
+		Text->SetText(CCharacterData::GetInst().GetMaterialCount());
+
+		auto FontSize = 36 * Ratio;
+		Text->SetFontSize(FontSize);
+	}
+
 	return true;
 }
 
 void CShopWidget::OnClickPlay()
 {
 	auto& CharacterData = CCharacterData::GetInst();
-	CharacterData.SetStageLevel(CharacterData.GetStageLevel() +1);
+	CharacterData.SetStageLevel(CharacterData.GetStageLevel() + 1);
 
 	if (auto World = CWorldManager::GetInst()->CreateWorld<CLoadingWorld>(true).lock())
 	{

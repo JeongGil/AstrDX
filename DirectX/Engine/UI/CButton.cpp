@@ -218,15 +218,16 @@ void CButton::Update(const float DeltaTime)
 
 					State = EButtonState::Hovered;
 				}
-				//else if (Input->GetMouseState(EMouseType::LButton, EInputType::Hold))
-				//{
-				//	State = EButtonState::Click;
-				//}
 			}
 		}
 	}
 
 	Brush[State].PlayAnimation(DeltaTime);
+
+	if (Child && Child->GetEnable())
+	{
+		Child->Update(DeltaTime);
+	}
 }
 
 void CButton::Render()
@@ -235,7 +236,7 @@ void CButton::Render()
 
 	RenderBrush(Brush[State], RenderPos, Size);
 
-	if (Child)
+	if (Child && Child->GetEnable())
 	{
 		Child->Render();
 	}
@@ -248,7 +249,7 @@ bool CButton::CollideMouse(std::weak_ptr<CWidget>& Result, const FVector2& Mouse
 		return false;
 	}
 
-	if (Child)
+	if (Child && Child->GetEnable())
 	{
 		if (!Child->CollideMouse(Result, MousePos))
 		{

@@ -54,12 +54,7 @@ public:
 
 	void SetStatValue(const int NewValue);
 
-	void SetStat(EStat::Type Type, int Value, bool bIsPrimary)
-	{
-		SetPrimary(bIsPrimary);
-		SetStatType(Type);
-		SetStatValue(Value);
-	}
+	void SetStat(EStat::Type Type, int Value, bool bIsPrimary);
 
 private:
 	void OnClickButton();

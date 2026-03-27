@@ -52,8 +52,8 @@ bool CBrotatoWorld_Battle::Init()
 	}
 
 	// 임시
-	//EnemySpawnEntries.push_back({ TableID(1), 8.f, 0.f });
-	//EnemySpawnEntries.push_back({ TableID(2), 2.f, 2.f });
+	EnemySpawnEntries.push_back({ TableID(1), 8.f, 0.f });
+	EnemySpawnEntries.push_back({ TableID(2), 2.f, 2.f });
 	EnemySpawnEntries.push_back({ TableID(3), 4.f, 4.f });
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");

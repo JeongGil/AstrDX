@@ -29,7 +29,7 @@ void CTableManager::LoadTables()
 	EnemyTable::GetInst().Load(GetFilePath(TEXT("Enemy")));
 	CharacterBaseTable::GetInst().Load(GetFilePath(TEXT("CharacterBase")));
 	ProjectileTable::GetInst().Load(GetFilePath(TEXT("Projectile")));
-	//ItemTable::GetInst().Load(GetFilePath(TEXT("Item")));
+	ItemTable::GetInst().Load(GetFilePath(TEXT("Item")));
 }
 
 std::string CTableManager::GetFilePath(const TCHAR* FileName, const std::string& PathKey)

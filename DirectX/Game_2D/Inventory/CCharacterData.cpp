@@ -1,5 +1,6 @@
 #include "CCharacterData.h"
 
+#include "CInventoryItem_Item.h"
 #include "CInventoryItem_Weapon.h"
 #include "CShop.h"
 #include "../Table/CharacterBaseTable.h"
@@ -14,13 +15,14 @@ bool CCharacterData::Init()
 	Weapons.reserve(INVENTORY_MAX_WEAPON);
 
 	MaterialCount = 0;
-	Level = 0;
 	Exp = 0;
 
 	SetBaseStatus();
 
 	// 임시
-	//AddWeapon(TableID(1));
+	AddWeapon(TableID(1));
+	AddWeapon(TableID(2));
+	AddWeapon(TableID(5));
 
 	return true;
 }
@@ -66,6 +68,8 @@ float CCharacterData::GetStat(EStat::Type StatType) const
 void CCharacterData::SetBaseStatus()
 {
 	BaseStats.clear();
+
+	BaseStats.emplace(EStat::Level, 0);
 
 	if (auto CharBaseInfo = CharacterBaseTable::GetInst().Get())
 	{
@@ -151,6 +155,18 @@ void CCharacterData::RemoveWeapon(const std::weak_ptr<CInventoryItem_Weapon>& We
 			return;
 		}
 	}
+}
+
+int CCharacterData::GetItemCount(TableID ItemID) const
+{
+	return 0;
+	//auto It = Items.find(ItemID);
+	//if (It == Items.end())
+	//{
+	//	return 0;
+	//}
+
+	//return It->second->GetItemCount();
 }
 
 void CCharacterData::RefreshWeaponTypeCounts()

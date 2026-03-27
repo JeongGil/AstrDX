@@ -16,7 +16,7 @@ private:
 
 private:
 	std::vector<std::shared_ptr<CInventoryItem_Weapon>> Weapons;
-	std::vector<std::shared_ptr<CInventoryItem_Item>> Items;
+	//std::unordered_map<TableID, std::shared_ptr<CInventoryItem_Item>> Items;
 
 	std::unordered_map<EWeaponType::Type, int> WeaponTypeCounts;
 	std::unordered_map<EStat::Type, float> BaseStats;
@@ -24,7 +24,6 @@ private:
 
 	int MaterialCount{};
 
-	int Level{};
 	int Exp{};
 
 	int StageLevel = 1;
@@ -59,7 +58,7 @@ public:
 	void Clear()
 	{
 		Weapons.clear();
-		Items.clear();
+		//Items.clear();
 		WeaponTypeCounts.clear();
 		BaseStats.clear();
 		UpgradeStats.clear();
@@ -129,18 +128,18 @@ public:
 
 	[[nodiscard]] int GetLevel() const
 	{
-		return Level;
+		return static_cast<int>(GetStat(EStat::Level));
 	}
 
 	void SetExp(const int NewExp)
 	{
 		Exp = NewExp;
 
-		int NeedExp = GetLevelUpEXP(Level + 1);
+		int NeedExp = GetLevelUpEXP(BaseStats[EStat::Level] + 1);
 		if (Exp >= NeedExp)
 		{
 			Exp -= NeedExp;
-			++Level;
+			++BaseStats[EStat::Level];
 		}
 	}
 
@@ -148,6 +147,18 @@ public:
 	{
 		SetExp(GetExp() + Added);
 	}
+
+	[[nodiscard]] std::weak_ptr<CInventoryItem_Weapon> GetWeapon(int SlotIdx) const
+	{
+		if (SlotIdx >= Weapons.size())
+		{
+			return {};
+		}
+
+		return Weapons[SlotIdx];
+	}
+
+	[[nodiscard]] int GetItemCount(TableID ItemID) const;
 
 private:
 	void RefreshWeaponTypeCounts();
