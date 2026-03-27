@@ -89,7 +89,7 @@ public:
 		PosAnchor = Anchor;
 	}
 
-	void OnProjectileCollideOnMonster(const std::weak_ptr<CEnemy>& WeakMonster);
+	void OnProjectileCollideOnMonster(const FVector& HitPoint, CCollider* Other);
 
 protected:
 	void InitWeaponInfo(TableID ID);

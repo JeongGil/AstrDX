@@ -219,6 +219,7 @@
     <ClCompile Include="UI\CSlotIcon.cpp" />
     <ClCompile Include="UI\CStageStateWidget.cpp" />
     <ClCompile Include="UI\CStartWidget.cpp" />
+    <ClCompile Include="UI\CStatValueWidget.cpp" />
     <ClCompile Include="UI\CStatWidget.cpp" />
     <ClCompile Include="UI\CTitleWidget.cpp" />
     <ClCompile Include="UI\CWeaponInvenWidget.cpp" />
@@ -302,6 +303,7 @@
     <ClInclude Include="UI\CSlotIcon.h" />
     <ClInclude Include="UI\CStageStateWidget.h" />
     <ClInclude Include="UI\CStartWidget.h" />
+    <ClInclude Include="UI\CStatValueWidget.h" />
     <ClInclude Include="UI\CStatWidget.h" />
     <ClInclude Include="UI\CTitleWidget.h" />
     <ClInclude Include="UI\CWeaponInvenWidget.h" />

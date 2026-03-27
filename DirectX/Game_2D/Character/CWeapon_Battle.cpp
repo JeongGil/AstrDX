@@ -231,29 +231,9 @@ CWeapon_Battle* CWeapon_Battle::Clone()
 	return new CWeapon_Battle(*this);
 }
 
-void CWeapon_Battle::OnProjectileCollideOnMonster(const std::weak_ptr<CEnemy>& WeakMonster)
+void CWeapon_Battle::OnProjectileCollideOnMonster(const FVector& HitPoint, CCollider* Other)
 {
-	auto Monster = WeakMonster.lock();
-	if (!Monster)
-	{
-		return;
-	}
-
-	FWeaponInfo* Info;
-	if (!WeaponTable::GetInst().TryGet(GetWeaponInfoID(), Info))
-	{
-		return;
-	}
-
-	auto Character = Owner.lock();
-	if (!Character)
-	{
-		return;
-	}
-
-	auto [Damage, bIsCrit] = CalcAttackDamage(Info, Owner);
-
-	Monster->TakeDamage(Damage, Owner);
+	OnCollisionBeginOverlap(HitPoint, Other);
 }
 
 void CWeapon_Battle::InitWeaponInfo(TableID ID)

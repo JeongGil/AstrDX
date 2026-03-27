@@ -288,6 +288,9 @@
     <ClCompile Include="UI\CResultWidget.cpp">
       <Filter>UI\Main\Battle</Filter>
     </ClCompile>
+    <ClCompile Include="UI\CStatValueWidget.cpp">
+      <Filter>UI\Main\Shop\Group</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player\CPlayer.h">
@@ -535,6 +538,9 @@
     </ClInclude>
     <ClInclude Include="UI\CResultWidget.h">
       <Filter>UI\Main\Battle</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\CStatValueWidget.h">
+      <Filter>UI\Main\Shop\Group</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

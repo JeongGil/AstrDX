@@ -37,6 +37,8 @@ bool CProjectile::Init()
 		Collider->SetInheritScale(false);
 		Collider->SetEnable(true);
 
+		Collider->SetOnCollisionBegin(this, &CProjectile::OnCollisionBegin);
+
 #if defined(_DEBUG) || defined(DEBUG)
 		Collider->SetDrawDebug(true);
 #endif
@@ -86,15 +88,10 @@ void CProjectile::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 	// 공격자가 플레이어
 	if (auto OwnerWeapon = this->OwnerWeapon.lock())
 	{
-		
-
-		auto Monster = std::dynamic_pointer_cast<CEnemy>(Other->GetOwner().lock());
-		if (!Monster)
-		{
-			return;
-		}
-
-		//Monster->TakeDamage(TODO, Player);
+		 if (auto Monster = std::dynamic_pointer_cast<CEnemy>(Other->GetOwner().lock()))
+		 {
+			 OwnerWeapon->OnProjectileCollideOnMonster(HitPoint, Other);
+		 }
 	}
 	// 무기 없으면 몬스터의 공격
 	else if (auto OwnerCharacter = this->OwnerCharacter.lock())
@@ -105,25 +102,13 @@ void CProjectile::OnCollisionBegin(const FVector& HitPoint, CCollider* Other)
 			return;
 		}
 
-		auto Player = std::dynamic_pointer_cast<CPlayerCharacter>(Other->GetOwner().lock());
-		if (!Player)
-		{
-			return;
-		}
-
-		FEnemyInfo* Info;
-		if (!EnemyTable::GetInst().TryGet(Monster->GetEnemyInfoID(), Info))
-		{
-			return;
-		}
-
-		// TODO: DamageIncrease 적용.
-		Player->TakeDamage(Info->Damage, Monster);
+		Monster->OnProjectileHitPC(HitPoint, Other);
 	}
 
 	if (RemainPenetration == 0)
 	{
 		Destroy();
+		return;
 	}
 
 	--RemainPenetration;

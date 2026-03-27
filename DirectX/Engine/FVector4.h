@@ -465,6 +465,7 @@ struct FVector4
 	static FVector4	Green;
 	static FVector4	Yellow;
 	static FVector4 Transparent;
+	static FVector4 HalfTransparent;
 };
 
 using FColor = FVector4;

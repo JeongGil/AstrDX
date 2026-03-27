@@ -14,6 +14,8 @@ public:
 	void Update(float DeltaTime) override;
 	float TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator) override;
 
+	void OnProjectileHitPC(const FVector& HitPoint, CCollider* Other);
+
 	[[nodiscard]] TableID GetEnemyInfoID() const
 	{
 		return EnemyInfoID;
@@ -44,7 +46,7 @@ private:
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Collider);
 	void OnCollisionEnd(CCollider* Collider);
-	void CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC);
+	void CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC);	
 
 protected:
 	static constexpr int CHARGE_MOVE_SPEED = 800;

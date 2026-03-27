@@ -496,3 +496,19 @@ void CEnemy::CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC)
 		}
 	}
 }
+
+void CEnemy::OnProjectileHitPC(const FVector& HitPoint, CCollider* Other)
+{
+	FEnemyInfo* Info;
+	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
+	{
+		return;
+	}
+
+	if (auto Player = this->Player.lock())
+	{
+		// TODO: 난이도 영향 적용.
+		//+ Info->DamageIncrease * 난이도
+		Player->TakeDamage(Info->Damage, std::dynamic_pointer_cast<CGameObject>(shared_from_this()));
+	}
+}

@@ -25,6 +25,8 @@ struct FMiscInfo : FTableInfoBase
 
 	std::vector<std::string> HitEffectTexPaths;
 
+	std::unordered_map<EStat::Type, std::string> PrimaryStatIconPaths;
+
 	bool Load(std::stringstream& Stream) override
 	{
 		try
@@ -77,6 +79,16 @@ struct FMiscInfo : FTableInfoBase
 					HitEffectTexPaths.push_back(Segment);
 				}
 			}
+
+			for (int i = EStat::Level; i <= EStat::Harvesting; i++)
+			{
+				auto Stat = static_cast<EStat::Type>(i);
+				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+				PrimaryStatIconPaths.emplace(Stat, Segment);
+			}
+
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			PrimaryStatIconPaths.emplace(EStat::None, Segment);
 		}
 		catch (...)
 		{

@@ -20,23 +20,32 @@ bool CShopWidget::Init()
 		return false;
 	}
 
+	auto RS = CDevice::GetInst()->GetResolution();
+	float Ratio = CDevice::GetInst()->GetRatioFHD();
+
 	Background = CreateWidget<CImage>("BG");
 	if (auto BG = Background.lock())
 	{
 		// CResultWidget::Init에서 이미 텍스쳐 로드.
 		BG->SetTexture("ShopBG");
 
-		auto RS = CDevice::GetInst()->GetResolution();
 		BG->SetSize(RS.Width, RS.Height);
 	}
 
 	Goods = CreateWidget<CGoodsWidget>("Goods", 1);
+
 	Stats = CreateWidget<CStatWidget>("Stats", 1);
+	if (auto Widget = Stats.lock())
+	{
+		auto Pos = FVector(1483, 27, 0) * Ratio;
+		Widget->SetPos(Pos);
+	}
+
 	Items = CreateWidget<CItemInvenWidget>("Items", 1);
+
 	Weapons = CreateWidget<CWeaponInvenWidget>("Weapons", 1);
 
-	auto RS = CDevice::GetInst()->GetResolution();
-	float Ratio = CDevice::GetInst()->GetRatioFHD();
+	
 
 	// Title: 좌측 상단
 	Title = CreateWidget<CTextBlock>("Title", 2);
@@ -44,7 +53,6 @@ bool CShopWidget::Init()
 	{
 		FVector2 TitlePos = FVector2(36, 36) * Ratio;
 		TitleText->SetPos(TitlePos);
-		TitleText->SetPivot(0, 0);
 		TitleText->SetSize(500.f * Ratio, 80.f * Ratio);
 
 		TitleText->SetText(TEXT("상점 (웨이브 "));
