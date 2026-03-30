@@ -1,11 +1,15 @@
 #include "CGoodsSlot.h"
 
 #include <CDevice.h>
+#include <UI/CButton.h>
 #include <UI/CImage.h>
 #include <UI/CTextBlock.h>
+#include <UI/CWidgetContainer.h>
 
 #include "CItemSlot.h"
+#include "../Inventory/CCharacterData.h"
 #include "../Inventory/CShop.h"
+#include "../Strings.h"
 #include "../Table/ItemInfo.h"
 #include "../Table/ItemTable.h"
 #include "../Table/WeaponInfo.h"
@@ -19,11 +23,13 @@ bool CGoodsSlot::Init()
 		return false;
 	}
 
-	const auto Ratio = CDevice::GetInst()->GetRatioFHD();
-	auto Size = FVector(351, 483, 0) * Ratio;
-	
-	SetSize(Size);
+	const float Ratio = CDevice::GetInst()->GetRatioFHD();
 
+	const float SlotWidth  = 351.f * Ratio;
+	const float SlotHeight = 483.f * Ratio;
+	SetSize(FVector(SlotWidth, SlotHeight, 0.f));
+
+	// ── Background ──────────────────────────────────────────────────
 	Background = CreateWidget<CImage>("Background", 1);
 	if (auto Image = Background.lock())
 	{
@@ -31,36 +37,80 @@ bool CGoodsSlot::Init()
 		Image->SetTint(FColor::HalfTransparent);
 	}
 
-	Slot = CreateWidget<CItemSlot>("Slot", 2);
-	if (auto Slot = this->Slot.lock())
-	{
-		auto Pad = 14 * Ratio;
-		Slot->SetPos(Pad, Pad);
+	// ── ItemSlot (아이콘) ────────────────────────────────────────────
+	const float ItemSlotPad   = 14.f  * Ratio;
+	const float ItemSlotWidth = 100.f * Ratio;
 
-		auto SlotWidth = 100 * Ratio;
-		Slot->SetSize(SlotWidth, SlotWidth);
+	Slot = CreateWidget<CItemSlot>("Slot", 2);
+	if (auto S = Slot.lock())
+	{
+		S->SetPos(ItemSlotPad, ItemSlotPad);
+		S->SetSize(ItemSlotWidth, ItemSlotWidth);
 	}
+
+	// ── Name ─────────────────────────────────────────────────────────
+	const float NameW        = 200.f * Ratio;
+	const float NameH        = 30.f  * Ratio;
+	const float NameFontSize = 26.f  * Ratio;
 
 	Name = CreateWidget<CTextBlock>("Name", 2);
 	if (auto Text = Name.lock())
 	{
-		if (auto Slot = this->Slot.lock())
+		if (auto S = Slot.lock())
 		{
-			auto Pos = Slot->GetPos();
-			Pos.x += Slot->GetSize().x + 14 * Ratio;
-
+			auto Pos = S->GetPos();
+			Pos.x += S->GetSize().x + ItemSlotPad;
 			Text->SetPos(Pos);
 		}
-
-		Size = FVector(250, 30, 0) * Ratio;
-		Text->SetSize(Size);
-
+		Text->SetSize(FVector(NameW, NameH, 0.f));
 		Text->SetAlignH(ETextAlignH::Left);
 		Text->SetAlignV(ETextAlignV::Top);
-
-		auto FontSize = 26 * Ratio;
-		Text->SetFontSize(FontSize);
+		Text->SetFontSize(NameFontSize);
 	}
+
+	// ── BuyButton (중앙 하단) ────────────────────────────────────────
+	const float BtnW    = 280.f * Ratio;
+	const float BtnH    = 50.f  * Ratio;
+	const float BtnPadB = 14.f  * Ratio;
+
+	const float BtnX = (SlotWidth  - BtnW) * 0.5f;
+	const float BtnY =  SlotHeight - BtnH  - BtnPadB;
+
+	const float IconSize      = 32.f * Ratio;
+	const float TextW         = BtnW - IconSize;
+	const float PriceFontSize = 24.f * Ratio;
+
+	BuyButton = CreateWidget<CButton>("BuyButton", 2);
+	if (auto Button = BuyButton.lock())
+	{
+		Button->SetPos(BtnX, BtnY);
+		Button->SetSize(BtnW, BtnH);
+		Button->SetTint(EButtonState::Normal,  0.f,  0.f,  0.f,  0.6f);
+		Button->SetTint(EButtonState::Hovered, 0.3f, 0.3f, 0.3f, 0.75f);
+
+		// PriceText: 버튼 자식 (버튼 중앙에서 아이콘 절반만큼 왼쪽)
+		if (auto Text = CWidget::CreateStaticWidget<CTextBlock>("PriceText", World, 3))
+		{
+			PriceText = Text;
+			Text->SetPos(-(IconSize * 0.5f), 0.f);
+			Text->SetSize(BtnW, BtnH);
+			Text->SetAlignH(ETextAlignH::Center);
+			Text->SetAlignV(ETextAlignV::Middle);
+			Text->SetFontSize(PriceFontSize);
+			Text->SetTextColor(FColor::White);
+			Button->SetChild(Text);
+		}
+	}
+
+	// PriceIcon: 슬롯에 직접 배치 (버튼 우측 위에 겹침, ZOrder 높게)
+	PriceIcon = CreateWidget<CImage>("PriceIcon", 3);
+	if (auto Icon = PriceIcon.lock())
+	{
+		Icon->SetTexture("harvesting_icon", TEXT("items/materials/harvesting_icon.png"), Key::Path::Brotato);
+		Icon->SetPos(BtnX + TextW, BtnY + (BtnH - IconSize) * 0.5f);
+		Icon->SetSize(IconSize, IconSize);
+	}
+
 	return true;
 }
 
@@ -71,21 +121,38 @@ void CGoodsSlot::SetItem(TableID ID, bool bWeapon)
 		return;
 	}
 
-	ItemID = ID;
+	ItemID    = ID;
 	bIsWeapon = bWeapon;
 
-	if (auto Slot = this->Slot.lock())
+	if (auto S = Slot.lock())
 	{
-		Slot->SetItem(ID, bWeapon);
+		S->SetItem(ID, bWeapon);
 	}
 
-	if (bWeapon)
+	if (bIsWeapon)
 	{
 		SetWeaponInfo();
 	}
 	else
 	{
 		SetItemInfo();
+	}
+}
+
+// 가격에 따라 PriceText 색상을 설정하는 헬퍼
+static void ApplyPriceColor(const std::weak_ptr<CTextBlock>& PriceText, int Price)
+{
+	if (auto Text = PriceText.lock())
+	{
+		const int MaterialCount = CCharacterData::GetInst().GetMaterialCount();
+		if (Price > MaterialCount)
+		{
+			Text->SetTextColor(FColor(1.f, 0.f, 0.f, 1.f));
+		}
+		else
+		{
+			Text->SetTextColor(FColor::White);
+		}
 	}
 }
 
@@ -102,13 +169,17 @@ void CGoodsSlot::SetItemInfo()
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
 	}
 
+	FShopGoods Goods;
+	Goods.GoodsID   = ItemID;
+	Goods.bIsWeapon = false;
+	const int Price = Goods.GetPrice();
+
 	if (auto Text = PriceText.lock())
 	{
-		FShopGoods Goods;
-		Goods.GoodsID = ItemID;
-		Goods.bIsWeapon = false;
-		Text->SetText(Goods.GetPrice());
+		Text->SetText(Price);
 	}
+
+	ApplyPriceColor(PriceText, Price);
 }
 
 void CGoodsSlot::SetWeaponInfo()
@@ -124,11 +195,15 @@ void CGoodsSlot::SetWeaponInfo()
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
 	}
 
+	FShopGoods Goods;
+	Goods.GoodsID   = ItemID;
+	Goods.bIsWeapon = true;
+	const int Price = Goods.GetPrice();
+
 	if (auto Text = PriceText.lock())
 	{
-		FShopGoods Goods;
-		Goods.GoodsID = ItemID;
-		Goods.bIsWeapon = true;
-		Text->SetText(Goods.GetPrice());
+		Text->SetText(Price);
 	}
+
+	ApplyPriceColor(PriceText, Price);
 }

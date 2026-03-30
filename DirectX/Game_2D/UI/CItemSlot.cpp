@@ -77,6 +77,17 @@ void CItemSlot::SetSize(float x, float y)
 	SetSize(FVector(x, y, 0));
 }
 
+static const FColor& GetTierColor(int Tier)
+{
+	switch (Tier)
+	{
+	case 2:  return FColor::T2Color;
+	case 3:  return FColor::T3Color;
+	case 4:  return FColor::T4Color;
+	default: return FColor::T1Color;
+	}
+}
+
 void CItemSlot::SetItem(TableID ID, bool bWeapon) const
 {
 	if (ItemID == ID && bIsWeapon == bWeapon)
@@ -96,13 +107,17 @@ void CItemSlot::SetItem(TableID ID, bool bWeapon) const
 		if (!WeaponTable::GetInst().TryGet(ID, Info))
 		{
 			Image->SetEnable(false);
-
 			return;
 		}
 
 		if (Image->SetTexture(Info->IconPath, GetTextureFileNameTChar(Info->IconPath), Key::Path::Brotato))
 		{
 			Image->SetEnable(true);
+		}
+
+		if (auto BG = Background.lock())
+		{
+			BG->SetTint(GetTierColor(Info->Tier));
 		}
 	}
 	else
@@ -111,13 +126,17 @@ void CItemSlot::SetItem(TableID ID, bool bWeapon) const
 		if (!ItemTable::GetInst().TryGet(ID, Info))
 		{
 			Image->SetEnable(false);
-
 			return;
 		}
 
 		if (Image->SetTexture(Info->IconPath, GetTextureFileNameTChar(Info->IconPath), Key::Path::Brotato))
 		{
 			Image->SetEnable(true);
+		}
+
+		if (auto BG = Background.lock())
+		{
+			BG->SetTint(GetTierColor(Info->Tier));
 		}
 	}
 }

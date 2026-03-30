@@ -37,8 +37,9 @@ int FShopGoods::GetPrice() const
 	Price = static_cast<int>(std::floor(Base + Wave + Base * Wave * 0.1f));
 
 	const static TableID CouponID{ -1 };
-
-//CCharacterData::GetInst().
+	int CouponCount = CCharacterData::GetInst().GetItemCount(CouponID);
+	Price -= 1 - 0.05 * CouponCount;
+	Price = max(1, Price);
 
 	return Price;
 }
