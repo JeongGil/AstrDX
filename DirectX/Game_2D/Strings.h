@@ -62,6 +62,7 @@ namespace Key
 	{
 		inline const std::string Asset = "Asset";
 		inline const std::string Brotato = "Brotato";
+		inline const std::string BrotatoUISound = "BrotatoUISound";
 		inline const std::string Table = "Table";
 	}
 

@@ -186,6 +186,9 @@ bool CButton::Init()
 		return false;
 	}
 
+	// Init에서는 사운드를 로드하지 않음
+	// 첫 사용 시에 로드 (lazy loading)
+
 	return true;
 }
 
@@ -202,6 +205,19 @@ void CButton::Update(const float DeltaTime)
 				if (Input->GetMouseState(EMouseType::LButton, EInputType::Press))
 				{
 					State = EButtonState::Click;
+
+					// 기본 Click 사운드 로드 (처음 호출시만 로드)
+					if (!Sound[EButtonEventState::Click].lock())
+					{
+						if (auto World = this->World.lock())
+						{
+							if (auto AssetMgr = World->GetWorldAssetManager().lock())
+							{
+								AssetMgr->LoadSound("ButtonPress", "UI", false, "button_press.wav", "BrotatoUISound");
+								Sound[EButtonEventState::Click] = AssetMgr->FindSound("ButtonPress");
+							}
+						}
+					}
 
 					if (auto Sound = this->Sound[EButtonEventState::Click].lock())
 					{
@@ -264,6 +280,19 @@ void CButton::MouseHovered()
 {
 	if (State == EButtonState::Normal)
 	{
+		// 기본 Hovered 사운드 로드 (처음 호출시만 로드)
+		if (!Sound[EButtonEventState::Hovered].lock())
+		{
+			if (auto World = this->World.lock())
+			{
+				if (auto AssetMgr = World->GetWorldAssetManager().lock())
+				{
+					AssetMgr->LoadSound("ButtonFocus", "UI", false, "button_focus.wav", "BrotatoUISound");
+					Sound[EButtonEventState::Hovered] = AssetMgr->FindSound("ButtonFocus");
+				}
+			}
+		}
+
 		if (EventCallback[EButtonEventState::Hovered])
 		{
 			EventCallback[EButtonEventState::Hovered]();

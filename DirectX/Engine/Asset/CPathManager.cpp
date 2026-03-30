@@ -25,6 +25,7 @@ bool CPathManager::Init()
 	CreatePath("Shader", TEXT("Shader\\"), "Asset");
 	CreatePath("Texture", TEXT("Texture\\"), "Asset");
 	CreatePath("Sound", TEXT("Sound\\"), "Asset");
+	CreatePath("BrotatoUISound", TEXT("Brotato\\ui\\sounds\\"), "Asset");
 
 	CreatePath("EngineAsset", TEXT("EngineAsset\\"));
 	CreatePath("EngineShader", TEXT("Shader\\"), "EngineAsset");
