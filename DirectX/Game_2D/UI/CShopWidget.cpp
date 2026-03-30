@@ -12,6 +12,7 @@
 #include "CWeaponInvenWidget.h"
 #include "../Strings.h"
 #include "../Inventory/CCharacterData.h"
+#include "../Inventory/CShop.h"
 #include "../World/CLoadingWorld.h"
 
 bool CShopWidget::Init()
@@ -170,5 +171,21 @@ void CShopWidget::SetCurrentLevel(const int NewLevel)
 		Text->SetText(TEXT("이동 (웨이브 "));
 		Text->AddText(GetNextLevel());
 		Text->AddText(TEXT(")"));
+	}
+}
+
+void CShopWidget::RefreshGoods()
+{
+	auto GoodsWidget = Goods.lock();
+	if (!GoodsWidget)
+	{
+		return;
+	}
+
+	const auto& Shop = CShop::GetInst();
+	for (size_t i = 0; i < 4; i++)
+	{
+		const auto& Goods = Shop.GetGoodsInfo(i);
+		GoodsWidget->SetGoods(Goods.GoodsID, Goods.bIsWeapon, i);
 	}
 }

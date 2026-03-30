@@ -21,5 +21,7 @@ private:
 
 public:
 	bool Init() override;
+
+	void SetGoods(TableID ID, bool bIsWeapon, size_t SlotIdx);
 };
 

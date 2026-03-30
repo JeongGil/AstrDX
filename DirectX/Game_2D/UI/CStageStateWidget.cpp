@@ -78,7 +78,8 @@ void CStageStateWidget::Update(const float DeltaTime)
 {
 	CWidgetContainer::Update(DeltaTime);
 
-	switch (CCharacterData::GetInst().GetStageState())
+	auto StageState = CCharacterData::GetInst().GetStageState();
+	switch (StageState)
 	{
 		case EStageState::Playing:
 		{

@@ -32,3 +32,12 @@ bool CGoodsWidget::Init()
 
 	return true;
 }
+
+void CGoodsWidget::SetGoods(TableID ID, bool bIsWeapon, size_t SlotIdx)
+{
+	assert(SlotIdx < Slots.size());
+	if (auto Slot = Slots[SlotIdx].lock())
+	{
+		Slot->SetItem(ID, bIsWeapon);
+	}
+}

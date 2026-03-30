@@ -5,8 +5,12 @@
 #include <UI/CTextBlock.h>
 
 #include "CItemSlot.h"
+#include "../Inventory/CShop.h"
 #include "../Table/ItemInfo.h"
 #include "../Table/ItemTable.h"
+#include "../Table/WeaponInfo.h"
+#include "../Table/WeaponTable.h"
+#include "../Utility.h"
 
 bool CGoodsSlot::Init()
 {
@@ -48,7 +52,7 @@ bool CGoodsSlot::Init()
 			Text->SetPos(Pos);
 		}
 
-		Size = FVector(30, 250, 0) * Ratio;
+		Size = FVector(250, 30, 0) * Ratio;
 		Text->SetSize(Size);
 
 		Text->SetAlignH(ETextAlignH::Left);
@@ -93,9 +97,38 @@ void CGoodsSlot::SetItemInfo()
 		return;
 	}
 
-	
+	if (auto Text = Name.lock())
+	{
+		Text->SetText(GetTextureFileNameTChar(Info->Name));
+	}
+
+	if (auto Text = PriceText.lock())
+	{
+		FShopGoods Goods;
+		Goods.GoodsID = ItemID;
+		Goods.bIsWeapon = false;
+		Text->SetText(Goods.GetPrice());
+	}
 }
 
 void CGoodsSlot::SetWeaponInfo()
 {
+	FWeaponInfo* Info;
+	if (!WeaponTable::GetInst().TryGet(ItemID, Info))
+	{
+		return;
+	}
+
+	if (auto Text = Name.lock())
+	{
+		Text->SetText(GetTextureFileNameTChar(Info->Name));
+	}
+
+	if (auto Text = PriceText.lock())
+	{
+		FShopGoods Goods;
+		Goods.GoodsID = ItemID;
+		Goods.bIsWeapon = true;
+		Text->SetText(Goods.GetPrice());
+	}
 }

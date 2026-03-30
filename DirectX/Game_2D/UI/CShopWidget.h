@@ -57,5 +57,12 @@ public:
 	{
 		return CurrentLevel + 1;
 	}
+
+	[[nodiscard]] std::weak_ptr<CGoodsWidget> GetGoodsWidget() const
+	{
+		return Goods;
+	}
+
+	void RefreshGoods();
 };
 

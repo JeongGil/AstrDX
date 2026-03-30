@@ -4,6 +4,8 @@
 #include "../Table/ItemInfo.h"
 #include "../Table/ItemTable.h"
 #include "../Table/WeaponTable.h"
+#include <random>
+#include <CEngine.h>
 
 int FShopGoods::GetPrice() const
 {
@@ -39,4 +41,47 @@ int FShopGoods::GetPrice() const
 //CCharacterData::GetInst().
 
 	return Price;
+}
+
+void CShop::GenerateGoods()
+{
+	++RerollCount;
+
+	for (size_t i = 0; i < SHOP_MAX_GOODS; i++)
+	{
+		CurrentGoods[i] = {};
+		GenerateRandomGoods(CurrentGoods[i].GoodsID, CurrentGoods[i].bIsWeapon);
+	}
+}
+
+bool CShop::GenerateRandomGoods(TableID& OutID, bool& OutIsWeapon)
+{
+	const auto& WeaponItems = WeaponTable::GetInst().GetItems();
+	const auto& ItemItems = ItemTable::GetInst().GetItems();
+
+	const size_t TotalCount = WeaponItems.size() + ItemItems.size();
+	if (TotalCount == 0)
+	{
+		return false;
+	}
+
+	std::uniform_int_distribution<size_t> Dist(0, TotalCount - 1);
+	const size_t PickIdx = Dist(CEngine::GetInst()->GetMT());
+
+	if (PickIdx < WeaponItems.size())
+	{
+		auto It = WeaponItems.begin();
+		std::advance(It, PickIdx);
+		OutID = It->first;
+		OutIsWeapon = true;
+	}
+	else
+	{
+		auto It = ItemItems.begin();
+		std::advance(It, PickIdx - WeaponItems.size());
+		OutID = It->first;
+		OutIsWeapon = false;
+	}
+
+	return true;
 }

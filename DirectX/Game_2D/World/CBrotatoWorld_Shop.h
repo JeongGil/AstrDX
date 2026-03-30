@@ -15,5 +15,10 @@ private:
 
 public:
 	bool Init() override;
+
+	[[nodiscard]] std::weak_ptr<CShopWidget> GetShopWidget() const
+	{
+		return ShopWidget;
+	}
 };
 

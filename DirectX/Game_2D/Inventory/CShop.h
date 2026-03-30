@@ -17,6 +17,8 @@ class CShop
 
 private:
 	std::array<FShopGoods, SHOP_MAX_GOODS> CurrentGoods = {};
+
+	int RerollCount = -1;
 	int RerollPrice = 0;
 
 public:
@@ -25,6 +27,11 @@ public:
 		assert(SlotIdx < SHOP_MAX_GOODS);
 		return CurrentGoods[SlotIdx];
 	}
+
+	void GenerateGoods();
+
+private:
+	bool GenerateRandomGoods(TableID& OutID, bool& OutIsWeapon);
 
 private:
 	CShop() = default;
