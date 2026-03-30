@@ -1,7 +1,6 @@
-#include "CGoodsWidget.h"
-
 #include <CDevice.h>
 
+#include "CGoodsWidget.h"
 #include "CGoodsSlot.h"
 
 bool CGoodsWidget::Init()
@@ -33,11 +32,11 @@ bool CGoodsWidget::Init()
 	return true;
 }
 
-void CGoodsWidget::SetGoods(TableID ID, bool bIsWeapon, size_t SlotIdx)
+void CGoodsWidget::SetGoods(const FShopGoods& GoodsInfo, size_t SlotIdx)
 {
 	assert(SlotIdx < Slots.size());
 	if (auto Slot = Slots[SlotIdx].lock())
 	{
-		Slot->SetItem(ID, bIsWeapon);
+		Slot->SetItem(GoodsInfo);
 	}
 }

@@ -87,6 +87,7 @@ bool CGoodsSlot::Init()
 		Button->SetSize(BtnW, BtnH);
 		Button->SetTint(EButtonState::Normal,  0.f,  0.f,  0.f,  0.6f);
 		Button->SetTint(EButtonState::Hovered, 0.3f, 0.3f, 0.3f, 0.75f);
+		Button->SetEventCallback<CGoodsSlot>(EButtonEventState::Click, this, &CGoodsSlot::OnClickBuy);
 
 		// PriceText: 버튼 자식 (버튼 중앙에서 아이콘 절반만큼 왼쪽)
 		if (auto Text = CWidget::CreateStaticWidget<CTextBlock>("PriceText", World, 3))
@@ -114,22 +115,21 @@ bool CGoodsSlot::Init()
 	return true;
 }
 
-void CGoodsSlot::SetItem(TableID ID, bool bWeapon)
+void CGoodsSlot::SetItem(const FShopGoods& InGoodsInfo)
 {
-	if (ItemID == ID && bIsWeapon == bWeapon)
+	if (GoodsInfo.GoodsID == InGoodsInfo.GoodsID && GoodsInfo.bIsWeapon == InGoodsInfo.bIsWeapon)
 	{
 		return;
 	}
 
-	ItemID    = ID;
-	bIsWeapon = bWeapon;
+	GoodsInfo = InGoodsInfo;
 
 	if (auto S = Slot.lock())
 	{
-		S->SetItem(ID, bWeapon);
+		S->SetItem(GoodsInfo.GoodsID, GoodsInfo.bIsWeapon);
 	}
 
-	if (bIsWeapon)
+	if (GoodsInfo.bIsWeapon)
 	{
 		SetWeaponInfo();
 	}
@@ -159,7 +159,7 @@ static void ApplyPriceColor(const std::weak_ptr<CTextBlock>& PriceText, int Pric
 void CGoodsSlot::SetItemInfo()
 {
 	FItemInfo* Info;
-	if (!ItemTable::GetInst().TryGet(ItemID, Info))
+	if (!ItemTable::GetInst().TryGet(GoodsInfo.GoodsID, Info))
 	{
 		return;
 	}
@@ -169,10 +169,7 @@ void CGoodsSlot::SetItemInfo()
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
 	}
 
-	FShopGoods Goods;
-	Goods.GoodsID   = ItemID;
-	Goods.bIsWeapon = false;
-	const int Price = Goods.GetPrice();
+	const int Price = GoodsInfo.GetPrice();
 
 	if (auto Text = PriceText.lock())
 	{
@@ -185,7 +182,7 @@ void CGoodsSlot::SetItemInfo()
 void CGoodsSlot::SetWeaponInfo()
 {
 	FWeaponInfo* Info;
-	if (!WeaponTable::GetInst().TryGet(ItemID, Info))
+	if (!WeaponTable::GetInst().TryGet(GoodsInfo.GoodsID, Info))
 	{
 		return;
 	}
@@ -195,10 +192,7 @@ void CGoodsSlot::SetWeaponInfo()
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
 	}
 
-	FShopGoods Goods;
-	Goods.GoodsID   = ItemID;
-	Goods.bIsWeapon = true;
-	const int Price = Goods.GetPrice();
+	const int Price = GoodsInfo.GetPrice();
 
 	if (auto Text = PriceText.lock())
 	{
@@ -206,4 +200,12 @@ void CGoodsSlot::SetWeaponInfo()
 	}
 
 	ApplyPriceColor(PriceText, Price);
+}
+
+void CGoodsSlot::OnClickBuy()
+{
+	if (CCharacterData::GetInst().GetMaterialCount() < GoodsInfo.GetPrice())
+	{
+		return;
+	}
 }

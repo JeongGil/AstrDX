@@ -14,7 +14,7 @@ bool CCharacterData::Init()
 
 	Weapons.reserve(INVENTORY_MAX_WEAPON);
 
-	MaterialCount = 0;
+	SetMaterialCount(1000);
 	Exp = 0;
 
 	SetBaseStatus();
@@ -159,14 +159,13 @@ void CCharacterData::RemoveWeapon(const std::weak_ptr<CInventoryItem_Weapon>& We
 
 int CCharacterData::GetItemCount(TableID ItemID) const
 {
-	return 0;
-	//auto It = Items.find(ItemID);
-	//if (It == Items.end())
-	//{
-	//	return 0;
-	//}
+	auto It = Items.find(ItemID);
+	if (It == Items.end())
+	{
+		return 0;
+	}
 
-	//return It->second->GetItemCount();
+	return It->second->GetItemCount();
 }
 
 void CCharacterData::RefreshWeaponTypeCounts()

@@ -16,7 +16,7 @@ private:
 
 private:
 	std::vector<std::shared_ptr<CInventoryItem_Weapon>> Weapons;
-	//std::unordered_map<TableID, std::shared_ptr<CInventoryItem_Item>> Items;
+	std::unordered_map<TableID, std::shared_ptr<CInventoryItem_Item>> Items;
 
 	std::unordered_map<EWeaponType::Type, int> WeaponTypeCounts;
 	std::unordered_map<EStat::Type, float> BaseStats;

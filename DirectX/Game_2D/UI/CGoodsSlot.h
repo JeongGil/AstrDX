@@ -1,6 +1,8 @@
 #pragma once
 #include <UI/CWidgetContainer.h>
 
+#include "../Inventory/CShop.h"
+
 class CImage;
 class CButton;
 class CTextBlock;
@@ -31,13 +33,12 @@ private:
 	std::weak_ptr<CImage> PriceIcon;
 	std::weak_ptr<CTextBlock> PriceText;
 
-	TableID ItemID{ -1 };
-	bool bIsWeapon = false;
+	FShopGoods GoodsInfo;
 
 public:
 	bool Init() override;
 
-	void SetItem(TableID ID, bool bWeapon);
+	void SetItem(const FShopGoods& InGoodsInfo);
 
 	[[nodiscard]] int GetSlotIdx() const
 	{
@@ -52,5 +53,7 @@ public:
 private:
 	void SetItemInfo();
 	void SetWeaponInfo();
+
+	void OnClickBuy();
 };
 

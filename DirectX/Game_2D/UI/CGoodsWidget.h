@@ -1,6 +1,8 @@
 #pragma once
 #include <UI/CWidgetContainer.h>
 
+#include "../Inventory/CShop.h"
+
 class CGoodsSlot;
 class CWorldUIManager;
 
@@ -22,6 +24,6 @@ private:
 public:
 	bool Init() override;
 
-	void SetGoods(TableID ID, bool bIsWeapon, size_t SlotIdx);
+	void SetGoods(const FShopGoods& GoodsInfo, size_t SlotIdx);
 };
 

@@ -186,6 +186,6 @@ void CShopWidget::RefreshGoods()
 	for (size_t i = 0; i < 4; i++)
 	{
 		const auto& Goods = Shop.GetGoodsInfo(i);
-		GoodsWidget->SetGoods(Goods.GoodsID, Goods.bIsWeapon, i);
+		GoodsWidget->SetGoods(Goods, i);
 	}
 }

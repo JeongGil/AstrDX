@@ -52,9 +52,25 @@ bool CBrotatoWorld_Battle::Init()
 	}
 
 	// 임시
-	EnemySpawnEntries.push_back({ TableID(1), 8.f, 0.f });
-	EnemySpawnEntries.push_back({ TableID(2), 2.f, 2.f });
-	EnemySpawnEntries.push_back({ TableID(3), 4.f, 4.f });
+	int StageLevel = CCharacterData::GetInst().GetStageLevel();
+
+	TableID ID =TableID(1);	
+	if (auto Info = EnemyTable::GetInst().Get(ID); Info != nullptr && StageLevel >= Info->AppearWaves[0])
+	{
+		EnemySpawnEntries.push_back({ ID, 8.f, 0.f });
+	}
+
+	ID = TableID(2);
+	if (auto Info = EnemyTable::GetInst().Get(ID); Info != nullptr && StageLevel >= Info->AppearWaves[0])
+	{
+		EnemySpawnEntries.push_back({ ID, 2.f, 2.f });
+	}
+
+	ID = TableID(3);
+	if (auto Info = EnemyTable::GetInst().Get(ID); Info != nullptr && StageLevel >= Info->AppearWaves[0])
+	{
+		EnemySpawnEntries.push_back({ ID, 4.f, 4.f });
+	}
 
 	SubCameraObj = CreateGameObject<CCameraObject>("SubCam");
 
