@@ -119,6 +119,11 @@ void CEnemy::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
 
+	if (IsBattleActionStoppedByStageState())
+	{
+		return;
+	}
+
 	if (Player.expired())
 	{
 		if (auto World = this->World.lock())
@@ -269,6 +274,11 @@ void CEnemy::Update(const float DeltaTime)
 
 float CEnemy::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return 0.f;
+	}
+
 	auto PC = std::dynamic_pointer_cast<CPlayerCharacter>(Instigator.lock());
 	if (!PC)
 	{
@@ -480,6 +490,11 @@ void CEnemy::OnCollisionEnd(CCollider* Collider)
 
 void CEnemy::CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return;
+	}
+
 	FEnemyInfo* Info;
 	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
 	{
@@ -499,6 +514,11 @@ void CEnemy::CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC)
 
 void CEnemy::OnProjectileHitPC(const FVector& HitPoint, CCollider* Other)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return;
+	}
+
 	FEnemyInfo* Info;
 	if (!EnemyTable::GetInst().TryGet(GetEnemyInfoID(), Info))
 	{

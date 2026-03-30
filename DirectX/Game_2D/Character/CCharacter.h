@@ -69,6 +69,9 @@ public:
 	void Destroy() override;
 
 protected:
+	[[nodiscard]] static bool IsBattleActionStoppedByStageState();
+
+protected:
 	CCharacter* Clone() override;
 
 public:

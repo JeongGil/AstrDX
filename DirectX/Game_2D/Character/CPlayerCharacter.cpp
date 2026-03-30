@@ -331,6 +331,11 @@ void CPlayerCharacter::PostUpdate(const float DeltaTime)
 
 float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return 0.f;
+	}
+
 	if (ElapsedFromDamaged < INVINCIBLE_DURATION)
 	{
 		return 0.f;
@@ -544,7 +549,7 @@ CPlayerCharacter* CPlayerCharacter::Clone()
 
 void CPlayerCharacter::MoveUp()
 {
-	if (IsPendingDead())
+	if (IsPendingDead() || CCharacterData::GetInst().GetStageState() != EStageState::Playing)
 	{
 		return;
 	}
@@ -557,7 +562,7 @@ void CPlayerCharacter::MoveUp()
 
 void CPlayerCharacter::MoveDown()
 {
-	if (IsPendingDead())
+	if (IsPendingDead() || CCharacterData::GetInst().GetStageState() != EStageState::Playing)
 	{
 		return;
 	}
@@ -570,7 +575,7 @@ void CPlayerCharacter::MoveDown()
 
 void CPlayerCharacter::MoveLeft()
 {
-	if (IsPendingDead())
+	if (IsPendingDead() || CCharacterData::GetInst().GetStageState() != EStageState::Playing)
 	{
 		return;
 	}
@@ -583,7 +588,7 @@ void CPlayerCharacter::MoveLeft()
 
 void CPlayerCharacter::MoveRight()
 {
-	if (IsPendingDead())
+	if (IsPendingDead() || CCharacterData::GetInst().GetStageState() != EStageState::Playing)
 	{
 		return;
 	}

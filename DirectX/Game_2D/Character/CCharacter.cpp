@@ -8,6 +8,7 @@
 
 #include "../Strings.h"
 #include "../UI/CDamageFloatingText.h"
+#include "../Inventory/CCharacterData.h"
 
 bool CCharacter::Init()
 {
@@ -91,6 +92,11 @@ CCharacter* CCharacter::Clone()
 
 float CCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject>& Instigator)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return 0.f;
+	}
+
 	const auto World = this->World.lock();
 	const auto UIManager = World->GetUIManager().lock();
 	const auto DamageWidget = UIManager->CreateWidget<CDamageFloatingText>("DamageFloating").lock();
@@ -184,4 +190,16 @@ void CCharacter::SquashAndStretch(const float DeltaTime, float Intensity, float 
 	NewScale.y = 1 - (SinValue * Intensity);
 
 	Root->SetRelativeScale(NewScale);
+}
+
+bool CCharacter::IsBattleActionStoppedByStageState()
+{
+	switch (CCharacterData::GetInst().GetStageState())
+	{
+	case EStageState::Clear:
+	case EStageState::Defeat:
+		return true;
+	default:
+		return false;
+	}
 }

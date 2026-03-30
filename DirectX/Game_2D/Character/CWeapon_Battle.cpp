@@ -16,7 +16,22 @@
 #include "../Strings.h"
 #include "../Table/MiscTable.h"
 #include "../Table/WeaponTable.h"
+#include "../Inventory/CCharacterData.h"
 
+namespace
+{
+	bool IsBattleActionStoppedByStageState()
+	{
+		switch (CCharacterData::GetInst().GetStageState())
+		{
+		case EStageState::Clear:
+		case EStageState::Defeat:
+			return true;
+		default:
+			return false;
+		}
+	}
+}
 
 bool CWeapon_Battle::Init()
 {
@@ -76,6 +91,30 @@ bool CWeapon_Battle::Init()
 void CWeapon_Battle::Update(const float DeltaTime)
 {
 	CGameObject::Update(DeltaTime);
+
+	if (IsBattleActionStoppedByStageState())
+	{
+		bOnMeleeAttack = false;
+		ElapsedMeleeMoveTime = 0.f;
+		MovedDistance = 0.f;
+		TargetDir = FVector::Zero;
+		HitEnemiesInCurrentAttack.clear();
+		CloseEnemies.clear();
+		ClosestEnemy.reset();
+		ClosestDistance = std::numeric_limits<float>::infinity();
+
+		if (auto Col = Collider.lock())
+		{
+			Col->SetEnable(false);
+		}
+
+		if (auto Search = SearchCollider.lock())
+		{
+			Search->SetEnable(false);
+		}
+
+		return;
+	}
 
 	SortCloseEnemies();
 
@@ -317,6 +356,11 @@ FAttackResult CWeapon_Battle::CalcAttackDamage(const FWeaponInfo* WeaponInfo,
 
 void CWeapon_Battle::OnCollisionBeginOverlap(const FVector& HitPoint, CCollider* Other)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return;
+	}
+
 	auto ColObj = Other->GetOwner().lock();
 	if (!ColObj)
 	{
@@ -357,6 +401,11 @@ void CWeapon_Battle::OnCollisionBeginOverlap(const FVector& HitPoint, CCollider*
 
 void CWeapon_Battle::OnSearchCollisionBeginOverlap(const FVector& HitPoint, CCollider* Other)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return;
+	}
+
 	if (Other == nullptr)
 	{
 		return;
@@ -367,6 +416,11 @@ void CWeapon_Battle::OnSearchCollisionBeginOverlap(const FVector& HitPoint, CCol
 
 void CWeapon_Battle::OnSearchCollisionEndOverlap(CCollider* Other)
 {
+	if (IsBattleActionStoppedByStageState())
+	{
+		return;
+	}
+
 	if (Other == nullptr)
 	{
 		return;
