@@ -35,6 +35,7 @@ bool CBrotatoWorld_Battle::Init()
 	}
 
 	LoadAnimation2D();
+	LoadSound();
 
 	auto& CharacterData = CCharacterData::GetInst();
 
@@ -480,6 +481,23 @@ void CBrotatoWorld_Battle::LoadAnimation2D()
 
 void CBrotatoWorld_Battle::LoadSound()
 {
+	static constexpr std::array<std::pair<const char*, const char*>, 5> BattleBgmInfos =
+	{
+		std::pair{ "BattleBGM_Hyperspace", "resources/music/streamer_mode/Adonai - Hyperspace.mp3" },
+		std::pair{ "BattleBGM_LiquidGlass", "resources/music/streamer_mode/Adonai - Liquid Glass.mp3" },
+		std::pair{ "BattleBGM_PhaseBreak", "resources/music/streamer_mode/Adonai - Phase Break.mp3" },
+		std::pair{ "BattleBGM_TurbineKick", "resources/music/streamer_mode/Adonai - Turbine Kick.mp3" },
+		std::pair{ "BattleBGM_WubsOfTheDeep", "resources/music/streamer_mode/Adonai - Wubs of the Deep.mp3" }
+	};
+
+	auto& RandEngine = CEngine::GetInst()->GetMT();
+	std::uniform_int_distribution<size_t> Dist(0, BattleBgmInfos.size() - 1);
+	const auto& [BgmKey, BgmPath] = BattleBgmInfos[Dist(RandEngine)];
+
+	if (WorldAssetManager->LoadSound(BgmKey, "BGM", true, BgmPath, Key::Path::Brotato))
+	{
+		WorldAssetManager->SoundPlay(BgmKey);
+	}
 }
 
 void CBrotatoWorld_Battle::CreateUI(const std::weak_ptr<CPlayerCharacter>& PC)
