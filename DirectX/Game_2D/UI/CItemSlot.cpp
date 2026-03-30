@@ -88,12 +88,15 @@ static const FColor& GetTierColor(int Tier)
 	}
 }
 
-void CItemSlot::SetItem(TableID ID, bool bWeapon) const
+void CItemSlot::SetItem(TableID ID, bool bWeapon)
 {
 	if (ItemID == ID && bIsWeapon == bWeapon)
 	{
 		return;
 	}
+
+	ItemID = ID;
+	bIsWeapon = bWeapon;
 
 	auto Image = SlotItem.lock();
 	if (!Image)

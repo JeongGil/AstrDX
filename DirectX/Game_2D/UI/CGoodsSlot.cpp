@@ -5,8 +5,10 @@
 #include <UI/CImage.h>
 #include <UI/CTextBlock.h>
 #include <UI/CWidgetContainer.h>
+#include <World/CWorldUIManager.h>
 
 #include "CItemSlot.h"
+#include "CShopWidget.h"
 #include "../Inventory/CCharacterData.h"
 #include "../Inventory/CShop.h"
 #include "../Strings.h"
@@ -207,5 +209,24 @@ void CGoodsSlot::OnClickBuy()
 	if (CCharacterData::GetInst().GetMaterialCount() < GoodsInfo.GetPrice())
 	{
 		return;
+	}
+
+	CCharacterData::GetInst().AddMaterialCount(-GoodsInfo.GetPrice());
+
+	if (GoodsInfo.bIsWeapon)
+	{
+		CCharacterData::GetInst().AddWeapon(GoodsInfo);
+	}
+	else
+	{
+		CCharacterData::GetInst().AddItem(GoodsInfo);
+	}
+
+	if (auto Manager = UIManager.lock())
+	{
+		if (auto Shop = Manager->FindWidget<CShopWidget>("Shop").lock())
+		{
+			Shop->RefreshInventory();
+		}
 	}
 }

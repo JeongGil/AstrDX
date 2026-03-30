@@ -31,7 +31,7 @@ private:
 	TableID ItemID{ -1 };
 	bool bIsWeapon = false;
 
-	float FontSize;
+	float FontSize = 0.f;
 
 public:
 	bool Init() override;
@@ -62,8 +62,8 @@ public:
 	void SetSize(const FVector& Size) override;
 	void SetSize(float x, float y) override;
 
-	void SetItem(TableID ID, bool bWeapon = false) const;
-	
+	void SetItem(TableID ID, bool bWeapon = false);
+
 	void SetFontSize(float NewSize);
 
 	void SetItemCount(int Count) const;

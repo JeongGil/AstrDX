@@ -44,8 +44,20 @@ bool CShopWidget::Init()
 	}
 
 	Items = CreateWidget<CItemInvenWidget>("Items", 1);
+	if (auto Widget = Items.lock())
+	{
+		// CGoodsWidget 하단 좌측, PlayButton 하단(1080-36=1044)에서 위젯 높이(96*2+4=196) 올림
+		auto Pos = FVector(26, 848, 0) * Ratio;
+		Widget->SetPos(Pos);
+	}
 
 	Weapons = CreateWidget<CWeaponInvenWidget>("Weapons", 1);
+	if (auto Widget = Weapons.lock())
+	{
+		// CGoodsWidget 하단 우측(1460), 무기위젯 너비(96*3+4*2=296) 역산, PlayButton 하단 맞춤
+		auto Pos = FVector(1164, 848, 0) * Ratio;
+		Widget->SetPos(Pos);
+	}
 
 
 	// Title: 좌측 상단
@@ -187,5 +199,23 @@ void CShopWidget::RefreshGoods()
 	{
 		const auto& Goods = Shop.GetGoodsInfo(i);
 		GoodsWidget->SetGoods(Goods, i);
+	}
+}
+
+void CShopWidget::RefreshInventory()
+{
+	if (auto Widget = Weapons.lock())
+	{
+		Widget->Refresh();
+	}
+
+	if (auto Widget = Items.lock())
+	{
+		Widget->Refresh();
+	}
+
+	if (auto Text = MaterialCount.lock())
+	{
+		Text->SetText(CCharacterData::GetInst().GetMaterialCount());
 	}
 }

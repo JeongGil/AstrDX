@@ -52,6 +52,7 @@ public:
 
 	void AddWeapon(const FShopGoods& WeaponGoods);
 	void AddWeapon(TableID WeaponID);
+	void AddItem(const FShopGoods& ItemGoods);
 	void RemoveWeapon(size_t SlotIdx);
 	void RemoveWeapon(const std::weak_ptr<CInventoryItem_Weapon>& Weapon);
 
@@ -159,6 +160,11 @@ public:
 	}
 
 	[[nodiscard]] int GetItemCount(TableID ItemID) const;
+
+	[[nodiscard]] const std::unordered_map<TableID, std::shared_ptr<CInventoryItem_Item>>& GetItems() const
+	{
+		return Items;
+	}
 
 private:
 	void RefreshWeaponTypeCounts();

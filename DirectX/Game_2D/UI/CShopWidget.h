@@ -64,5 +64,6 @@ public:
 	}
 
 	void RefreshGoods();
+	void RefreshInventory();
 };
 

@@ -23,5 +23,6 @@ private:
 
 public:
 	bool Init() override;
+	void Refresh();
 };
 

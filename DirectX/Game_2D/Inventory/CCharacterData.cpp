@@ -98,10 +98,7 @@ void CCharacterData::AddWeapon(const FShopGoods& WeaponGoods)
 		return;
 	}
 
-	// TODO: 작업 필요.
-	assert(false);
-
-	RefreshWeaponTypeCounts();
+	AddWeapon(WeaponGoods.GoodsID);
 }
 
 void CCharacterData::AddWeapon(TableID WeaponID)
@@ -166,6 +163,24 @@ int CCharacterData::GetItemCount(TableID ItemID) const
 	}
 
 	return It->second->GetItemCount();
+}
+
+void CCharacterData::AddItem(const FShopGoods& ItemGoods)
+{
+	assert(!ItemGoods.bIsWeapon);
+
+	auto It = Items.find(ItemGoods.GoodsID);
+	if (It != Items.end())
+	{
+		It->second->SetItemCount(It->second->GetItemCount() + 1);
+	}
+	else
+	{
+		auto NewItem = std::make_shared<CInventoryItem_Item>();
+		NewItem->SetItemInfoID(ItemGoods.GoodsID);
+		NewItem->SetItemCount(1);
+		Items.emplace(ItemGoods.GoodsID, std::move(NewItem));
+	}
 }
 
 void CCharacterData::RefreshWeaponTypeCounts()
