@@ -1,6 +1,7 @@
 #include "CDropItem.h"
 
 #include <CEngine.h>
+#include <World/CWorld.h>
 #include <Asset/Material/CMaterial.h>
 #include <Asset/Texture/CTexture.h>
 #include <Component/CColliderBox2D.h>
@@ -84,6 +85,55 @@ CDropItem* CDropItem::Clone()
 
 void CDropItem::OnPickedUp()
 {
+	if (ItemType == EDropItemType::Material)
+	{
+		static constexpr std::array<std::pair<const char*, const char*>, 5> MaterialPickupSoundInfos =
+		{
+			std::pair{ "MaterialPickup_01", "items/materials/water_drop_drip_single_01.wav" },
+			std::pair{ "MaterialPickup_02", "items/materials/water_drop_drip_single_02.wav" },
+			std::pair{ "MaterialPickup_03", "items/materials/water_drop_drip_single_03.wav" },
+			std::pair{ "MaterialPickup_04", "items/materials/water_drop_drip_single_04.wav" },
+			std::pair{ "MaterialPickup_05", "items/materials/water_drop_drip_single_05.wav" }
+		};
+
+		std::uniform_int_distribution<size_t> Dist(0, MaterialPickupSoundInfos.size() - 1);
+		const auto& [SoundKey, SoundPath] = MaterialPickupSoundInfos[Dist(CEngine::GetInst()->GetMT())];
+
+		if (auto World = GetWorld().lock())
+		{
+			if (auto AssetMgr = World->GetWorldAssetManager().lock())
+			{
+				if (AssetMgr->LoadSound(SoundKey, "Effect", false, SoundPath, Key::Path::Brotato))
+				{
+					AssetMgr->SoundPlay(SoundKey);
+				}
+			}
+		}
+	}
+	else if (ItemType == EDropItemType::Fruit)
+	{
+		static constexpr std::array<std::pair<const char*, const char*>, 3> FruitPickupSoundInfos =
+		{
+			std::pair{ "FruitPickup_01", "items/consumables/fruit/comedy_bite_chew_01.wav" },
+			std::pair{ "FruitPickup_02", "items/consumables/fruit/comedy_bite_chew_02.wav" },
+			std::pair{ "FruitPickup_03", "items/consumables/fruit/comedy_bite_chew_03.wav" }
+		};
+
+		std::uniform_int_distribution<size_t> Dist(0, FruitPickupSoundInfos.size() - 1);
+		const auto& [SoundKey, SoundPath] = FruitPickupSoundInfos[Dist(CEngine::GetInst()->GetMT())];
+
+		if (auto World = GetWorld().lock())
+		{
+			if (auto AssetMgr = World->GetWorldAssetManager().lock())
+			{
+				if (AssetMgr->LoadSound(SoundKey, "Effect", false, SoundPath, Key::Path::Brotato))
+				{
+					AssetMgr->SoundPlay(SoundKey);
+				}
+			}
+		}
+	}
+
 	CCharacterData::GetInst().AddMaterialCount(MaterialCount);
 	CCharacterData::GetInst().AddExp(MaterialCount);
 

@@ -1,6 +1,7 @@
 #include "CWeapon_Battle.h"
 
 #include <CEngine.h>
+#include <array>
 #include <cmath>
 #include <CTimer.h>
 #include <unordered_set>
@@ -29,6 +30,30 @@ namespace
 			return true;
 		default:
 			return false;
+		}
+	}
+
+	void PlayRandomMeleeSwingSound(const std::weak_ptr<CWorld>& InWorld)
+	{
+		static constexpr std::array<std::pair<const char*, const char*>, 3> MeleeSwingSoundInfos =
+		{
+			std::pair{ "MeleeSwing_01", "weapons/melee_sounds/whoosh_weapon_knife_swing_01.wav" },
+			std::pair{ "MeleeSwing_02", "weapons/melee_sounds/whoosh_weapon_knife_swing_02.wav" },
+			std::pair{ "MeleeSwing_03", "weapons/melee_sounds/whoosh_weapon_knife_swing_03.wav" }
+		};
+
+		if (const auto World = InWorld.lock())
+		{
+			if (const auto AssetMgr = World->GetWorldAssetManager().lock())
+			{
+				std::uniform_int_distribution<size_t> Dist(0, MeleeSwingSoundInfos.size() - 1);
+				const auto& [SoundKey, SoundPath] = MeleeSwingSoundInfos[Dist(CEngine::GetInst()->GetMT())];
+
+				if (AssetMgr->LoadSound(SoundKey, "Effect", false, SoundPath, Key::Path::Brotato))
+				{
+					AssetMgr->SoundPlay(SoundKey);
+				}
+			}
 		}
 	}
 }
@@ -184,6 +209,8 @@ void CWeapon_Battle::Update(const float DeltaTime)
 			{
 				Col->SetEnable(true);
 			}
+
+			PlayRandomMeleeSwingSound(this->World);
 		}
 		else
 		{

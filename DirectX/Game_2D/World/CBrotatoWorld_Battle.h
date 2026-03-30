@@ -27,7 +27,7 @@ protected:
 	int StageLevel;
 
 	int TotalStageTime;
-	float RemainStageTime = 1.f;
+	float RemainStageTime = 30.f;
 	float RemainFinishTime = 3.f;
 
 	int ItemBoxDropCount{};
