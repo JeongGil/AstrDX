@@ -6,8 +6,8 @@
 #include "../Asset/Texture/CTextureManager.h"
 
 bool CWorldAssetManager::CreateMesh(const std::string& Key, bool bKeep, void* Vertices, int VertexSize,
-                                    int VertexCount, D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize,
-                                    int IndexCount, DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
+	int VertexCount, D3D11_USAGE VertexUsage, D3D11_PRIMITIVE_TOPOLOGY Topology, void* Indices, int IndexSize,
+	int IndexCount, DXGI_FORMAT Format, D3D11_USAGE IndexUsage)
 {
 	auto MeshMgr = CAssetManager::GetInst()->GetMeshManager().lock();
 	if (!MeshMgr)
@@ -17,7 +17,7 @@ bool CWorldAssetManager::CreateMesh(const std::string& Key, bool bKeep, void* Ve
 
 	auto InnerKey = "Mesh_" + Key;
 	if (!MeshMgr->CreateMesh(InnerKey, bKeep, Vertices, VertexSize, VertexCount, VertexUsage, Topology,
-	                         Indices, IndexSize, IndexCount, Format, IndexUsage))
+		Indices, IndexSize, IndexCount, Format, IndexUsage))
 	{
 		return false;
 	}
@@ -653,9 +653,9 @@ bool CWorldAssetManager::Init()
 	unsigned short	CenterRectColorIdx[6] = { 0, 1, 3, 0, 3, 2 };
 
 	if (!CreateMesh("CenterRectColor", false, CenterRectColor,
-	                sizeof(FVertexColor), 4, D3D11_USAGE_IMMUTABLE,
-	                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterRectColorIdx, 2, 6,
-	                DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
+		sizeof(FVertexColor), 4, D3D11_USAGE_IMMUTABLE,
+		D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST, CenterRectColorIdx, 2, 6,
+		DXGI_FORMAT_R16_UINT, D3D11_USAGE_IMMUTABLE))
 	{
 		return false;
 	}
@@ -669,30 +669,31 @@ void CWorldAssetManager::Update(const float DeltaTime)
 
 void CWorldAssetManager::ClearAsset()
 {
-	for (const auto& Asset : Assets | std::views::values)
+	auto Sounds = Assets
+		| std::views::values
+		| std::views::filter([](const auto& Asset) { return Asset->GetAssetType() == EAssetType::Sound; })
+		| std::views::transform([](const auto& Asset) { return std::dynamic_pointer_cast<CSound>(Asset); })
+		| std::views::filter([](const auto& Sound) { return Sound != nullptr; });
+
+	for (const auto& Sound : Sounds)
 	{
-		if (Asset->GetAssetType() == EAssetType::Sound)
-		{
-			if (auto Sound = std::dynamic_pointer_cast<CSound>(Asset))
-			{
-				Sound->Stop();
-			}
-		}
+		Sound->Stop();
 	}
 }
 
 CWorldAssetManager::~CWorldAssetManager()
 {
-	for (auto& Asset : Assets | std::views::values)
-	{
-		if (Asset && !Asset->GetKeep())
-		{
-			const auto& AssetKey = Asset->GetKey();
-			const auto AssetType = Asset->GetAssetType();
+	auto Assets = this->Assets
+		| std::views::values
+		| std::views::filter([](const auto& Asset) { return Asset != nullptr && !Asset->GetKeep(); });
 
-			CAssetManager::GetInst()->ReleaseAsset(AssetKey, AssetType);
-		}
+	for (auto& Asset : Assets)
+	{
+		const auto& AssetKey = Asset->GetKey();
+		const auto AssetType = Asset->GetAssetType();
+
+		CAssetManager::GetInst()->ReleaseAsset(AssetKey, AssetType);
 	}
 
-	Assets.clear();
+	this->Assets.clear();
 }
