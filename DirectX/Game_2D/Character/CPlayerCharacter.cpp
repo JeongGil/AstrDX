@@ -406,6 +406,11 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 		return 0.f;
 	}
 
+	if (IsPendingDead())
+	{
+		return 0.f;
+	}
+
 	if (ElapsedFromDamaged < INVINCIBLE_DURATION)
 	{
 		return 0.f;
