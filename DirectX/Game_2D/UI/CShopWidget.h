@@ -48,6 +48,7 @@ public:
 
 private:
 	void OnClickPlay();
+	void OnClickReroll();
 
 public:
 	[[nodiscard]] int GetCurrentLevel() const

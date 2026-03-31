@@ -47,6 +47,7 @@ int FShopGoods::GetPrice() const
 void CShop::GenerateGoods()
 {
 	++RerollCount;
+	RerollPrice = RerollCount * 5;
 
 	for (size_t i = 0; i < SHOP_MAX_GOODS; i++)
 	{
@@ -84,5 +85,17 @@ bool CShop::GenerateRandomGoods(TableID& OutID, bool& OutIsWeapon)
 		OutIsWeapon = false;
 	}
 
+	return true;
+}
+
+bool CShop::Reroll()
+{
+	if (CCharacterData::GetInst().GetMaterialCount() < RerollPrice)
+	{
+		return false;
+	}
+
+	CCharacterData::GetInst().AddMaterialCount(-RerollPrice);
+	GenerateGoods();
 	return true;
 }

@@ -151,27 +151,51 @@ bool CShopWidget::Init()
 	RerollButton = CreateWidget<CButton>("RerollButton", 1);
 	if (auto Button = RerollButton.lock())
 	{
-		
-	}
+		const float BtnW = 280.f * Ratio;
+		const float BtnH = 70.f  * Ratio;
 
-	RerollIcon = CreateWidget<CImage>("RerollIcon", 2);
-	if (auto Image = RerollIcon.lock())
-	{
-		if (auto Button = RerollButton.lock())
+		// 우측 끝을 CGoodsWidget 우측 끝(1460)에 맞추고, 상단을 CStatWidget 상단(27)에 맞춤
+		const float GoodsRight = (26.f + 4.f * 351.f + 3.f * 10.f) * Ratio; // 1460 * Ratio
+		const float StatTop    = 27.f * Ratio;
+
+		Button->SetPos(GoodsRight - BtnW, StatTop);
+		Button->SetSize(BtnW, BtnH);
+		Button->SetTint(EButtonState::Normal,  0.f,  0.f,  0.f,  0.6f);
+		Button->SetTint(EButtonState::Hovered, 0.3f, 0.3f, 0.3f, 0.75f);
+		Button->SetEventCallback<CShopWidget>(EButtonEventState::Click, this, &CShopWidget::OnClickReroll);
+
+		const float IconSize      = 48.f * Ratio; // 32 * 1.5
+		const float PriceFontSize = 24.f * Ratio;
+
+		// RerollPrice 텍스트: 아이콘 왼쪽 영역을 채움
+		RerollPrice = CreateWidget<CTextBlock>("RerollPriceText", 2);
+		if (auto Text = RerollPrice.lock())
 		{
-			Button->SetChild(Image);
+			const int Price         = CShop::GetInst().GetRerollPrice();
+			const int MaterialCount = CCharacterData::GetInst().GetMaterialCount();
+
+			Text->SetPos(0.f, 0.f);
+			Text->SetSize(BtnW - IconSize, BtnH);
+			Text->SetAlignH(ETextAlignH::Center);
+			Text->SetAlignV(ETextAlignV::Middle);
+			Text->SetFontSize(PriceFontSize);
+			Text->SetText(TEXT("초기화 - "));
+			Text->AddText(Price);
+			Text->SetTextColor(Price > MaterialCount ? FColor(1.f, 0.f, 0.f, 1.f) : FColor::White);
+			Button->SetChild(RerollPrice);
+		}
+
+		// RerollIcon: SetChild가 내부적으로 버튼 크기로 덮어쓰므로 SetChild 이후에 크기/위치 재설정
+		RerollIcon = CreateWidget<CImage>("RerollIconImg", 3);
+		if (auto Icon = RerollIcon.lock())
+		{
+			Icon->SetTexture("harvesting_icon", TEXT("items/materials/harvesting_icon.png"), Key::Path::Brotato);
+			Button->SetChild(RerollIcon);
+			// SetChild 이후에 크기·위치 재지정 — 버튼 우측에 세로 중앙 정렬
+			Icon->SetSize(IconSize, IconSize);
+			Icon->SetPos(BtnW - IconSize, (BtnH - IconSize) * 0.5f);
 		}
 	}
-
-	RerollPrice = CreateWidget<CTextBlock>("RerollPrice", 2);
-	if (auto Text = RerollPrice.lock())
-	{
-		if (auto Button = RerollButton.lock())
-		{
-			Button->SetChild(Text);
-		}
-	}
-
 	return true;
 }
 
@@ -236,6 +260,31 @@ void CShopWidget::RefreshInventory()
 	if (auto Widget = Items.lock())
 	{
 		Widget->Refresh();
+	}
+
+	if (auto Text = MaterialCount.lock())
+	{
+		Text->SetText(CCharacterData::GetInst().GetMaterialCount());
+	}
+}
+
+void CShopWidget::OnClickReroll()
+{
+	if (!CShop::GetInst().Reroll())
+	{
+		return;
+	}
+
+	RefreshGoods();
+
+	if (auto Text = RerollPrice.lock())
+	{
+		const int Price         = CShop::GetInst().GetRerollPrice();
+		const int MaterialCount = CCharacterData::GetInst().GetMaterialCount();
+
+		Text->SetText(TEXT("초기화 - "));
+		Text->AddText(Price);
+		Text->SetTextColor(Price > MaterialCount ? FColor(1.f, 0.f, 0.f, 1.f) : FColor::White);
 	}
 
 	if (auto Text = MaterialCount.lock())

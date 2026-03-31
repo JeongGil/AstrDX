@@ -28,7 +28,13 @@ public:
 		return CurrentGoods[SlotIdx];
 	}
 
+	[[nodiscard]] int GetRerollPrice() const
+	{
+		return RerollPrice;
+	}
+
 	void GenerateGoods();
+	bool Reroll();
 
 private:
 	bool GenerateRandomGoods(TableID& OutID, bool& OutIsWeapon);
