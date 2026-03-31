@@ -53,7 +53,7 @@ bool CResultWidget::Init()
 	const float InvenAreaLeft = StatPos.x + StatWidth;
 	const float InvenAreaWidth = static_cast<float>(RS.Width) - InvenAreaLeft - StatPos.x;
 	const FVector2 WeaponPos = FVector2(InvenAreaLeft + InvenLeftPad, InvenAreaTop + InvenTitleHeight + InvenContentTopPad);
-	const FVector2 ItemPos = FVector2(WeaponPos.x, WeaponPos.y + (96.f * 2.f + 4.f) * RatioFHD + 30.f * RatioFHD);
+	const FVector2 ItemPos = FVector2(WeaponPos.x, WeaponPos.y + (96.f * 2.f + 20.f) * RatioFHD + 30.f * RatioFHD);
 
 	if (auto Widget = StatWidget.lock())
 	{
