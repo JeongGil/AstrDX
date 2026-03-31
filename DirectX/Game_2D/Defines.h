@@ -17,26 +17,26 @@ namespace EWeaponType
 {
 	enum Type : uint32_t
 	{
-		None		= 0,
-		All			= ~None,
+		None = 0,
+		All = ~None,
 
-		Blade		= 1 << 0,
-		Blunt		= 1 << 1,
-		Elemental	= 1 << 2,
-		Ethereal	= 1 << 3,
-		Explosive	= 1 << 4,
-		Gun			= 1 << 5,
-		Heavy		= 1 << 6,
-		Legendary	= 1 << 7,
-		Medical		= 1 << 8,
-		Medieval	= 1 << 9,
-		Musical		= 1 << 10,
-		Naval		= 1 << 11,
-		Precise		= 1 << 12,
-		Primitive	= 1 << 13,
-		Support		= 1 << 14,
-		Tool		= 1 << 15,
-		Unarmed		= 1 << 16,
+		Blade = 1 << 0,
+		Blunt = 1 << 1,
+		Elemental = 1 << 2,
+		Ethereal = 1 << 3,
+		Explosive = 1 << 4,
+		Gun = 1 << 5,
+		Heavy = 1 << 6,
+		Legendary = 1 << 7,
+		Medical = 1 << 8,
+		Medieval = 1 << 9,
+		Musical = 1 << 10,
+		Naval = 1 << 11,
+		Precise = 1 << 12,
+		Primitive = 1 << 13,
+		Support = 1 << 14,
+		Tool = 1 << 15,
+		Unarmed = 1 << 16,
 	};
 }
 
@@ -167,11 +167,11 @@ namespace EEnemyBehavior
 		None = 0,
 		All = ~None,
 
-		DamageOnTouch	= 1 << 0,
-		Chase			= 1 << 1,
-		Kiting			= 1 << 2,
-		Charge			= 1 << 3,
-		Fire			= 1 << 4,
+		DamageOnTouch = 1 << 0,
+		Chase = 1 << 1,
+		Kiting = 1 << 2,
+		Charge = 1 << 3,
+		Fire = 1 << 4,
 	};
 }
 

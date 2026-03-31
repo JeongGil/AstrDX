@@ -29,6 +29,12 @@ private:
 		std::weak_ptr<CTextBlock> Name;
 	};
 
+	struct FWeaponInfoLineWidgets
+	{
+		std::weak_ptr<CTextBlock> Label;
+		std::weak_ptr<CTextBlock> Value;
+	};
+
 private:
 	int SlotIdx = -1;
 
@@ -42,6 +48,7 @@ private:
 	std::weak_ptr<CTextBlock> PriceText;
 
 	std::vector<FItemEffectLineWidgets> ItemEffectLines;
+	std::vector<FWeaponInfoLineWidgets> WeaponInfoLines;
 
 	FShopGoods GoodsInfo;
 
@@ -64,6 +71,7 @@ private:
 	void SetItemInfo();
 	void SetWeaponInfo();
 	void HideItemEffectLines();
+	void HideWeaponInfoLines();
 
 	void OnClickBuy();
 };

@@ -1,5 +1,9 @@
 #include "CGoodsSlot.h"
 
+#include <cmath>
+#include <iomanip>
+#include <sstream>
+
 #include <CDevice.h>
 #include <UI/CButton.h>
 #include <UI/CImage.h>
@@ -77,6 +81,8 @@ bool CGoodsSlot::Init()
 	const float EffectValueW = 60.f * Ratio;
 	const float EffectPad = 4.f * Ratio;
 	const float EffectFontSize = 20.f * Ratio;
+	const float WeaponLabelW = 118.f * Ratio;
+	const float WeaponLineW = SlotWidth - ItemSlotPad * 2.f;
 
 	ItemEffectLines.reserve(FItemInfo::MAX_EFFECT_COUNT);
 	for (int i = 0; i < FItemInfo::MAX_EFFECT_COUNT; ++i)
@@ -116,6 +122,38 @@ bool CGoodsSlot::Init()
 		}
 
 		ItemEffectLines.push_back(Line);
+	}
+
+	WeaponInfoLines.reserve(4);
+	for (int i = 0; i < 4; ++i)
+	{
+		FWeaponInfoLineWidgets Line;
+
+		Line.Label = CreateWidget<CTextBlock>("WeaponInfoLabel", 2);
+		if (auto Text = Line.Label.lock())
+		{
+			Text->SetPos(ItemSlotPad, EffectStartY + EffectLineH * i);
+			Text->SetSize(WeaponLabelW, EffectIconSize);
+			Text->SetFontSize(EffectFontSize);
+			Text->SetAlignH(ETextAlignH::Left);
+			Text->SetAlignV(ETextAlignV::Middle);
+			Text->SetTextColor(FColor(255.f / 255.f, 236.f / 255.f, 170.f / 255.f, 1.f));
+			Text->SetEnable(false);
+		}
+
+		Line.Value = CreateWidget<CTextBlock>("WeaponInfoValue", 2);
+		if (auto Text = Line.Value.lock())
+		{
+			Text->SetPos(ItemSlotPad + WeaponLabelW, EffectStartY + EffectLineH * i);
+			Text->SetSize(WeaponLineW - WeaponLabelW, EffectIconSize);
+			Text->SetFontSize(EffectFontSize);
+			Text->SetAlignH(ETextAlignH::Left);
+			Text->SetAlignV(ETextAlignV::Middle);
+			Text->SetTextColor(FColor::White);
+			Text->SetEnable(false);
+		}
+
+		WeaponInfoLines.push_back(Line);
 	}
 
 	// ── BuyButton (중앙 하단) ────────────────────────────────────────
@@ -243,6 +281,40 @@ static bool IsPrimaryStat(const EStat::Type StatType)
 	return EStat::Level <= StatType && StatType <= EStat::Harvesting;
 }
 
+static std::wstring FormatWeaponCritValue(const FWeaponInfo& Info)
+{
+	std::wstringstream Stream;
+
+	const float Multiplier = static_cast<float>(Info.CritDamagePercent) / 100.f;
+	Stream << L"X";
+	if (std::fabs(Multiplier - std::round(Multiplier)) < 0.01f)
+	{
+		Stream << static_cast<int>(std::round(Multiplier));
+	}
+	else
+	{
+		Stream << std::fixed << std::setprecision(2) << Multiplier;
+	}
+
+	Stream << L" (" << Info.CritChancePercent << L"% 확률)";
+	return Stream.str();
+}
+
+static std::wstring FormatWeaponCooldownValue(const FWeaponInfo& Info)
+{
+	std::wstringstream Stream;
+	const float CooldownSec = static_cast<float>(Info.CooldownMS) / 1000.f;
+	Stream << std::fixed << std::setprecision(2) << CooldownSec << L"s";
+	return Stream.str();
+}
+
+static std::wstring FormatWeaponRangeValue(const FWeaponInfo& Info)
+{
+	std::wstringstream Stream;
+	Stream << Info.Range << L" (" << (Info.bIsMeleeWeapon ? L"근거리" : L"원거리") << L")";
+	return Stream.str();
+}
+
 void CGoodsSlot::SetItemInfo()
 {
 	FItemInfo* Info;
@@ -257,6 +329,7 @@ void CGoodsSlot::SetItemInfo()
 		Text->SetTextColor(GetTierColor(Info->Tier));
 	}
 
+	HideWeaponInfoLines();
 	HideItemEffectLines();
 
 	const auto Misc = MiscTable::GetInst().Get();
@@ -338,11 +411,62 @@ void CGoodsSlot::SetWeaponInfo()
 	}
 
 	HideItemEffectLines();
+	HideWeaponInfoLines();
 
 	if (auto Text = Name.lock())
 	{
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
 		Text->SetTextColor(GetTierColor(Info->Tier));
+	}
+
+	if (WeaponInfoLines.size() >= 4)
+	{
+		if (auto Label = WeaponInfoLines[0].Label.lock())
+		{
+			Label->SetText(TEXT("대미지:"));
+			Label->SetEnable(true);
+		}
+		if (auto Value = WeaponInfoLines[0].Value.lock())
+		{
+			Value->SetText(Info->BaseDamage);
+			Value->SetEnable(true);
+		}
+
+		if (auto Label = WeaponInfoLines[1].Label.lock())
+		{
+			Label->SetText(TEXT("치명타:"));
+			Label->SetEnable(true);
+		}
+		if (auto Value = WeaponInfoLines[1].Value.lock())
+		{
+			auto CritText = FormatWeaponCritValue(*Info);
+			Value->SetText(CritText.c_str());
+			Value->SetEnable(true);
+		}
+
+		if (auto Label = WeaponInfoLines[2].Label.lock())
+		{
+			Label->SetText(TEXT("쿨다운:"));
+			Label->SetEnable(true);
+		}
+		if (auto Value = WeaponInfoLines[2].Value.lock())
+		{
+			auto CooldownText = FormatWeaponCooldownValue(*Info);
+			Value->SetText(CooldownText.c_str());
+			Value->SetEnable(true);
+		}
+
+		if (auto Label = WeaponInfoLines[3].Label.lock())
+		{
+			Label->SetText(TEXT("범위:"));
+			Label->SetEnable(true);
+		}
+		if (auto Value = WeaponInfoLines[3].Value.lock())
+		{
+			auto RangeText = FormatWeaponRangeValue(*Info);
+			Value->SetText(RangeText.c_str());
+			Value->SetEnable(true);
+		}
 	}
 
 	const int Price = GoodsInfo.GetPrice();
@@ -372,6 +496,22 @@ void CGoodsSlot::HideItemEffectLines()
 		if (auto NameText = Line.Name.lock())
 		{
 			NameText->SetEnable(false);
+		}
+	}
+}
+
+void CGoodsSlot::HideWeaponInfoLines()
+{
+	for (auto& Line : WeaponInfoLines)
+	{
+		if (auto Label = Line.Label.lock())
+		{
+			Label->SetEnable(false);
+		}
+
+		if (auto Value = Line.Value.lock())
+		{
+			Value->SetEnable(false);
 		}
 	}
 }
