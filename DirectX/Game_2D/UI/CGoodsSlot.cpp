@@ -158,6 +158,23 @@ static void ApplyPriceColor(const std::weak_ptr<CTextBlock>& PriceText, int Pric
 	}
 }
 
+static FColor GetTierColor(const int Tier)
+{
+	switch (Tier)
+	{
+	case 1:
+		return FColor::White;
+	case 2:
+		return FColor(130.f / 255.f, 200.f / 255.f, 240.f / 255.f, 1.f);
+	case 3:
+		return FColor(190.f / 255.f, 130.f / 255.f, 255.f / 255.f, 1.f);
+	case 4:
+		return FColor(255.f / 255.f, 120.f / 255.f, 130.f / 255.f, 1.f);
+	default:
+		return FColor::White;
+	}
+}
+
 void CGoodsSlot::SetItemInfo()
 {
 	FItemInfo* Info;
@@ -169,6 +186,7 @@ void CGoodsSlot::SetItemInfo()
 	if (auto Text = Name.lock())
 	{
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
+		Text->SetTextColor(GetTierColor(Info->Tier));
 	}
 
 	const int Price = GoodsInfo.GetPrice();
@@ -192,6 +210,7 @@ void CGoodsSlot::SetWeaponInfo()
 	if (auto Text = Name.lock())
 	{
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
+		Text->SetTextColor(GetTierColor(Info->Tier));
 	}
 
 	const int Price = GoodsInfo.GetPrice();
