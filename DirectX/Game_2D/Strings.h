@@ -60,10 +60,11 @@ namespace Key
 
 	namespace Path
 	{
-		inline const std::string Asset = "Asset";
-		inline const std::string Brotato = "Brotato";
+		inline const std::string Asset          = "Asset";
+		inline const std::string Brotato        = "Brotato";
 		inline const std::string BrotatoUISound = "BrotatoUISound";
-		inline const std::string Table = "Table";
+		inline const std::string BrotatoMusic   = "BrotatoMusic";
+		inline const std::string Table          = "Table";
 	}
 
 	namespace Comp

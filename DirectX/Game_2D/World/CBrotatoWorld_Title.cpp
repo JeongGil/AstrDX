@@ -38,6 +38,9 @@ void CBrotatoWorld_Title::LoadAnimation2D()
 
 void CBrotatoWorld_Title::LoadSound()
 {
+	WorldAssetManager->LoadSound("TitleBGM", "BGM", true,
+		"after-midnight by luke-melville Artlist.mp3", Key::Path::BrotatoMusic);
+	WorldAssetManager->SoundPlay("TitleBGM");
 }
 
 void CBrotatoWorld_Title::CreateUI()
