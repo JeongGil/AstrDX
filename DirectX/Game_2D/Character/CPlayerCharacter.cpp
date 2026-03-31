@@ -45,7 +45,7 @@ bool CPlayerCharacter::Init()
 	}
 
 	SetTeam(ETeam::Player);
-	
+
 	Potato = CreateComponent<CMeshComponent>(Key::Comp::Potato, Key::Comp::Root);
 	PotatoAnim = CreateComponent<CAnimation2DComponent>(Key::Anim::Potato, Key::Comp::Root);
 	if (auto Body = this->Potato.lock())
@@ -129,7 +129,7 @@ bool CPlayerCharacter::Init()
 		Move->SetSpeed(CharacterBase->BaseSpeed);
 
 		SleepOnSpawnComponents.push_back(Move);
-		Move->SetEnable(false);		
+		Move->SetEnable(false);
 	}
 
 	if (auto World = this->World.lock())
@@ -157,7 +157,7 @@ bool CPlayerCharacter::Init()
 		Cam->SetProjection(ECameraProjectionType::Orthogonal,
 			90.f, static_cast<float>(Resolution.Width), static_cast<float>(Resolution.Height), 1000);
 
-		Cam->SetInheritRotation(false);		
+		Cam->SetInheritRotation(false);
 
 		SleepOnSpawnComponents.push_back(Camera);
 		Cam->SetEnable(false);
@@ -187,7 +187,9 @@ bool CPlayerCharacter::Init()
 		Col->SetCollisionProfile("PickupRange");
 		Col->SetOnCollisionBegin<CPlayerCharacter>(this, &CPlayerCharacter::OnPickupColliderBeginOverlap);
 
+#if defined(_DEBUG) || defined(DEBUG)
 		Col->SetDrawDebug(true);
+#endif
 
 		SleepOnSpawnComponents.push_back(PickupCollider);
 		Col->SetEnable(false);
@@ -227,7 +229,7 @@ bool CPlayerCharacter::Init()
 
 	RemainAbsorbAttackStack = static_cast<int>(GetStat(EStat::AbsorbAttack));
 
-	
+
 
 	return true;
 }
@@ -676,7 +678,7 @@ void CPlayerCharacter::OnDead()
 
 	if (auto BrotatoWorld = std::dynamic_pointer_cast<CBrotatoWorld_Battle>(World.lock()))
 	{
-		if (auto CamMgr =  BrotatoWorld->GetCameraManager().lock())
+		if (auto CamMgr = BrotatoWorld->GetCameraManager().lock())
 		{
 			if (auto SubCam = BrotatoWorld->GetSubCameraObj().lock())
 			{
