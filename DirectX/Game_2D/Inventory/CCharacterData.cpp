@@ -4,6 +4,7 @@
 #include "CInventoryItem_Weapon.h"
 #include "CShop.h"
 #include "../Table/CharacterBaseTable.h"
+#include "../Table/ItemTable.h"
 #include "../Table/WeaponInfo.h"
 #include "../Table/WeaponSetBonusTable.h"
 #include "../Table/WeaponTable.h"
@@ -39,6 +40,26 @@ float CCharacterData::GetStat(EStat::Type StatType) const
 	if (auto It = UpgradeStats.find(StatType); It != UpgradeStats.end())
 	{
 		Value += It->second;
+	}
+
+	for (const auto& [ItemID, Item] : Items)
+	{
+		if (!Item)
+		{
+			continue;
+		}
+
+		FItemInfo* ItemInfo = nullptr;
+		if (!ItemTable::GetInst().TryGet(ItemID, ItemInfo))
+		{
+			continue;
+		}
+
+		auto EffectIt = ItemInfo->Effects.find(StatType);
+		if (EffectIt != ItemInfo->Effects.end())
+		{
+			Value += static_cast<float>(EffectIt->second * Item->GetItemCount());
+		}
 	}
 
 	for (const auto& [WeaponType, TypeCount] : WeaponTypeCounts)

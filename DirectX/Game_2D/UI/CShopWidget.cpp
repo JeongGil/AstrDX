@@ -262,6 +262,11 @@ void CShopWidget::RefreshInventory()
 		Widget->Refresh();
 	}
 
+	if (auto Widget = Stats.lock())
+	{
+		Widget->RefreshCurrent();
+	}
+
 	if (auto Text = MaterialCount.lock())
 	{
 		Text->SetText(CCharacterData::GetInst().GetMaterialCount());

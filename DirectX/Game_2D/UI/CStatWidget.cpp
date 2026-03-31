@@ -138,6 +138,8 @@ bool CStatWidget::Init()
 
 void CStatWidget::PrintPrimary()
 {
+	bIsPrimarySelected = true;
+
 	auto Active = PrimaryButton.lock();
 	auto Inactive = SecondaryButton.lock();
 
@@ -167,6 +169,8 @@ void CStatWidget::PrintPrimary()
 
 void CStatWidget::PrintSecondary()
 {
+	bIsPrimarySelected = false;
+
 	auto Active = SecondaryButton.lock();
 	auto Inactive = PrimaryButton.lock();
 
@@ -192,4 +196,15 @@ void CStatWidget::PrintSecondary()
 
 		Item->SetEnable(false);
 	}
+}
+
+void CStatWidget::RefreshCurrent()
+{
+	if (bIsPrimarySelected)
+	{
+		PrintPrimary();
+		return;
+	}
+
+	PrintSecondary();
 }

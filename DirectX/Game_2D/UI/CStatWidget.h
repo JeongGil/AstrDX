@@ -32,10 +32,13 @@ private:
 
 	std::vector<std::weak_ptr<CStatValueWidget>> Stats;
 
+	bool bIsPrimarySelected = true;
+
 public:
 	bool Init() override;
 
 	void PrintPrimary();
 	void PrintSecondary();
+	void RefreshCurrent();
 };
 

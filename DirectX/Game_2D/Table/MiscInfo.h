@@ -80,15 +80,15 @@ struct FMiscInfo : FTableInfoBase
 				}
 			}
 
+			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
+			PrimaryStatIconPaths.emplace(EStat::None, Segment);
+
 			for (int i = EStat::Level; i <= EStat::Harvesting; i++)
 			{
 				auto Stat = static_cast<EStat::Type>(i);
 				if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
 				PrimaryStatIconPaths.emplace(Stat, Segment);
 			}
-
-			if (!std::getline(Stream, Segment, Delim)) { assert(false); return false; }
-			PrimaryStatIconPaths.emplace(EStat::None, Segment);
 		}
 		catch (...)
 		{
