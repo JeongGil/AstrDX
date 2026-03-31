@@ -27,6 +27,7 @@ bool CItemInvenWidget::Init()
 		const FVector TitleSize = FVector(400.f, 45.f, 0.f) * Ratio;
 		Text->SetPos(0.f, -TitleSize.y);
 		Text->SetSize(TitleSize);
+		Text->SetFontSize(30.f * Ratio);
 		Text->SetText(TEXT("아이템"));
 		Text->SetTextColor(FColor::White);
 		Text->SetAlignH(ETextAlignH::Left);
