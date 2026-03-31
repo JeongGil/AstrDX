@@ -21,9 +21,9 @@ bool CCharacterData::Init()
 	SetBaseStatus();
 
 	// 임시
-	AddWeapon(TableID(1));
-	AddWeapon(TableID(2));
-	AddWeapon(TableID(5));
+	//AddWeapon(TableID(1));
+	//AddWeapon(TableID(2));
+	//AddWeapon(TableID(5));
 
 	return true;
 }

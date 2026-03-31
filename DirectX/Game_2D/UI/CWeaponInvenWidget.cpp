@@ -1,6 +1,7 @@
 #include "CWeaponInvenWidget.h"
 
 #include <CDevice.h>
+#include <UI/CTextBlock.h>
 
 #include "CItemSlot.h"
 #include "../Inventory/CCharacterData.h"
@@ -33,6 +34,18 @@ bool CWeaponInvenWidget::Init()
 	}
 
 	Refresh();
+
+	Title = CreateWidget<CTextBlock>("Title", 2);
+	if (auto Text = Title.lock())
+	{
+		const FVector TitleSize = FVector(400.f, 45.f, 0.f) * Ratio;
+		Text->SetPos(0.f, -TitleSize.y);
+		Text->SetSize(TitleSize);
+		Text->SetText(TEXT("무기"));
+		Text->SetTextColor(FColor::White);
+		Text->SetAlignH(ETextAlignH::Left);
+		Text->SetAlignV(ETextAlignV::Top);
+	}
 
 	return true;
 }

@@ -3,6 +3,7 @@
 
 #include "../Defines.h"
 
+class CTextBlock;
 class CItemSlot;
 class CWorldUIManager;
 
@@ -19,6 +20,7 @@ public:
 	~CWeaponInvenWidget() override = default;
 
 private:
+	std::weak_ptr<CTextBlock> Title;
 	std::array<std::weak_ptr<CItemSlot>, INVENTORY_MAX_WEAPON> Slots;
 
 public:
