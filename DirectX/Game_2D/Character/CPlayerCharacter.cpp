@@ -432,8 +432,11 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 		return 0.f;
 	}
 
+	ElapsedFromDamaged = 0.f;
+
 	// Round enemy damage before apply armor.
 	Damage = round(Damage);
+	const float FinalDmg = Damage * GetArmoredDmgRatio(static_cast<int>(GetStat(EStat::Armor)));
 
 	PlayRandomHurtSound();
 
@@ -449,10 +452,8 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 		FxAnim->SetLoop(Key::Anim::HitEffect, false);
 	}
 
-	SetCurrHP(GetCurrHP() - Damage);
-	ElapsedFromDamaged = 0.f;
+	SetCurrHP(GetCurrHP() - FinalDmg);
 
-	float FinalDmg = Damage * GetArmoredDmgRatio(static_cast<int>(GetStat(EStat::Armor)));
 	return CCharacter::TakeDamage(FinalDmg, Instigator);
 }
 

@@ -42,6 +42,8 @@ protected:
 	void OnSpawnFinished() override;
 
 private:
+	constexpr static float TOUCH_DAMAGE_INTERVAL = 0.5f;
+
 	void SetChargeCooldownTime(float& OutCooldownTime);
 
 	void OnCollisionBegin(const FVector& HitPoint, CCollider* Collider);
@@ -64,6 +66,7 @@ protected:
 
 	std::weak_ptr<CPlayerCharacter> Player;
 	bool bIsCollidingToPC{};
+	float ElapsedTouchDamage = TOUCH_DAMAGE_INTERVAL;
 
 	EEnemyBehavior::Type CurrentBehavior{};
 

@@ -119,6 +119,11 @@ void CEnemy::Update(const float DeltaTime)
 {
 	CCharacter::Update(DeltaTime);
 
+	if (IsPendingDead())
+	{
+		return;
+	}
+
 	if (IsBattleActionStoppedByStageState())
 	{
 		return;
@@ -134,7 +139,16 @@ void CEnemy::Update(const float DeltaTime)
 
 	if (bIsCollidingToPC)
 	{
-		CollidingWithPC(Player);
+		ElapsedTouchDamage += DeltaTime;
+		if (ElapsedTouchDamage >= TOUCH_DAMAGE_INTERVAL)
+		{
+			CollidingWithPC(Player);
+			ElapsedTouchDamage = 0.f;
+		}
+	}
+	else
+	{
+		ElapsedTouchDamage = TOUCH_DAMAGE_INTERVAL;
 	}
 
 #pragma region AI
@@ -351,6 +365,9 @@ CEnemy* CEnemy::Clone()
 
 void CEnemy::OnDead()
 {
+	bIsCollidingToPC = false;
+	ElapsedTouchDamage = TOUCH_DAMAGE_INTERVAL;
+
 	CCharacter::OnDead();
 
 	auto Info = EnemyTable::GetInst().Get(GetEnemyInfoID());
@@ -474,23 +491,49 @@ void CEnemy::SetChargeCooldownTime(float& OutCooldownTime)
 
 void CEnemy::OnCollisionBegin(const FVector& HitPoint, CCollider* Collider)
 {
+	if (Collider == nullptr)
+	{
+		return;
+	}
+
+	auto* Profile = Collider->GetCollisionProfile();
+	if (Profile == nullptr || Profile->Channel == nullptr || Profile->Channel->Name != "Player")
+	{
+		return;
+	}
+
 	if (auto PC = std::dynamic_pointer_cast<CPlayerCharacter>(Collider->GetOwner().lock()))
 	{
+		Player = PC;
 		bIsCollidingToPC = true;
+		ElapsedTouchDamage = 0.f;
+		CollidingWithPC(PC);
 	}
 }
 
 void CEnemy::OnCollisionEnd(CCollider* Collider)
 {
+	if (Collider == nullptr)
+	{
+		return;
+	}
+
+	auto* Profile = Collider->GetCollisionProfile();
+	if (Profile == nullptr || Profile->Channel == nullptr || Profile->Channel->Name != "Player")
+	{
+		return;
+	}
+
 	if (auto PC = std::dynamic_pointer_cast<CPlayerCharacter>(Collider->GetOwner().lock()))
 	{
 		bIsCollidingToPC = false;
+		ElapsedTouchDamage = TOUCH_DAMAGE_INTERVAL;
 	}
 }
 
 void CEnemy::CollidingWithPC(const std::weak_ptr<CPlayerCharacter>& WeakPC)
 {
-	if (IsBattleActionStoppedByStageState())
+	if (IsPendingDead() || IsBattleActionStoppedByStageState())
 	{
 		return;
 	}
