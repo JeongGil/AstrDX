@@ -222,6 +222,8 @@ void CGoodsSlot::OnClickBuy()
 		CCharacterData::GetInst().AddItem(GoodsInfo);
 	}
 
+	SetEnable(false);
+
 	if (auto Manager = UIManager.lock())
 	{
 		if (auto Shop = Manager->FindWidget<CShopWidget>("Shop").lock())

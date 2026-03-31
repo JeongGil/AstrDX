@@ -32,6 +32,10 @@ private:
 	std::weak_ptr<CImage> MaterialIcon;
 	std::weak_ptr<CTextBlock> MaterialCount;
 
+	std::weak_ptr<CButton> RerollButton;
+	std::weak_ptr<CImage> RerollIcon;
+	std::weak_ptr<CTextBlock> RerollPrice;
+
 	std::weak_ptr<CButton> PlayButton;
 	std::weak_ptr<CTextBlock> Playtext;
 

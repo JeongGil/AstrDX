@@ -37,6 +37,7 @@ void CGoodsWidget::SetGoods(const FShopGoods& GoodsInfo, size_t SlotIdx)
 	assert(SlotIdx < Slots.size());
 	if (auto Slot = Slots[SlotIdx].lock())
 	{
+		Slot->SetEnable(true);
 		Slot->SetItem(GoodsInfo);
 	}
 }

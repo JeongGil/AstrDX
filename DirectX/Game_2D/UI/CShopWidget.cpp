@@ -148,6 +148,30 @@ bool CShopWidget::Init()
 		Text->SetFontSize(FontSize);
 	}
 
+	RerollButton = CreateWidget<CButton>("RerollButton", 1);
+	if (auto Button = RerollButton.lock())
+	{
+		
+	}
+
+	RerollIcon = CreateWidget<CImage>("RerollIcon", 2);
+	if (auto Image = RerollIcon.lock())
+	{
+		if (auto Button = RerollButton.lock())
+		{
+			Button->SetChild(Image);
+		}
+	}
+
+	RerollPrice = CreateWidget<CTextBlock>("RerollPrice", 2);
+	if (auto Text = RerollPrice.lock())
+	{
+		if (auto Button = RerollButton.lock())
+		{
+			Button->SetChild(Text);
+		}
+	}
+
 	return true;
 }
 
