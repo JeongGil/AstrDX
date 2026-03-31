@@ -67,9 +67,9 @@ void CLoadingWorld::LoadAnimation2D()
 
 void CLoadingWorld::LoadSound()
 {
-	WorldAssetManager->LoadSound("MainBGM", "BGM", true, "MainBgm.mp3");
+	WorldAssetManager->LoadSound("BlobfishMove", "Effect", false, "Brotato\\ui\\splash\\blobfish_move.wav", "Asset");
 
-	WorldAssetManager->SoundPlay("MainBGM");
+	WorldAssetManager->SoundPlay("BlobfishMove");
 }
 
 void CLoadingWorld::CreateUI()
