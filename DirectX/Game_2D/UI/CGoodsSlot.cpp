@@ -206,20 +206,27 @@ void CGoodsSlot::SetWeaponInfo()
 
 void CGoodsSlot::OnClickBuy()
 {
-	if (CCharacterData::GetInst().GetMaterialCount() < GoodsInfo.GetPrice())
+	auto& CharacterData = CCharacterData::GetInst();
+
+	if (CharacterData.GetMaterialCount() < GoodsInfo.GetPrice())
 	{
 		return;
 	}
 
-	CCharacterData::GetInst().AddMaterialCount(-GoodsInfo.GetPrice());
+	if (GoodsInfo.bIsWeapon && CharacterData.GetWeaponCount() >= INVENTORY_MAX_WEAPON)
+	{
+		return;
+	}
+
+	CharacterData.AddMaterialCount(-GoodsInfo.GetPrice());
 
 	if (GoodsInfo.bIsWeapon)
 	{
-		CCharacterData::GetInst().AddWeapon(GoodsInfo);
+		CharacterData.AddWeapon(GoodsInfo);
 	}
 	else
 	{
-		CCharacterData::GetInst().AddItem(GoodsInfo);
+		CharacterData.AddItem(GoodsInfo);
 	}
 
 	SetEnable(false);
