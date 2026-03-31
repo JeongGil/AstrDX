@@ -2,6 +2,7 @@
 
 #include <atlbase.h>
 #include <atlconv.h>
+#include <array>
 #include <CDevice.h>
 #include <CEngine.h>
 #include <Asset/Material/CMaterial.h>
@@ -267,6 +268,73 @@ void CPlayerCharacter::Update(const float DeltaTime)
 	{
 		float SpeedRatio = 1 + GetStat(EStat::Speed) * 0.01f;
 		Move->SetSpeed(CharacterBase->BaseSpeed * SpeedRatio);
+
+		if (Move->GetMoveDirection().IsZero())
+		{
+			ElapsedStepSound = 0.f;
+		}
+		else
+		{
+			ElapsedStepSound += DeltaTime;
+			while (ElapsedStepSound >= STEP_SOUND_INTERVAL)
+			{
+				ElapsedStepSound -= STEP_SOUND_INTERVAL;
+				PlayRandomStepSound();
+			}
+		}
+	}
+}
+
+void CPlayerCharacter::PlayRandomStepSound()
+{
+	auto WorldPtr = World.lock();
+	if (!WorldPtr)
+	{
+		return;
+	}
+
+	auto AssetMgr = WorldPtr->GetWorldAssetManager().lock();
+	if (!AssetMgr)
+	{
+		return;
+	}
+
+	auto& RandEngine = CEngine::GetInst()->GetMT();
+	std::uniform_int_distribution<int> Dist(1, 6);
+	const std::string SoundKey = "PlayerStep_" + std::to_string(Dist(RandEngine));
+
+	AssetMgr->SoundPlay(SoundKey);
+}
+
+void CPlayerCharacter::PlayRandomHurtSound()
+{
+	static constexpr std::array<std::pair<const char*, const char*>, 4> HurtSoundInfos =
+	{
+		std::pair{ "PlayerHurt_05", "entities/units/unit/hurt_sounds/bullet_impact_body_flesh_05.wav" },
+		std::pair{ "PlayerHurt_06", "entities/units/unit/hurt_sounds/bullet_impact_body_flesh_06.wav" },
+		std::pair{ "PlayerHurt_07", "entities/units/unit/hurt_sounds/bullet_impact_body_flesh_07.wav" },
+		std::pair{ "PlayerHurt_08", "entities/units/unit/hurt_sounds/bullet_impact_body_flesh_08.wav" }
+	};
+
+	const auto WorldPtr = World.lock();
+	if (!WorldPtr)
+	{
+		return;
+	}
+
+	const auto AssetMgr = WorldPtr->GetWorldAssetManager().lock();
+	if (!AssetMgr)
+	{
+		return;
+	}
+
+	auto& RandEngine = CEngine::GetInst()->GetMT();
+	std::uniform_int_distribution<size_t> Dist(0, HurtSoundInfos.size() - 1);
+	const auto& [SoundKey, SoundPath] = HurtSoundInfos[Dist(RandEngine)];
+
+	if (AssetMgr->LoadSound(SoundKey, "Effect", false, SoundPath, Key::Path::Brotato))
+	{
+		AssetMgr->SoundPlay(SoundKey);
 	}
 }
 
@@ -366,6 +434,8 @@ float CPlayerCharacter::TakeDamage(float Damage, const std::weak_ptr<CGameObject
 
 	// Round enemy damage before apply armor.
 	Damage = round(Damage);
+
+	PlayRandomHurtSound();
 
 	if (auto FxMesh = HitEffectMesh.lock())
 	{

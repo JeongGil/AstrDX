@@ -56,6 +56,39 @@ namespace
 			}
 		}
 	}
+
+	void PlayRandomMeleeImpactSound(const std::weak_ptr<CWorld>& InWorld)
+	{
+		static constexpr std::array<std::pair<const char*, const char*>, 8> MeleeImpactSoundInfos =
+		{
+			std::pair{ "MeleeImpact_01", "entities/units/unit/hurt_sounds/punch_general_body_impact_01.wav" },
+			std::pair{ "MeleeImpact_02", "entities/units/unit/hurt_sounds/punch_general_body_impact_02.wav" },
+			std::pair{ "MeleeImpact_03", "entities/units/unit/hurt_sounds/punch_general_body_impact_03.wav" },
+			std::pair{ "MeleeImpact_04", "entities/units/unit/hurt_sounds/punch_general_body_impact_04.wav" },
+			std::pair{ "MeleeImpact_05", "entities/units/unit/hurt_sounds/punch_general_body_impact_05.wav" },
+			std::pair{ "MeleeImpact_06", "entities/units/unit/hurt_sounds/punch_general_body_impact_06.wav" },
+			std::pair{ "MeleeImpact_07", "entities/units/unit/hurt_sounds/punch_general_body_impact_07.wav" },
+			std::pair{ "MeleeImpact_08", "entities/units/unit/hurt_sounds/punch_general_body_impact_08.wav" }
+		};
+
+		if (const auto World = InWorld.lock())
+		{
+			if (const auto AssetMgr = World->GetWorldAssetManager().lock())
+			{
+				std::uniform_int_distribution<size_t> Dist(0, MeleeImpactSoundInfos.size() - 1);
+				const auto& [SoundKey, SoundPath] = MeleeImpactSoundInfos[Dist(CEngine::GetInst()->GetMT())];
+
+				if (AssetMgr->LoadSound(SoundKey, "Effect", false, SoundPath, Key::Path::Brotato))
+				{
+					AssetMgr->SoundPlay(SoundKey);
+				}
+				else
+				{
+					AssetMgr->SoundPlay(SoundKey);
+				}
+			}
+		}
+	}
 }
 
 bool CWeapon_Battle::Init()
@@ -414,7 +447,11 @@ void CWeapon_Battle::OnCollisionBeginOverlap(const FVector& HitPoint, CCollider*
 
 	auto [Damage, bIsCrit] = CalcAttackDamage(WeaponInfo, Owner);
 
-	ColChar->TakeDamage(Damage, Owner);
+	const float AppliedDamage = ColChar->TakeDamage(Damage, Owner);
+	if (WeaponInfo->bIsMeleeWeapon && AppliedDamage > 0.f)
+	{
+		PlayRandomMeleeImpactSound(this->World);
+	}
 
 	// 이 적을 현재 공격의 히트 목록에 추가
 	HitEnemiesInCurrentAttack.insert(Other);

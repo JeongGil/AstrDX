@@ -21,6 +21,7 @@ class CPlayerCharacter :
 
 	constexpr static float INVINCIBLE_DURATION = 0.5f;
 	constexpr static float INVINCIBLE_FLICKER_INTERVAL = 0.2f;
+	constexpr static float STEP_SOUND_INTERVAL = 1 / 3.f;
 
 public:
 	bool Init() override;
@@ -46,6 +47,9 @@ private:
 	void MoveDown();
 	void MoveLeft();
 	void MoveRight();
+
+	void PlayRandomStepSound();
+	void PlayRandomHurtSound();
 
 	void CreateDeco(const std::string& DecoPath);
 
@@ -88,6 +92,7 @@ protected:
 	bool bLastSymmetry = false;
 
 	float ElapsedFromDamaged = INVINCIBLE_DURATION;
+	float ElapsedStepSound = 0.f;
 
 private:
 	inline static std::unordered_map<size_t, std::vector<FVector2>> AnchorPositions =

@@ -498,6 +498,13 @@ void CBrotatoWorld_Battle::LoadSound()
 	{
 		WorldAssetManager->SoundPlay(BgmKey);
 	}
+
+	for (int i = 1; i <= 6; ++i)
+	{
+		const std::string StepKey = "PlayerStep_" + std::to_string(i);
+		const std::string StepPath = "entities/units/player/step_sounds/Step " + std::to_string(i) + ".mp3";
+		WorldAssetManager->LoadSound(StepKey, "Effect", false, StepPath.c_str(), Key::Path::Brotato);
+	}
 }
 
 void CBrotatoWorld_Battle::CreateUI(const std::weak_ptr<CPlayerCharacter>& PC)
