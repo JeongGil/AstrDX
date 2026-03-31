@@ -14,6 +14,7 @@
 #include "../Strings.h"
 #include "../Table/ItemInfo.h"
 #include "../Table/ItemTable.h"
+#include "../Table/MiscTable.h"
 #include "../Table/WeaponInfo.h"
 #include "../Table/WeaponTable.h"
 #include "../Utility.h"
@@ -68,6 +69,53 @@ bool CGoodsSlot::Init()
 		Text->SetAlignH(ETextAlignH::Left);
 		Text->SetAlignV(ETextAlignV::Top);
 		Text->SetFontSize(NameFontSize);
+	}
+
+	const float EffectStartY = ItemSlotPad + ItemSlotWidth + 18.f * Ratio;
+	const float EffectLineH = 28.f * Ratio;
+	const float EffectIconSize = 24.f * Ratio;
+	const float EffectValueW = 60.f * Ratio;
+	const float EffectPad = 4.f * Ratio;
+	const float EffectFontSize = 20.f * Ratio;
+
+	ItemEffectLines.reserve(FItemInfo::MAX_EFFECT_COUNT);
+	for (int i = 0; i < FItemInfo::MAX_EFFECT_COUNT; ++i)
+	{
+		FItemEffectLineWidgets Line;
+
+		Line.Icon = CreateWidget<CImage>("EffectIcon", 2);
+		if (auto Icon = Line.Icon.lock())
+		{
+			Icon->SetPos(ItemSlotPad, EffectStartY + EffectLineH * i);
+			Icon->SetSize(EffectIconSize, EffectIconSize);
+			Icon->SetEnable(false);
+		}
+
+		Line.Value = CreateWidget<CTextBlock>("EffectValue", 2);
+		if (auto Text = Line.Value.lock())
+		{
+			Text->SetPos(ItemSlotPad + EffectIconSize + EffectPad, EffectStartY + EffectLineH * i);
+			Text->SetSize(EffectValueW, EffectIconSize);
+			Text->SetFontSize(EffectFontSize);
+			Text->SetAlignH(ETextAlignH::Right);
+			Text->SetAlignV(ETextAlignV::Middle);
+			Text->SetEnable(false);
+		}
+
+		Line.Name = CreateWidget<CTextBlock>("EffectName", 2);
+		if (auto Text = Line.Name.lock())
+		{
+			const float NameX = ItemSlotPad + EffectIconSize + EffectPad + EffectValueW + EffectPad;
+			Text->SetPos(NameX, EffectStartY + EffectLineH * i);
+			Text->SetSize(SlotWidth - NameX - ItemSlotPad, EffectIconSize);
+			Text->SetFontSize(EffectFontSize);
+			Text->SetAlignH(ETextAlignH::Left);
+			Text->SetAlignV(ETextAlignV::Middle);
+			Text->SetTextColor(FColor::White);
+			Text->SetEnable(false);
+		}
+
+		ItemEffectLines.push_back(Line);
 	}
 
 	// ── BuyButton (중앙 하단) ────────────────────────────────────────
@@ -175,6 +223,26 @@ static FColor GetTierColor(const int Tier)
 	}
 }
 
+static FColor GetStatValueColor(const int StatValue)
+{
+	if (StatValue > 0)
+	{
+		return FColor::Green;
+	}
+
+	if (StatValue < 0)
+	{
+		return FColor::Red;
+	}
+
+	return FColor::White;
+}
+
+static bool IsPrimaryStat(const EStat::Type StatType)
+{
+	return EStat::Level <= StatType && StatType <= EStat::Harvesting;
+}
+
 void CGoodsSlot::SetItemInfo()
 {
 	FItemInfo* Info;
@@ -187,6 +255,68 @@ void CGoodsSlot::SetItemInfo()
 	{
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
 		Text->SetTextColor(GetTierColor(Info->Tier));
+	}
+
+	HideItemEffectLines();
+
+	const auto Misc = MiscTable::GetInst().Get();
+	if (Misc)
+	{
+		int LineIndex = 0;
+		for (const auto& [StatType, StatValue] : Info->Effects)
+		{
+			if (LineIndex >= static_cast<int>(ItemEffectLines.size()))
+			{
+				break;
+			}
+
+			auto& Line = ItemEffectLines[LineIndex];
+
+			EStat::Type IconStatType = StatType;
+			if (!IsPrimaryStat(StatType))
+			{
+				IconStatType = EStat::None;
+			}
+
+			const auto IconIt = Misc->PrimaryStatIconPaths.find(IconStatType);
+			if (IconIt != Misc->PrimaryStatIconPaths.end())
+			{
+				if (auto Icon = Line.Icon.lock())
+				{
+					const auto& IconPath = IconIt->second;
+					std::string IconKey = "GoodsEffectIcon_" + std::to_string(static_cast<int>(IconStatType));
+					Icon->SetTexture(IconKey, GetTextureFileNameTChar(IconPath), Key::Path::Brotato);
+					Icon->SetEnable(true);
+				}
+			}
+
+			if (auto ValueText = Line.Value.lock())
+			{
+				std::wstring ValueStr;
+				if (StatValue > 0)
+				{
+					ValueStr = L"+";
+					ValueStr += std::to_wstring(StatValue);
+				}
+				else
+				{
+					ValueStr = std::to_wstring(StatValue);
+				}
+
+				ValueText->SetText(ValueStr.c_str());
+				ValueText->SetTextColor(GetStatValueColor(StatValue));
+				ValueText->SetEnable(true);
+			}
+
+			if (auto NameText = Line.Name.lock())
+			{
+				NameText->SetText(GetStatName(StatType));
+				NameText->SetTextColor(FColor::White);
+				NameText->SetEnable(true);
+			}
+
+			++LineIndex;
+		}
 	}
 
 	const int Price = GoodsInfo.GetPrice();
@@ -207,6 +337,8 @@ void CGoodsSlot::SetWeaponInfo()
 		return;
 	}
 
+	HideItemEffectLines();
+
 	if (auto Text = Name.lock())
 	{
 		Text->SetText(GetTextureFileNameTChar(Info->Name));
@@ -221,6 +353,27 @@ void CGoodsSlot::SetWeaponInfo()
 	}
 
 	ApplyPriceColor(PriceText, Price);
+}
+
+void CGoodsSlot::HideItemEffectLines()
+{
+	for (auto& Line : ItemEffectLines)
+	{
+		if (auto Icon = Line.Icon.lock())
+		{
+			Icon->SetEnable(false);
+		}
+
+		if (auto Value = Line.Value.lock())
+		{
+			Value->SetEnable(false);
+		}
+
+		if (auto NameText = Line.Name.lock())
+		{
+			NameText->SetEnable(false);
+		}
+	}
 }
 
 void CGoodsSlot::OnClickBuy()

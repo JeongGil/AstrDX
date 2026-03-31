@@ -22,6 +22,14 @@ public:
 	~CGoodsSlot() override = default;
 
 private:
+	struct FItemEffectLineWidgets
+	{
+		std::weak_ptr<CImage> Icon;
+		std::weak_ptr<CTextBlock> Value;
+		std::weak_ptr<CTextBlock> Name;
+	};
+
+private:
 	int SlotIdx = -1;
 
 	std::weak_ptr<CImage> Background;
@@ -32,6 +40,8 @@ private:
 	std::weak_ptr<CButton> BuyButton;
 	std::weak_ptr<CImage> PriceIcon;
 	std::weak_ptr<CTextBlock> PriceText;
+
+	std::vector<FItemEffectLineWidgets> ItemEffectLines;
 
 	FShopGoods GoodsInfo;
 
@@ -53,6 +63,7 @@ public:
 private:
 	void SetItemInfo();
 	void SetWeaponInfo();
+	void HideItemEffectLines();
 
 	void OnClickBuy();
 };
